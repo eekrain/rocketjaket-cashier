@@ -1,0 +1,6 @@
+mutation Produk_DeleteKategoriProduk($id: Int!) {
+  delete_rocketjaket_product_category_by_pk(id: $id) {
+    id
+    name
+  }
+}

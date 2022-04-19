@@ -1,0 +1,27 @@
+mutation Inventory_BulkUpdateInventoryProduct(
+  $inventory_product_id: uuid!
+  $update_rocketjaket_inventory_product_by_pk: rocketjaket_inventory_product_set_input!
+  $insert_rocketjaket_inventory_product_variant: [rocketjaket_inventory_product_variant_insert_input!]!
+) {
+  update_rocketjaket_inventory_product_by_pk(
+    pk_columns: {id: $inventory_product_id}
+    _set: $update_rocketjaket_inventory_product_by_pk
+  ) {
+    product {
+      name
+      product_category {
+        name
+      }
+    }
+  }
+  delete_rocketjaket_inventory_product_variant(
+    where: {inventory_product_id: {_eq: $inventory_product_id}}
+  ) {
+    affected_rows
+  }
+  insert_rocketjaket_inventory_product_variant(
+    objects: $insert_rocketjaket_inventory_product_variant
+  ) {
+    affected_rows
+  }
+}

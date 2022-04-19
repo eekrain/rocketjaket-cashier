@@ -1,0 +1,5 @@
+mutation WA_Signout {
+  whatsappSignout {
+    is_success
+  }
+}

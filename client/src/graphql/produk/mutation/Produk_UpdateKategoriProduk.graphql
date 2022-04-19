@@ -1,0 +1,14 @@
+mutation Produk_UpdateKategoriProduk(
+  $id: Int!
+  $description: String
+  $name: String!
+) {
+  update_rocketjaket_product_category_by_pk(
+    pk_columns: {id: $id}
+    _set: {name: $name, description: $description}
+  ) {
+    name
+    id
+    description
+  }
+}

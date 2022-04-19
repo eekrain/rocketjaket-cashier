@@ -1,0 +1,15 @@
+mutation User_BulkDeleteOneUser($account_id: uuid!, $user_id: uuid!) {
+  delete_auth_refresh_tokens(where: {account_id: {_eq: $account_id}}) {
+    affected_rows
+  }
+  delete_auth_account_roles(where: {account_id: {_eq: $account_id}}) {
+    affected_rows
+  }
+  delete_auth_accounts(where: {id: {_eq: $account_id}}) {
+    affected_rows
+  }
+  delete_users_by_pk(id: $user_id) {
+    id
+    display_name
+  }
+}
