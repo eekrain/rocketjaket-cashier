@@ -1,0 +1,15 @@
+{
+  "name": "rocketjaket-cashier",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/eekrain/rocketjaket-cashier.git",
+  "author": "eekrain <ardianoption10@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.25"
+  }
+}
