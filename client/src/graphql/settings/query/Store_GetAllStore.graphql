@@ -1,0 +1,9 @@
+query Store_GetAllStore {
+  rocketjaket_store {
+    id
+    name
+    latitude
+    longitude
+    address
+  }
+}

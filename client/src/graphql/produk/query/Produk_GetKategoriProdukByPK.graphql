@@ -1,0 +1,7 @@
+query Produk_GetKategoriProdukByPK($id: Int!) {
+  rocketjaket_product_category_by_pk(id: $id) {
+    id
+    name
+    description
+  }
+}

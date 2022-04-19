@@ -1,0 +1,8 @@
+mutation User_BulkUpdateUserByUserId(
+  $user_id: uuid!
+  $update_user: users_set_input!
+) {
+  update_users_by_pk(pk_columns: {id: $user_id}, _set: $update_user) {
+    display_name
+  }
+}

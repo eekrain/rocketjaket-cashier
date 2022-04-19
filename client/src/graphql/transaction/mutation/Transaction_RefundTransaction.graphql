@@ -1,0 +1,14 @@
+mutation Transaction_RefundTransaction(
+  $invoice_number: String!
+  $isRefundAll: Boolean!
+  $refund_reason: String!
+) {
+  refundTransaction(
+    invoice_number: $invoice_number
+    isRefundAll: $isRefundAll
+    refund_reason: $refund_reason
+  ) {
+    invoice_number
+    is_success
+  }
+}
