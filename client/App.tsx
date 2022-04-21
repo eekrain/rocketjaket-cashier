@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -9,248 +8,108 @@
  * @format
  */
 
-import React, {useState, useEffect} from 'react';
-import {useUserId, useAuthenticationStatus} from '@nhost/react';
-import {LinkingOptions, NavigationContainer} from '@react-navigation/native';
-import AuthNavigation from './src/screens/auth';
-import AppNavigation, {AppNavigationParamList} from './src/screens/app';
-import {Alert, Linking} from 'react-native';
-import {useMemo} from 'react';
+import React from 'react';
 import {
-  checkMultiple,
-  requestMultiple,
-  PERMISSIONS,
-  RESULTS,
-} from 'react-native-permissions';
-import SplashScreen from './src/components/Overlay/Splashscreen';
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from 'react-native';
 
-import messaging, {
-  FirebaseMessagingTypes,
-} from '@react-native-firebase/messaging';
-import notifee, {EventType} from '@notifee/react-native';
 import {
-  useUser_CreateOneUserFcmTokenMutation,
-  useUser_GetAllUserFcmTokensByIdQuery,
-} from './src/graphql/gql-generated';
-import {
-  getXHasuraContextHeader,
-  myNotifeeActions,
-  onDisplayNotification,
-  useMyUser,
-} from './src/shared/utils';
-import {useNavigationContainerRef} from '@react-navigation/native';
+  Colors,
+  DebugInstructions,
+  Header,
+  LearnMoreLinks,
+  ReloadInstructions,
+} from 'react-native/Libraries/NewAppScreen';
 
-const appPermission = async () => {
-  checkMultiple([
-    PERMISSIONS.ANDROID.CAMERA,
-    PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-    PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
-  ]).then(checkStatuses => {
-    if (checkStatuses[PERMISSIONS.ANDROID.CAMERA] === RESULTS.BLOCKED) {
-      Alert.alert(
-        'Izin Kamera Terblokir',
-        'Izin kamera untuk aplikasi ini telah diblokir. Aktifkan izin kamera untuk menggunakan aplikasi ini!',
-      );
-    }
-
-    if (
-      checkStatuses[PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE] ===
-        RESULTS.BLOCKED ||
-      checkStatuses[PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE] ===
-        RESULTS.BLOCKED
-    ) {
-      Alert.alert(
-        'Izin Storage Terblokir',
-        'Izin storage untuk aplikasi ini telah diblokir. Aktifkan izin storage untuk menggunakan aplikasi ini!',
-      );
-    }
-
-    requestMultiple([
-      PERMISSIONS.ANDROID.CAMERA,
-      PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-      PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
-    ]).then(_reqStatuses => {
-      // console.log('Kamera', _reqStatuses[PERMISSIONS.ANDROID.CAMERA]);
-      // console.log(
-      //   'Storage write',
-      //   _reqStatuses[PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE],
-      // );
-      // console.log(
-      //   'Storage read',
-      //   _reqStatuses[PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE],
-      // );
-    });
-  });
-};
-
-const linking: LinkingOptions<AppNavigationParamList> = {
-  prefixes: ['myapp://'],
-  config: {
-    initialRouteName: 'Dashboard',
-    screens: {
-      InventoryRoot: 'inventory',
-    },
-  },
-  async getInitialURL() {
-    // First, you may want to do the default deep link handling
-    // Check if app was opened from a deep link
-    const url = await Linking.getInitialURL();
-
-    if (url != null) {
-      return url;
-    }
-
-    // Next, you would need to get the initial URL from your third-party integration
-    // It depends on the third-party SDK you use
-    // For example, to get to get the initial URL for branch.io:
-    const notif = await notifee.getInitialNotification();
-    console.log('🚀 ~ file: App.tsx ~ line 109 ~ getInitialURL ~ notif', notif);
-
-    return notif?.notification?.data?.link;
-  },
-  subscribe(listener) {
-    const onReceiveURL = ({url}: {url: string}) => listener(url);
-    // Listen to incoming links from deep linking
-    Linking.addEventListener('url', onReceiveURL);
-    // Listen to firebase push notifications
-    const unsubscribeNotification = notifee.onForegroundEvent(
-      async notifeeEvent => {
-        if (notifeeEvent.type === EventType.PRESS) {
-          if (notifeeEvent.detail.notification?.data?.link) {
-            listener(notifeeEvent.detail.notification?.data?.link);
-          }
-          if (notifeeEvent.detail.notification?.id) {
-            notifee.cancelNotification(notifeeEvent.detail.notification?.id);
-          }
-        }
-      },
-    );
-
-    notifee.onBackgroundEvent(async notifeeEvent => {
-      if (notifeeEvent.type === EventType.PRESS) {
-        if (notifeeEvent.detail.notification?.data?.link) {
-          listener(notifeeEvent.detail.notification?.data?.link);
-        }
-        if (notifeeEvent.detail.notification?.id) {
-          notifee.cancelNotification(notifeeEvent.detail.notification?.id);
-        }
-      }
-    });
-
-    return () => {
-      // Clean up the event listeners
-      Linking.removeAllListeners('url');
-      unsubscribeNotification();
-    };
-  },
+const Section: React.FC<{
+  title: string;
+}> = ({children, title}) => {
+  const isDarkMode = useColorScheme() === 'dark';
+  return (
+    <View style={styles.sectionContainer}>
+      <Text
+        style={[
+          styles.sectionTitle,
+          {
+            color: isDarkMode ? Colors.white : Colors.black,
+          },
+        ]}>
+        {title}
+      </Text>
+      <Text
+        style={[
+          styles.sectionDescription,
+          {
+            color: isDarkMode ? Colors.light : Colors.dark,
+          },
+        ]}>
+        {children}
+      </Text>
+    </View>
+  );
 };
 
 const App = () => {
-  useEffect(() => {
-    appPermission();
-  }, []);
+  const isDarkMode = useColorScheme() === 'dark';
 
-  const authStatus = useAuthenticationStatus();
-
-  const [loadingSplashScreen, setLoadingSplashScreen] = useState(true);
-  const loading = useMemo(
-    () => authStatus.isLoading || loadingSplashScreen,
-    [authStatus, loadingSplashScreen],
-  );
-
-  useEffect(() => {
-    const splash = setTimeout(() => {
-      setLoadingSplashScreen(false);
-    }, 1000);
-
-    return () => {
-      clearTimeout(splash);
-    };
-  });
-  if (loading) {
-    return <SplashScreen />;
-  }
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
 
   return (
-    <NavigationContainer<AppNavigationParamList> linking={linking}>
-      {!loading && authStatus.isAuthenticated ? (
-        <>
-          <MyNotifee />
-          <AppNavigation />
-        </>
-      ) : (
-        <AuthNavigation />
-      )}
-    </NavigationContainer>
+    <SafeAreaView style={backgroundStyle}>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={backgroundStyle}>
+        <Header />
+        <View
+          style={{
+            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+          }}>
+          <Section title="Step One">
+            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
+            screen and then come back to see your edits.
+          </Section>
+          <Section title="See Your Changes">
+            <ReloadInstructions />
+          </Section>
+          <Section title="Debug">
+            <DebugInstructions />
+          </Section>
+          <Section title="Learn More">
+            Read the docs to discover what to do next:
+          </Section>
+          <LearnMoreLinks />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  sectionContainer: {
+    marginTop: 32,
+    paddingHorizontal: 24,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+  },
+  sectionDescription: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: '400',
+  },
+  highlight: {
+    fontWeight: '700',
+  },
+});
+
 export default App;
-
-interface MyNotifeeProps {}
-
-const MyNotifee = ({}: MyNotifeeProps) => {
-  const navigation = useNavigationContainerRef<AppNavigationParamList>();
-  const myUser = useMyUser();
-
-  const [bootstrapFcmDone, setBootstrapFcmDone] = useState(false);
-
-  const getAllFcmUser = useUser_GetAllUserFcmTokensByIdQuery({
-    variables: {
-      user_id: myUser.id,
-    },
-    ...getXHasuraContextHeader({role: 'me', withUserId: true}),
-  });
-
-  const [createFcmToken] = useUser_CreateOneUserFcmTokenMutation({
-    ...getXHasuraContextHeader({role: 'me', withUserId: true}),
-  });
-
-  useEffect(() => {
-    const allFcmUser = getAllFcmUser.data?.users_fcm_token;
-    const registerFcm = async () => {
-      const token = await messaging().getToken();
-      myUser.updateFcmToken(token);
-
-      const found = allFcmUser?.find(fcm => fcm.fcm_token === token);
-      console.log('🚀 ~ file: App.tsx ~ line 205 ~ registerFcm ~ found', found);
-      if (!found) {
-        const res = await createFcmToken({
-          variables: {
-            insert_users_fcm_token: {
-              fcm_token: token,
-              user_id: myUser.id,
-            },
-          },
-        });
-        console.log('🚀 ~ file: index.tsx ~ line 161 ~ registerFcm ~ res', res);
-      }
-    };
-
-    if (!bootstrapFcmDone && allFcmUser && myUser.id) {
-      registerFcm();
-      setBootstrapFcmDone(true);
-    }
-  }, [
-    bootstrapFcmDone,
-    createFcmToken,
-    getAllFcmUser.data?.users_fcm_token,
-    myUser,
-  ]);
-
-  useEffect(() => {
-    messaging().registerDeviceForRemoteMessages();
-    const unsubscribe = messaging().onMessage(message =>
-      onDisplayNotification(message, 'onMessage'),
-    );
-
-    return unsubscribe;
-  }, []);
-
-  useEffect(() => {
-    return notifee.onForegroundEvent(notifeeEvent => {
-      myNotifeeActions(notifeeEvent, 'foreground', navigation);
-    });
-  }, [navigation]);
-
-  return null;
-};

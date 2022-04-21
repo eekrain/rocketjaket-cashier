@@ -1,7 +1,0 @@
-query Inventory_GetAllVariantMetadata {
-  rocketjaket_inventory_variant_metadata(order_by: {id: asc}) {
-    variant_title
-    variant_value
-    id
-  }
-}

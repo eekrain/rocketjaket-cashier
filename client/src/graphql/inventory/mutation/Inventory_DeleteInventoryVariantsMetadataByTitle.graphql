@@ -1,9 +1,0 @@
-mutation Inventory_DeleteInventoryVariantsMetadataByTitle(
-  $variant_title: String = ""
-) {
-  delete_rocketjaket_inventory_variant_metadata(
-    where: {variant_title: {_eq: $variant_title}}
-  ) {
-    affected_rows
-  }
-}

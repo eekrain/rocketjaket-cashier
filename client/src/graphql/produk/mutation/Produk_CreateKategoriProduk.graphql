@@ -1,9 +1,0 @@
-mutation Produk_CreateKategoriProduk($description: String, $name: String!) {
-  insert_rocketjaket_product_category_one(
-    object: {description: $description, name: $name}
-  ) {
-    id
-    name
-    description
-  }
-}
