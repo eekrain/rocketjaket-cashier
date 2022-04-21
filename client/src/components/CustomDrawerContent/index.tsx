@@ -15,13 +15,13 @@ import {
 } from 'native-base';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {rootAppRoutes, getAppIcon, IAppRoutes} from '../../screens/app';
-import {useNhostAuth} from '../../shared/utils';
+import {useMyUser} from '../../shared/utils';
 import {TUserRoleOptions} from '../../types/user';
 
 interface Props extends DrawerContentComponentProps {}
 
 const CustomDrawerContent = (props: Props) => {
-  const nhostAuth = useNhostAuth();
+  const myUser = useMyUser();
 
   const routeItem = useCallback(
     (route: IAppRoutes, index: number) => {
@@ -63,13 +63,13 @@ const CustomDrawerContent = (props: Props) => {
 
   const routes = useMemo(() => {
     return rootAppRoutes.map((route, index) => {
-      const temp1 = route.role.includes(nhostAuth.user.role as TUserRoleOptions)
+      const temp1 = route.role.some(r => myUser.roles.includes(r))
         ? routeItem(route, index)
         : null;
       const temp2 = !route.isHideOnDrawer ? temp1 : null;
       return temp2;
     });
-  }, [nhostAuth.user.role, routeItem]);
+  }, [myUser, routeItem]);
 
   return (
     <DrawerContentScrollView {...props}>

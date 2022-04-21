@@ -11,8 +11,8 @@ import {
 } from 'native-base';
 import {SigninNavProps} from '../../../types/navigation';
 import {RHTextInput} from '../../../shared/components';
-import {auth, useNhostAuth} from '../../../shared/utils/nhost';
 import {useForm} from 'react-hook-form';
+import {useSignInEmailPassword} from '@nhost/react';
 
 interface ISignInScreenProps extends SigninNavProps {}
 
@@ -27,7 +27,17 @@ const defaultValues = {
 };
 
 const SignInScreen = ({navigation}: ISignInScreenProps) => {
-  const nhostAuth = useNhostAuth();
+  const {
+    signInEmailPassword,
+    isLoading,
+    needsEmailVerification,
+    needsMfaOtp,
+    sendMfaOtp,
+    isSuccess,
+    isError,
+    error,
+    user,
+  } = useSignInEmailPassword();
 
   const {
     register,
@@ -37,12 +47,7 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
   } = useForm({defaultValues});
 
   const handleSubmission = async (data: IDefaultValues) => {
-    await nhostAuth.signIn(data.username, data.password).catch(err => {
-      console.error(
-        '🚀 ~ file: index.tsx ~ line 34 ~ handleSubmission ~ err',
-        err,
-      );
-    });
+    signInEmailPassword(data.username, data.password);
   };
 
   return (

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import {
-  Box,
   Button,
   HamburgerIcon,
   Pressable,
@@ -11,15 +10,13 @@ import {
   Text,
   VStack,
   Icon,
-  Spinner,
   IconButton,
   Badge,
   useContrastText,
 } from 'native-base';
 import {
+  useMyUser,
   getStorageFileUrlWImageTransform,
-  useNhostAuth,
-  auth,
   getXHasuraContextHeader,
 } from '../../shared/utils';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -27,6 +24,11 @@ import {useState} from 'react';
 import {allAppRoutes, AppNavProps} from '../../screens/app';
 import {MyAvatar} from '../../shared/components';
 import {useUser_DeleteFcmTokenByUserIdMutation} from '../../graphql/gql-generated';
+import {
+  useAccessToken,
+  useSignOut,
+  useAuthenticationStatus,
+} from '@nhost/react';
 
 export const customHeaderHeight: number = 70;
 
@@ -41,7 +43,10 @@ const getRouteNiceName = (routeName: string) => {
 interface ICustomHeaderProps extends AppNavProps {}
 
 const CustomHeader = (props: ICustomHeaderProps) => {
-  const nhostAuth = useNhostAuth();
+  const accessToken = useAccessToken();
+  const authStatus = useAuthenticationStatus();
+  const myUser = useMyUser();
+  const {signOut, isSuccess: isSignoutSuccess} = useSignOut();
   const bgLight = 'white';
   const colorContrastLight = useContrastText(bgLight);
 
@@ -53,26 +58,27 @@ const CustomHeader = (props: ICustomHeaderProps) => {
   });
 
   const handleLogout = () => {
-    nhostAuth.setLoading(true);
-    nhostAuth
-      .signOut(async () => {
-        const resDelete = await deleteFcmToken({
-          variables: {
-            user_id: nhostAuth.user.userId,
-            fcm_token: nhostAuth.fcmToken,
-          },
-        }).catch(error => {
-          console.error(
-            '🚀 ~ file: index.tsx ~ line 65 ~ .signOut ~ error',
-            error,
-          );
-        });
-        console.log(
-          '🚀 ~ file: index.tsx ~ line 65 ~ .signOut ~ resDelete',
-          resDelete,
-        );
-      })
-      .finally(() => nhostAuth.setLoading(false));
+    signOut();
+    // nhostAuth.setLoading(true);
+    // nhostAuth
+    //   .signOut(async () => {
+    //     const resDelete = await deleteFcmToken({
+    //       variables: {
+    //         user_id: nhostAuth.user.userId,
+    //         fcm_token: nhostAuth.fcmToken,
+    //       },
+    //     }).catch(error => {
+    //       console.error(
+    //         '🚀 ~ file: index.tsx ~ line 65 ~ .signOut ~ error',
+    //         error,
+    //       );
+    //     });
+    //     console.log(
+    //       '🚀 ~ file: index.tsx ~ line 65 ~ .signOut ~ resDelete',
+    //       resDelete,
+    //     );
+    //   })
+    //   .finally(() => nhostAuth.setLoading(false));
   };
 
   return (
@@ -127,15 +133,15 @@ const CustomHeader = (props: ICustomHeaderProps) => {
               <MyAvatar
                 source={{
                   uri: getStorageFileUrlWImageTransform({
-                    fileKey: nhostAuth.user.photoURL,
+                    fileKey: myUser.avatarUrl,
                     w: 100,
                     q: 60,
                   }),
                   headers: {
-                    authorization: `Bearer ${auth.getJWTToken()}`,
+                    authorization: `Bearer ${accessToken}`,
                   },
                 }}
-                fallbackText={nhostAuth.user.displayName || ''}
+                fallbackText={myUser.displayName || ''}
                 size={50}
                 bgColor={isAvatarPressed ? 'gray.200' : 'white'}
                 textColor={
@@ -146,7 +152,7 @@ const CustomHeader = (props: ICustomHeaderProps) => {
           )}>
           <Popover.Content accessibilityLabel="User settings" bgColor="white">
             <Popover.Header>
-              <Text>Hai, {nhostAuth.user.displayName}!</Text>
+              <Text>Hai, {myUser.displayName}!</Text>
             </Popover.Header>
             <Popover.Body>
               <VStack space="3">
@@ -164,7 +170,7 @@ const CustomHeader = (props: ICustomHeaderProps) => {
                   Profile
                 </Button>
                 <Button
-                  isLoading={nhostAuth.isLoading}
+                  isLoading={authStatus.isLoading}
                   onPress={handleLogout}
                   justifyContent="flex-start"
                   variant="ghost"

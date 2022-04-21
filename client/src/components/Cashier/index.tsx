@@ -11,7 +11,7 @@ import {
 import {
   getStorageFileUrlWImageTransform,
   useFlexSearch,
-  useNhostAuth,
+  useMyUser,
 } from '../../shared/utils';
 import {UserRolesEnum} from '../../types/user';
 import {useForm} from 'react-hook-form';
@@ -56,7 +56,7 @@ const CashierHome = ({route}: Props) => {
     '🚀 ~ file: index.tsx ~ line 55 ~ CashierHome ~ route.params?.invoiceNumberRefundPart',
     route.params?.invoiceNumberRefundPart,
   );
-  const nhostAuth = useNhostAuth();
+  const myUser = useMyUser();
   const [isDataStoreReady, setDataStoreReady] = useState(false);
   const {
     watch,
@@ -71,13 +71,10 @@ const CashierHome = ({route}: Props) => {
   const searchTerm = watch('search_term');
 
   useEffect(() => {
-    if (
-      nhostAuth.user.role === UserRolesEnum.administrator &&
-      selectedStoreId
-    ) {
-      nhostAuth.updateUserData({store_id: parseInt(selectedStoreId, 10)});
+    if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
+      myUser.updateStoreId(parseInt(selectedStoreId, 10));
     }
-  }, [nhostAuth, selectedStoreId]);
+  }, [myUser, selectedStoreId]);
 
   const getAllCategory = useProduk_GetAllKategoriProdukQuery();
   const kategoriProdukTab = useMemo(() => {
@@ -215,43 +212,32 @@ const CashierHome = ({route}: Props) => {
 
   useEffect(() => {
     if (
-      nhostAuth?.user?.role &&
-      nhostAuth?.user?.role === UserRolesEnum.administrator &&
+      myUser.roles.includes(UserRolesEnum.administrator) &&
       !selectedStoreId
     ) {
       setValue('show_modal_change_toko', true);
     } else if (
-      nhostAuth?.user?.role &&
-      nhostAuth?.user?.role === UserRolesEnum.administrator &&
+      myUser.roles.includes(UserRolesEnum.administrator) &&
       selectedStoreId
     ) {
       setValue('show_modal_change_toko', false);
     }
     if (!isDataStoreReady) {
       console.log(
-        '🚀 ~ file: index.tsx ~ line 227 ~ useEffect ~ nhostAuth.user.store_id',
-        nhostAuth.user.store_id,
+        '🚀 ~ file: index.tsx ~ line 227 ~ useEffect ~ myUser.store_id',
+        myUser.store_id,
       );
-      if (nhostAuth.user.store_id) {
-        setValue('store_id', nhostAuth?.user?.store_id.toString());
+      if (myUser.store_id) {
+        setValue('store_id', myUser.store_id.toString());
         setDataStoreReady(true);
-      } else if (
-        nhostAuth?.user?.role &&
-        nhostAuth?.user?.role !== UserRolesEnum.administrator
-      ) {
+      } else if (!myUser.roles.includes(UserRolesEnum.administrator)) {
         Alert.alert(
           'Akun Anda Belum Terdaftar',
           'Akun anda belum terdaftar di store manapun! Silahkan kontak owner / admin untuk mendaftarkan akun anda ke penempatan toko sesuai.',
         );
       }
     }
-  }, [
-    isDataStoreReady,
-    nhostAuth.user?.role,
-    nhostAuth.user.store_id,
-    selectedStoreId,
-    setValue,
-  ]);
+  }, [isDataStoreReady, myUser, selectedStoreId, setValue]);
 
   return (
     <Box>

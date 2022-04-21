@@ -1,5 +1,4 @@
 export * from './generateAvatarName';
-export * from './nhost';
 export * from './toTitleCase';
 export * from './stringFileNameUtil';
 export * from './getStorageFileUrl';
@@ -7,3 +6,4 @@ export * from './myFormat';
 export * from './useFlexSearch';
 export * from './myNotifee';
 export {toTitleCase} from './stringTransformUtils';
+export * from './nhost';

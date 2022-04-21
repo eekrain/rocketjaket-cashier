@@ -13,7 +13,7 @@ import {
   Center,
 } from 'native-base';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import {myNumberFormat, useNhostAuth} from '../../shared/utils';
+import {myNumberFormat, useMyUser} from '../../shared/utils';
 import {UserRolesEnum} from '../../types/user';
 import {Control, UseFormSetValue} from 'react-hook-form';
 import {MyAvatar, RHTextInput} from '../../shared/components';
@@ -62,7 +62,8 @@ const ProductsContent = ({
   filteredByCategoryProductData,
   searchedInventoryProductData,
 }: Props) => {
-  const nhostAuth = useNhostAuth();
+  const myUser = useMyUser();
+
   return (
     <ScrollView w={['full', 'full', '4/6']}>
       <Stack w="full" direction="column" space="3" pb="100">
@@ -73,7 +74,7 @@ const ProductsContent = ({
         )}
         <HStack space="4" alignItems="center">
           <Heading fontSize="xl">Toko {dataStoreActive?.name}</Heading>
-          {nhostAuth?.user?.role === UserRolesEnum.administrator && (
+          {myUser.roles.includes(UserRolesEnum.administrator) && (
             <Button
               onPress={() => setValue('show_modal_change_toko', true)}
               size="sm"

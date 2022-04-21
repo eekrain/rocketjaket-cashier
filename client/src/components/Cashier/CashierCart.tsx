@@ -15,7 +15,7 @@ import {
 import {Alert} from 'react-native';
 import {ICart, ICartItem, useMyCart} from '../../state';
 import {MyAvatar} from '../../shared/components';
-import {myNumberFormat, useNhostAuth} from '../../shared/utils';
+import {myNumberFormat, useMyUser} from '../../shared/utils';
 import Feather from 'react-native-vector-icons/Feather';
 import {ALL_POSSIBLE_PAYMENT_METHOD} from '../../shared/constants';
 import PaymentTypeForm from './PaymentTypeForm';
@@ -63,7 +63,7 @@ interface Props {
 
 const CashierCart = ({route}: Props) => {
   const myCart = useMyCart();
-  const nhostAuth = useNhostAuth();
+  const myUser = useMyUser();
   const [isModalPayOpen, setModalPayOpen] = useState(false);
   const [formPayStep, setFormPayStep] = useState<0 | 1>(0);
   const [paymentProcessResult, setPaymentProcessResult] = useState<
@@ -155,17 +155,17 @@ const CashierCart = ({route}: Props) => {
         setLoadingProcessPayment(false);
         return;
       }
-      if (!data.payment_type || !nhostAuth.user.store_id) {
+      if (!data.payment_type || !myUser.store_id) {
         console.error(
           '🚀 ~ file: CashierCart.tsx ~ line 83 ~ handleSubmission ~ data.payment_type is invalid',
           data.payment_type,
         );
         return;
       }
-      if (!nhostAuth.user.store_id) {
+      if (!myUser.store_id) {
         console.error(
-          '🚀 ~ file: CashierCart.tsx ~ line 83 ~ handleSubmission ~ nhostAuth.user.store_id is invalid',
-          nhostAuth.user.store_id,
+          '🚀 ~ file: CashierCart.tsx ~ line 83 ~ handleSubmission ~ myUser.store_id is invalid',
+          myUser.store_id,
         );
       }
       const transaction_items: Transaction_Items[] = myCart.cartItems.map(
@@ -186,10 +186,10 @@ const CashierCart = ({route}: Props) => {
         variables: {
           total_transaction: myCart.getTotalPrice(),
           payment_type: data.payment_type,
-          user_id: nhostAuth.user.userId,
+          user_id: myUser.id,
           transaction_items: transaction_items,
           cash_in_amount: data.cash_in_amount.value as number,
-          store_id: nhostAuth.user.store_id,
+          store_id: myUser.store_id,
         },
       }).catch(error => {
         setPaymentProcessResult('error');
@@ -207,12 +207,7 @@ const CashierCart = ({route}: Props) => {
       setFormPayStep(1);
       setLoadingProcessPayment(false);
     },
-    [
-      createTransactionMutation,
-      myCart,
-      nhostAuth.user.store_id,
-      nhostAuth.user.userId,
-    ],
+    [createTransactionMutation, myCart, myUser.store_id, myUser.id],
   );
 
   const oldProductFromInvoice = useMemo(() => {

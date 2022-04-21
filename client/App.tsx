@@ -9,14 +9,11 @@
  * @format
  */
 
-import React from 'react';
-
+import React, {useState, useEffect} from 'react';
+import {useUserId, useAuthenticationStatus} from '@nhost/react';
 import {LinkingOptions, NavigationContainer} from '@react-navigation/native';
 import AuthNavigation from './src/screens/auth';
 import AppNavigation, {AppNavigationParamList} from './src/screens/app';
-import {useState} from 'react';
-import {useEffect} from 'react';
-import {useNhostAuth} from './src/shared/utils';
 import {Alert, Linking} from 'react-native';
 import {useMemo} from 'react';
 import {
@@ -39,6 +36,7 @@ import {
   getXHasuraContextHeader,
   myNotifeeActions,
   onDisplayNotification,
+  useMyUser,
 } from './src/shared/utils';
 import {useNavigationContainerRef} from '@react-navigation/native';
 
@@ -148,16 +146,16 @@ const linking: LinkingOptions<AppNavigationParamList> = {
 };
 
 const App = () => {
-  const nhostAuth = useNhostAuth();
-
   useEffect(() => {
     appPermission();
   }, []);
 
+  const authStatus = useAuthenticationStatus();
+
   const [loadingSplashScreen, setLoadingSplashScreen] = useState(true);
   const loading = useMemo(
-    () => nhostAuth.isLoading || loadingSplashScreen,
-    [nhostAuth.isLoading, loadingSplashScreen],
+    () => authStatus.isLoading || loadingSplashScreen,
+    [authStatus, loadingSplashScreen],
   );
 
   useEffect(() => {
@@ -175,7 +173,7 @@ const App = () => {
 
   return (
     <NavigationContainer<AppNavigationParamList> linking={linking}>
-      {!loading && nhostAuth.isAuthenticated ? (
+      {!loading && authStatus.isAuthenticated ? (
         <>
           <MyNotifee />
           <AppNavigation />
@@ -192,13 +190,13 @@ interface MyNotifeeProps {}
 
 const MyNotifee = ({}: MyNotifeeProps) => {
   const navigation = useNavigationContainerRef<AppNavigationParamList>();
-  const nhostAuth = useNhostAuth();
+  const myUser = useMyUser();
 
   const [bootstrapFcmDone, setBootstrapFcmDone] = useState(false);
 
   const getAllFcmUser = useUser_GetAllUserFcmTokensByIdQuery({
     variables: {
-      user_id: nhostAuth.user.userId,
+      user_id: myUser.id,
     },
     ...getXHasuraContextHeader({role: 'me', withUserId: true}),
   });
@@ -211,7 +209,7 @@ const MyNotifee = ({}: MyNotifeeProps) => {
     const allFcmUser = getAllFcmUser.data?.users_fcm_token;
     const registerFcm = async () => {
       const token = await messaging().getToken();
-      nhostAuth.updateFcmToken(token);
+      myUser.updateFcmToken(token);
 
       const found = allFcmUser?.find(fcm => fcm.fcm_token === token);
       console.log('🚀 ~ file: App.tsx ~ line 205 ~ registerFcm ~ found', found);
@@ -220,7 +218,7 @@ const MyNotifee = ({}: MyNotifeeProps) => {
           variables: {
             insert_users_fcm_token: {
               fcm_token: token,
-              user_id: nhostAuth.user.userId,
+              user_id: myUser.id,
             },
           },
         });
@@ -228,7 +226,7 @@ const MyNotifee = ({}: MyNotifeeProps) => {
       }
     };
 
-    if (!bootstrapFcmDone && allFcmUser && nhostAuth?.user?.userId) {
+    if (!bootstrapFcmDone && allFcmUser && myUser.id) {
       registerFcm();
       setBootstrapFcmDone(true);
     }
@@ -236,7 +234,7 @@ const MyNotifee = ({}: MyNotifeeProps) => {
     bootstrapFcmDone,
     createFcmToken,
     getAllFcmUser.data?.users_fcm_token,
-    nhostAuth,
+    myUser,
   ]);
 
   useEffect(() => {
