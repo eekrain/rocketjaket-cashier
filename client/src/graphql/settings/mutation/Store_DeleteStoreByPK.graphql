@@ -1,6 +1,0 @@
-mutation Store_DeleteStoreByPK($id: Int = 10) {
-  delete_rocketjaket_store_by_pk(id: $id) {
-    id
-    name
-  }
-}
