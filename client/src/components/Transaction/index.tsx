@@ -29,7 +29,7 @@ import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {IconButtonDelete, ButtonEdit} from '../Buttons';
-import {myNumberFormat, storage, useNhostAuth} from '../../shared/utils';
+import {myNumberFormat, useMyUser} from '../../shared/utils';
 import {useMyAppState} from '../../state';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import withAppLayout from '../Layout/AppLayout';
@@ -78,7 +78,7 @@ const Action = ({invoice_number, navigation}: IActionProps) => {
 interface Props extends ListTransactionNavProps {}
 
 const Produk = ({navigation}: Props) => {
-  const nhostAuth = useNhostAuth();
+  const myUser = useMyUser();
   const toast = useToast();
   const [isDataStoreReady, setDataStoreReady] = useState(false);
 
@@ -109,7 +109,7 @@ const Produk = ({navigation}: Props) => {
 
   const getAllTransaction = useTransaction_GetAllTransactionByStoreIdQuery({
     variables: {
-      store_id: nhostAuth.user.store_id,
+      store_id: myUser.store_id,
     },
   });
 
@@ -160,14 +160,12 @@ const Produk = ({navigation}: Props) => {
 
   useEffect(() => {
     if (
-      nhostAuth?.user?.role &&
-      nhostAuth?.user?.role === UserRolesEnum.administrator &&
+      myUser.roles.includes(UserRolesEnum.administrator) &&
       !selectedStoreId
     ) {
       setValue('show_modal_change_toko', true);
     } else if (
-      nhostAuth?.user?.role &&
-      nhostAuth?.user?.role === UserRolesEnum.administrator &&
+      myUser.roles.includes(UserRolesEnum.administrator) &&
       selectedStoreId
     ) {
       setValue('show_modal_change_toko', false);
@@ -175,28 +173,19 @@ const Produk = ({navigation}: Props) => {
     if (!isDataStoreReady) {
       console.log(
         '🚀 ~ file: index.tsx ~ line 227 ~ useEffect ~ nhostAuth.user.store_id',
-        nhostAuth.user.store_id,
+        myUser.store_id,
       );
-      if (nhostAuth.user.store_id) {
-        setValue('store_id', nhostAuth?.user?.store_id.toString());
+      if (myUser.store_id) {
+        setValue('store_id', myUser.store_id.toString());
         setDataStoreReady(true);
-      } else if (
-        nhostAuth?.user?.role &&
-        nhostAuth?.user?.role !== UserRolesEnum.administrator
-      ) {
+      } else if (!myUser.roles.includes(UserRolesEnum.administrator)) {
         Alert.alert(
           'Akun Anda Belum Terdaftar',
           'Akun anda belum terdaftar di store manapun! Silahkan kontak owner / admin untuk mendaftarkan akun anda ke penempatan toko sesuai.',
         );
       }
     }
-  }, [
-    isDataStoreReady,
-    nhostAuth.user?.role,
-    nhostAuth.user.store_id,
-    selectedStoreId,
-    setValue,
-  ]);
+  }, [isDataStoreReady, myUser, selectedStoreId, setValue]);
 
   return (
     <ScrollView
@@ -231,7 +220,7 @@ const Produk = ({navigation}: Props) => {
             <Heading fontSize="xl">
               List Semua Transaksi di Toko {dataStoreActive?.name}
             </Heading>
-            {nhostAuth?.user?.role === UserRolesEnum.administrator && (
+            {myUser.roles.includes(UserRolesEnum.administrator) && (
               <Button
                 onPress={() => setValue('show_modal_change_toko', true)}
                 size="sm"

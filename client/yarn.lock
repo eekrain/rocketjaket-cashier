@@ -745,6 +745,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.16.0":
+  version "7.17.9"
+  resolved "https://registry.npmmirror.com/@babel/runtime/-/runtime-7.17.9.tgz#d19fbf802d01a8cb6cf053a64e472d42c434ba72"
+  integrity sha512-lSiBBvodq29uShpWGNbgFdKYNiFDo5/HIYsaCEY9ff4sb10x9jizo2+pRrSyF4jKZCXqgzuqBOQKbUm90gQwJg==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.0.0", "@babel/template@^7.16.0", "@babel/template@^7.3.3":
   version "7.16.0"
   resolved "https://registry.npmmirror.com/@babel/template/download/@babel/template-7.16.0.tgz?cache=0&sync_timestamp=1635561347448&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40babel%2Ftemplate%2Fdownload%2F%40babel%2Ftemplate-7.16.0.tgz#d16a35ebf4cd74e202083356fab21dd89363ddd6"
@@ -1577,12 +1584,65 @@
   resolved "https://registry.npmmirror.com/@n1ru4l/graphql-live-query/download/@n1ru4l/graphql-live-query-0.9.0.tgz#defaebdd31f625bee49e6745934f36312532b2bc"
   integrity sha1-3vrr3TH2Jb7knmdFk082MSUysrw=
 
-"@nhost/react-apollo@1.1.3":
-  version "1.1.3"
-  resolved "https://registry.npmmirror.com/@nhost/react-apollo/download/@nhost/react-apollo-1.1.3.tgz#651b0e36c7ad21f8d84831572af4db0efc1ea8c1"
-  integrity sha1-ZRsONsetIfjYSDFXKvTbDvweqME=
+"@nhost/apollo@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.npmmirror.com/@nhost/apollo/-/apollo-0.4.0.tgz#41f12b2fc4047fec27a6002d78f508f12fa5c78c"
+  integrity sha512-s/kGInse3bFhHAQ+TLW5kZcsjCkB9EWAMJGnLeUQYF/BoVs43uZK7WnB0WkRkafKBe77NKGxDtHIe4tL2gFzMw==
   dependencies:
-    subscriptions-transport-ws "^0.9.19"
+    "@nhost/core" "^0.3.10"
+    graphql "16"
+    graphql-ws "^5.7.0"
+
+"@nhost/core@^0.3.10":
+  version "0.3.10"
+  resolved "https://registry.npmmirror.com/@nhost/core/-/core-0.3.10.tgz#c6ab6b524e60261565ce8ec9c17d3fb3b0853a21"
+  integrity sha512-ng71+36Utz16uMPK5MvIKeQRFVKv9jraDH6Uj/thX7iZQRV5I4mXVaTMwlyL8Jlk8PLxQmYV2c7Q8SB0qRPgKA==
+  dependencies:
+    axios "^0.25.0"
+    broadcast-channel "^4.10.0"
+    js-cookie "^3.0.1"
+    xstate "^4.30.5"
+
+"@nhost/hasura-auth-js@^1.0.11":
+  version "1.0.11"
+  resolved "https://registry.npmmirror.com/@nhost/hasura-auth-js/-/hasura-auth-js-1.0.11.tgz#03ca481d28af4c3a0919f9a5e0924c619fcbc076"
+  integrity sha512-IzVT7IHSr/KezMJnhGDfsVrUU7E6azqK1Fbilf8hKKmPxaYJniXpZDsAp+zgSUada4H+XaULwn9nIjlzl22jZQ==
+  dependencies:
+    "@nhost/core" "^0.3.10"
+
+"@nhost/hasura-storage-js@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.npmmirror.com/@nhost/hasura-storage-js/-/hasura-storage-js-0.2.0.tgz#e8c127d883d231313cd262553732da3b0dccb858"
+  integrity sha512-JumgUhnScU6Bv8SBmN2F4sY+LbrD3i25Ppr30Zjbv4MvbUguBclx9zzAwqub/P2n/azc7bjjRvYl2n2/jjKRXw==
+  dependencies:
+    axios "^0.21.1"
+
+"@nhost/nhost-js@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/@nhost/nhost-js/-/nhost-js-1.1.0.tgz#0ff96c10cbc95ce247ce5a8cb8e7106322ac2bd6"
+  integrity sha512-897rwGFeXTySwhlsPbyURtMTNha88vVORVM5URlsfgNajK9mhmrANUj5tLQ8dlivomf8fWrbyW1ieTZdulDiCA==
+  dependencies:
+    "@nhost/hasura-auth-js" "^1.0.11"
+    "@nhost/hasura-storage-js" "^0.2.0"
+    axios "^0.23.0"
+    jwt-decode "^3.1.2"
+    query-string "^7.0.1"
+
+"@nhost/react-apollo@^4.0.13":
+  version "4.0.13"
+  resolved "https://registry.npmmirror.com/@nhost/react-apollo/-/react-apollo-4.0.13.tgz#f79eee522c76db2d03c2bf1e67174a632e85ac7c"
+  integrity sha512-L3lTbFPFRm89cink9b08xhT50DbUe63llFW33nkO0ub2W4UDyMtYZszNhc+oJ3b7KNm30oH7sXggL2LXY75VMA==
+  dependencies:
+    "@nhost/apollo" "^0.4.0"
+
+"@nhost/react@^0.5.3":
+  version "0.5.3"
+  resolved "https://registry.npmmirror.com/@nhost/react/-/react-0.5.3.tgz#bb2ccb86de919f6b1aee5fd2ec6bf0bf1dafee6d"
+  integrity sha512-KRb7yOIHQDX+ErBaZq64EhF9OOpCGpgtETB3w/ODNkTnefCk5gr0uMnZzbvDfIXvvMJdQrsk2k1R7BslMZuSsw==
+  dependencies:
+    "@nhost/nhost-js" "^1.1.0"
+    "@xstate/react" "^2.0.1"
+    immer "^9.0.12"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -2801,11 +2861,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/jwt-decode@^2.2.1":
-  version "2.2.1"
-  resolved "https://registry.npm.taobao.org/@types/jwt-decode/download/@types/jwt-decode-2.2.1.tgz#afdf5c527fcfccbd4009b5fd02d1e18241f2d2f2"
-  integrity sha1-r99cUn/PzL1ACbX9AtHhgkHy0vI=
-
 "@types/lodash.has@^4.5.6":
   version "4.5.6"
   resolved "https://registry.nlark.com/@types/lodash.has/download/@types/lodash.has-4.5.6.tgz#d94d3f0b45ced2ae76d632080daf70e9b76e29eb"
@@ -3046,6 +3101,14 @@
   version "0.7.5"
   resolved "https://registry.nlark.com/@xmldom/xmldom/download/@xmldom/xmldom-0.7.5.tgz#09fa51e356d07d0be200642b0e4f91d8e6dd408d"
   integrity sha1-CfpR41bQfQviAGQrDk+R2ObdQI0=
+
+"@xstate/react@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.npmmirror.com/@xstate/react/-/react-2.0.1.tgz#2b4717369d419e78a6c67f2dfcd1a3be9abce2d9"
+  integrity sha512-sT3hxyzNBw+bm7uT3BP+uXzN0MnRqiaj/U9Yl4OYaMAUJXWsRvSA/ipL7EDf0gVLRGrRhJTCsC0cjWaduAAqnw==
+  dependencies:
+    use-isomorphic-layout-effect "^1.0.0"
+    use-subscription "^1.3.0"
 
 abab@^2.0.3, abab@^2.0.5:
   version "2.0.5"
@@ -3366,6 +3429,20 @@ axios@^0.21.1:
   dependencies:
     follow-redirects "^1.14.0"
 
+axios@^0.23.0:
+  version "0.23.0"
+  resolved "https://registry.npmmirror.com/axios/-/axios-0.23.0.tgz#b0fa5d0948a8d1d75e3d5635238b6c4625b05149"
+  integrity sha512-NmvAE4i0YAv5cKq8zlDoPd1VLKAqX5oLuZKs8xkJa4qi6RGn0uhCYFjWtHHC9EM/MwOwYWOs53W+V0aqEXq1sg==
+  dependencies:
+    follow-redirects "^1.14.4"
+
+axios@^0.25.0:
+  version "0.25.0"
+  resolved "https://registry.npmmirror.com/axios/-/axios-0.25.0.tgz#349cfbb31331a9b4453190791760a8d35b093e0a"
+  integrity sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==
+  dependencies:
+    follow-redirects "^1.14.7"
+
 babel-core@^7.0.0-bridge.0:
   version "7.0.0-bridge.0"
   resolved "https://registry.npm.taobao.org/babel-core/download/babel-core-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
@@ -3625,6 +3702,19 @@ braces@^3.0.1, braces@~3.0.2:
   integrity sha1-NFThpGLujVmeI23zNs2epPiv4Qc=
   dependencies:
     fill-range "^7.0.1"
+
+broadcast-channel@^4.10.0:
+  version "4.11.0"
+  resolved "https://registry.npmmirror.com/broadcast-channel/-/broadcast-channel-4.11.0.tgz#b9ebc7ce1326120088e61d2197477496908a1a9e"
+  integrity sha512-4FS1Zk+ttekfXHq5I2R7KhN9AsnZUFVV5SczrTtnZPuf5w+jw+fqM1PJHuHzwEXJezJeCbJxoZMDcFqsIN2c1Q==
+  dependencies:
+    "@babel/runtime" "^7.16.0"
+    detect-node "^2.1.0"
+    microtime "3.0.0"
+    oblivious-set "1.0.0"
+    p-queue "6.6.2"
+    rimraf "3.0.2"
+    unload "2.3.1"
 
 browser-process-hrtime@^1.0.0:
   version "1.0.0"
@@ -4446,6 +4536,11 @@ detect-newline@^3.0.0:
   resolved "https://registry.npmmirror.com/detect-newline/download/detect-newline-3.1.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fdetect-newline%2Fdownload%2Fdetect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha1-V29d/GOuGhkv8ZLYrTr2MImRtlE=
 
+detect-node@2.1.0, detect-node@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmmirror.com/detect-node/-/detect-node-2.1.0.tgz#c9c70775a49c3d03bc2c06d9a73be550f978f8b1"
+  integrity sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==
+
 diff-sequences@^26.6.2:
   version "26.6.2"
   resolved "https://registry.nlark.com/diff-sequences/download/diff-sequences-26.6.2.tgz#48ba99157de1923412eed41db6b6d4aa9ca7c0b1"
@@ -4906,6 +5001,11 @@ eventemitter3@^3.1.0:
   resolved "https://registry.npm.taobao.org/eventemitter3/download/eventemitter3-3.1.2.tgz#2d3d48f9c346698fce83a85d7d664e98535df6e7"
   integrity sha1-LT1I+cNGaY/Og6hdfWZOmFNd9uc=
 
+eventemitter3@^4.0.4:
+  version "4.0.7"
+  resolved "https://registry.npmmirror.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
+  integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
+
 exec-sh@^0.3.2:
   version "0.3.6"
   resolved "https://registry.nlark.com/exec-sh/download/exec-sh-0.3.6.tgz#ff264f9e325519a60cb5e273692943483cca63bc"
@@ -5214,6 +5314,11 @@ follow-redirects@^1.14.0:
   resolved "https://registry.npmmirror.com/follow-redirects/download/follow-redirects-1.14.5.tgz#f09a5848981d3c772b5392309778523f8d85c381"
   integrity sha1-8JpYSJgdPHcrU5Iwl3hSP42Fw4E=
 
+follow-redirects@^1.14.4, follow-redirects@^1.14.7:
+  version "1.14.9"
+  resolved "https://registry.npmmirror.com/follow-redirects/-/follow-redirects-1.14.9.tgz#dd4ea157de7bfaf9ea9b3fbd85aa16951f78d8d7"
+  integrity sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==
+
 for-in@^0.1.3:
   version "0.1.8"
   resolved "https://registry.nlark.com/for-in/download/for-in-0.1.8.tgz#d8773908e31256109952b1fdb9b3fa867d2775e1"
@@ -5490,6 +5595,16 @@ graphql-ws@^5.4.1:
   resolved "https://registry.npmmirror.com/graphql-ws/download/graphql-ws-5.5.5.tgz#f375486d3f196e2a2527b503644693ae3a8670a9"
   integrity sha1-83VIbT8ZbiolJ7UDZEaTrjqGcKk=
 
+graphql-ws@^5.7.0:
+  version "5.7.0"
+  resolved "https://registry.npmmirror.com/graphql-ws/-/graphql-ws-5.7.0.tgz#4b9d7a0ee9555804582f27f5d7695d10aafdbdc8"
+  integrity sha512-8yYuvnyqIjlJ/WfebOyu2GSOQeFauRxnfuTveY9yvrDGs2g3kR9Nv4gu40AKvRHbXlSJwTbMJ6dVxAtEyKwVRA==
+
+graphql@16:
+  version "16.3.0"
+  resolved "https://registry.npmmirror.com/graphql/-/graphql-16.3.0.tgz#a91e24d10babf9e60c706919bb182b53ccdffc05"
+  integrity sha512-xm+ANmA16BzCT5pLjuXySbQVFwH3oJctUVdy81w1sV0vBU0KgDdBGtxQOUd5zqOBk/JayAFeG8Dlmeq74rjm/A==
+
 graphql@^16.0.1:
   version "16.0.1"
   resolved "https://registry.npmmirror.com/graphql/download/graphql-16.0.1.tgz#93a13cd4e0e38ca8d0832e79614c8578bfd34f10"
@@ -5694,6 +5809,11 @@ image-size@^0.6.0:
   version "0.6.3"
   resolved "https://registry.npm.taobao.org/image-size/download/image-size-0.6.3.tgz#e7e5c65bb534bd7cdcedd6cb5166272a85f75fb2"
   integrity sha1-5+XGW7U0vXzc7dbLUWYnKoX3X7I=
+
+immer@^9.0.12:
+  version "9.0.12"
+  resolved "https://registry.npmmirror.com/immer/-/immer-9.0.12.tgz#2d33ddf3ee1d247deab9d707ca472c8c942a0f20"
+  integrity sha512-lk7UNmSbAukB5B6dh9fnh5D0bJTOFKxVg2cyJWTYrWRfhLrLMBquONcUs3aFq507hNoIZEDDh8lb8UtOizSMhA==
 
 immutable@~3.7.6:
   version "3.7.6"
@@ -6612,6 +6732,11 @@ joi@^17.2.1:
     "@sideway/formula" "^3.0.0"
     "@sideway/pinpoint" "^2.0.0"
 
+js-cookie@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.npmmirror.com/js-cookie/-/js-cookie-3.0.1.tgz#9e39b4c6c2f56563708d7d31f6f5f21873a92414"
+  integrity sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==
+
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.nlark.com/js-tokens/download/js-tokens-4.0.0.tgz?cache=0&sync_timestamp=1619346044390&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fjs-tokens%2Fdownload%2Fjs-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
@@ -6833,10 +6958,10 @@ jws@^3.2.2:
     jwa "^1.4.1"
     safe-buffer "^5.0.1"
 
-jwt-decode@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.npm.taobao.org/jwt-decode/download/jwt-decode-2.2.0.tgz#7d86bd56679f58ce6a84704a657dd392bba81a79"
-  integrity sha1-fYa9VmefWM5qhHBKZX3TkruoGnk=
+jwt-decode@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.npmmirror.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
+  integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
 
 keyv@^3.0.0:
   version "3.1.0"
@@ -7567,6 +7692,14 @@ micromatch@^4.0.2, micromatch@^4.0.4:
     braces "^3.0.1"
     picomatch "^2.2.3"
 
+microtime@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmmirror.com/microtime/-/microtime-3.0.0.tgz#d140914bde88aa89b4f9fd2a18620b435af0f39b"
+  integrity sha512-SirJr7ZL4ow2iWcb54bekS4aWyBQNVcEDBiwAz9D/sTgY59A+uE8UJU15cp5wyZmPBwg/3zf8lyCJ5NUe1nVlQ==
+  dependencies:
+    node-addon-api "^1.2.0"
+    node-gyp-build "^3.8.0"
+
 mime-db@1.50.0, "mime-db@>= 1.43.0 < 2":
   version "1.50.0"
   resolved "https://registry.nlark.com/mime-db/download/mime-db-1.50.0.tgz?cache=0&sync_timestamp=1631863244447&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fmime-db%2Fdownload%2Fmime-db-1.50.0.tgz#abd4ac94e98d3c0e185016c67ab45d5fde40c11f"
@@ -7757,16 +7890,6 @@ neo-async@^2.5.0:
   resolved "https://registry.npm.taobao.org/neo-async/download/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha1-tKr7k+OustgXTKU88WOrfXMIMF8=
 
-nhost-js-sdk@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.npmmirror.com/nhost-js-sdk/download/nhost-js-sdk-3.1.0.tgz#3c9cefe6a6184b91bacf7c97d68444b520ed0d71"
-  integrity sha1-PJzv5qYYS5G6z3yX1oREtSDtDXE=
-  dependencies:
-    "@types/jwt-decode" "^2.2.1"
-    axios "^0.21.1"
-    jwt-decode "^2.2.0"
-    query-string "^6.13.1"
-
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.nlark.com/nice-try/download/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
@@ -7784,6 +7907,11 @@ nocache@^2.1.0:
   version "2.1.0"
   resolved "https://registry.nlark.com/nocache/download/nocache-2.1.0.tgz#120c9ffec43b5729b1d5de88cd71aa75a0ba491f"
   integrity sha1-Egyf/sQ7Vymx1d6IzXGqdaC6SR8=
+
+node-addon-api@^1.2.0:
+  version "1.7.2"
+  resolved "https://registry.npmmirror.com/node-addon-api/-/node-addon-api-1.7.2.tgz#3df30b95720b53c24e59948b49532b662444f54d"
+  integrity sha512-ibPK3iA+vaY1eEjESkQkM0BbCqFOaZMiXRTtdB0u7b4djtY6JnsjvPdUHVMg6xQt3B8fpTTWHI9A+ADjM9frzg==
 
 node-dir@^0.1.17:
   version "0.1.17"
@@ -7803,6 +7931,11 @@ node-fetch@^2.2.0, node-fetch@^2.6.0, node-fetch@^2.6.1, node-fetch@^2.6.5:
   integrity sha1-F1GnwBg06OFpd1hzLp77burfr4k=
   dependencies:
     whatwg-url "^5.0.0"
+
+node-gyp-build@^3.8.0:
+  version "3.9.0"
+  resolved "https://registry.npmmirror.com/node-gyp-build/-/node-gyp-build-3.9.0.tgz#53a350187dd4d5276750da21605d1cb681d09e25"
+  integrity sha512-zLcTg6P4AbcHPq465ZMFNXx7XpKKJh+7kkN699NiQWisR2uWYOWNWqRHAmbnmKiL4e9aLSlmy5U7rEMUXV59+A==
 
 node-int64@^0.4.0:
   version "0.4.0"
@@ -7994,6 +8127,11 @@ object.values@^1.1.4:
     define-properties "^1.1.3"
     es-abstract "^1.19.1"
 
+oblivious-set@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmmirror.com/oblivious-set/-/oblivious-set-1.0.0.tgz#c8316f2c2fb6ff7b11b6158db3234c49f733c566"
+  integrity sha512-z+pI07qxo4c2CulUHCDf9lcqDlMSo72N/4rLUpRXf6fu+q8vjt8y0xS+Tlf8NTJDdTXHbdeO1n3MlbctwEoXZw==
+
 on-finished@~2.3.0:
   version "2.3.0"
   resolved "https://registry.npm.taobao.org/on-finished/download/on-finished-2.3.0.tgz#20f1336481b083cd75337992a16971aa2d906947"
@@ -8147,6 +8285,21 @@ p-map@^2.0.0:
   version "2.1.0"
   resolved "https://registry.npmmirror.com/p-map/download/p-map-2.1.0.tgz?cache=0&sync_timestamp=1635931916150&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fp-map%2Fdownload%2Fp-map-2.1.0.tgz#310928feef9c9ecc65b68b17693018a665cea175"
   integrity sha1-MQko/u+cnsxltosXaTAYpmXOoXU=
+
+p-queue@6.6.2:
+  version "6.6.2"
+  resolved "https://registry.npmmirror.com/p-queue/-/p-queue-6.6.2.tgz#2068a9dcf8e67dd0ec3e7a2bcb76810faa85e426"
+  integrity sha512-RwFpb72c/BhQLEXIZ5K2e+AhgNVmIejGlTgiB9MzZ0e93GRvqZ7uSi0dvRF7/XIXDeNkra2fNHBxTyPDGySpjQ==
+  dependencies:
+    eventemitter3 "^4.0.4"
+    p-timeout "^3.2.0"
+
+p-timeout@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.npmmirror.com/p-timeout/-/p-timeout-3.2.0.tgz#c7e17abc971d2a7962ef83626b35d635acf23dfe"
+  integrity sha512-rhIwUycgwwKcP9yTOOFK/AKsAopjjCakVqLHePO3CC6Mir1Z99xT+R63jZxAT5lFZLa2inS5h+ZS2GvR99/FBg==
+  dependencies:
+    p-finally "^1.0.0"
 
 p-try@^2.0.0:
   version "2.2.0"
@@ -8458,20 +8611,20 @@ qrcode@^1.5.0:
     pngjs "^5.0.0"
     yargs "^15.3.1"
 
-query-string@^6.13.1:
-  version "6.14.1"
-  resolved "https://registry.nlark.com/query-string/download/query-string-6.14.1.tgz#7ac2dca46da7f309449ba0f86b1fd28255b0c86a"
-  integrity sha1-esLcpG2n8wlEm6D4ax/SglWwyGo=
+query-string@^7.0.0:
+  version "7.0.1"
+  resolved "https://registry.nlark.com/query-string/download/query-string-7.0.1.tgz#45bd149cf586aaa582dffc7ec7a8ad97dd02f75d"
+  integrity sha1-Rb0UnPWGqqWC3/x+x6itl90C910=
   dependencies:
     decode-uri-component "^0.2.0"
     filter-obj "^1.1.0"
     split-on-first "^1.0.0"
     strict-uri-encode "^2.0.0"
 
-query-string@^7.0.0:
-  version "7.0.1"
-  resolved "https://registry.nlark.com/query-string/download/query-string-7.0.1.tgz#45bd149cf586aaa582dffc7ec7a8ad97dd02f75d"
-  integrity sha1-Rb0UnPWGqqWC3/x+x6itl90C910=
+query-string@^7.0.1:
+  version "7.1.1"
+  resolved "https://registry.npmmirror.com/query-string/-/query-string-7.1.1.tgz#754620669db978625a90f635f12617c271a088e1"
+  integrity sha512-MplouLRDHBZSG9z7fpuAAcI7aAYjDLhtsiVZsevsfaHWDS2IDdORKbSd1kWUA+V4zyva/HZoSfpwnYMMQDhb0w==
   dependencies:
     decode-uri-component "^0.2.0"
     filter-obj "^1.1.0"
@@ -8540,6 +8693,11 @@ react-native-awesome-loading@^1.0.15:
   version "1.0.15"
   resolved "https://registry.npmmirror.com/react-native-awesome-loading/download/react-native-awesome-loading-1.0.15.tgz#9255ebe0be96af5268f6ad3490e5d866c91b9a2f"
   integrity sha1-klXr4L6Wr1Jo9q00kOXYZskbmi8=
+
+react-native-clean-project@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.npmmirror.com/react-native-clean-project/-/react-native-clean-project-4.0.1.tgz#c0e2b17eebf32a683aa67da45fe7932857166da7"
+  integrity sha512-B7rXdFC4bfA+Vv7lZ9bKS6cUDgqg04OR5D69sNnhheFBJQ1V04cIfJ1Fu0sbqRsIehqlOcySQRpp8tm7r7PvLQ==
 
 react-native-codegen@^0.0.7:
   version "0.0.7"
@@ -9054,17 +9212,17 @@ reusify@^1.0.4:
   resolved "https://registry.nlark.com/reusify/download/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
   integrity sha1-kNo4Kx4SbvwCFG6QhFqI2xKSXXY=
 
+rimraf@3.0.2, rimraf@^3.0.0, rimraf@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.nlark.com/rimraf/download/rimraf-3.0.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2Frimraf%2Fdownload%2Frimraf-3.0.2.tgz#f1a5402ba6220ad52cc1282bac1ae3aa49fd061a"
+  integrity sha1-8aVAK6YiCtUswSgrrBrjqkn9Bho=
+  dependencies:
+    glob "^7.1.3"
+
 rimraf@^2.5.4:
   version "2.7.1"
   resolved "https://registry.nlark.com/rimraf/download/rimraf-2.7.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2Frimraf%2Fdownload%2Frimraf-2.7.1.tgz#35797f13a7fdadc566142c29d4f07ccad483e3ec"
   integrity sha1-NXl/E6f9rcVmFCwp1PB8ytSD4+w=
-  dependencies:
-    glob "^7.1.3"
-
-rimraf@^3.0.0, rimraf@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.nlark.com/rimraf/download/rimraf-3.0.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2Frimraf%2Fdownload%2Frimraf-3.0.2.tgz#f1a5402ba6220ad52cc1282bac1ae3aa49fd061a"
-  integrity sha1-8aVAK6YiCtUswSgrrBrjqkn9Bho=
   dependencies:
     glob "^7.1.3"
 
@@ -9738,17 +9896,6 @@ subscriptions-transport-ws@^0.11.0:
     symbol-observable "^1.0.4"
     ws "^5.2.0 || ^6.0.0 || ^7.0.0"
 
-subscriptions-transport-ws@^0.9.19:
-  version "0.9.19"
-  resolved "https://registry.npmmirror.com/subscriptions-transport-ws/download/subscriptions-transport-ws-0.9.19.tgz?cache=0&sync_timestamp=1635915723069&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fsubscriptions-transport-ws%2Fdownload%2Fsubscriptions-transport-ws-0.9.19.tgz#10ca32f7e291d5ee8eb728b9c02e43c52606cdcf"
-  integrity sha1-EMoy9+KR1e6Otyi5wC5DxSYGzc8=
-  dependencies:
-    backo2 "^1.0.2"
-    eventemitter3 "^3.1.0"
-    iterall "^1.2.1"
-    symbol-observable "^1.0.4"
-    ws "^5.2.0 || ^6.0.0 || ^7.0.0"
-
 sudo-prompt@^9.0.0:
   version "9.2.1"
   resolved "https://registry.npm.taobao.org/sudo-prompt/download/sudo-prompt-9.2.1.tgz#77efb84309c9ca489527a4e749f287e6bdd52afd"
@@ -10172,6 +10319,14 @@ unixify@^1.0.0:
   dependencies:
     normalize-path "^2.1.1"
 
+unload@2.3.1:
+  version "2.3.1"
+  resolved "https://registry.npmmirror.com/unload/-/unload-2.3.1.tgz#9d16862d372a5ce5cb630ad1309c2fd6e35dacfe"
+  integrity sha512-MUZEiDqvAN9AIDRbbBnVYVvfcR6DrjCqeU2YQMmliFZl9uaBUjTkhuDQkBiyAy8ad5bx1TXVbqZ3gg7namsWjA==
+  dependencies:
+    "@babel/runtime" "^7.6.2"
+    detect-node "2.1.0"
+
 unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.nlark.com/unpipe/download/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
@@ -10223,12 +10378,22 @@ use-context-selector@1.3.7:
   resolved "https://registry.npmmirror.com/use-context-selector/download/use-context-selector-1.3.7.tgz#4e59270baa73417dcb0c5c6c124359fd0e8b3aaf"
   integrity sha1-TlknC6pzQX3LDFxsEkNZ/Q6LOq8=
 
+use-isomorphic-layout-effect@^1.0.0:
+  version "1.1.2"
+  resolved "https://registry.npmmirror.com/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.1.2.tgz#497cefb13d863d687b08477d9e5a164ad8c1a6fb"
+  integrity sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==
+
 use-subscription@^1.0.0:
   version "1.5.1"
   resolved "https://registry.npmmirror.com/use-subscription/download/use-subscription-1.5.1.tgz#73501107f02fad84c6dd57965beb0b75c68c42d1"
   integrity sha1-c1ARB/AvrYTG3VeWW+sLdcaMQtE=
   dependencies:
     object-assign "^4.1.1"
+
+use-subscription@^1.3.0:
+  version "1.6.0"
+  resolved "https://registry.npmmirror.com/use-subscription/-/use-subscription-1.6.0.tgz#86ace4f60675a4c360712975c4933ac95c7e7f35"
+  integrity sha512-0Y/cTLlZfw547tJhJMoRA16OUbVqRm6DmvGpiGbmLST6BIA5KU5cKlvlz8DVMrACnWpyEjCkgmhLatthP4jUbA==
 
 use@^3.1.0:
   version "3.1.1"
@@ -10554,6 +10719,11 @@ xmldoc@^1.1.2:
   integrity sha1-ZmbgKf4lRw1ZnNMOI/8NHtUEZtc=
   dependencies:
     sax "^1.2.1"
+
+xstate@^4.30.5:
+  version "4.31.0"
+  resolved "https://registry.npmmirror.com/xstate/-/xstate-4.31.0.tgz#039cf6f865dd9e104012eb76a14df757c988ec58"
+  integrity sha512-UK5m6OqUsTlPuKWkfRR5cR9/Yt7sysFyEg+PVIbEH9mwHSf9zuCvWO7rRvhBq7T+3pEXLKTEMfaqmLxl9Ob1pw==
 
 xtend@~4.0.1:
   version "4.0.2"

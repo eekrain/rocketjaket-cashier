@@ -20,12 +20,10 @@ import {
 } from '../../../graphql/gql-generated';
 import * as yup from 'yup';
 import {
-  auth,
+  useMyUser,
   getStorageFileUrlWImageTransform,
   getXHasuraContextHeader,
   renameFilenameWithAddedNanoid,
-  storage,
-  useNhostAuth,
 } from '../../../shared/utils';
 import {TOAST_TEMPLATE} from '../../../shared/constants';
 import {useForm} from 'react-hook-form';
@@ -75,7 +73,7 @@ const ProfileScreen = ({route, navigation}: IProfileScreenProps) => {
   const myAppState = useMyAppState();
   const [isErrorOnce, setErrorOnce] = useState(false);
   const [isDataReady, setDataReady] = useState(false);
-  const nhostAuth = useNhostAuth();
+  const myUser = useMyUser();
   const {
     watch,
     handleSubmit,
@@ -95,11 +93,11 @@ const ProfileScreen = ({route, navigation}: IProfileScreenProps) => {
   // );
 
   console.log(
-    '🚀 ~ file: index.tsx ~ line 99 ~ ProfileScreen ~ nhostAuth.user.userId',
-    nhostAuth.user.userId,
+    '🚀 ~ file: index.tsx ~ line 99 ~ ProfileScreen ~ myUser.id',
+    myUser.id,
   );
   const getDataUser = useUser_GetUserByIdQuery({
-    variables: {id: nhostAuth.user.userId},
+    variables: {id: myUser.id},
     fetchPolicy: 'network-only',
   });
 
@@ -149,78 +147,75 @@ const ProfileScreen = ({route, navigation}: IProfileScreenProps) => {
     });
 
   const handleSubmission = async (data: IDefaultValues) => {
-    console.log(
-      '🚀 ~ file: index.tsx ~ line 150 ~ handleSubmission ~ data',
-      data,
-    );
-    let photo_url = '';
-    if (data?.photo?.asset?.uri) {
-      const finalFileName = renameFilenameWithAddedNanoid(
-        dataUserFetched?.id as string,
-        data?.photo?.asset?.uri,
-      );
-      const image = {
-        type: data?.photo?.asset.type,
-        uri: data?.photo?.asset.uri,
-        name: finalFileName.modifiedName,
-      };
-
-      const res = await storage
-        .put(`/user/photo/${finalFileName.modifiedName}`, image)
-        .catch(error => {
-          console.log(
-            '🚀 ~ file: index.tsx ~ line 170 ~ handleSubmission - storage.put ~ error',
-            error,
-          );
-        });
-
-      if (res?.key && data.photo.current_avatar_url !== '') {
-        nhostAuth.updateUserData({photoURL: res?.key});
-        await storage
-          .delete(`/${data.photo.current_avatar_url}`)
-          .catch(error => {
-            console.log(
-              '🚀 ~ file: index.tsx ~ line 177 ~ handleSubmission - storage.delete ~ error',
-              error,
-            );
-          });
-      }
-      photo_url = res?.key ? res.key : 'error key undefined';
-    } else {
-      photo_url = data.photo.current_avatar_url;
-    }
-
-    if (!isDirty) {
-      toast.show({
-        ...TOAST_TEMPLATE.cancelled('Data user tidak ada yang diubah.'),
-      });
-      return;
-    }
-    const res = await updateUserMutation({
-      variables: {
-        user_id: nhostAuth.user.userId,
-        update_user: {
-          avatar_url: photo_url,
-          display_name: data.display_name,
-        },
-      },
-    });
-    if (res.errors) {
-      toast.show({
-        ...TOAST_TEMPLATE.error(
-          `Gagal update user ${res.data?.update_users_by_pk?.display_name}.`,
-        ),
-      });
-    } else {
-      nhostAuth.updateUserData({
-        displayName: data.display_name,
-      });
-      toast.show({
-        ...TOAST_TEMPLATE.success(
-          `Berhasil update user ${res.data?.update_users_by_pk?.display_name}.`,
-        ),
-      });
-    }
+    // console.log(
+    //   '🚀 ~ file: index.tsx ~ line 150 ~ handleSubmission ~ data',
+    //   data,
+    // );
+    // let photo_url = '';
+    // if (data?.photo?.asset?.uri) {
+    //   const finalFileName = renameFilenameWithAddedNanoid(
+    //     dataUserFetched?.id as string,
+    //     data?.photo?.asset?.uri,
+    //   );
+    //   const image = {
+    //     type: data?.photo?.asset.type,
+    //     uri: data?.photo?.asset.uri,
+    //     name: finalFileName.modifiedName,
+    //   };
+    //   const res = await storage
+    //     .put(`/user/photo/${finalFileName.modifiedName}`, image)
+    //     .catch(error => {
+    //       console.log(
+    //         '🚀 ~ file: index.tsx ~ line 170 ~ handleSubmission - storage.put ~ error',
+    //         error,
+    //       );
+    //     });
+    //   if (res?.key && data.photo.current_avatar_url !== '') {
+    //     nhostAuth.updateUserData({photoURL: res?.key});
+    //     await storage
+    //       .delete(`/${data.photo.current_avatar_url}`)
+    //       .catch(error => {
+    //         console.log(
+    //           '🚀 ~ file: index.tsx ~ line 177 ~ handleSubmission - storage.delete ~ error',
+    //           error,
+    //         );
+    //       });
+    //   }
+    //   photo_url = res?.key ? res.key : 'error key undefined';
+    // } else {
+    //   photo_url = data.photo.current_avatar_url;
+    // }
+    // if (!isDirty) {
+    //   toast.show({
+    //     ...TOAST_TEMPLATE.cancelled('Data user tidak ada yang diubah.'),
+    //   });
+    //   return;
+    // }
+    // const res = await updateUserMutation({
+    //   variables: {
+    //     user_id: nhostAuth.user.userId,
+    //     update_user: {
+    //       avatar_url: photo_url,
+    //       display_name: data.display_name,
+    //     },
+    //   },
+    // });
+    // if (res.errors) {
+    //   toast.show({
+    //     ...TOAST_TEMPLATE.error(
+    //       `Gagal update user ${res.data?.update_users_by_pk?.display_name}.`,
+    //     ),
+    //   });
+    // } else {
+    //   nhostAuth.updateUserData({
+    //     displayName: data.display_name,
+    //   });
+    //   toast.show({
+    //     ...TOAST_TEMPLATE.success(
+    //       `Berhasil update user ${res.data?.update_users_by_pk?.display_name}.`,
+    //     ),
+    //   });
+    // }
   };
 
   React.useEffect(() => {
@@ -313,9 +308,9 @@ const ProfileScreen = ({route, navigation}: IProfileScreenProps) => {
                             w: 150,
                             q: 60,
                           }),
-                      headers: {
-                        authorization: `Bearer ${auth.getJWTToken()}`,
-                      },
+                      // headers: {
+                      //   authorization: `Bearer ${auth.getJWTToken()}`,
+                      // },
                     }}
                     fallbackText={dataUserFetched?.display_name || ''}
                     size={150}
