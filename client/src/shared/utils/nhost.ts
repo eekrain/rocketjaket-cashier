@@ -8,7 +8,10 @@ import {createTrackedSelector} from 'react-tracked';
 import {NHOST_BACKEND_URL} from '@env';
 
 export const nhost = new NhostClient({
-  backendUrl: NHOST_BACKEND_URL,
+  backendUrl: 'NHOST_BACKEND_URL',
+  clientStorage: AsyncStorage,
+  clientStorageType: 'react-native',
+  autoLogin: false,
 });
 
 interface IGetXHasuraRoleHeader {

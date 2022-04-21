@@ -37,8 +37,13 @@ import {
   myNotifeeActions,
   onDisplayNotification,
   useMyUser,
+  nhost,
 } from './src/shared/utils';
 import {useNavigationContainerRef} from '@react-navigation/native';
+
+import {NhostApolloProvider} from '@nhost/react-apollo';
+import {NhostReactProvider} from '@nhost/react';
+import MyNativeBaseProvider from './src/components/MyNativeBaseProvider';
 
 const appPermission = async () => {
   checkMultiple([
@@ -145,47 +150,6 @@ const linking: LinkingOptions<AppNavigationParamList> = {
   },
 };
 
-const App = () => {
-  useEffect(() => {
-    appPermission();
-  }, []);
-
-  const authStatus = useAuthenticationStatus();
-
-  const [loadingSplashScreen, setLoadingSplashScreen] = useState(true);
-  const loading = useMemo(
-    () => authStatus.isLoading || loadingSplashScreen,
-    [authStatus, loadingSplashScreen],
-  );
-
-  useEffect(() => {
-    const splash = setTimeout(() => {
-      setLoadingSplashScreen(false);
-    }, 1000);
-
-    return () => {
-      clearTimeout(splash);
-    };
-  });
-  if (loading) {
-    return <SplashScreen />;
-  }
-
-  return (
-    <NavigationContainer<AppNavigationParamList> linking={linking}>
-      {!loading && authStatus.isAuthenticated ? (
-        <>
-          <MyNotifee />
-          <AppNavigation />
-        </>
-      ) : (
-        <AuthNavigation />
-      )}
-    </NavigationContainer>
-  );
-};
-export default App;
-
 interface MyNotifeeProps {}
 
 const MyNotifee = ({}: MyNotifeeProps) => {
@@ -254,3 +218,50 @@ const MyNotifee = ({}: MyNotifeeProps) => {
 
   return null;
 };
+
+const App = () => {
+  useEffect(() => {
+    appPermission();
+  }, []);
+
+  const authStatus = useAuthenticationStatus();
+
+  const [loadingSplashScreen, setLoadingSplashScreen] = useState(true);
+  const loading = useMemo(
+    () => authStatus.isLoading || loadingSplashScreen,
+    [authStatus, loadingSplashScreen],
+  );
+
+  useEffect(() => {
+    const splash = setTimeout(() => {
+      setLoadingSplashScreen(false);
+    }, 1000);
+
+    return () => {
+      clearTimeout(splash);
+    };
+  });
+  if (loading) {
+    return <SplashScreen />;
+  }
+
+  return (
+    <MyNativeBaseProvider>
+      <NhostReactProvider nhost={nhost}>
+        <NhostApolloProvider nhost={nhost}>
+          <NavigationContainer<AppNavigationParamList> linking={linking}>
+            {!loading && authStatus.isAuthenticated ? (
+              <>
+                <MyNotifee />
+                <AppNavigation />
+              </>
+            ) : (
+              <AuthNavigation />
+            )}
+          </NavigationContainer>
+        </NhostApolloProvider>
+      </NhostReactProvider>
+    </MyNativeBaseProvider>
+  );
+};
+export default App;
