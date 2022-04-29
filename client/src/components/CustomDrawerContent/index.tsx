@@ -21,10 +21,6 @@ interface Props extends DrawerContentComponentProps {}
 
 const CustomDrawerContent = (props: Props) => {
   const myUser = useMyUser();
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 24 ~ CustomDrawerContent ~ myUser',
-    myUser.roles,
-  );
 
   const routeItem = useCallback(
     (route: IAppRoutes, index: number) => {

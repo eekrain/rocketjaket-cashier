@@ -1806,6 +1806,10 @@ export type Mutation_Root = {
   deleteUser?: Maybe<Users>;
   /** delete data from the table: "auth.users" */
   deleteUsers?: Maybe<Users_Mutation_Response>;
+  /** delete data from the table: "store" */
+  delete_store?: Maybe<Store_Mutation_Response>;
+  /** delete single row from the table: "store" */
+  delete_store_by_pk?: Maybe<Store>;
   /** delete data from the table: "users_metadata" */
   delete_users_metadata?: Maybe<Users_Metadata_Mutation_Response>;
   /** delete single row from the table: "users_metadata" */
@@ -1846,6 +1850,10 @@ export type Mutation_Root = {
   insertUser?: Maybe<Users>;
   /** insert data into the table: "auth.users" */
   insertUsers?: Maybe<Users_Mutation_Response>;
+  /** insert data into the table: "store" */
+  insert_store?: Maybe<Store_Mutation_Response>;
+  /** insert a single row into the table: "store" */
+  insert_store_one?: Maybe<Store>;
   /** insert data into the table: "users_metadata" */
   insert_users_metadata?: Maybe<Users_Metadata_Mutation_Response>;
   /** insert a single row into the table: "users_metadata" */
@@ -1886,6 +1894,10 @@ export type Mutation_Root = {
   updateUser?: Maybe<Users>;
   /** update data of the table: "auth.users" */
   updateUsers?: Maybe<Users_Mutation_Response>;
+  /** update data of the table: "store" */
+  update_store?: Maybe<Store_Mutation_Response>;
+  /** update single row of the table: "store" */
+  update_store_by_pk?: Maybe<Store>;
   /** update data of the table: "users_metadata" */
   update_users_metadata?: Maybe<Users_Metadata_Mutation_Response>;
   /** update single row of the table: "users_metadata" */
@@ -1998,6 +2010,18 @@ export type Mutation_RootDeleteUserArgs = {
 /** mutation root */
 export type Mutation_RootDeleteUsersArgs = {
   where: Users_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_StoreArgs = {
+  where: Store_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Store_By_PkArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -2136,6 +2160,20 @@ export type Mutation_RootInsertUserArgs = {
 export type Mutation_RootInsertUsersArgs = {
   objects: Array<Users_Insert_Input>;
   on_conflict?: InputMaybe<Users_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_StoreArgs = {
+  objects: Array<Store_Insert_Input>;
+  on_conflict?: InputMaybe<Store_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Store_OneArgs = {
+  object: Store_Insert_Input;
+  on_conflict?: InputMaybe<Store_On_Conflict>;
 };
 
 
@@ -2294,6 +2332,22 @@ export type Mutation_RootUpdateUsersArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_StoreArgs = {
+  _inc?: InputMaybe<Store_Inc_Input>;
+  _set?: InputMaybe<Store_Set_Input>;
+  where: Store_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Store_By_PkArgs = {
+  _inc?: InputMaybe<Store_Inc_Input>;
+  _set?: InputMaybe<Store_Set_Input>;
+  pk_columns: Store_Pk_Columns_Input;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_Users_MetadataArgs = {
   _inc?: InputMaybe<Users_Metadata_Inc_Input>;
   _set?: InputMaybe<Users_Metadata_Set_Input>;
@@ -2374,6 +2428,12 @@ export type Query_Root = {
   files: Array<Files>;
   /** fetch aggregated fields from the table: "storage.files" */
   filesAggregate: Files_Aggregate;
+  /** fetch data from the table: "store" */
+  store: Array<Store>;
+  /** fetch aggregated fields from the table: "store" */
+  store_aggregate: Store_Aggregate;
+  /** fetch data from the table: "store" using primary key columns */
+  store_by_pk?: Maybe<Store>;
   /** fetch data from the table: "auth.users" using primary key columns */
   user?: Maybe<Users>;
   /** fetch aggregated fields from the table: "auth.users" */
@@ -2573,6 +2633,29 @@ export type Query_RootFilesAggregateArgs = {
 };
 
 
+export type Query_RootStoreArgs = {
+  distinct_on?: InputMaybe<Array<Store_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Store_Order_By>>;
+  where?: InputMaybe<Store_Bool_Exp>;
+};
+
+
+export type Query_RootStore_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Store_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Store_Order_By>>;
+  where?: InputMaybe<Store_Bool_Exp>;
+};
+
+
+export type Query_RootStore_By_PkArgs = {
+  id: Scalars['Int'];
+};
+
+
 export type Query_RootUserArgs = {
   id: Scalars['uuid'];
 };
@@ -2616,6 +2699,237 @@ export type Query_RootUsers_Metadata_AggregateArgs = {
 
 export type Query_RootUsers_Metadata_By_PkArgs = {
   id: Scalars['uuid'];
+};
+
+/** columns and relationships of "store" */
+export type Store = {
+  __typename?: 'store';
+  address: Scalars['String'];
+  created_at: Scalars['timestamptz'];
+  id: Scalars['Int'];
+  latitude: Scalars['String'];
+  longitude: Scalars['String'];
+  name: Scalars['String'];
+  updated_at: Scalars['timestamptz'];
+};
+
+/** aggregated selection of "store" */
+export type Store_Aggregate = {
+  __typename?: 'store_aggregate';
+  aggregate?: Maybe<Store_Aggregate_Fields>;
+  nodes: Array<Store>;
+};
+
+/** aggregate fields of "store" */
+export type Store_Aggregate_Fields = {
+  __typename?: 'store_aggregate_fields';
+  avg?: Maybe<Store_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Store_Max_Fields>;
+  min?: Maybe<Store_Min_Fields>;
+  stddev?: Maybe<Store_Stddev_Fields>;
+  stddev_pop?: Maybe<Store_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Store_Stddev_Samp_Fields>;
+  sum?: Maybe<Store_Sum_Fields>;
+  var_pop?: Maybe<Store_Var_Pop_Fields>;
+  var_samp?: Maybe<Store_Var_Samp_Fields>;
+  variance?: Maybe<Store_Variance_Fields>;
+};
+
+
+/** aggregate fields of "store" */
+export type Store_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Store_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** aggregate avg on columns */
+export type Store_Avg_Fields = {
+  __typename?: 'store_avg_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** Boolean expression to filter rows from the table "store". All fields are combined with a logical 'AND'. */
+export type Store_Bool_Exp = {
+  _and?: InputMaybe<Array<Store_Bool_Exp>>;
+  _not?: InputMaybe<Store_Bool_Exp>;
+  _or?: InputMaybe<Array<Store_Bool_Exp>>;
+  address?: InputMaybe<String_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Int_Comparison_Exp>;
+  latitude?: InputMaybe<String_Comparison_Exp>;
+  longitude?: InputMaybe<String_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "store" */
+export enum Store_Constraint {
+  /** unique or primary key constraint */
+  StoreNameKey = 'store_name_key',
+  /** unique or primary key constraint */
+  StorePkey = 'store_pkey'
+}
+
+/** input type for incrementing numeric columns in table "store" */
+export type Store_Inc_Input = {
+  id?: InputMaybe<Scalars['Int']>;
+};
+
+/** input type for inserting data into table "store" */
+export type Store_Insert_Input = {
+  address?: InputMaybe<Scalars['String']>;
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['Int']>;
+  latitude?: InputMaybe<Scalars['String']>;
+  longitude?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate max on columns */
+export type Store_Max_Fields = {
+  __typename?: 'store_max_fields';
+  address?: Maybe<Scalars['String']>;
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['Int']>;
+  latitude?: Maybe<Scalars['String']>;
+  longitude?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  updated_at?: Maybe<Scalars['timestamptz']>;
+};
+
+/** aggregate min on columns */
+export type Store_Min_Fields = {
+  __typename?: 'store_min_fields';
+  address?: Maybe<Scalars['String']>;
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['Int']>;
+  latitude?: Maybe<Scalars['String']>;
+  longitude?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  updated_at?: Maybe<Scalars['timestamptz']>;
+};
+
+/** response of any mutation on the table "store" */
+export type Store_Mutation_Response = {
+  __typename?: 'store_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Store>;
+};
+
+/** on_conflict condition type for table "store" */
+export type Store_On_Conflict = {
+  constraint: Store_Constraint;
+  update_columns?: Array<Store_Update_Column>;
+  where?: InputMaybe<Store_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "store". */
+export type Store_Order_By = {
+  address?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: store */
+export type Store_Pk_Columns_Input = {
+  id: Scalars['Int'];
+};
+
+/** select columns of table "store" */
+export enum Store_Select_Column {
+  /** column name */
+  Address = 'address',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** input type for updating data in table "store" */
+export type Store_Set_Input = {
+  address?: InputMaybe<Scalars['String']>;
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['Int']>;
+  latitude?: InputMaybe<Scalars['String']>;
+  longitude?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate stddev on columns */
+export type Store_Stddev_Fields = {
+  __typename?: 'store_stddev_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Store_Stddev_Pop_Fields = {
+  __typename?: 'store_stddev_pop_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Store_Stddev_Samp_Fields = {
+  __typename?: 'store_stddev_samp_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate sum on columns */
+export type Store_Sum_Fields = {
+  __typename?: 'store_sum_fields';
+  id?: Maybe<Scalars['Int']>;
+};
+
+/** update columns of table "store" */
+export enum Store_Update_Column {
+  /** column name */
+  Address = 'address',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** aggregate var_pop on columns */
+export type Store_Var_Pop_Fields = {
+  __typename?: 'store_var_pop_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate var_samp on columns */
+export type Store_Var_Samp_Fields = {
+  __typename?: 'store_var_samp_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate variance on columns */
+export type Store_Variance_Fields = {
+  __typename?: 'store_variance_fields';
+  id?: Maybe<Scalars['Float']>;
 };
 
 export type Subscription_Root = {
@@ -2668,6 +2982,12 @@ export type Subscription_Root = {
   files: Array<Files>;
   /** fetch aggregated fields from the table: "storage.files" */
   filesAggregate: Files_Aggregate;
+  /** fetch data from the table: "store" */
+  store: Array<Store>;
+  /** fetch aggregated fields from the table: "store" */
+  store_aggregate: Store_Aggregate;
+  /** fetch data from the table: "store" using primary key columns */
+  store_by_pk?: Maybe<Store>;
   /** fetch data from the table: "auth.users" using primary key columns */
   user?: Maybe<Users>;
   /** fetch aggregated fields from the table: "auth.users" */
@@ -2864,6 +3184,29 @@ export type Subscription_RootFilesAggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Files_Order_By>>;
   where?: InputMaybe<Files_Bool_Exp>;
+};
+
+
+export type Subscription_RootStoreArgs = {
+  distinct_on?: InputMaybe<Array<Store_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Store_Order_By>>;
+  where?: InputMaybe<Store_Bool_Exp>;
+};
+
+
+export type Subscription_RootStore_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Store_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Store_Order_By>>;
+  where?: InputMaybe<Store_Bool_Exp>;
+};
+
+
+export type Subscription_RootStore_By_PkArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -3244,7 +3587,7 @@ export type Users_Max_Order_By = {
 export type Users_Metadata = {
   __typename?: 'users_metadata';
   id: Scalars['uuid'];
-  store_id: Scalars['Int'];
+  store_id?: Maybe<Scalars['Int']>;
   /** An object relationship */
   user: Users;
   user_id: Scalars['uuid'];
@@ -3764,6 +4107,40 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
+export type Store_CreateStoreMutationVariables = Exact<{
+  store?: InputMaybe<Store_Insert_Input>;
+}>;
+
+
+export type Store_CreateStoreMutation = { __typename?: 'mutation_root', insert_store_one?: { __typename?: 'store', id: number, name: string } | null };
+
+export type Store_DeleteStoreByPkMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type Store_DeleteStoreByPkMutation = { __typename?: 'mutation_root', delete_store_by_pk?: { __typename?: 'store', id: number, name: string } | null };
+
+export type Store_UpdateStoreMutationVariables = Exact<{
+  store: Store_Set_Input;
+  store_id: Scalars['Int'];
+}>;
+
+
+export type Store_UpdateStoreMutation = { __typename?: 'mutation_root', update_store_by_pk?: { __typename?: 'store', id: number, name: string } | null };
+
+export type Store_GetAllStoreQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type Store_GetAllStoreQuery = { __typename?: 'query_root', store: Array<{ __typename?: 'store', id: number, name: string, address: string, latitude: string, longitude: string }> };
+
+export type Store_GetStoreByPkQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type Store_GetStoreByPkQuery = { __typename?: 'query_root', store_by_pk?: { __typename?: 'store', id: number, name: string, latitude: string, longitude: string, address: string, created_at: any, updated_at: any } | null };
+
 export type User_UpdateUserByUserIdMutationVariables = Exact<{
   id?: InputMaybe<Scalars['uuid']>;
   _set?: InputMaybe<Users_Set_Input>;
@@ -3777,17 +4154,204 @@ export type User_GetUserByIdQueryVariables = Exact<{
 }>;
 
 
-export type User_GetUserByIdQuery = { __typename?: 'query_root', user?: { __typename?: 'users', avatarUrl: string, defaultRole: string, displayName: string, email?: any | null, emailVerified: boolean, id: any, newEmail?: any | null, users_metadata: Array<{ __typename?: 'users_metadata', store_id: number }> } | null };
+export type User_GetUserByIdQuery = { __typename?: 'query_root', user?: { __typename?: 'users', avatarUrl: string, defaultRole: string, displayName: string, email?: any | null, emailVerified: boolean, id: any, newEmail?: any | null, users_metadata: Array<{ __typename?: 'users_metadata', store_id?: number | null }> } | null };
 
 export const namedOperations = {
   Query: {
+    Store_GetAllStore: 'Store_GetAllStore',
+    Store_GetStoreByPK: 'Store_GetStoreByPK',
     User_GetUserById: 'User_GetUserById'
   },
   Mutation: {
+    Store_CreateStore: 'Store_CreateStore',
+    Store_DeleteStoreByPK: 'Store_DeleteStoreByPK',
+    Store_UpdateStore: 'Store_UpdateStore',
     User_UpdateUserByUserId: 'User_UpdateUserByUserId'
   }
 }
 
+export const Store_CreateStoreDocument = gql`
+    mutation Store_CreateStore($store: store_insert_input = {}) {
+  insert_store_one(object: $store) {
+    id
+    name
+  }
+}
+    `;
+export type Store_CreateStoreMutationFn = Apollo.MutationFunction<Store_CreateStoreMutation, Store_CreateStoreMutationVariables>;
+
+/**
+ * __useStore_CreateStoreMutation__
+ *
+ * To run a mutation, you first call `useStore_CreateStoreMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStore_CreateStoreMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [storeCreateStoreMutation, { data, loading, error }] = useStore_CreateStoreMutation({
+ *   variables: {
+ *      store: // value for 'store'
+ *   },
+ * });
+ */
+export function useStore_CreateStoreMutation(baseOptions?: Apollo.MutationHookOptions<Store_CreateStoreMutation, Store_CreateStoreMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Store_CreateStoreMutation, Store_CreateStoreMutationVariables>(Store_CreateStoreDocument, options);
+      }
+export type Store_CreateStoreMutationHookResult = ReturnType<typeof useStore_CreateStoreMutation>;
+export type Store_CreateStoreMutationResult = Apollo.MutationResult<Store_CreateStoreMutation>;
+export type Store_CreateStoreMutationOptions = Apollo.BaseMutationOptions<Store_CreateStoreMutation, Store_CreateStoreMutationVariables>;
+export const Store_DeleteStoreByPkDocument = gql`
+    mutation Store_DeleteStoreByPK($id: Int!) {
+  delete_store_by_pk(id: $id) {
+    id
+    name
+  }
+}
+    `;
+export type Store_DeleteStoreByPkMutationFn = Apollo.MutationFunction<Store_DeleteStoreByPkMutation, Store_DeleteStoreByPkMutationVariables>;
+
+/**
+ * __useStore_DeleteStoreByPkMutation__
+ *
+ * To run a mutation, you first call `useStore_DeleteStoreByPkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStore_DeleteStoreByPkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [storeDeleteStoreByPkMutation, { data, loading, error }] = useStore_DeleteStoreByPkMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useStore_DeleteStoreByPkMutation(baseOptions?: Apollo.MutationHookOptions<Store_DeleteStoreByPkMutation, Store_DeleteStoreByPkMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Store_DeleteStoreByPkMutation, Store_DeleteStoreByPkMutationVariables>(Store_DeleteStoreByPkDocument, options);
+      }
+export type Store_DeleteStoreByPkMutationHookResult = ReturnType<typeof useStore_DeleteStoreByPkMutation>;
+export type Store_DeleteStoreByPkMutationResult = Apollo.MutationResult<Store_DeleteStoreByPkMutation>;
+export type Store_DeleteStoreByPkMutationOptions = Apollo.BaseMutationOptions<Store_DeleteStoreByPkMutation, Store_DeleteStoreByPkMutationVariables>;
+export const Store_UpdateStoreDocument = gql`
+    mutation Store_UpdateStore($store: store_set_input!, $store_id: Int!) {
+  update_store_by_pk(pk_columns: {id: $store_id}, _set: $store) {
+    id
+    name
+  }
+}
+    `;
+export type Store_UpdateStoreMutationFn = Apollo.MutationFunction<Store_UpdateStoreMutation, Store_UpdateStoreMutationVariables>;
+
+/**
+ * __useStore_UpdateStoreMutation__
+ *
+ * To run a mutation, you first call `useStore_UpdateStoreMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStore_UpdateStoreMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [storeUpdateStoreMutation, { data, loading, error }] = useStore_UpdateStoreMutation({
+ *   variables: {
+ *      store: // value for 'store'
+ *      store_id: // value for 'store_id'
+ *   },
+ * });
+ */
+export function useStore_UpdateStoreMutation(baseOptions?: Apollo.MutationHookOptions<Store_UpdateStoreMutation, Store_UpdateStoreMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Store_UpdateStoreMutation, Store_UpdateStoreMutationVariables>(Store_UpdateStoreDocument, options);
+      }
+export type Store_UpdateStoreMutationHookResult = ReturnType<typeof useStore_UpdateStoreMutation>;
+export type Store_UpdateStoreMutationResult = Apollo.MutationResult<Store_UpdateStoreMutation>;
+export type Store_UpdateStoreMutationOptions = Apollo.BaseMutationOptions<Store_UpdateStoreMutation, Store_UpdateStoreMutationVariables>;
+export const Store_GetAllStoreDocument = gql`
+    query Store_GetAllStore {
+  store {
+    id
+    name
+    address
+    latitude
+    longitude
+  }
+}
+    `;
+
+/**
+ * __useStore_GetAllStoreQuery__
+ *
+ * To run a query within a React component, call `useStore_GetAllStoreQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStore_GetAllStoreQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStore_GetAllStoreQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStore_GetAllStoreQuery(baseOptions?: Apollo.QueryHookOptions<Store_GetAllStoreQuery, Store_GetAllStoreQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Store_GetAllStoreQuery, Store_GetAllStoreQueryVariables>(Store_GetAllStoreDocument, options);
+      }
+export function useStore_GetAllStoreLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Store_GetAllStoreQuery, Store_GetAllStoreQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Store_GetAllStoreQuery, Store_GetAllStoreQueryVariables>(Store_GetAllStoreDocument, options);
+        }
+export type Store_GetAllStoreQueryHookResult = ReturnType<typeof useStore_GetAllStoreQuery>;
+export type Store_GetAllStoreLazyQueryHookResult = ReturnType<typeof useStore_GetAllStoreLazyQuery>;
+export type Store_GetAllStoreQueryResult = Apollo.QueryResult<Store_GetAllStoreQuery, Store_GetAllStoreQueryVariables>;
+export const Store_GetStoreByPkDocument = gql`
+    query Store_GetStoreByPK($id: Int!) {
+  store_by_pk(id: $id) {
+    id
+    name
+    latitude
+    longitude
+    address
+    created_at
+    updated_at
+  }
+}
+    `;
+
+/**
+ * __useStore_GetStoreByPkQuery__
+ *
+ * To run a query within a React component, call `useStore_GetStoreByPkQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStore_GetStoreByPkQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStore_GetStoreByPkQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useStore_GetStoreByPkQuery(baseOptions: Apollo.QueryHookOptions<Store_GetStoreByPkQuery, Store_GetStoreByPkQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Store_GetStoreByPkQuery, Store_GetStoreByPkQueryVariables>(Store_GetStoreByPkDocument, options);
+      }
+export function useStore_GetStoreByPkLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Store_GetStoreByPkQuery, Store_GetStoreByPkQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Store_GetStoreByPkQuery, Store_GetStoreByPkQueryVariables>(Store_GetStoreByPkDocument, options);
+        }
+export type Store_GetStoreByPkQueryHookResult = ReturnType<typeof useStore_GetStoreByPkQuery>;
+export type Store_GetStoreByPkLazyQueryHookResult = ReturnType<typeof useStore_GetStoreByPkLazyQuery>;
+export type Store_GetStoreByPkQueryResult = Apollo.QueryResult<Store_GetStoreByPkQuery, Store_GetStoreByPkQueryVariables>;
 export const User_UpdateUserByUserIdDocument = gql`
     mutation User_UpdateUserByUserId($id: uuid = "", $_set: users_set_input = {}) {
   updateUser(pk_columns: {id: $id}, _set: $_set) {
