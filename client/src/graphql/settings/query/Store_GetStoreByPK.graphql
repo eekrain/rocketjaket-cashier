@@ -1,0 +1,11 @@
+query Store_GetStoreByPK($id: Int!) {
+  store_by_pk(id: $id) {
+    id
+    name
+    latitude
+    longitude
+    address
+    created_at
+    updated_at
+  }
+}

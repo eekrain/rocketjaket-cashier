@@ -8,7 +8,7 @@ import DashboardScreen from './DashboardScreen';
 import ProfileScreen from './ProfileScreen';
 import CustomDrawerContent from '../../components/CustomDrawerContent';
 // import ProdukScreen, {rootProdukRoutes} from './ProdukScreen';
-// import SettingsScreen, {rootSettingsRoutes} from './SettingsScreen';
+import SettingsScreen, {rootSettingsRoutes} from './SettingsScreen';
 // import InventoryScreen, {rootInventoryRoutes} from './InventoryScreen';
 // import UserScreen, {rootUserRoutes} from './UserScreen';
 import {DrawerScreenProps} from '@react-navigation/drawer';
@@ -82,17 +82,17 @@ export const rootAppRoutes: IAppRoutes[] = [
   //   routeNiceName: 'Pengguna',
   //   role: ['administrator'],
   // },
-  // {
-  //   name: 'SettingsRoot',
-  //   component: SettingsScreen,
-  //   routeNiceName: 'Settings',
-  //   role: ['administrator'],
-  // },
+  {
+    name: 'SettingsRoot',
+    component: SettingsScreen,
+    routeNiceName: 'Settings',
+    role: ['administrator'],
+  },
 ];
 
 export const allAppRoutes = [
   ...rootAppRoutes,
-  // ...rootSettingsRoutes,
+  ...rootSettingsRoutes,
   // ...rootProdukRoutes,
   // ...rootInventoryRoutes,
   // ...rootUserRoutes,
