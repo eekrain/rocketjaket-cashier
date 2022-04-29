@@ -10,14 +10,12 @@ import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useChangePassword} from '@nhost/react';
 
 interface IDefaultValues {
-  oldPassword: string;
   newPassword: string;
   newPasswordConfirm: string;
 }
 
 const schema = yup
   .object({
-    oldPassword: yup.string().required('Password lama harus di isi'),
     newPassword: yup
       .string()
       .min(8, 'Minimal 8 karakter')
@@ -29,7 +27,6 @@ const schema = yup
   .required();
 
 const defaultValues: IDefaultValues = {
-  oldPassword: '',
   newPassword: '',
   newPasswordConfirm: '',
 };
@@ -87,13 +84,6 @@ const ChangePassword = ({}: Props) => {
         </Button>
       ) : (
         <>
-          <RHTextInput
-            type="password"
-            name="oldPassword"
-            control={control}
-            errors={errors}
-            label="Password Lama"
-          />
           <RHTextInput
             type="password"
             name="newPassword"

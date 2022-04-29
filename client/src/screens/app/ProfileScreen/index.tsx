@@ -290,11 +290,6 @@ const ProfileScreen = ({route, navigation}: IProfileScreenProps) => {
   //   userPhoto?.asset?.uri,
   // );
 
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 294 ~ ProfileScreen ~ myUser.avatarUrl',
-    myUser.avatarUrl,
-  );
-
   return (
     <KeyboardAwareScrollView
       enableOnAndroid={true}
@@ -314,9 +309,6 @@ const ProfileScreen = ({route, navigation}: IProfileScreenProps) => {
                   errors={errors}
                   label="Nama"
                 />
-                {userDataFetched ? (
-                  <ChangeEmail current_email={userDataFetched.email} />
-                ) : null}
 
                 <RHTextInput
                   name="default_role"
@@ -325,6 +317,11 @@ const ProfileScreen = ({route, navigation}: IProfileScreenProps) => {
                   label="Role"
                   isDisabled={true}
                 />
+
+                {userDataFetched ? (
+                  <ChangeEmail current_email={userDataFetched.email} />
+                ) : null}
+
                 <ChangePassword />
               </VStack>
             </Box>

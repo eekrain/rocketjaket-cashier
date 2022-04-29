@@ -1,0 +1,6 @@
+mutation Store_CreateStore($store: store_insert_input = {}) {
+  insert_store_one(object: $store) {
+    id
+    name
+  }
+}
