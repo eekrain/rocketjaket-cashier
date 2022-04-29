@@ -1,0 +1,14 @@
+query User_GetUserById($user_id: uuid = "") {
+  user(id: $user_id) {
+    avatarUrl
+    defaultRole
+    displayName
+    email
+    emailVerified
+    id
+    newEmail
+    users_metadata(limit: 1) {
+      store_id
+    }
+  }
+}

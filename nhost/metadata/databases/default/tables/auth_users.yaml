@@ -58,3 +58,37 @@ array_relationships:
       table:
         name: user_providers
         schema: auth
+- name: users_metadata
+  using:
+    foreign_key_constraint_on:
+      column: user_id
+      table:
+        name: users_metadata
+        schema: public
+select_permissions:
+- permission:
+    columns:
+    - avatar_url
+    - default_role
+    - display_name
+    - email
+    - email_verified
+    - id
+    - is_anonymous
+    - new_email
+    - phone_number
+    - phone_number_verified
+    filter:
+      id:
+        _eq: X-Hasura-User-Id
+  role: me
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - avatar_url
+    - display_name
+    filter:
+      id:
+        _eq: X-Hasura-User-Id
+  role: me
