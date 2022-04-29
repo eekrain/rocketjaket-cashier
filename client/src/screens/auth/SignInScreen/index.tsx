@@ -9,10 +9,11 @@ import {
   Button,
   ScrollView,
 } from 'native-base';
-import {SigninNavProps} from '../../../types/navigation';
+import {SigninNavProps} from '..';
 import {RHTextInput} from '../../../shared/components';
 import {useForm} from 'react-hook-form';
-import {useSignInEmailPassword} from '@nhost/react';
+import {useSignInEmailPassword, useSignUpEmailPassword} from '@nhost/react';
+import Config from 'react-native-config';
 
 interface ISignInScreenProps extends SigninNavProps {}
 
@@ -27,17 +28,9 @@ const defaultValues = {
 };
 
 const SignInScreen = ({navigation}: ISignInScreenProps) => {
-  const {
-    signInEmailPassword,
-    isLoading,
-    needsEmailVerification,
-    needsMfaOtp,
-    sendMfaOtp,
-    isSuccess,
-    isError,
-    error,
-    user,
-  } = useSignInEmailPassword();
+  const {signInEmailPassword} = useSignInEmailPassword();
+  const signUp = useSignUpEmailPassword();
+  console.log('🚀 ~ file: index.tsx ~ line 34 ~ SignInScreen ~ signUp', signUp);
 
   const {
     register,
@@ -46,8 +39,19 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
     formState: {errors},
   } = useForm({defaultValues});
 
-  const handleSubmission = async (data: IDefaultValues) => {
-    signInEmailPassword(data.username, data.password);
+  const handleSignIn = async (data: IDefaultValues) => {
+    console.log(
+      '🚀 ~ file: index.tsx ~ line 43 ~ handleSubmission ~ data',
+      data,
+    );
+    const res = await signInEmailPassword(data.username, data.password);
+    console.log('🚀 ~ file: index.tsx ~ line 48 ~ handleSignIn ~ res', res);
+  };
+
+  const handleSignUp = async (data: IDefaultValues) => {
+    console.log('🚀 ~ file: index.tsx ~ line 46 ~ handleRegister ~ data', data);
+    const res = await signUp.signUpEmailPassword(data.username, data.password);
+    console.log('🚀 ~ file: index.tsx ~ line 53 ~ handleRegister ~ res', res);
   };
 
   return (
@@ -92,25 +96,22 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
             }}
             alignSelf="flex-end"
             mt="1">
-            Forget Password?
+            Forget Password? {Config.NHOST_BACKEND_URL}
           </Link>
           <Button
             mt="2"
             _text={{color: 'white'}}
-            onPress={handleSubmit(handleSubmission)}>
+            onPress={handleSubmit(handleSignIn)}>
             Sign in
           </Button>
-          {/* <Button
+          {/* {Config.APP_ENV === 'development' && ( */}
+          <Button
             mt="2"
             _text={{color: 'white'}}
-            onPress={async () =>
-              await auth.register({
-                email: defaultValues.username,
-                password: defaultValues.password,
-              })
-            }>
+            onPress={handleSubmit(handleSignUp)}>
             Register EKA
-          </Button> */}
+          </Button>
+          {/* )} */}
         </VStack>
       </Box>
     </ScrollView>
