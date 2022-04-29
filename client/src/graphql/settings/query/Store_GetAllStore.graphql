@@ -1,0 +1,9 @@
+query Store_GetAllStore {
+  store {
+    id
+    name
+    address
+    latitude
+    longitude
+  }
+}
