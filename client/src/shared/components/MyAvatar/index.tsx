@@ -5,7 +5,7 @@ import {generateAvatarName} from '../../utils';
 
 interface Props {
   fallbackText: string;
-  source: Source;
+  source?: Source;
   overlay?: boolean;
   overlayColor?: IBoxProps['bgColor'];
   size?: number | string;
@@ -66,7 +66,7 @@ export const MyAvatar = ({
           <Text
             fontWeight={fontWeight}
             color={textColor}
-            letterSpacing="2xl"
+            letterSpacing={2}
             textTransform="uppercase"
             fontSize={fontSize}>
             {generateAvatarName(fallbackText)}

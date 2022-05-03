@@ -78,11 +78,25 @@ export type String_Comparison_Exp = {
   _similar?: InputMaybe<Scalars['String']>;
 };
 
+export type User_SignUpOutput = {
+  __typename?: 'User_SignUpOutput';
+  displayName?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  errorMessage?: Maybe<Scalars['String']>;
+  isError: Scalars['Boolean'];
+};
+
 /** columns and relationships of "auth.provider_requests" */
 export type AuthProviderRequests = {
   __typename?: 'authProviderRequests';
   id: Scalars['uuid'];
-  redirectUrl: Scalars['String'];
+  options?: Maybe<Scalars['jsonb']>;
+};
+
+
+/** columns and relationships of "auth.provider_requests" */
+export type AuthProviderRequestsOptionsArgs = {
+  path?: InputMaybe<Scalars['String']>;
 };
 
 /** aggregated selection of "auth.provider_requests" */
@@ -107,13 +121,18 @@ export type AuthProviderRequests_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type AuthProviderRequests_Append_Input = {
+  options?: InputMaybe<Scalars['jsonb']>;
+};
+
 /** Boolean expression to filter rows from the table "auth.provider_requests". All fields are combined with a logical 'AND'. */
 export type AuthProviderRequests_Bool_Exp = {
   _and?: InputMaybe<Array<AuthProviderRequests_Bool_Exp>>;
   _not?: InputMaybe<AuthProviderRequests_Bool_Exp>;
   _or?: InputMaybe<Array<AuthProviderRequests_Bool_Exp>>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
-  redirectUrl?: InputMaybe<String_Comparison_Exp>;
+  options?: InputMaybe<Jsonb_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "auth.provider_requests" */
@@ -122,24 +141,37 @@ export enum AuthProviderRequests_Constraint {
   ProviderRequestsPkey = 'provider_requests_pkey'
 }
 
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type AuthProviderRequests_Delete_At_Path_Input = {
+  options?: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type AuthProviderRequests_Delete_Elem_Input = {
+  options?: InputMaybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type AuthProviderRequests_Delete_Key_Input = {
+  options?: InputMaybe<Scalars['String']>;
+};
+
 /** input type for inserting data into table "auth.provider_requests" */
 export type AuthProviderRequests_Insert_Input = {
   id?: InputMaybe<Scalars['uuid']>;
-  redirectUrl?: InputMaybe<Scalars['String']>;
+  options?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** aggregate max on columns */
 export type AuthProviderRequests_Max_Fields = {
   __typename?: 'authProviderRequests_max_fields';
   id?: Maybe<Scalars['uuid']>;
-  redirectUrl?: Maybe<Scalars['String']>;
 };
 
 /** aggregate min on columns */
 export type AuthProviderRequests_Min_Fields = {
   __typename?: 'authProviderRequests_min_fields';
   id?: Maybe<Scalars['uuid']>;
-  redirectUrl?: Maybe<Scalars['String']>;
 };
 
 /** response of any mutation on the table "auth.provider_requests" */
@@ -161,7 +193,7 @@ export type AuthProviderRequests_On_Conflict = {
 /** Ordering options when selecting data from "auth.provider_requests". */
 export type AuthProviderRequests_Order_By = {
   id?: InputMaybe<Order_By>;
-  redirectUrl?: InputMaybe<Order_By>;
+  options?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: authProviderRequests */
@@ -169,18 +201,23 @@ export type AuthProviderRequests_Pk_Columns_Input = {
   id: Scalars['uuid'];
 };
 
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type AuthProviderRequests_Prepend_Input = {
+  options?: InputMaybe<Scalars['jsonb']>;
+};
+
 /** select columns of table "auth.provider_requests" */
 export enum AuthProviderRequests_Select_Column {
   /** column name */
   Id = 'id',
   /** column name */
-  RedirectUrl = 'redirectUrl'
+  Options = 'options'
 }
 
 /** input type for updating data in table "auth.provider_requests" */
 export type AuthProviderRequests_Set_Input = {
   id?: InputMaybe<Scalars['uuid']>;
-  redirectUrl?: InputMaybe<Scalars['String']>;
+  options?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** update columns of table "auth.provider_requests" */
@@ -188,7 +225,7 @@ export enum AuthProviderRequests_Update_Column {
   /** column name */
   Id = 'id',
   /** column name */
-  RedirectUrl = 'redirectUrl'
+  Options = 'options'
 }
 
 /** columns and relationships of "auth.providers" */
@@ -1770,6 +1807,7 @@ export type Jsonb_Comparison_Exp = {
 /** mutation root */
 export type Mutation_Root = {
   __typename?: 'mutation_root';
+  User_SignUp?: Maybe<User_SignUpOutput>;
   /** delete single row from the table: "auth.providers" */
   deleteAuthProvider?: Maybe<AuthProviders>;
   /** delete single row from the table: "auth.provider_requests" */
@@ -1902,6 +1940,16 @@ export type Mutation_Root = {
   update_users_metadata?: Maybe<Users_Metadata_Mutation_Response>;
   /** update single row of the table: "users_metadata" */
   update_users_metadata_by_pk?: Maybe<Users_Metadata>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUser_SignUpArgs = {
+  defaultRole: Scalars['String'];
+  defaultStore?: InputMaybe<Scalars['Int']>;
+  displayName?: InputMaybe<Scalars['String']>;
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 
@@ -2200,6 +2248,11 @@ export type Mutation_RootUpdateAuthProviderArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdateAuthProviderRequestArgs = {
+  _append?: InputMaybe<AuthProviderRequests_Append_Input>;
+  _delete_at_path?: InputMaybe<AuthProviderRequests_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<AuthProviderRequests_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<AuthProviderRequests_Delete_Key_Input>;
+  _prepend?: InputMaybe<AuthProviderRequests_Prepend_Input>;
   _set?: InputMaybe<AuthProviderRequests_Set_Input>;
   pk_columns: AuthProviderRequests_Pk_Columns_Input;
 };
@@ -2207,6 +2260,11 @@ export type Mutation_RootUpdateAuthProviderRequestArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdateAuthProviderRequestsArgs = {
+  _append?: InputMaybe<AuthProviderRequests_Append_Input>;
+  _delete_at_path?: InputMaybe<AuthProviderRequests_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<AuthProviderRequests_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<AuthProviderRequests_Delete_Key_Input>;
+  _prepend?: InputMaybe<AuthProviderRequests_Prepend_Input>;
   _set?: InputMaybe<AuthProviderRequests_Set_Input>;
   where: AuthProviderRequests_Bool_Exp;
 };
@@ -2436,10 +2494,10 @@ export type Query_Root = {
   store_by_pk?: Maybe<Store>;
   /** fetch data from the table: "auth.users" using primary key columns */
   user?: Maybe<Users>;
-  /** fetch aggregated fields from the table: "auth.users" */
-  userAggregate: Users_Aggregate;
   /** fetch data from the table: "auth.users" */
   users: Array<Users>;
+  /** fetch aggregated fields from the table: "auth.users" */
+  usersAggregate: Users_Aggregate;
   /** An array relationship */
   users_metadata: Array<Users_Metadata>;
   /** An aggregate relationship */
@@ -2661,7 +2719,7 @@ export type Query_RootUserArgs = {
 };
 
 
-export type Query_RootUserAggregateArgs = {
+export type Query_RootUsersArgs = {
   distinct_on?: InputMaybe<Array<Users_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -2670,7 +2728,7 @@ export type Query_RootUserAggregateArgs = {
 };
 
 
-export type Query_RootUsersArgs = {
+export type Query_RootUsersAggregateArgs = {
   distinct_on?: InputMaybe<Array<Users_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -2711,6 +2769,30 @@ export type Store = {
   longitude: Scalars['String'];
   name: Scalars['String'];
   updated_at: Scalars['timestamptz'];
+  /** An array relationship */
+  users_metadata: Array<Users_Metadata>;
+  /** An aggregate relationship */
+  users_metadata_aggregate: Users_Metadata_Aggregate;
+};
+
+
+/** columns and relationships of "store" */
+export type StoreUsers_MetadataArgs = {
+  distinct_on?: InputMaybe<Array<Users_Metadata_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Users_Metadata_Order_By>>;
+  where?: InputMaybe<Users_Metadata_Bool_Exp>;
+};
+
+
+/** columns and relationships of "store" */
+export type StoreUsers_Metadata_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Users_Metadata_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Users_Metadata_Order_By>>;
+  where?: InputMaybe<Users_Metadata_Bool_Exp>;
 };
 
 /** aggregated selection of "store" */
@@ -2761,6 +2843,7 @@ export type Store_Bool_Exp = {
   longitude?: InputMaybe<String_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  users_metadata?: InputMaybe<Users_Metadata_Bool_Exp>;
 };
 
 /** unique or primary key constraints on table "store" */
@@ -2785,6 +2868,7 @@ export type Store_Insert_Input = {
   longitude?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
+  users_metadata?: InputMaybe<Users_Metadata_Arr_Rel_Insert_Input>;
 };
 
 /** aggregate max on columns */
@@ -2820,6 +2904,13 @@ export type Store_Mutation_Response = {
   returning: Array<Store>;
 };
 
+/** input type for inserting object relation for remote table "store" */
+export type Store_Obj_Rel_Insert_Input = {
+  data: Store_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Store_On_Conflict>;
+};
+
 /** on_conflict condition type for table "store" */
 export type Store_On_Conflict = {
   constraint: Store_Constraint;
@@ -2836,6 +2927,7 @@ export type Store_Order_By = {
   longitude?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
+  users_metadata_aggregate?: InputMaybe<Users_Metadata_Aggregate_Order_By>;
 };
 
 /** primary key columns input for table: store */
@@ -2990,10 +3082,10 @@ export type Subscription_Root = {
   store_by_pk?: Maybe<Store>;
   /** fetch data from the table: "auth.users" using primary key columns */
   user?: Maybe<Users>;
-  /** fetch aggregated fields from the table: "auth.users" */
-  userAggregate: Users_Aggregate;
   /** fetch data from the table: "auth.users" */
   users: Array<Users>;
+  /** fetch aggregated fields from the table: "auth.users" */
+  usersAggregate: Users_Aggregate;
   /** An array relationship */
   users_metadata: Array<Users_Metadata>;
   /** An aggregate relationship */
@@ -3215,7 +3307,7 @@ export type Subscription_RootUserArgs = {
 };
 
 
-export type Subscription_RootUserAggregateArgs = {
+export type Subscription_RootUsersArgs = {
   distinct_on?: InputMaybe<Array<Users_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -3224,7 +3316,7 @@ export type Subscription_RootUserAggregateArgs = {
 };
 
 
-export type Subscription_RootUsersArgs = {
+export type Subscription_RootUsersAggregateArgs = {
   distinct_on?: InputMaybe<Array<Users_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -3587,6 +3679,8 @@ export type Users_Max_Order_By = {
 export type Users_Metadata = {
   __typename?: 'users_metadata';
   id: Scalars['uuid'];
+  /** An object relationship */
+  store?: Maybe<Store>;
   store_id?: Maybe<Scalars['Int']>;
   /** An object relationship */
   user: Users;
@@ -3662,6 +3756,7 @@ export type Users_Metadata_Bool_Exp = {
   _not?: InputMaybe<Users_Metadata_Bool_Exp>;
   _or?: InputMaybe<Array<Users_Metadata_Bool_Exp>>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  store?: InputMaybe<Store_Bool_Exp>;
   store_id?: InputMaybe<Int_Comparison_Exp>;
   user?: InputMaybe<Users_Bool_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -3681,6 +3776,7 @@ export type Users_Metadata_Inc_Input = {
 /** input type for inserting data into table "users_metadata" */
 export type Users_Metadata_Insert_Input = {
   id?: InputMaybe<Scalars['uuid']>;
+  store?: InputMaybe<Store_Obj_Rel_Insert_Input>;
   store_id?: InputMaybe<Scalars['Int']>;
   user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id?: InputMaybe<Scalars['uuid']>;
@@ -3735,6 +3831,7 @@ export type Users_Metadata_On_Conflict = {
 /** Ordering options when selecting data from "users_metadata". */
 export type Users_Metadata_Order_By = {
   id?: InputMaybe<Order_By>;
+  store?: InputMaybe<Store_Order_By>;
   store_id?: InputMaybe<Order_By>;
   user?: InputMaybe<Users_Order_By>;
   user_id?: InputMaybe<Order_By>;
@@ -4141,32 +4238,62 @@ export type Store_GetStoreByPkQueryVariables = Exact<{
 
 export type Store_GetStoreByPkQuery = { __typename?: 'query_root', store_by_pk?: { __typename?: 'store', id: number, name: string, latitude: string, longitude: string, address: string, created_at: any, updated_at: any } | null };
 
-export type User_UpdateUserByUserIdMutationVariables = Exact<{
-  id?: InputMaybe<Scalars['uuid']>;
-  _set?: InputMaybe<Users_Set_Input>;
+export type User_SignUpMutationVariables = Exact<{
+  defaultRole?: InputMaybe<Scalars['String']>;
+  defaultStore?: InputMaybe<Scalars['Int']>;
+  displayName: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
 }>;
 
 
-export type User_UpdateUserByUserIdMutation = { __typename?: 'mutation_root', updateUser?: { __typename?: 'users', avatarUrl: string, displayName: string } | null };
+export type User_SignUpMutation = { __typename?: 'mutation_root', User_SignUp?: { __typename?: 'User_SignUpOutput', email?: string | null, errorMessage?: string | null, isError: boolean, displayName?: string | null } | null };
+
+export type User_UpdateUserByUserIdMutationVariables = Exact<{
+  userId: Scalars['uuid'];
+  updateUser?: InputMaybe<Users_Set_Input>;
+}>;
+
+
+export type User_UpdateUserByUserIdMutation = { __typename?: 'mutation_root', updateUser?: { __typename?: 'users', id: any } | null };
+
+export type User_UpdateUserForAdminMutationVariables = Exact<{
+  userId: Scalars['uuid'];
+  updateUser?: InputMaybe<Users_Set_Input>;
+  roleBefore: Scalars['String'];
+  roleAfter: Scalars['String'];
+  store_id?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type User_UpdateUserForAdminMutation = { __typename?: 'mutation_root', updateUser?: { __typename?: 'users', id: any } | null, updateAuthUserRoles?: { __typename?: 'authUserRoles_mutation_response', returning: Array<{ __typename?: 'authUserRoles', userId: any }> } | null, update_users_metadata?: { __typename?: 'users_metadata_mutation_response', affected_rows: number } | null };
+
+export type User_GetAllUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type User_GetAllUserQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: any, displayName: string, avatarUrl: string, defaultRole: string, email?: any | null, newEmail?: any | null, users_metadata: Array<{ __typename?: 'users_metadata', store?: { __typename?: 'store', id: number, name: string } | null }> }> };
 
 export type User_GetUserByIdQueryVariables = Exact<{
   user_id?: InputMaybe<Scalars['uuid']>;
 }>;
 
 
-export type User_GetUserByIdQuery = { __typename?: 'query_root', user?: { __typename?: 'users', avatarUrl: string, defaultRole: string, displayName: string, email?: any | null, emailVerified: boolean, id: any, newEmail?: any | null, users_metadata: Array<{ __typename?: 'users_metadata', store_id?: number | null }> } | null };
+export type User_GetUserByIdQuery = { __typename?: 'query_root', user?: { __typename?: 'users', avatarUrl: string, defaultRole: string, displayName: string, email?: any | null, emailVerified: boolean, id: any, newEmail?: any | null, disabled: boolean, users_metadata: Array<{ __typename?: 'users_metadata', store_id?: number | null }> } | null };
 
 export const namedOperations = {
   Query: {
     Store_GetAllStore: 'Store_GetAllStore',
     Store_GetStoreByPK: 'Store_GetStoreByPK',
+    User_GetAllUser: 'User_GetAllUser',
     User_GetUserById: 'User_GetUserById'
   },
   Mutation: {
     Store_CreateStore: 'Store_CreateStore',
     Store_DeleteStoreByPK: 'Store_DeleteStoreByPK',
     Store_UpdateStore: 'Store_UpdateStore',
-    User_UpdateUserByUserId: 'User_UpdateUserByUserId'
+    User_SignUp: 'User_SignUp',
+    User_UpdateUserByUserId: 'User_UpdateUserByUserId',
+    User_UpdateUserForAdmin: 'User_UpdateUserForAdmin'
   }
 }
 
@@ -4352,11 +4479,56 @@ export function useStore_GetStoreByPkLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type Store_GetStoreByPkQueryHookResult = ReturnType<typeof useStore_GetStoreByPkQuery>;
 export type Store_GetStoreByPkLazyQueryHookResult = ReturnType<typeof useStore_GetStoreByPkLazyQuery>;
 export type Store_GetStoreByPkQueryResult = Apollo.QueryResult<Store_GetStoreByPkQuery, Store_GetStoreByPkQueryVariables>;
-export const User_UpdateUserByUserIdDocument = gql`
-    mutation User_UpdateUserByUserId($id: uuid = "", $_set: users_set_input = {}) {
-  updateUser(pk_columns: {id: $id}, _set: $_set) {
-    avatarUrl
+export const User_SignUpDocument = gql`
+    mutation User_SignUp($defaultRole: String = "karyawan", $defaultStore: Int = null, $displayName: String!, $email: String!, $password: String!) {
+  User_SignUp(
+    password: $password
+    email: $email
+    displayName: $displayName
+    defaultStore: $defaultStore
+    defaultRole: $defaultRole
+  ) {
+    email
+    errorMessage
+    isError
     displayName
+  }
+}
+    `;
+export type User_SignUpMutationFn = Apollo.MutationFunction<User_SignUpMutation, User_SignUpMutationVariables>;
+
+/**
+ * __useUser_SignUpMutation__
+ *
+ * To run a mutation, you first call `useUser_SignUpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUser_SignUpMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [userSignUpMutation, { data, loading, error }] = useUser_SignUpMutation({
+ *   variables: {
+ *      defaultRole: // value for 'defaultRole'
+ *      defaultStore: // value for 'defaultStore'
+ *      displayName: // value for 'displayName'
+ *      email: // value for 'email'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useUser_SignUpMutation(baseOptions?: Apollo.MutationHookOptions<User_SignUpMutation, User_SignUpMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<User_SignUpMutation, User_SignUpMutationVariables>(User_SignUpDocument, options);
+      }
+export type User_SignUpMutationHookResult = ReturnType<typeof useUser_SignUpMutation>;
+export type User_SignUpMutationResult = Apollo.MutationResult<User_SignUpMutation>;
+export type User_SignUpMutationOptions = Apollo.BaseMutationOptions<User_SignUpMutation, User_SignUpMutationVariables>;
+export const User_UpdateUserByUserIdDocument = gql`
+    mutation User_UpdateUserByUserId($userId: uuid!, $updateUser: users_set_input = {}) {
+  updateUser(pk_columns: {id: $userId}, _set: $updateUser) {
+    id
   }
 }
     `;
@@ -4375,8 +4547,8 @@ export type User_UpdateUserByUserIdMutationFn = Apollo.MutationFunction<User_Upd
  * @example
  * const [userUpdateUserByUserIdMutation, { data, loading, error }] = useUser_UpdateUserByUserIdMutation({
  *   variables: {
- *      id: // value for 'id'
- *      _set: // value for '_set'
+ *      userId: // value for 'userId'
+ *      updateUser: // value for 'updateUser'
  *   },
  * });
  */
@@ -4387,6 +4559,99 @@ export function useUser_UpdateUserByUserIdMutation(baseOptions?: Apollo.Mutation
 export type User_UpdateUserByUserIdMutationHookResult = ReturnType<typeof useUser_UpdateUserByUserIdMutation>;
 export type User_UpdateUserByUserIdMutationResult = Apollo.MutationResult<User_UpdateUserByUserIdMutation>;
 export type User_UpdateUserByUserIdMutationOptions = Apollo.BaseMutationOptions<User_UpdateUserByUserIdMutation, User_UpdateUserByUserIdMutationVariables>;
+export const User_UpdateUserForAdminDocument = gql`
+    mutation User_UpdateUserForAdmin($userId: uuid!, $updateUser: users_set_input = {}, $roleBefore: String!, $roleAfter: String!, $store_id: Int) {
+  updateUser(pk_columns: {id: $userId}, _set: $updateUser) {
+    id
+  }
+  updateAuthUserRoles(where: {role: {_eq: $roleBefore}}, _set: {role: $roleAfter}) {
+    returning {
+      userId
+    }
+  }
+  update_users_metadata(
+    where: {user_id: {_eq: $userId}}
+    _set: {store_id: $store_id}
+  ) {
+    affected_rows
+  }
+}
+    `;
+export type User_UpdateUserForAdminMutationFn = Apollo.MutationFunction<User_UpdateUserForAdminMutation, User_UpdateUserForAdminMutationVariables>;
+
+/**
+ * __useUser_UpdateUserForAdminMutation__
+ *
+ * To run a mutation, you first call `useUser_UpdateUserForAdminMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUser_UpdateUserForAdminMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [userUpdateUserForAdminMutation, { data, loading, error }] = useUser_UpdateUserForAdminMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      updateUser: // value for 'updateUser'
+ *      roleBefore: // value for 'roleBefore'
+ *      roleAfter: // value for 'roleAfter'
+ *      store_id: // value for 'store_id'
+ *   },
+ * });
+ */
+export function useUser_UpdateUserForAdminMutation(baseOptions?: Apollo.MutationHookOptions<User_UpdateUserForAdminMutation, User_UpdateUserForAdminMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<User_UpdateUserForAdminMutation, User_UpdateUserForAdminMutationVariables>(User_UpdateUserForAdminDocument, options);
+      }
+export type User_UpdateUserForAdminMutationHookResult = ReturnType<typeof useUser_UpdateUserForAdminMutation>;
+export type User_UpdateUserForAdminMutationResult = Apollo.MutationResult<User_UpdateUserForAdminMutation>;
+export type User_UpdateUserForAdminMutationOptions = Apollo.BaseMutationOptions<User_UpdateUserForAdminMutation, User_UpdateUserForAdminMutationVariables>;
+export const User_GetAllUserDocument = gql`
+    query User_GetAllUser {
+  users {
+    id
+    displayName
+    avatarUrl
+    defaultRole
+    email
+    newEmail
+    users_metadata {
+      store {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useUser_GetAllUserQuery__
+ *
+ * To run a query within a React component, call `useUser_GetAllUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUser_GetAllUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUser_GetAllUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUser_GetAllUserQuery(baseOptions?: Apollo.QueryHookOptions<User_GetAllUserQuery, User_GetAllUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<User_GetAllUserQuery, User_GetAllUserQueryVariables>(User_GetAllUserDocument, options);
+      }
+export function useUser_GetAllUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<User_GetAllUserQuery, User_GetAllUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<User_GetAllUserQuery, User_GetAllUserQueryVariables>(User_GetAllUserDocument, options);
+        }
+export type User_GetAllUserQueryHookResult = ReturnType<typeof useUser_GetAllUserQuery>;
+export type User_GetAllUserLazyQueryHookResult = ReturnType<typeof useUser_GetAllUserLazyQuery>;
+export type User_GetAllUserQueryResult = Apollo.QueryResult<User_GetAllUserQuery, User_GetAllUserQueryVariables>;
 export const User_GetUserByIdDocument = gql`
     query User_GetUserById($user_id: uuid = "") {
   user(id: $user_id) {
@@ -4400,6 +4665,7 @@ export const User_GetUserByIdDocument = gql`
     users_metadata(limit: 1) {
       store_id
     }
+    disabled
   }
 }
     `;

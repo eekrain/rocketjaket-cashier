@@ -45,6 +45,7 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 import {useIsFocused} from '@react-navigation/native';
 import {useAccessToken} from '@nhost/react';
+import to from 'await-to-js';
 
 interface IDefaultValues {
   display_name: string;
@@ -171,36 +172,36 @@ const ProfileScreen = ({route, navigation}: IProfileScreenProps) => {
         uri: data?.photo?.asset.uri,
         name: finalFileName.modifiedName,
       };
-      try {
-        const res = await nhost.storage.upload({
+
+      const [errUpload, resUpload] = await to(
+        nhost.storage.upload({
           file: image,
           bucketId: 'avatarPhoto',
-        });
-        console.log(
-          '🚀 ~ file: index.tsx ~ line 179 ~ handleSubmission ~ res',
-          res,
-        );
-        if (res.fileMetadata?.id && data.photo.currentAvatarFileId !== '') {
-          // nhostAuth.updateUserData({photoURL: res?.key});
-          await nhost.storage
-            .delete({fileId: data.photo.currentAvatarFileId})
-            .catch(error => {
-              console.log(
-                '🚀 ~ file: index.tsx ~ line 177 ~ handleSubmission - storage.delete ~ error',
-                error,
-              );
-            });
-        }
+        }),
+      );
+      console.log(
+        '🚀 ~ file: index.tsx ~ line 179 ~ handleSubmission ~ resUpload',
+        resUpload,
+      );
 
-        newAvatarFileId = res.fileMetadata?.id
-          ? res.fileMetadata.id
-          : data.photo.currentAvatarFileId;
-      } catch (error) {
-        console.log(
-          '🚀 ~ file: index.tsx ~ line 170 ~ handleSubmission - storage.put ~ error',
-          error,
-        );
+      if (
+        !errUpload &&
+        resUpload?.fileMetadata?.id &&
+        data.photo.currentAvatarFileId !== ''
+      ) {
+        await nhost.storage
+          .delete({fileId: data.photo.currentAvatarFileId})
+          .catch(error => {
+            console.log(
+              '🚀 ~ file: index.tsx ~ line 177 ~ handleSubmission - storage.delete ~ error',
+              error,
+            );
+          });
       }
+
+      newAvatarFileId = resUpload?.fileMetadata?.id
+        ? resUpload.fileMetadata.id
+        : data.photo.currentAvatarFileId;
     } else {
       newAvatarFileId = data.photo.currentAvatarFileId;
     }
@@ -212,27 +213,25 @@ const ProfileScreen = ({route, navigation}: IProfileScreenProps) => {
       return;
     }
 
-    const res = await updateUserMutation({
-      variables: {
-        id: myUser.id,
-        _set: {
-          avatarUrl: newAvatarFileId,
-          displayName: data.display_name,
+    const [errUpdate, resUpdate] = await to(
+      updateUserMutation({
+        variables: {
+          userId: myUser.id,
+          updateUser: {
+            avatarUrl: newAvatarFileId,
+            displayName: data.display_name,
+          },
         },
-      },
-    });
-    if (res.errors) {
+      }),
+    );
+    if (errUpdate) {
       toast.show({
-        ...TOAST_TEMPLATE.error(
-          `Gagal update user ${res.data?.updateUser?.displayName}.`,
-        ),
+        ...TOAST_TEMPLATE.error(`Gagal update user ${data.display_name}.`),
       });
     } else {
       nhost.auth.refreshSession();
       toast.show({
-        ...TOAST_TEMPLATE.success(
-          `Berhasil update user ${res.data?.updateUser?.displayName}.`,
-        ),
+        ...TOAST_TEMPLATE.success(`Berhasil update user ${data.display_name}.`),
       });
     }
   };
