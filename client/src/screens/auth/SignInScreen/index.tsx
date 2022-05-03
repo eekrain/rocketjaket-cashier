@@ -8,12 +8,14 @@ import {
   Link,
   Button,
   ScrollView,
+  useToast,
 } from 'native-base';
 import {SigninNavProps} from '..';
 import {RHTextInput} from '../../../shared/components';
 import {useForm} from 'react-hook-form';
 import {useSignInEmailPassword, useSignUpEmailPassword} from '@nhost/react';
 import Config from 'react-native-config';
+import {TOAST_TEMPLATE} from '../../../shared/constants';
 
 interface ISignInScreenProps extends SigninNavProps {}
 
@@ -28,6 +30,8 @@ const defaultValues = {
 };
 
 const SignInScreen = ({navigation}: ISignInScreenProps) => {
+  const toast = useToast();
+
   const {signInEmailPassword} = useSignInEmailPassword();
   const signUp = useSignUpEmailPassword();
   console.log('🚀 ~ file: index.tsx ~ line 34 ~ SignInScreen ~ signUp', signUp);
@@ -44,8 +48,19 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
       '🚀 ~ file: index.tsx ~ line 43 ~ handleSubmission ~ data',
       data,
     );
+
     const res = await signInEmailPassword(data.username, data.password);
-    console.log('🚀 ~ file: index.tsx ~ line 48 ~ handleSignIn ~ res', res);
+
+    if (res.needsEmailVerification) {
+      toast.show({
+        ...TOAST_TEMPLATE.error(`Email anda belum terverifikasi!`),
+      });
+    }
+    if (res.isError) {
+      toast.show({
+        ...TOAST_TEMPLATE.error(res.error?.message || 'Error'),
+      });
+    }
   };
 
   const handleSignUp = async (data: IDefaultValues) => {

@@ -14,7 +14,6 @@ export const nhost = new NhostClient({
   clientStorageType: 'react-native',
   autoLogin: false,
 });
-
 interface IGetXHasuraRoleHeader {
   role?: TUserRoleOptions | null;
   withUserId?: boolean;

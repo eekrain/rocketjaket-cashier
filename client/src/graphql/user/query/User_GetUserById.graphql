@@ -10,5 +10,6 @@ query User_GetUserById($user_id: uuid = "") {
     users_metadata(limit: 1) {
       store_id
     }
+    disabled
   }
 }

@@ -21,7 +21,7 @@ interface IRHCheckBoxProps {
   extendedOnChange?: (itemValue?: any) => void;
 }
 
-export const RHCheckBox = ({
+export const RHCheckbox = ({
   checkboxOptions,
   name,
   label,

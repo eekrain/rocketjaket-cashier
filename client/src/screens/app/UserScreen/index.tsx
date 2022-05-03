@@ -3,7 +3,10 @@ import {AppNavProps, UserRootNavProps} from '../index';
 import UsersHome from '../../../components/Users';
 import CreateUser from '../../../components/Users/CreateUser';
 import UpdateUser from '../../../components/Users/UpdateUser';
-import {createStackNavigator, StackScreenProps} from '@react-navigation/stack';
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import {CompositeScreenProps} from '@react-navigation/native';
 
 export type UserRootStackParamList = {
@@ -24,20 +27,21 @@ export const rootUserRoutes: IUserRoutes[] = [
   {name: 'UpdateUser', component: UpdateUser, routeNiceName: 'Pengguna'},
 ];
 
-export type ListUserNavProps = CompositeScreenProps<
-  StackScreenProps<UserRootStackParamList, 'ListUser'>,
+export type ListUserProps = CompositeScreenProps<
+  NativeStackScreenProps<UserRootStackParamList, 'ListUser'>,
   AppNavProps
 >;
-export type CreateUserNavProps = CompositeScreenProps<
-  StackScreenProps<UserRootStackParamList, 'CreateUser'>,
+export type ListUserNavProp = ListUserProps['navigation'];
+export type CreateUserProps = CompositeScreenProps<
+  NativeStackScreenProps<UserRootStackParamList, 'CreateUser'>,
   AppNavProps
 >;
-export type UpdateUserNavProps = CompositeScreenProps<
-  StackScreenProps<UserRootStackParamList, 'UpdateUser'>,
+export type UpdateUserProps = CompositeScreenProps<
+  NativeStackScreenProps<UserRootStackParamList, 'UpdateUser'>,
   AppNavProps
 >;
 
-const UserStack = createStackNavigator<UserRootStackParamList>();
+const UserStack = createNativeStackNavigator<UserRootStackParamList>();
 
 interface IUserScreenProps extends UserRootNavProps {}
 
