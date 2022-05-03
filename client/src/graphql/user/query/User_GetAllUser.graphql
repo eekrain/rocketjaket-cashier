@@ -1,0 +1,16 @@
+query User_GetAllUser {
+  users {
+    id
+    displayName
+    avatarUrl
+    defaultRole
+    email
+    newEmail
+    users_metadata {
+      store {
+        id
+        name
+      }
+    }
+  }
+}

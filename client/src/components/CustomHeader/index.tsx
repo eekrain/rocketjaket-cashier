@@ -46,6 +46,7 @@ const CustomHeader = (props: ICustomHeaderProps) => {
   const accessToken = useAccessToken();
   const authStatus = useAuthenticationStatus();
   const myUser = useMyUser();
+  // console.log('🚀 ~ file: index.tsx ~ line 49 ~ CustomHeader ~ myUser', myUser);
   const {signOut, isSuccess: isSignoutSuccess} = useSignOut();
   const bgLight = 'white';
   const colorContrastLight = useContrastText(bgLight);
