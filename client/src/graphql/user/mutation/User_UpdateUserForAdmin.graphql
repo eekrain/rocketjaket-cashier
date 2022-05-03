@@ -1,0 +1,25 @@
+mutation User_UpdateUserForAdmin(
+  $userId: uuid!
+  $updateUser: users_set_input = {}
+  $roleBefore: String!
+  $roleAfter: String!
+  $store_id: Int
+) {
+  updateUser(pk_columns: {id: $userId}, _set: $updateUser) {
+    id
+  }
+  updateAuthUserRoles(
+    where: {role: {_eq: $roleBefore}}
+    _set: {role: $roleAfter}
+  ) {
+    returning {
+      userId
+    }
+  }
+  update_users_metadata(
+    where: {user_id: {_eq: $userId}}
+    _set: {store_id: $store_id}
+  ) {
+    affected_rows
+  }
+}

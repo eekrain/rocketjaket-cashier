@@ -1,6 +1,8 @@
-mutation User_UpdateUserByUserId($id: uuid = "", $_set: users_set_input = {}) {
-  updateUser(pk_columns: {id: $id}, _set: $_set) {
-    avatarUrl
-    displayName
+mutation User_UpdateUserByUserId(
+  $userId: uuid!
+  $updateUser: users_set_input = {}
+) {
+  updateUser(pk_columns: {id: $userId}, _set: $updateUser) {
+    id
   }
 }

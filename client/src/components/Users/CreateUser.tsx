@@ -1,31 +1,38 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Box, HStack, VStack, Heading, useToast} from 'native-base';
 import withAppLayout from '../Layout/AppLayout';
-// import {
-//   namedOperations,
-//   useUser_UpdateDefaultRoleByUserIdMutation,
-// } from '../../graphql/gql-generated';
+import {
+  namedOperations,
+  useStore_GetAllStoreQuery,
+  useUser_SignUpMutation,
+} from '../../graphql/gql-generated';
 import * as yup from 'yup';
-import {useNavigation} from '@react-navigation/native';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {
   DismissKeyboardWrapper,
+  RHSelect,
   RHTextInput,
-  // RHSelect,
 } from '../../shared/components';
 import ButtonSave from '../Buttons/ButtonSave';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {CreateUserNavProps} from '../../screens/app/UserScreen';
-// import {TUserRoleOptions, PossibleDefaultRoleUser} from '../../types/user';
+import {CreateUserProps} from '../../screens/app/UserScreen';
+import {getXHasuraContextHeader} from '../../shared/utils';
+import {
+  PossibleDefaultRoleUser,
+  TUserRoleOptions,
+  UserRolesEnum,
+} from '../../types/user';
+import {ButtonBack} from '../Buttons';
 
 interface IDefaultValues {
   display_name: string;
   email: string;
   password: string;
   passwordConfirm: string;
-  // default_role: TUserRoleOptions;
+  default_role: TUserRoleOptions;
+  store_id: string;
 }
 
 const schema = yup
@@ -42,9 +49,23 @@ const schema = yup
     passwordConfirm: yup
       .string()
       .oneOf([yup.ref('password'), null], 'Password konfirmasi tidak sama'),
-    // default_role: yup
-    //   .string()
-    //   .oneOf(PossibleDefaultRoleUser, 'Role tidak terdaftar'),
+    default_role: yup
+      .string()
+      .oneOf(PossibleDefaultRoleUser, 'Role tidak terdaftar'),
+    store_id: yup
+      .string()
+      .nullable()
+      .when('default_role', {
+        is: (default_role: string) =>
+          default_role !== UserRolesEnum.administrator,
+        then: yup
+          .string()
+          .nullable()
+          .required(
+            `Selain role ${UserRolesEnum.administrator} harus masukkan toko penempatan user bekerja.`,
+          ),
+        otherwise: yup.string().nullable(),
+      }),
   })
   .required();
 
@@ -53,14 +74,14 @@ const defaultValues: IDefaultValues = {
   email: '',
   password: '',
   passwordConfirm: '',
-  // default_role: 'karyawan',
+  default_role: 'karyawan',
+  store_id: '',
 };
 
-interface ICreateUserProps extends CreateUserNavProps {}
+interface ICreateUserProps extends CreateUserProps {}
 
-const CreateUser = ({}: ICreateUserProps) => {
+const CreateUser = ({navigation}: ICreateUserProps) => {
   const toast = useToast();
-  const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -68,74 +89,66 @@ const CreateUser = ({}: ICreateUserProps) => {
     control,
     formState: {errors},
     reset,
+    watch,
   } = useForm({
     defaultValues,
     resolver: yupResolver(schema),
   });
 
-  // const [updateDefaultRole, _updateDefaultRoleResult] =
-  //   useUser_UpdateDefaultRoleByUserIdMutation({
-  //     ...getXHasuraContextHeader({role: 'administrator'}),
-  //     refetchQueries: [namedOperations.Query.Store_GetAllStore],
-  //   });
+  const currDefaultRole = watch('default_role');
+  const getAllStore = useStore_GetAllStoreQuery();
+  const allStoreOptions = useMemo(() => {
+    const stores = getAllStore.data?.store || [];
+
+    return stores.map(store => ({
+      value: store.id.toString(),
+      label: store.name,
+    }));
+  }, [getAllStore.data?.store]);
+
+  const [signUp, _signUpResult] = useUser_SignUpMutation({
+    ...getXHasuraContextHeader({role: 'administrator'}),
+    refetchQueries: [namedOperations.Query.User_GetAllUser],
+  });
 
   const handleSubmission = async (data: IDefaultValues) => {
-    setLoading(true);
     console.log(
-      '🚀 ~ file: CreateUser.tsx ~ line 84 ~ handleSubmission ~ data',
+      '🚀 ~ file: CreateUser.tsx ~ line 113 ~ handleSubmission ~ data',
       data,
     );
-    const resRegister = await auth
-      .register({
+    setLoading(true);
+
+    let defaultStore: number | null = parseInt(data.store_id, 10);
+    defaultStore = isNaN(defaultStore) ? null : defaultStore;
+    const register = await signUp({
+      variables: {
         email: data.email,
-        password: data.passwordConfirm,
-        options: {
-          userData: {
-            display_name: data.display_name,
-          },
-        },
-      })
-      .catch(error => {
-        console.log(
-          '🚀 ~ file: CreateUser.tsx ~ line 99 ~ handleSubmission ~ error',
-          error,
-        );
+        displayName: data.display_name,
+        password: data.password,
+        defaultRole: data.default_role,
+        defaultStore: defaultStore,
+      },
+    });
+
+    setLoading(false);
+    if (register.errors || register.data?.User_SignUp?.isError) {
+      toast.show({
+        ...TOAST_TEMPLATE.error(
+          `Gagal menambahkan user ${data.display_name}.${
+            register.data?.User_SignUp?.errorMessage
+              ? `Error: ${register.data?.User_SignUp?.errorMessage}.`
+              : ''
+          }`,
+        ),
       });
-
-    if (resRegister && resRegister?.user?.id) {
-      // UPDATE USER ROLE
-
-      // const res = await updateDefaultRole({
-      //   variables: {
-      //     user_id: resRegister.user.id,
-      //     default_role: data.default_role,
-      //   },
-      // }).catch(error => {
-      //   console.log(
-      //     '🚀 ~ file: CreateUser.tsx ~ line 114 ~ handleSubmission ~ error',
-      //     error,
-      //   );
-      // });
-      // if (res && res?.data?.update_auth_accounts?.affected_rows) {
-      //   console.log(
-      //     '🚀 ~ file: CreateUser.tsx ~ line 118 ~ handleSubmission ~ res.data?.update_auth_accounts?.affected_rows',
-      //     res.data?.update_auth_accounts?.affected_rows,
-      //   );
-      // }
-
-      reset();
+    } else {
       toast.show({
         ...TOAST_TEMPLATE.success(
           `Berhasil menambahkan user ${data.display_name}.`,
         ),
       });
       navigation.goBack();
-    } else {
-      toast.show({
-        ...TOAST_TEMPLATE.error(`Gagal menambahkan user ${data.display_name}.`),
-      });
     }
-    setLoading(false);
   };
 
   return (
@@ -175,7 +188,7 @@ const CreateUser = ({}: ICreateUserProps) => {
                 errors={errors}
                 label="Konfirmasi Password"
               />
-              {/* <RHSelect
+              <RHSelect
                 name="default_role"
                 control={control}
                 errors={errors}
@@ -184,11 +197,25 @@ const CreateUser = ({}: ICreateUserProps) => {
                   label: val,
                   value: val,
                 }))}
-              /> */}
-              <HStack justifyContent="flex-end" mt="5">
+              />
+              {currDefaultRole !== UserRolesEnum.administrator && (
+                <RHSelect
+                  name="store_id"
+                  control={control}
+                  errors={errors}
+                  label="Penempatan Toko"
+                  selectOptions={allStoreOptions}
+                />
+              )}
+              <HStack justifyContent="flex-end" mt="8" space={4}>
                 <ButtonSave
                   isLoading={loading}
                   onPress={handleSubmit(handleSubmission)}
+                />
+                <ButtonBack
+                  onPress={() => {
+                    navigation.goBack();
+                  }}
                 />
               </HStack>
             </VStack>
