@@ -1,6 +1,14 @@
 table:
   name: store
   schema: public
+array_relationships:
+- name: users_metadata
+  using:
+    foreign_key_constraint_on:
+      column: store_id
+      table:
+        name: users_metadata
+        schema: public
 insert_permissions:
 - permission:
     backend_only: false
@@ -26,6 +34,20 @@ select_permissions:
     - updated_at
     filter: {}
   role: administrator
+- permission:
+    columns:
+    - id
+    - address
+    - latitude
+    - longitude
+    - name
+    - created_at
+    - updated_at
+    filter:
+      users_metadata:
+        user_id:
+          _eq: X-Hasura-User-Id
+  role: me
 update_permissions:
 - permission:
     check: {}
