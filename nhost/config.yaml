@@ -135,3 +135,5 @@ auth:
 storage:
   force_download_for_content_types: text/html,application/javascript
 version: 3
+endpoint: http://localhost:1337/
+admin_secret: nhost-admin-secret
