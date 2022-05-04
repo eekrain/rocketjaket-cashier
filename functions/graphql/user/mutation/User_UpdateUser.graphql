@@ -1,0 +1,19 @@
+mutation User_UpdateUser(
+  $id: uuid!
+  $updateUser: users_set_input = {}
+  $insertUserRole: authUserRoles_insert_input = {}
+  $insertMetadata: users_metadata_insert_input = {}
+) {
+  updateUser(pk_columns: { id: $id }, _set: $updateUser) {
+    id
+  }
+  insertAuthUserRole(object: $insertUserRole) {
+    role
+    userId
+    id
+  }
+  insert_users_metadata_one(object: $insertMetadata) {
+    id
+    store_id
+  }
+}
