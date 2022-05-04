@@ -1,0 +1,17 @@
+type Mutation {
+  User_SignUp(
+    email: String!
+    password: String!
+    displayName: String
+    defaultRole: String!
+    defaultStore: Int
+  ): User_SignUpOutput
+}
+
+type User_SignUpOutput {
+  email: String
+  displayName: String
+  isError: Boolean!
+  errorMessage: String
+}
+
