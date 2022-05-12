@@ -6,9 +6,24 @@ actions:
     forward_client_headers: true
   permissions:
   - role: administrator
+- name: Whatsapp_GetAuthStatus
+  definition:
+    kind: ""
+    handler: '{{NHOST_BACKEND_URL}}/v1/functions/actions/Whatsapp_GetAuthStatus'
+  permissions:
+  - role: administrator
+- name: Whatsapp_SignOut
+  definition:
+    kind: synchronous
+    handler: '{{NHOST_BACKEND_URL}}/v1/functions/actions/Whatsapp_SignOut'
+    forward_client_headers: true
+  permissions:
+  - role: administrator
 custom_types:
   enums: []
   input_objects: []
   objects:
   - name: User_SignUpOutput
+  - name: Whatsapp_GetAuthStatusOutput
+  - name: Whatsapp_SignOutOutput
   scalars: []

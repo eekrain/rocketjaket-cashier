@@ -1,6 +1,6 @@
 import React from 'react';
 import {AppNavProps, SettingsRootNavProps} from '../index';
-import TokoHome from '../../../components/Settings';
+import SettingsHome from '../../../components/Settings';
 import CreateToko from '../../../components/Settings/CreateToko';
 import UpdateToko from '../../../components/Settings/UpdateToko';
 import {
@@ -22,7 +22,7 @@ type ISettingsRoutes = {
 };
 
 export const rootSettingsRoutes: ISettingsRoutes[] = [
-  {name: 'ListToko', component: TokoHome, routeNiceName: 'Settings'},
+  {name: 'ListToko', component: SettingsHome, routeNiceName: 'Settings'},
   {name: 'CreateToko', component: CreateToko, routeNiceName: 'Toko'},
   {name: 'UpdateToko', component: UpdateToko, routeNiceName: 'Toko'},
 ];
@@ -31,7 +31,6 @@ export type SettingsHomeProps = CompositeScreenProps<
   NativeStackScreenProps<SettingsStackParamList, 'ListToko'>,
   AppNavProps
 >;
-export type SettingsHomeNavProp = SettingsHomeProps['navigation'];
 export type CreateTokoProps = CompositeScreenProps<
   NativeStackScreenProps<SettingsStackParamList, 'CreateToko'>,
   AppNavProps

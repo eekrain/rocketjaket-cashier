@@ -6,11 +6,11 @@ import {useMemo} from 'react';
 import withAppLayout from '../Layout/AppLayout';
 import {SettingsHomeProps} from '../../screens/app/SettingsScreen';
 import ListToko from './ListToko';
-// import WhatsappHome from './WhatsappHome';
+import WhatsappHome from './WhatsappHome';
 
 const routes = [
   {key: 'first', title: 'List Toko', component: ListToko},
-  // {key: 'second', title: 'Whatsapp', component: WhatsappHome},
+  {key: 'second', title: 'Whatsapp', component: WhatsappHome},
 ];
 
 interface ITokoHomeProps extends SettingsHomeProps {}
