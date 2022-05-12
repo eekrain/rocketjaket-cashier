@@ -24,8 +24,9 @@ import {useMyAppState} from '../../state';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import FastImage from 'react-native-fast-image';
 import useCountDown from 'react-countdown-hook';
+import {myNumberFormat} from '../../shared/utils';
 
-const initialTime = 30 * 1000; // initial time in milliseconds, defaults to 60000
+const initialTime = 20 * 1000; // initial time in milliseconds, defaults to 60000
 const interval = 1000; // interval to change remaining time amount, defaults to 1000
 
 interface ITokoHomeProps extends SettingsHomeProps {}
@@ -106,7 +107,7 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
     };
     Alert.alert(
       'Signout Whatsapp',
-      `Whatsapp dengan nama ${WAAuthStatus?.client_name} di device ${WAAuthStatus?.client_device_model} akan di keluarkan. Lanjutkan?`,
+      `Whatsapp dengan nama ${WAAuthStatus?.client_name} akan di keluarkan. Lanjutkan?`,
       [
         {
           text: 'Cancel',
@@ -122,13 +123,7 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
         cancelable: true,
       },
     );
-  }, [
-    WAAuthStatus?.client_device_model,
-    WAAuthStatus?.client_name,
-    startCountdown,
-    toast,
-    whatsappSignout,
-  ]);
+  }, [WAAuthStatus?.client_name, startCountdown, toast, whatsappSignout]);
 
   return (
     <Box>
@@ -154,9 +149,9 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
       </HStack>
       <Stack direction={['column', 'column', 'row-reverse']}>
         <Box flex={1} alignItems="center">
-          {WAAuthStatus?.qr_code && (
+          {WAAuthStatus?.qrcode && (
             <>
-              <QRCode value={WAAuthStatus.qr_code} size={200} />
+              <QRCode value={WAAuthStatus.qrcode} size={200} />
               <Heading fontSize="lg" mt="4">
                 Scan Untuk Masuk
               </Heading>
@@ -172,19 +167,14 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
               <Col style={colDivider}>
                 <Text>:</Text>
               </Col>
-              <Col style={colValue}>
-                <Box>
-                  <Badge
-                    w="24"
-                    padding={2}
-                    colorScheme={
-                      WAAuthStatus?.is_authenticated ? 'success' : 'danger'
-                    }>
-                    {WAAuthStatus?.is_authenticated
-                      ? 'Signed In'
-                      : 'Signed Out'}
-                  </Badge>
-                </Box>
+              <Col style={{width: 'auto'}}>
+                <Badge
+                  padding={2}
+                  colorScheme={
+                    WAAuthStatus?.is_authenticated ? 'success' : 'danger'
+                  }>
+                  {WAAuthStatus?.is_authenticated ? 'Signed In' : 'Signed Out'}
+                </Badge>
               </Col>
             </Row>
             {WAAuthStatus?.client_state && (
@@ -222,31 +212,30 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
                   <Text>:</Text>
                 </Col>
                 <Col style={colValue}>
-                  <Text>{WAAuthStatus?.client_phone_number}</Text>
+                  <Text>
+                    {WAAuthStatus?.client_phone_number
+                      ? myNumberFormat.phoneNumber(
+                          WAAuthStatus.client_phone_number,
+                          'with+62',
+                        )
+                      : ''}
+                  </Text>
                 </Col>
               </Row>
             )}
-            {WAAuthStatus?.client_platform &&
-              WAAuthStatus?.client_device_manufacturer &&
-              WAAuthStatus?.client_device_model && (
-                <Row style={defaultStyles.row}>
-                  <Col style={colTitle}>
-                    <Text>HP</Text>
-                  </Col>
-                  <Col style={colDivider}>
-                    <Text>:</Text>
-                  </Col>
-                  <Col style={colValue}>
-                    <Text>
-                      {WAAuthStatus?.client_platform}
-                      {' | '}
-                      {WAAuthStatus?.client_device_manufacturer}
-                      {' | '}
-                      {WAAuthStatus.client_device_model}
-                    </Text>
-                  </Col>
-                </Row>
-              )}
+            {WAAuthStatus?.client_platform && (
+              <Row style={defaultStyles.row}>
+                <Col style={colTitle}>
+                  <Text>HP</Text>
+                </Col>
+                <Col style={colDivider}>
+                  <Text>:</Text>
+                </Col>
+                <Col style={colValue}>
+                  <Text>{WAAuthStatus?.client_platform}</Text>
+                </Col>
+              </Row>
+            )}
             {WAAuthStatus?.is_authenticated && (
               <Row
                 style={{

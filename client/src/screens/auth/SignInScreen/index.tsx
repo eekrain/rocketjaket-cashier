@@ -16,10 +16,6 @@ import {useForm} from 'react-hook-form';
 import {useSignInEmailPassword} from '@nhost/react';
 import Config from 'react-native-config';
 import {TOAST_TEMPLATE} from '../../../shared/constants';
-import {
-  useUser_SignUpMutation,
-  namedOperations,
-} from '../../../graphql/gql-generated';
 
 interface ISignInScreenProps extends SigninNavProps {}
 
@@ -37,15 +33,6 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
   const toast = useToast();
 
   const {signInEmailPassword} = useSignInEmailPassword();
-  const [signUp, _signUpResult] = useUser_SignUpMutation({
-    context: {
-      headers: {
-        'x-hasura-admin-secret': 'nhost-admin-secret',
-        'x-hasura-role': 'admin',
-      },
-    },
-    refetchQueries: [namedOperations.Query.User_GetAllUser],
-  });
 
   const {
     register,
@@ -72,23 +59,6 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
         ...TOAST_TEMPLATE.error(res.error?.message || 'Error'),
       });
     }
-  };
-
-  const handleSignUp = async (data: IDefaultValues) => {
-    console.log('🚀 ~ file: index.tsx ~ line 46 ~ handleRegister ~ data', data);
-    const register = await signUp({
-      variables: {
-        email: defaultValues.username,
-        displayName: 'Ardian Eka Candra',
-        password: defaultValues.password,
-        defaultRole: 'administrator',
-        defaultStore: null,
-      },
-    });
-    console.log(
-      '🚀 ~ file: index.tsx ~ line 53 ~ handleRegister ~ register',
-      register,
-    );
   };
 
   return (
@@ -133,7 +103,7 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
             }}
             alignSelf="flex-end"
             mt="1">
-            Forget Password? {Config.NHOST_BACKEND_URL}
+            Forget Password?
           </Link>
           <Button
             mt="2"
@@ -141,14 +111,6 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
             onPress={handleSubmit(handleSignIn)}>
             Sign in
           </Button>
-          {/* {Config.APP_ENV === 'development' && ( */}
-          <Button
-            mt="2"
-            _text={{color: 'white'}}
-            onPress={handleSubmit(handleSignUp)}>
-            Register EKA
-          </Button>
-          {/* )} */}
         </VStack>
       </Box>
     </ScrollView>

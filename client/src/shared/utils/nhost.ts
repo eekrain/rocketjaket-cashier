@@ -12,7 +12,7 @@ export const nhost = new NhostClient({
   backendUrl: Config.NHOST_BACKEND_URL,
   clientStorage: AsyncStorage,
   clientStorageType: 'react-native',
-  autoLogin: false,
+  // autoLogin: false,
 });
 interface IGetXHasuraRoleHeader {
   role?: TUserRoleOptions | null;
