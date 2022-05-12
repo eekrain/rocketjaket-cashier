@@ -25,13 +25,13 @@ type User_SignUpOutput {
 
 type Whatsapp_GetAuthStatusOutput {
   is_authenticated: Boolean!
-  qr_code: String
+  is_qr_ready: Boolean!
+  is_client_ready: Boolean!
+  qrcode: String
   client_state: String
   client_name: String
   client_phone_number: String
   client_platform: String
-  client_device_manufacturer: String
-  client_device_model: String
   isError: Boolean!
   errorMessage: String
 }

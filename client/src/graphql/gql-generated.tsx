@@ -88,8 +88,6 @@ export type User_SignUpOutput = {
 
 export type Whatsapp_GetAuthStatusOutput = {
   __typename?: 'Whatsapp_GetAuthStatusOutput';
-  client_device_manufacturer?: Maybe<Scalars['String']>;
-  client_device_model?: Maybe<Scalars['String']>;
   client_name?: Maybe<Scalars['String']>;
   client_phone_number?: Maybe<Scalars['String']>;
   client_platform?: Maybe<Scalars['String']>;
@@ -97,7 +95,9 @@ export type Whatsapp_GetAuthStatusOutput = {
   errorMessage?: Maybe<Scalars['String']>;
   isError: Scalars['Boolean'];
   is_authenticated: Scalars['Boolean'];
-  qr_code?: Maybe<Scalars['String']>;
+  is_client_ready: Scalars['Boolean'];
+  is_qr_ready: Scalars['Boolean'];
+  qrcode?: Maybe<Scalars['String']>;
 };
 
 export type Whatsapp_SignOutOutput = {
@@ -4267,7 +4267,7 @@ export type Store_GetStoreByPkQuery = { __typename?: 'query_root', store_by_pk?:
 export type Whatsapp_GetAuthStatusQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Whatsapp_GetAuthStatusQuery = { __typename?: 'query_root', Whatsapp_GetAuthStatus?: { __typename?: 'Whatsapp_GetAuthStatusOutput', client_device_manufacturer?: string | null, client_device_model?: string | null, client_phone_number?: string | null, client_name?: string | null, client_platform?: string | null, client_state?: string | null, errorMessage?: string | null, qr_code?: string | null, is_authenticated: boolean, isError: boolean } | null };
+export type Whatsapp_GetAuthStatusQuery = { __typename?: 'query_root', Whatsapp_GetAuthStatus?: { __typename?: 'Whatsapp_GetAuthStatusOutput', client_phone_number?: string | null, client_name?: string | null, client_platform?: string | null, client_state?: string | null, errorMessage?: string | null, qrcode?: string | null, is_authenticated: boolean, is_qr_ready: boolean, is_client_ready: boolean, isError: boolean } | null };
 
 export type User_SignUpMutationVariables = Exact<{
   defaultRole?: InputMaybe<Scalars['String']>;
@@ -4547,15 +4547,15 @@ export type Store_GetStoreByPkQueryResult = Apollo.QueryResult<Store_GetStoreByP
 export const Whatsapp_GetAuthStatusDocument = gql`
     query Whatsapp_GetAuthStatus {
   Whatsapp_GetAuthStatus {
-    client_device_manufacturer
-    client_device_model
     client_phone_number
     client_name
     client_platform
     client_state
     errorMessage
-    qr_code
+    qrcode
     is_authenticated
+    is_qr_ready
+    is_client_ready
     isError
   }
 }

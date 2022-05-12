@@ -2,55 +2,12 @@ import { Request, Response } from "express";
 import axios from "axios";
 import to from "await-to-js";
 
-interface MyWASendMessageResponse {
-  status: "AUTHENTICATED" | "NOT_AUTHENTICATED";
-  qrcode: string;
-  state:
-    | "CONFLICT"
-    | "CONNECTED"
-    | "DEPRECATED_VERSION"
-    | "OPENING"
-    | "PAIRING"
-    | "PROXYBLOCK"
-    | "SMB_TOS_BLOCK"
-    | "TIMEOUT"
-    | "TOS_BLOCK"
-    | "UNLAUNCHED"
-    | "UNPAIRED"
-    | "UNPAIRED_IDLE";
-  info?: {
-    pushname: string;
-    platform: string;
-    me: {
-      server: string;
-      user: string;
-      _serialized: string;
-    };
-    wid: {
-      server: string;
-      user: string;
-      _serialized: string;
-    };
-    phone: {
-      wa_version: string;
-      mcc: string;
-      mnc: string;
-      os_version: string;
-      device_manufacturer: string;
-      device_model: string;
-      os_build_number: string;
-    };
-  };
-}
-
-export default async (req: Request, res: Response) => {
-  const params: Whatsapp_GetAuthStatusArgs = req.body.input;
-
-  const defaultOutput: Whatsapp_GetAuthStatusOutput = {
+export default async (_req: Request, res: Response) => {
+  const defaultFailReq: Whatsapp_GetAuthStatusOutput = {
     is_authenticated: false,
-    qr_code: null,
-    client_device_manufacturer: null,
-    client_device_model: null,
+    is_client_ready: false,
+    is_qr_ready: false,
+    qrcode: null,
     client_name: null,
     client_phone_number: null,
     client_platform: null,
@@ -60,50 +17,57 @@ export default async (req: Request, res: Response) => {
   };
 
   const [errAuth, resAuth] = await to(
-    axios.get<MyWASendMessageResponse>(
-      `${process.env.WHATSAPP_API_URL}/auth/getqr`
+    axios.get<MyWAGetAuthStatusOutput>(
+      `${process.env.WHATSAPP_API_URL}/auth/getauthstatus`,
+      {
+        headers: {
+          "x-mywa-secret": process.env.WHATSAPP_API_SECRET || "",
+        },
+      }
     )
   );
 
-  res.send("ok");
-  // if (errAuth) {
-  //   console.log(
-  //     "🚀 ~ file: Whatsapp_GetAuthStatus.ts ~ line 54 ~ errAuth",
-  //     errAuth
-  //   );
-  //   const output: Whatsapp_GetAuthStatusOutput = {
-  //     ...defaultOutput,
-  //     errorMessage:
-  //       "Request gagal. Service Whatsapp API mungkin tidak berjalan dengan benar!",
-  //   };
-  //   return res.send(output);
-  // }
-  // console.log(
-  //   "🚀 ~ file: Whatsapp_GetAuthStatus.ts ~ line 49 ~ resAuth",
-  //   resAuth
-  // );
+  if (errAuth || !resAuth) {
+    console.log(
+      "🚀 ~ file: Whatsapp_GetAuthStatus.ts ~ line 54 ~ errAuth",
+      errAuth
+    );
+    const output: Whatsapp_GetAuthStatusOutput = {
+      ...defaultFailReq,
+      errorMessage:
+        "Request gagal. Service Whatsapp API mungkin tidak berjalan dengan benar!",
+    };
+    return res.send(output);
+  }
 
-  // if (resAuth) {
-  //   const client = resAuth.data.info;
-  //   const output: Whatsapp_GetAuthStatusOutput = {
-  //     ...defaultOutput,
-  //     is_authenticated: resAuth.data.status === "AUTHENTICATED" ? true : false,
-  //     qr_code: resAuth.data.qrcode || null,
-  //     client_device_manufacturer: client?.phone.device_manufacturer || null,
-  //     client_device_model: client?.phone.device_model || null,
-  //     client_name: client?.pushname || null,
-  //     client_phone_number: client?.me.user || null,
-  //     client_platform: client?.platform || null,
-  //     client_state: resAuth.data.state || null,
-  //     isError: false,
-  //   };
+  console.log(
+    "🚀 ~ file: Whatsapp_GetAuthStatus.ts ~ line 24 ~ resAuth",
+    resAuth
+  );
 
-  //   return res.send(output);
-  // } else {
-  //   const output: Whatsapp_GetAuthStatusOutput = {
-  //     ...defaultOutput,
-  //     errorMessage: "Request berhasil tetapi response Whatsapp API undefined.",
-  //   };
-  //   return res.send(output);
-  // }
+  const client = resAuth.data.info;
+  const defaultSuccessReq: Whatsapp_GetAuthStatusOutput = {
+    ...defaultFailReq,
+    is_authenticated: resAuth.data.is_authenticated,
+    is_client_ready: resAuth.data.is_client_ready,
+    is_qr_ready: resAuth.data.is_qr_ready,
+    qrcode: resAuth.data.qrcode || null,
+    client_name: client?.pushname || null,
+    client_phone_number: client?.wid.user || null,
+    client_platform: client?.platform || null,
+    client_state: resAuth.data.state || null,
+    isError: false,
+  };
+
+  if (
+    resAuth.data.is_authenticated === false ||
+    resAuth.data.is_client_ready === false
+  ) {
+    return res.send({
+      ...defaultSuccessReq,
+      isError: true,
+      errorMessage: "Service Whatsapp API belum ready / ter-autentikasi",
+    } as Whatsapp_GetAuthStatusOutput);
+  }
+  return res.send(defaultSuccessReq);
 };
