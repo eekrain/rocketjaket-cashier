@@ -1,0 +1,14 @@
+query Whatsapp_GetAuthStatus {
+  Whatsapp_GetAuthStatus {
+    client_device_manufacturer
+    client_device_model
+    client_phone_number
+    client_name
+    client_platform
+    client_state
+    errorMessage
+    qr_code
+    is_authenticated
+    isError
+  }
+}

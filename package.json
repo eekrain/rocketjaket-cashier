@@ -13,7 +13,8 @@
     "axios": "^0.27.2",
     "express": "^4.17.3",
     "graphql": "^16.4.0",
-    "graphql-request": "^4.2.0"
+    "graphql-request": "^4.2.0",
+    "http-status-codes": "^2.2.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.6.2",
