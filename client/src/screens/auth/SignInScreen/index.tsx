@@ -13,9 +13,13 @@ import {
 import {SigninNavProps} from '..';
 import {RHTextInput} from '../../../shared/components';
 import {useForm} from 'react-hook-form';
-import {useSignInEmailPassword, useSignUpEmailPassword} from '@nhost/react';
+import {useSignInEmailPassword} from '@nhost/react';
 import Config from 'react-native-config';
 import {TOAST_TEMPLATE} from '../../../shared/constants';
+import {
+  useUser_SignUpMutation,
+  namedOperations,
+} from '../../../graphql/gql-generated';
 
 interface ISignInScreenProps extends SigninNavProps {}
 
@@ -33,8 +37,15 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
   const toast = useToast();
 
   const {signInEmailPassword} = useSignInEmailPassword();
-  const signUp = useSignUpEmailPassword();
-  console.log('🚀 ~ file: index.tsx ~ line 34 ~ SignInScreen ~ signUp', signUp);
+  const [signUp, _signUpResult] = useUser_SignUpMutation({
+    context: {
+      headers: {
+        'x-hasura-admin-secret': 'nhost-admin-secret',
+        'x-hasura-role': 'admin',
+      },
+    },
+    refetchQueries: [namedOperations.Query.User_GetAllUser],
+  });
 
   const {
     register,
@@ -65,8 +76,19 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
 
   const handleSignUp = async (data: IDefaultValues) => {
     console.log('🚀 ~ file: index.tsx ~ line 46 ~ handleRegister ~ data', data);
-    const res = await signUp.signUpEmailPassword(data.username, data.password);
-    console.log('🚀 ~ file: index.tsx ~ line 53 ~ handleRegister ~ res', res);
+    const register = await signUp({
+      variables: {
+        email: defaultValues.username,
+        displayName: 'Ardian Eka Candra',
+        password: defaultValues.password,
+        defaultRole: 'administrator',
+        defaultStore: null,
+      },
+    });
+    console.log(
+      '🚀 ~ file: index.tsx ~ line 53 ~ handleRegister ~ register',
+      register,
+    );
   };
 
   return (
