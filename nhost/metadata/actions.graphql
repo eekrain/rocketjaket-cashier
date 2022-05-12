@@ -8,10 +8,35 @@ type Mutation {
   ): User_SignUpOutput
 }
 
+type Query {
+  Whatsapp_GetAuthStatus: Whatsapp_GetAuthStatusOutput
+}
+
+type Mutation {
+  Whatsapp_SignOut: Whatsapp_SignOutOutput
+}
+
 type User_SignUpOutput {
   email: String
   displayName: String
   isError: Boolean!
   errorMessage: String
+}
+
+type Whatsapp_GetAuthStatusOutput {
+  is_authenticated: Boolean!
+  qr_code: String
+  client_state: String
+  client_name: String
+  client_phone_number: String
+  client_platform: String
+  client_device_manufacturer: String
+  client_device_model: String
+  isError: Boolean!
+  errorMessage: String
+}
+
+type Whatsapp_SignOutOutput {
+  is_success: Boolean!
 }
 

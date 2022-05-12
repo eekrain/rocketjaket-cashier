@@ -86,6 +86,25 @@ export type User_SignUpOutput = {
   isError: Scalars['Boolean'];
 };
 
+export type Whatsapp_GetAuthStatusOutput = {
+  __typename?: 'Whatsapp_GetAuthStatusOutput';
+  client_device_manufacturer?: Maybe<Scalars['String']>;
+  client_device_model?: Maybe<Scalars['String']>;
+  client_name?: Maybe<Scalars['String']>;
+  client_phone_number?: Maybe<Scalars['String']>;
+  client_platform?: Maybe<Scalars['String']>;
+  client_state?: Maybe<Scalars['String']>;
+  errorMessage?: Maybe<Scalars['String']>;
+  isError: Scalars['Boolean'];
+  is_authenticated: Scalars['Boolean'];
+  qr_code?: Maybe<Scalars['String']>;
+};
+
+export type Whatsapp_SignOutOutput = {
+  __typename?: 'Whatsapp_SignOutOutput';
+  is_success: Scalars['Boolean'];
+};
+
 /** columns and relationships of "auth.provider_requests" */
 export type AuthProviderRequests = {
   __typename?: 'authProviderRequests';
@@ -1808,6 +1827,7 @@ export type Jsonb_Comparison_Exp = {
 export type Mutation_Root = {
   __typename?: 'mutation_root';
   User_SignUp?: Maybe<User_SignUpOutput>;
+  Whatsapp_SignOut?: Maybe<Whatsapp_SignOutOutput>;
   /** delete single row from the table: "auth.providers" */
   deleteAuthProvider?: Maybe<AuthProviders>;
   /** delete single row from the table: "auth.provider_requests" */
@@ -2438,6 +2458,7 @@ export enum Order_By {
 
 export type Query_Root = {
   __typename?: 'query_root';
+  Whatsapp_GetAuthStatus?: Maybe<Whatsapp_GetAuthStatusOutput>;
   /** fetch data from the table: "auth.providers" using primary key columns */
   authProvider?: Maybe<AuthProviders>;
   /** fetch data from the table: "auth.provider_requests" using primary key columns */
@@ -4226,6 +4247,11 @@ export type Store_UpdateStoreMutationVariables = Exact<{
 
 export type Store_UpdateStoreMutation = { __typename?: 'mutation_root', update_store_by_pk?: { __typename?: 'store', id: number, name: string } | null };
 
+export type Whatsapp_SignOutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type Whatsapp_SignOutMutation = { __typename?: 'mutation_root', Whatsapp_SignOut?: { __typename?: 'Whatsapp_SignOutOutput', is_success: boolean } | null };
+
 export type Store_GetAllStoreQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -4237,6 +4263,11 @@ export type Store_GetStoreByPkQueryVariables = Exact<{
 
 
 export type Store_GetStoreByPkQuery = { __typename?: 'query_root', store_by_pk?: { __typename?: 'store', id: number, name: string, latitude: string, longitude: string, address: string, created_at: any, updated_at: any } | null };
+
+export type Whatsapp_GetAuthStatusQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type Whatsapp_GetAuthStatusQuery = { __typename?: 'query_root', Whatsapp_GetAuthStatus?: { __typename?: 'Whatsapp_GetAuthStatusOutput', client_device_manufacturer?: string | null, client_device_model?: string | null, client_phone_number?: string | null, client_name?: string | null, client_platform?: string | null, client_state?: string | null, errorMessage?: string | null, qr_code?: string | null, is_authenticated: boolean, isError: boolean } | null };
 
 export type User_SignUpMutationVariables = Exact<{
   defaultRole?: InputMaybe<Scalars['String']>;
@@ -4284,6 +4315,7 @@ export const namedOperations = {
   Query: {
     Store_GetAllStore: 'Store_GetAllStore',
     Store_GetStoreByPK: 'Store_GetStoreByPK',
+    Whatsapp_GetAuthStatus: 'Whatsapp_GetAuthStatus',
     User_GetAllUser: 'User_GetAllUser',
     User_GetUserById: 'User_GetUserById'
   },
@@ -4291,6 +4323,7 @@ export const namedOperations = {
     Store_CreateStore: 'Store_CreateStore',
     Store_DeleteStoreByPK: 'Store_DeleteStoreByPK',
     Store_UpdateStore: 'Store_UpdateStore',
+    Whatsapp_SignOut: 'Whatsapp_SignOut',
     User_SignUp: 'User_SignUp',
     User_UpdateUserByUserId: 'User_UpdateUserByUserId',
     User_UpdateUserForAdmin: 'User_UpdateUserForAdmin'
@@ -4400,6 +4433,38 @@ export function useStore_UpdateStoreMutation(baseOptions?: Apollo.MutationHookOp
 export type Store_UpdateStoreMutationHookResult = ReturnType<typeof useStore_UpdateStoreMutation>;
 export type Store_UpdateStoreMutationResult = Apollo.MutationResult<Store_UpdateStoreMutation>;
 export type Store_UpdateStoreMutationOptions = Apollo.BaseMutationOptions<Store_UpdateStoreMutation, Store_UpdateStoreMutationVariables>;
+export const Whatsapp_SignOutDocument = gql`
+    mutation Whatsapp_SignOut {
+  Whatsapp_SignOut {
+    is_success
+  }
+}
+    `;
+export type Whatsapp_SignOutMutationFn = Apollo.MutationFunction<Whatsapp_SignOutMutation, Whatsapp_SignOutMutationVariables>;
+
+/**
+ * __useWhatsapp_SignOutMutation__
+ *
+ * To run a mutation, you first call `useWhatsapp_SignOutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useWhatsapp_SignOutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [whatsappSignOutMutation, { data, loading, error }] = useWhatsapp_SignOutMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useWhatsapp_SignOutMutation(baseOptions?: Apollo.MutationHookOptions<Whatsapp_SignOutMutation, Whatsapp_SignOutMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Whatsapp_SignOutMutation, Whatsapp_SignOutMutationVariables>(Whatsapp_SignOutDocument, options);
+      }
+export type Whatsapp_SignOutMutationHookResult = ReturnType<typeof useWhatsapp_SignOutMutation>;
+export type Whatsapp_SignOutMutationResult = Apollo.MutationResult<Whatsapp_SignOutMutation>;
+export type Whatsapp_SignOutMutationOptions = Apollo.BaseMutationOptions<Whatsapp_SignOutMutation, Whatsapp_SignOutMutationVariables>;
 export const Store_GetAllStoreDocument = gql`
     query Store_GetAllStore {
   store {
@@ -4479,6 +4544,49 @@ export function useStore_GetStoreByPkLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type Store_GetStoreByPkQueryHookResult = ReturnType<typeof useStore_GetStoreByPkQuery>;
 export type Store_GetStoreByPkLazyQueryHookResult = ReturnType<typeof useStore_GetStoreByPkLazyQuery>;
 export type Store_GetStoreByPkQueryResult = Apollo.QueryResult<Store_GetStoreByPkQuery, Store_GetStoreByPkQueryVariables>;
+export const Whatsapp_GetAuthStatusDocument = gql`
+    query Whatsapp_GetAuthStatus {
+  Whatsapp_GetAuthStatus {
+    client_device_manufacturer
+    client_device_model
+    client_phone_number
+    client_name
+    client_platform
+    client_state
+    errorMessage
+    qr_code
+    is_authenticated
+    isError
+  }
+}
+    `;
+
+/**
+ * __useWhatsapp_GetAuthStatusQuery__
+ *
+ * To run a query within a React component, call `useWhatsapp_GetAuthStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useWhatsapp_GetAuthStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWhatsapp_GetAuthStatusQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useWhatsapp_GetAuthStatusQuery(baseOptions?: Apollo.QueryHookOptions<Whatsapp_GetAuthStatusQuery, Whatsapp_GetAuthStatusQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Whatsapp_GetAuthStatusQuery, Whatsapp_GetAuthStatusQueryVariables>(Whatsapp_GetAuthStatusDocument, options);
+      }
+export function useWhatsapp_GetAuthStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Whatsapp_GetAuthStatusQuery, Whatsapp_GetAuthStatusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Whatsapp_GetAuthStatusQuery, Whatsapp_GetAuthStatusQueryVariables>(Whatsapp_GetAuthStatusDocument, options);
+        }
+export type Whatsapp_GetAuthStatusQueryHookResult = ReturnType<typeof useWhatsapp_GetAuthStatusQuery>;
+export type Whatsapp_GetAuthStatusLazyQueryHookResult = ReturnType<typeof useWhatsapp_GetAuthStatusLazyQuery>;
+export type Whatsapp_GetAuthStatusQueryResult = Apollo.QueryResult<Whatsapp_GetAuthStatusQuery, Whatsapp_GetAuthStatusQueryVariables>;
 export const User_SignUpDocument = gql`
     mutation User_SignUp($defaultRole: String = "karyawan", $defaultStore: Int = null, $displayName: String!, $email: String!, $password: String!) {
   User_SignUp(

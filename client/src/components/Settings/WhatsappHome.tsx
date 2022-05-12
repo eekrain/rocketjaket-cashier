@@ -12,10 +12,10 @@ import {
   useToast,
   Modal,
 } from 'native-base';
-import {SettingsHomeNavProps} from '../../screens/app/SettingsScreen';
+import {SettingsHomeProps} from '../../screens/app/SettingsScreen';
 import {
-  useWa_GetWaAuthStatusQuery,
-  useWa_SignoutMutation,
+  useWhatsapp_GetAuthStatusQuery,
+  useWhatsapp_SignOutMutation,
 } from '../../graphql/gql-generated';
 import {Grid, Row, Col} from 'react-native-easy-grid';
 import {Alert, StyleProp, StyleSheet, ViewStyle} from 'react-native';
@@ -28,7 +28,7 @@ import useCountDown from 'react-countdown-hook';
 const initialTime = 30 * 1000; // initial time in milliseconds, defaults to 60000
 const interval = 1000; // interval to change remaining time amount, defaults to 1000
 
-interface ITokoHomeProps extends SettingsHomeNavProps {}
+interface ITokoHomeProps extends SettingsHomeProps {}
 
 const WhatsappHome = ({}: ITokoHomeProps) => {
   const myAppState = useMyAppState();
@@ -62,7 +62,11 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
     width: colValueW,
   };
 
-  const getWAAuthStatus = useWa_GetWaAuthStatusQuery();
+  const getWAAuthStatus = useWhatsapp_GetAuthStatusQuery();
+  console.log(
+    '🚀 ~ file: WhatsappHome.tsx ~ line 66 ~ WhatsappHome ~ getWAAuthStatus',
+    getWAAuthStatus.error,
+  );
 
   useEffect(() => {
     if (timeLeft === 0 && waiting && !doneWaiting) {
@@ -77,14 +81,10 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
   }, [getWAAuthStatus.loading, myAppState]);
 
   const WAAuthStatus = useMemo(() => {
-    return getWAAuthStatus.data?.getWhatsappAuthStatus;
-  }, [getWAAuthStatus.data?.getWhatsappAuthStatus]);
-  console.log(
-    '🚀 ~ file: WhatsappHome.tsx ~ line 58 ~ WAAuthStatus ~ WAAuthStatus',
-    WAAuthStatus,
-  );
+    return getWAAuthStatus.data?.Whatsapp_GetAuthStatus;
+  }, [getWAAuthStatus.data?.Whatsapp_GetAuthStatus]);
 
-  const [whatsappSignout] = useWa_SignoutMutation({});
+  const [whatsappSignout] = useWhatsapp_SignOutMutation({});
 
   const handleWhatsappSignout = useCallback(async () => {
     const doSignout = async () => {
@@ -98,7 +98,7 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
         });
       });
 
-      if (res && res.data?.whatsappSignout?.is_success) {
+      if (res && res.data?.Whatsapp_SignOut?.is_success) {
         startCountdown();
         setWaiting(true);
         setDoneWaiting(false);

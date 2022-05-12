@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import axios from "axios";
 import to from "await-to-js";
-import { getAdminSdk } from "../utils/graphqlClient";
+import { getAdminSdk } from "../utils";
 
 export default async (req: Request, res: Response) => {
   const params: User_SignUpArgs = req.body.input;

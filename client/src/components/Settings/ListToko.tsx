@@ -18,18 +18,13 @@ import {
 import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
 import {ButtonEdit, IconButtonDelete} from '../Buttons';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useMyAppState} from '../../state';
-import {
-  SettingsHomeProps,
-  SettingsHomeNavProp,
-  SettingsStackParamList,
-} from '../../screens/app/SettingsScreen';
+import {SettingsHomeProps} from '../../screens/app/SettingsScreen';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 
 interface IActionProps {
   id: number;
-  navigation: SettingsHomeNavProp;
+  navigation: SettingsHomeProps['navigation'];
   handleDeleteKategori: () => Promise<void>;
 }
 
