@@ -13,6 +13,7 @@ import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {DismissKeyboardWrapper, RHTextInput} from '../../shared/components';
 import ButtonSave from '../Buttons/ButtonSave';
+import {SettingsScreenProps} from '../../screens/app/SettingsScreen';
 
 interface IDefaultValues {
   name: string;
@@ -41,7 +42,7 @@ interface ICreateTokoProps {}
 
 const CreateToko = ({}: ICreateTokoProps) => {
   const toast = useToast();
-  const navigation = useNavigation();
+  const navigation = useNavigation<SettingsScreenProps['navigation']>();
 
   const {
     handleSubmit,

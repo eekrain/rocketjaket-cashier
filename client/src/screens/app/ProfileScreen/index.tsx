@@ -32,7 +32,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {DismissKeyboardWrapper, RHTextInput} from '../../../shared/components';
 import {ButtonSave, ButtonBack} from '../../../components/Buttons';
 import {useMyAppState} from '../../../state';
-import {ProfileRootNavProps} from '../index';
+import {AppScreenProps} from '../index';
 import ChangePassword from '../../../components/Users/ChangePassword';
 import ChangeEmail from '../../../components/Users/ChangeEmail';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -43,7 +43,7 @@ import {
   launchImageLibrary,
 } from 'react-native-image-picker';
 import Feather from 'react-native-vector-icons/Feather';
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {useAccessToken} from '@nhost/react';
 import to from 'await-to-js';
 
@@ -68,9 +68,11 @@ const defaultValues: IDefaultValues = {
   default_role: '',
 };
 
-interface IProfileScreenProps extends ProfileRootNavProps {}
+interface IProfileScreenProps {}
 
-const ProfileScreen = ({route, navigation}: IProfileScreenProps) => {
+const ProfileScreen = ({}: IProfileScreenProps) => {
+  const navigation = useNavigation<AppScreenProps['Profile']['navigation']>();
+  const route = useRoute<AppScreenProps['Profile']['route']>();
   const focused = useIsFocused();
   const toast = useToast();
   const myAppState = useMyAppState();

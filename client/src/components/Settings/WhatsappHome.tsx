@@ -12,7 +12,6 @@ import {
   useToast,
   Modal,
 } from 'native-base';
-import {SettingsHomeProps} from '../../screens/app/SettingsScreen';
 import {
   useWhatsapp_GetAuthStatusQuery,
   useWhatsapp_SignOutMutation,
@@ -29,7 +28,7 @@ import {myNumberFormat} from '../../shared/utils';
 const initialTime = 20 * 1000; // initial time in milliseconds, defaults to 60000
 const interval = 1000; // interval to change remaining time amount, defaults to 1000
 
-interface ITokoHomeProps extends SettingsHomeProps {}
+interface ITokoHomeProps {}
 
 const WhatsappHome = ({}: ITokoHomeProps) => {
   const myAppState = useMyAppState();
@@ -63,7 +62,9 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
     width: colValueW,
   };
 
-  const getWAAuthStatus = useWhatsapp_GetAuthStatusQuery();
+  const getWAAuthStatus = useWhatsapp_GetAuthStatusQuery({
+    fetchPolicy: 'network-only',
+  });
   console.log(
     '🚀 ~ file: WhatsappHome.tsx ~ line 66 ~ WhatsappHome ~ getWAAuthStatus',
     getWAAuthStatus.error,
@@ -145,7 +146,12 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
 
       <HStack mb="10" mt="4" justifyContent="space-between">
         <Heading fontSize="xl">Whatsapp</Heading>
-        <Button onPress={() => getWAAuthStatus.refetch()}>Refresh</Button>
+        <Button
+          onPress={() => {
+            getWAAuthStatus.refetch();
+          }}>
+          Refresh
+        </Button>
       </HStack>
       <Stack direction={['column', 'column', 'row-reverse']}>
         <Box flex={1} alignItems="center">
@@ -177,6 +183,41 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
                 </Badge>
               </Col>
             </Row>
+            {WAAuthStatus?.isError && (
+              <Row
+                style={{
+                  ...defaultStyles.row,
+                  height: defaultStyles.row.height + 25,
+                }}>
+                <Col
+                  style={{
+                    ...colTitle,
+                    height: defaultStyles.row.height + 25,
+                  }}>
+                  <HStack alignItems={'center'} h="full">
+                    <Text>Autentikasi</Text>
+                  </HStack>
+                </Col>
+                <Col
+                  style={{
+                    ...colDivider,
+                    height: defaultStyles.row.height + 25,
+                  }}>
+                  <HStack alignItems={'center'} h="full">
+                    <Text>:</Text>
+                  </HStack>
+                </Col>
+                <Col
+                  style={{
+                    width: 'auto',
+                    height: defaultStyles.row.height + 25,
+                  }}>
+                  <HStack alignItems={'center'} h="full">
+                    <Text color="red.700">{WAAuthStatus.errorMessage}</Text>
+                  </HStack>
+                </Col>
+              </Row>
+            )}
             {WAAuthStatus?.client_state && (
               <Row style={defaultStyles.row}>
                 <Col style={colTitle}>

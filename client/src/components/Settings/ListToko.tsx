@@ -19,13 +19,14 @@ import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
 import {ButtonEdit, IconButtonDelete} from '../Buttons';
 import {useMyAppState} from '../../state';
-import {SettingsHomeProps} from '../../screens/app/SettingsScreen';
+import {SettingsScreenProps} from '../../screens/app/SettingsScreen';
 import {TOAST_TEMPLATE} from '../../shared/constants';
+import {useNavigation} from '@react-navigation/native';
 
 interface IActionProps {
   id: number;
-  navigation: SettingsHomeProps['navigation'];
   handleDeleteKategori: () => Promise<void>;
+  navigation: SettingsScreenProps['ListToko']['navigation'];
 }
 
 const Action = ({id, navigation, handleDeleteKategori}: IActionProps) => {
@@ -45,10 +46,12 @@ const Action = ({id, navigation, handleDeleteKategori}: IActionProps) => {
   );
 };
 
-interface ITokoHomeProps extends SettingsHomeProps {}
+interface ITokoHomeProps {}
 
-const TokoHome = ({navigation}: ITokoHomeProps) => {
+const TokoHome = () => {
   const getAllToko = useStore_GetAllStoreQuery();
+  const navigation =
+    useNavigation<SettingsScreenProps['ListToko']['navigation']>();
   const toast = useToast();
 
   const [deleteStoreMutation, _deleteStoreMutationResult] =
@@ -95,8 +98,8 @@ const TokoHome = ({navigation}: ITokoHomeProps) => {
       ...val,
       component: (
         <Action
-          id={val.id}
           navigation={navigation}
+          id={val.id}
           handleDeleteKategori={async () =>
             handleDeleteKategori(val.id, val.name)
           }
@@ -108,7 +111,6 @@ const TokoHome = ({navigation}: ITokoHomeProps) => {
   }, [
     // deleteStoreMutation,
     getAllToko.data?.store,
-    navigation,
     toast,
   ]);
 
