@@ -1,12 +1,11 @@
 import React from 'react';
 import {View, Text} from 'native-base';
-import {DashboardRootNavProps} from '../index';
 import withAppLayout from '../../../components/Layout/AppLayout';
 
-interface IDashboardScreenProps extends DashboardRootNavProps {}
+interface IDashboardScreenProps {}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const DashboardScreen = (props: IDashboardScreenProps) => {
+const DashboardScreen = ({}: IDashboardScreenProps) => {
   return (
     <View>
       <Text>HAHAHAh</Text>

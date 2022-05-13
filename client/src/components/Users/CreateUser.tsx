@@ -17,7 +17,7 @@ import {
 } from '../../shared/components';
 import ButtonSave from '../Buttons/ButtonSave';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {CreateUserProps} from '../../screens/app/UserScreen';
+import {UserScreenProps} from '../../screens/app/UserScreen';
 import {getXHasuraContextHeader} from '../../shared/utils';
 import {
   PossibleDefaultRoleUser,
@@ -25,6 +25,7 @@ import {
   UserRolesEnum,
 } from '../../types/user';
 import {ButtonBack} from '../Buttons';
+import {useNavigation} from '@react-navigation/native';
 
 interface IDefaultValues {
   display_name: string;
@@ -78,11 +79,12 @@ const defaultValues: IDefaultValues = {
   store_id: '',
 };
 
-interface ICreateUserProps extends CreateUserProps {}
+interface ICreateUserProps {}
 
-const CreateUser = ({navigation}: ICreateUserProps) => {
+const CreateUser = ({}: ICreateUserProps) => {
   const toast = useToast();
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation<UserScreenProps['ListUser']['navigation']>();
 
   const {
     handleSubmit,
