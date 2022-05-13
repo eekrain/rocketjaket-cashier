@@ -9,41 +9,22 @@ import {
   useToast,
   ScrollView,
 } from 'native-base';
-import {Alert, RefreshControl} from 'react-native';
+import {RefreshControl} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import {
-  useStore_GetAllStoreQuery,
-  useStore_DeleteStoreByPkMutation,
-  namedOperations,
-  useUser_GetAllUserQuery,
-  // useUser_BulkDeleteOneUserMutation,
-} from '../../graphql/gql-generated';
+import {useUser_GetAllUserQuery} from '../../graphql/gql-generated';
 import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
-import {ButtonEdit, IconButtonDelete} from '../Buttons';
-import {TOAST_TEMPLATE} from '../../shared/constants';
+import {ButtonEdit} from '../Buttons';
 import {useMyAppState} from '../../state';
 import withAppLayout from '../Layout/AppLayout';
-import {
-  ListUserProps,
-  UserRootStackParamList,
-} from '../../screens/app/UserScreen';
 import {MyAvatar} from '../../shared/components';
-import {
-  // getStorageFileUrlWImageTransform,
-  getXHasuraContextHeader,
-  // storage,
-} from '../../shared/utils';
-import {
-  PossibleDefaultRoleUser,
-  UserRolesEnum,
-  UserRoleValues,
-} from '../../types/user';
-import {nhost} from '../../shared/utils';
+import {PossibleDefaultRoleUser, UserRolesEnum} from '../../types/user';
+import {UserScreenProps} from '../../screens/app/UserScreen';
+import {useNavigation} from '@react-navigation/native';
 
 interface IActionProps {
   id: string;
-  navigation: ListUserProps['navigation'];
+  navigation: UserScreenProps['ListUser']['navigation'];
   // handleDeleteKategori: () => Promise<void>;
 }
 
@@ -64,11 +45,12 @@ const Action = ({id, navigation}: IActionProps) => {
   );
 };
 
-interface IUserHomeProps extends ListUserProps {}
+interface IUserHomeProps {}
 
-const UserHome = ({navigation}: IUserHomeProps) => {
+const UserHome = ({}: IUserHomeProps) => {
   const getAllUser = useUser_GetAllUserQuery();
   const toast = useToast();
+  const navigation = useNavigation<UserScreenProps['ListUser']['navigation']>();
 
   // const [deleteUser, _deleteUserResult] = useUser_BulkDeleteOneUserMutation({
   //   ...getXHasuraContextHeader({role: 'administrator'}),

@@ -1,5 +1,4 @@
 import React from 'react';
-import {AppNavProps, SettingsRootNavProps} from '../index';
 import SettingsHome from '../../../components/Settings';
 import CreateToko from '../../../components/Settings/CreateToko';
 import UpdateToko from '../../../components/Settings/UpdateToko';
@@ -7,7 +6,6 @@ import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import {CompositeScreenProps} from '@react-navigation/native';
 
 export type SettingsStackParamList = {
   ListToko: undefined;
@@ -27,25 +25,18 @@ export const rootSettingsRoutes: ISettingsRoutes[] = [
   {name: 'UpdateToko', component: UpdateToko, routeNiceName: 'Toko'},
 ];
 
-export type SettingsHomeProps = CompositeScreenProps<
-  NativeStackScreenProps<SettingsStackParamList, 'ListToko'>,
-  AppNavProps
->;
-export type CreateTokoProps = CompositeScreenProps<
-  NativeStackScreenProps<SettingsStackParamList, 'CreateToko'>,
-  AppNavProps
->;
-export type UpdateTokoProps = CompositeScreenProps<
-  NativeStackScreenProps<SettingsStackParamList, 'UpdateToko'>,
-  AppNavProps
->;
-
+export type SettingsScreenProps = {
+  [Properties in keyof SettingsStackParamList]: NativeStackScreenProps<
+    SettingsStackParamList,
+    keyof SettingsStackParamList
+  >;
+};
 const SettingsStack = createNativeStackNavigator<SettingsStackParamList>();
 
-interface ISettingsScreenProps extends SettingsRootNavProps {}
+interface ISettingsScreenProps {}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const SettingsScreen = (props: ISettingsScreenProps) => {
+const SettingsScreen = () => {
   return (
     <SettingsStack.Navigator screenOptions={{headerShown: false}}>
       {rootSettingsRoutes.map(route => (

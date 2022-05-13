@@ -13,8 +13,9 @@ import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {DismissKeyboardWrapper, RHTextInput} from '../../shared/components';
 import {ButtonSave, ButtonBack} from '../Buttons';
-import {UpdateTokoProps} from '../../screens/app/SettingsScreen';
+import {SettingsScreenProps} from '../../screens/app/SettingsScreen';
 import {useMyAppState} from '../../state';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 interface IDefaultValues {
   name: string;
@@ -39,12 +40,15 @@ const defaultValues: IDefaultValues = {
   longitude: '',
 };
 
-interface IUpdateTokoProps extends UpdateTokoProps {}
+interface IUpdateTokoProps {}
 
-const UpdateToko = ({route, navigation}: IUpdateTokoProps) => {
+const UpdateToko = ({}: IUpdateTokoProps) => {
   const toast = useToast();
   const myAppState = useMyAppState();
   const [isErrorOnce, setErrorOnce] = useState(false);
+  const navigation =
+    useNavigation<SettingsScreenProps['UpdateToko']['navigation']>();
+  const route = useRoute<SettingsScreenProps['UpdateToko']['route']>();
 
   const {
     handleSubmit,
@@ -58,7 +62,7 @@ const UpdateToko = ({route, navigation}: IUpdateTokoProps) => {
   });
 
   const getDataToko = useStore_GetStoreByPkQuery({
-    variables: {id: route.params.storeId},
+    variables: {id: route.params?.storeId || 0},
   });
   useEffect(() => {
     myAppState.setLoadingWholePage(getDataToko.loading);
@@ -109,17 +113,22 @@ const UpdateToko = ({route, navigation}: IUpdateTokoProps) => {
       '🚀 ~ file: UpdateToko.tsx ~ line 108 ~ handleSubmission ~ data',
       data,
     );
-    if (!isDirty) {
-      toast.show({
-        ...TOAST_TEMPLATE.cancelled('Kategori produk tidak ada yang diubah.'),
-      });
+    if (!isDirty || !route.params?.storeId) {
+      if (!isDirty)
+        toast.show({
+          ...TOAST_TEMPLATE.cancelled('Kategori produk tidak ada yang diubah.'),
+        });
+      else
+        toast.show({
+          ...TOAST_TEMPLATE.cancelled('Store id tidak valid.'),
+        });
       navigation.goBack();
       reset(defaultValues);
       return;
     }
     const res = await updateStoreMutation({
       variables: {
-        store_id: route.params.storeId,
+        store_id: route.params?.storeId,
         store: {
           name: data.name,
           address: data.address,

@@ -1,5 +1,4 @@
 import React from 'react';
-import {AppNavProps, UserRootNavProps} from '../index';
 import UsersHome from '../../../components/Users';
 import CreateUser from '../../../components/Users/CreateUser';
 import UpdateUser from '../../../components/Users/UpdateUser';
@@ -7,7 +6,6 @@ import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import {CompositeScreenProps} from '@react-navigation/native';
 
 export type UserRootStackParamList = {
   ListUser: undefined;
@@ -27,23 +25,16 @@ export const rootUserRoutes: IUserRoutes[] = [
   {name: 'UpdateUser', component: UpdateUser, routeNiceName: 'Pengguna'},
 ];
 
-export type ListUserProps = CompositeScreenProps<
-  NativeStackScreenProps<UserRootStackParamList, 'ListUser'>,
-  AppNavProps
->;
-export type ListUserNavProp = ListUserProps['navigation'];
-export type CreateUserProps = CompositeScreenProps<
-  NativeStackScreenProps<UserRootStackParamList, 'CreateUser'>,
-  AppNavProps
->;
-export type UpdateUserProps = CompositeScreenProps<
-  NativeStackScreenProps<UserRootStackParamList, 'UpdateUser'>,
-  AppNavProps
->;
+export type UserScreenProps = {
+  [Properties in keyof UserRootStackParamList]: NativeStackScreenProps<
+    UserRootStackParamList,
+    keyof UserRootStackParamList
+  >;
+};
 
 const UserStack = createNativeStackNavigator<UserRootStackParamList>();
 
-interface IUserScreenProps extends UserRootNavProps {}
+interface IUserScreenProps {}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const UserScreen = (props: IUserScreenProps) => {

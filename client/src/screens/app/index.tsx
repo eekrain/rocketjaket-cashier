@@ -100,40 +100,12 @@ export const allAppRoutes = [
   // ...rootTransactionRoutes,
 ];
 
-export type AppNavProps = DrawerScreenProps<AppNavigationParamList, any>;
-
-export type DashboardRootNavProps = DrawerScreenProps<
-  AppNavigationParamList,
-  'Dashboard'
->;
-// export type TransactionRootNavProps = DrawerScreenProps<
-//   AppNavigationParamList,
-//   'TransactionRoot'
-// >;
-// export type CashierRootNavProps = DrawerScreenProps<
-//   AppNavigationParamList,
-//   'CashierRoot'
-// >;
-export type ProfileRootNavProps = DrawerScreenProps<
-  AppNavigationParamList,
-  'Profile'
->;
-export type ProdukRootNavProps = DrawerScreenProps<
-  AppNavigationParamList,
-  'ProdukRoot'
->;
-export type SettingsRootNavProps = DrawerScreenProps<
-  AppNavigationParamList,
-  'SettingsRoot'
->;
-export type InventoryRootNavProps = DrawerScreenProps<
-  AppNavigationParamList,
-  'InventoryRoot'
->;
-export type UserRootNavProps = DrawerScreenProps<
-  AppNavigationParamList,
-  'UserRoot'
->;
+export type AppScreenProps = {
+  [Properties in keyof AppNavigationParamList]: DrawerScreenProps<
+    AppNavigationParamList,
+    keyof AppNavigationParamList
+  >;
+};
 
 const AppDrawer = createDrawerNavigator<AppNavigationParamList>();
 
