@@ -20,7 +20,7 @@ import {
   RHCheckbox,
 } from '../../shared/components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {UpdateUserProps} from '../../screens/app/UserScreen';
+import {UserScreenProps} from '../../screens/app/UserScreen';
 import {useMyAppState} from '../../state';
 import {
   TUserRoleOptions,
@@ -29,6 +29,7 @@ import {
 } from '../../types/user';
 import {ButtonBack, ButtonSave} from '../Buttons';
 import to from 'await-to-js';
+import {useNavigation} from '@react-navigation/native';
 
 interface IDefaultValues {
   display_name: string;
@@ -69,15 +70,17 @@ const defaultValues: IDefaultValues = {
   store_id: '',
 };
 
-interface IUpdateUserProps extends UpdateUserProps {}
+interface IUpdateUserProps {}
 
-const UpdateUser = ({navigation, route}: IUpdateUserProps) => {
+const UpdateUser = ({}: IUpdateUserProps) => {
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const myAppState = useMyAppState();
   const [isErrorOnce, setErrorOnce] = useState(false);
   const [isDataReady, setDataReady] = useState(false);
-  const [isAddAccRoleRunOnce, setAddAccRoleRunOnce] = useState(false);
+
+  const navigation = useNavigation<UserScreenProps['ListUser']['navigation']>();
+  const route = useNavigation<UserScreenProps['ListUser']['route']>();
 
   const {
     watch,
@@ -110,7 +113,7 @@ const UpdateUser = ({navigation, route}: IUpdateUserProps) => {
   const getUserById = useUser_GetUserByIdQuery({
     ...getXHasuraContextHeader({role: 'administrator'}),
     variables: {
-      user_id: route.params.userId,
+      user_id: route.params?.userId || '',
     },
     fetchPolicy: 'no-cache',
   });
@@ -169,6 +172,7 @@ const UpdateUser = ({navigation, route}: IUpdateUserProps) => {
   });
 
   const handleSubmission = async (data: IDefaultValues) => {
+    if (!route.params?.userId) return;
     setLoading(true);
     console.log(
       '🚀 ~ file: CreateUser.tsx ~ line 84 ~ handleSubmission ~ data',

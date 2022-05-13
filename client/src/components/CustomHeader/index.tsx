@@ -21,7 +21,7 @@ import {
 } from '../../shared/utils';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {useState} from 'react';
-import {allAppRoutes, AppNavProps} from '../../screens/app';
+import {allAppRoutes, AppNavigationParamList} from '../../screens/app';
 import {MyAvatar} from '../../shared/components';
 // import {useUser_DeleteFcmTokenByUserIdMutation} from '../../graphql/gql-generated';
 import {
@@ -29,6 +29,8 @@ import {
   useSignOut,
   useAuthenticationStatus,
 } from '@nhost/react';
+import {useNavigation} from '@react-navigation/native';
+import {DrawerScreenProps} from '@react-navigation/drawer';
 
 export const customHeaderHeight: number = 70;
 
@@ -40,9 +42,15 @@ const getRouteNiceName = (routeName: string) => {
   return niceName ? niceName : '';
 };
 
-interface ICustomHeaderProps extends AppNavProps {}
+interface ICustomHeaderProps {}
 
-const CustomHeader = (props: ICustomHeaderProps) => {
+const CustomHeader = ({}: ICustomHeaderProps) => {
+  const navigation =
+    useNavigation<
+      DrawerScreenProps<AppNavigationParamList, any>['navigation']
+    >();
+  const route =
+    useNavigation<DrawerScreenProps<AppNavigationParamList, any>['route']>();
   const accessToken = useAccessToken();
   const authStatus = useAuthenticationStatus();
   const myUser = useMyUser();
@@ -90,11 +98,11 @@ const CustomHeader = (props: ICustomHeaderProps) => {
       px="4"
       height={customHeaderHeight}>
       <HStack space="6">
-        <Pressable onPress={() => props.navigation.toggleDrawer()}>
+        <Pressable onPress={() => navigation.toggleDrawer()}>
           <HamburgerIcon size="sm" color="white" />
         </Pressable>
         <Heading size="md" color="white">
-          {getRouteNiceName(props.route.name)}
+          {getRouteNiceName(route.name)}
         </Heading>
       </HStack>
       <HStack space="4" alignItems="center">
@@ -155,7 +163,7 @@ const CustomHeader = (props: ICustomHeaderProps) => {
               <VStack space="3">
                 <Button
                   onPress={() => {
-                    props.navigation.navigate('Profile');
+                    navigation.navigate('Profile');
                   }}
                   justifyContent="flex-start"
                   bg={bgLight}

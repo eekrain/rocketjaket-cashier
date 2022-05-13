@@ -1,12 +1,11 @@
 import React from 'react';
-import {AppNavProps} from '../../screens/app';
 import CustomHeader from '../CustomHeader';
 import {Box} from 'native-base';
 import {useMyAppState} from '../../state';
 import LoadingOverlay from '../Overlay/LoadingOverlay';
 
 const withAppLayout = (Component: any) => {
-  return (props: AppNavProps) => {
+  return (props: any) => {
     const appState = useMyAppState();
     return (
       <>
