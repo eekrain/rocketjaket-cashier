@@ -1,0 +1,6 @@
+mutation Produk_CreateProduk($object: products_insert_input!) {
+  insert_products_one(object: $object) {
+    id
+    name
+  }
+}

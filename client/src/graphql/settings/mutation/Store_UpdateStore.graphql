@@ -1,5 +1,5 @@
-mutation Store_UpdateStore($store: store_set_input!, $store_id: Int!) {
-  update_store_by_pk(pk_columns: {id: $store_id}, _set: $store) {
+mutation Store_UpdateStore($store: stores_set_input!, $store_id: Int!) {
+  update_stores_by_pk(pk_columns: {id: $store_id}, _set: $store) {
     id
     name
   }

@@ -1,0 +1,10 @@
+mutation Produk_UpdateKategoriProduk(
+  $id: Int!
+  $category: product_categories_set_input!
+) {
+  update_product_categories_by_pk(pk_columns: {id: $id}, _set: $category) {
+    name
+    id
+    description
+  }
+}

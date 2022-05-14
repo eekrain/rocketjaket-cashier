@@ -1,5 +1,5 @@
-mutation Store_CreateStore($store: store_insert_input = {}) {
-  insert_store_one(object: $store) {
+mutation Store_CreateStore($store: stores_insert_input = {}) {
+  insert_stores_one(object: $store) {
     id
     name
   }

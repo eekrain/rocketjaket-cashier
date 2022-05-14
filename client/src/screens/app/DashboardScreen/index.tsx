@@ -1,6 +1,7 @@
 import React from 'react';
-import {View, Text} from 'native-base';
+import {View, Text, Button} from 'native-base';
 import withAppLayout from '../../../components/Layout/AppLayout';
+import {nhost} from '../../../shared/utils';
 
 interface IDashboardScreenProps {}
 
@@ -8,6 +9,12 @@ interface IDashboardScreenProps {}
 const DashboardScreen = ({}: IDashboardScreenProps) => {
   return (
     <View>
+      <Button
+        onPress={() => {
+          console.log(nhost.auth.getAccessToken());
+        }}>
+        Test
+      </Button>
       <Text>HAHAHAh</Text>
     </View>
   );

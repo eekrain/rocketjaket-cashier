@@ -1,0 +1,6 @@
+mutation Produk_UpdateProdukByPK($id: uuid!, $product: products_set_input!) {
+  update_products_by_pk(pk_columns: {id: $id}, _set: $product) {
+    id
+    name
+  }
+}
