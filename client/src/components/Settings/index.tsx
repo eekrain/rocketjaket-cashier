@@ -4,7 +4,6 @@ import {Box, Pressable} from 'native-base';
 import {Animated} from 'react-native';
 import {useMemo} from 'react';
 import withAppLayout from '../Layout/AppLayout';
-import {SettingsScreenProps} from '../../screens/app/SettingsScreen';
 import ListToko from './ListToko';
 import WhatsappHome from './WhatsappHome';
 
@@ -15,7 +14,7 @@ const routes = [
 
 interface ITokoHomeProps {}
 
-const TokoHome = () => {
+const TokoHome = ({}: ITokoHomeProps) => {
   const [activeTab, setActiveTab] = React.useState(0);
 
   const Component: React.ComponentType<any> = useMemo(() => {

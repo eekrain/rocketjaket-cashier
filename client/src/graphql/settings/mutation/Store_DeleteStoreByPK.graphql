@@ -1,5 +1,5 @@
 mutation Store_DeleteStoreByPK($id: Int!) {
-  delete_store_by_pk(id: $id) {
+  delete_stores_by_pk(id: $id) {
     id
     name
   }

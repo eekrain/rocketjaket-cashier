@@ -25,6 +25,7 @@ import {
   // getStorageFileUrlWImageTransform,
   renameFilenameWithAddedNanoid,
   nhost,
+  getStorageFileUrlWImageTransform,
 } from '../../../shared/utils';
 import {TOAST_TEMPLATE} from '../../../shared/constants';
 import {useForm} from 'react-hook-form';
@@ -46,6 +47,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {useAccessToken} from '@nhost/react';
 import to from 'await-to-js';
+import axios from 'axios';
 
 interface IDefaultValues {
   display_name: string;
@@ -79,10 +81,6 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
   const [isErrorOnce, setErrorOnce] = useState(false);
   const [isDataReady, setDataReady] = useState(false);
   const myUser = useMyUser();
-  // console.log(
-  //   '🚀 ~ file: index.tsx ~ line 78 ~ ProfileScreen ~ myUser',
-  //   myUser.avatarUrl,
-  // );
   const accessToken = useAccessToken();
   const {
     watch,
@@ -102,10 +100,10 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
   //   watch(),
   // );
 
-  // console.log(
-  //   '🚀 ~ file: index.tsx ~ line 99 ~ ProfileScreen ~ myUser.id',
-  //   myUser.id,
-  // );
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 99 ~ ProfileScreen ~ myUser',
+    myUser,
+  );
 
   const getUserData = useUser_GetUserByIdQuery({
     variables: {user_id: myUser.id},
@@ -153,16 +151,12 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
     useUser_UpdateUserByUserIdMutation({
       ...getXHasuraContextHeader({role: 'me', withUserId: true}),
       refetchQueries: [
-        // namedOperations.Query.User_GetAllUser,
+        namedOperations.Query.User_GetAllUser,
         namedOperations.Query.User_GetUserById,
       ],
     });
 
   const handleSubmission = async (data: IDefaultValues) => {
-    console.log(
-      '🚀 ~ file: index.tsx ~ line 150 ~ handleSubmission ~ data',
-      data,
-    );
     let newAvatarFileId = '';
     if (data?.photo?.asset?.uri) {
       const finalFileName = renameFilenameWithAddedNanoid(
@@ -181,17 +175,21 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
           bucketId: 'avatarPhoto',
         }),
       );
-      console.log(
-        '🚀 ~ file: index.tsx ~ line 179 ~ handleSubmission ~ resUpload',
-        resUpload,
-      );
+      // console.log(
+      //   '🚀 ~ file: index.tsx ~ line 180 ~ handleSubmission ~ errUpload',
+      //   errUpload,
+      // );
+      // console.log(
+      //   '🚀 ~ file: index.tsx ~ line 179 ~ handleSubmission ~ resUpload',
+      //   resUpload,
+      // );
 
       if (
         !errUpload &&
         resUpload?.fileMetadata?.id &&
         data.photo.currentAvatarFileId !== ''
       ) {
-        await nhost.storage
+        const resdelete = await nhost.storage
           .delete({fileId: data.photo.currentAvatarFileId})
           .catch(error => {
             console.log(
@@ -199,6 +197,10 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
               error,
             );
           });
+        console.log(
+          '🚀 ~ file: index.tsx ~ line 199 ~ handleSubmission ~ resdelete',
+          resdelete,
+        );
       }
 
       newAvatarFileId = resUpload?.fileMetadata?.id
@@ -231,25 +233,12 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
         ...TOAST_TEMPLATE.error(`Gagal update user ${data.display_name}.`),
       });
     } else {
-      nhost.auth.refreshSession();
+      await nhost.auth.refreshSession();
       toast.show({
         ...TOAST_TEMPLATE.success(`Berhasil update user ${data.display_name}.`),
       });
     }
   };
-
-  React.useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset(defaultValues);
-      setDataReady(false);
-      navigation.goBack();
-    }
-  }, [reset, isSubmitSuccessful, getUserData.client, navigation]);
-  React.useEffect(() => {
-    if (!isSubmitSuccessful) {
-      setDataReady(false);
-    }
-  }, [focused, isSubmitSuccessful]);
 
   const getImageFromCamera = () => {
     launchCamera(
@@ -274,10 +263,10 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
         selectionLimit: 1,
       },
       data => {
-        console.log(
-          '🚀 ~ file: index.tsx ~ line 252 ~ getImageFromGallery ~ data',
-          data,
-        );
+        // console.log(
+        //   '🚀 ~ file: index.tsx ~ line 252 ~ getImageFromGallery ~ data',
+        //   data,
+        // );
         if (data?.assets) {
           const asset = data.assets[0] || {};
           setValue('photo.asset', asset, {shouldDirty: true});
@@ -285,11 +274,6 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
       },
     );
   };
-
-  // console.log(
-  //   '🚀 ~ file: index.tsx ~ line 300 ~ ProfileScreen ~ userPhoto?.asset?.uri',
-  //   userPhoto?.asset?.uri,
-  // );
 
   return (
     <KeyboardAwareScrollView
@@ -334,11 +318,16 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
                     source={{
                       uri: userPhoto?.asset?.uri
                         ? userPhoto.asset.uri
-                        : myUser.avatarUrl,
+                        : getStorageFileUrlWImageTransform({
+                            fileUrl: myUser.avatarUrl,
+                            w: 100,
+                            q: 60,
+                          }),
                       headers: {
                         Authorization: `Bearer ${accessToken}`,
                       },
                     }}
+                    disableErrorFallback={true}
                     fallbackText={userDataFetched?.displayName || ''}
                     size={150}
                   />
@@ -360,7 +349,7 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
           </Stack>
           <HStack justifyContent="flex-end" mt="8" space="4">
             <ButtonSave
-              // isLoading={_updateUserMutationResult.loading}
+              isLoading={_updateUserMutationResult.loading}
               onPress={handleSubmit(handleSubmission)}
             />
             <ButtonBack onPress={() => navigation.goBack()} />

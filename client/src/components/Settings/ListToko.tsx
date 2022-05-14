@@ -92,7 +92,7 @@ const TokoHome = () => {
         },
       );
     };
-    const temp = getAllToko.data?.store || [];
+    const temp = getAllToko.data?.stores || [];
 
     const withAction = temp.map(val => ({
       ...val,
@@ -110,7 +110,7 @@ const TokoHome = () => {
     return withAction;
   }, [
     // deleteStoreMutation,
-    getAllToko.data?.store,
+    getAllToko.data?.stores,
     toast,
   ]);
 

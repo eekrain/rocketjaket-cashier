@@ -1,5 +1,5 @@
 query Store_GetStoreByPK($id: Int!) {
-  store_by_pk(id: $id) {
+  stores_by_pk(id: $id) {
     id
     name
     latitude

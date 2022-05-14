@@ -16,8 +16,8 @@ import {
 } from 'native-base';
 import {
   useMyUser,
-  // getStorageFileUrlWImageTransform,
   getXHasuraContextHeader,
+  getStorageFileUrlWImageTransform,
 } from '../../shared/utils';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {useState} from 'react';
@@ -141,7 +141,11 @@ const CustomHeader = ({}: ICustomHeaderProps) => {
               {...triggerProps}>
               <MyAvatar
                 source={{
-                  uri: myUser.avatarUrl,
+                  uri: getStorageFileUrlWImageTransform({
+                    fileUrl: myUser.avatarUrl,
+                    w: 150,
+                    q: 60,
+                  }),
                   headers: {
                     authorization: `Bearer ${accessToken}`,
                   },

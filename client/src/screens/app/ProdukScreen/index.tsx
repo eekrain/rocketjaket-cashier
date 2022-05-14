@@ -4,14 +4,14 @@ import {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 
-// import ProdukIndex from '../../../components/Produk';
-// import CreateKategoriProduk from '../../../components/Produk/CreateKategoriProduk';
-// import UpdateKategoriProduk from '../../../components/Produk/UpdateKategoriProduk';
-// import CreateProduk from '../../../components/Produk/CreateProduk';
-// import UpdateProduk from '../../../components/Produk/UpdateProduk';
+import ProdukHome from '../../../components/Produk';
+import CreateKategoriProduk from '../../../components/Produk/CreateKategoriProduk';
+import UpdateKategoriProduk from '../../../components/Produk/UpdateKategoriProduk';
+import CreateProduk from '../../../components/Produk/CreateProduk';
+import UpdateProduk from '../../../components/Produk/UpdateProduk';
 
 export type ProductStackParamList = {
-  ListProduk: undefined;
+  ProdukHome: undefined;
   CreateKategoriProduk: undefined;
   UpdateKategoriProduk: {categoryId: number};
   CreateProduk: undefined;
@@ -25,7 +25,7 @@ type IProdukRoutes = {
 };
 
 export const rootProdukRoutes: IProdukRoutes[] = [
-  {name: 'ListProduk', component: ProdukIndex, routeNiceName: 'List Produk'},
+  {name: 'ProdukHome', component: ProdukHome, routeNiceName: 'List Produk'},
   {
     name: 'CreateKategoriProduk',
     component: CreateKategoriProduk,
@@ -54,6 +54,14 @@ export type ProdukScreenProps = {
     keyof ProductStackParamList
   >;
 };
+export type UpdateKategoriProdukNavProps = NativeStackScreenProps<
+  ProductStackParamList,
+  'UpdateKategoriProduk'
+>;
+export type UpdateProdukNavProps = NativeStackScreenProps<
+  ProductStackParamList,
+  'UpdateProduk'
+>;
 
 const ProdukStack = createNativeStackNavigator<ProductStackParamList>();
 
