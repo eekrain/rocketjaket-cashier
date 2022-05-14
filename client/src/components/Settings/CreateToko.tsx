@@ -42,7 +42,8 @@ interface ICreateTokoProps {}
 
 const CreateToko = ({}: ICreateTokoProps) => {
   const toast = useToast();
-  const navigation = useNavigation<SettingsScreenProps['navigation']>();
+  const navigation =
+    useNavigation<SettingsScreenProps['CreateToko']['navigation']>();
 
   const {
     handleSubmit,
@@ -74,14 +75,14 @@ const CreateToko = ({}: ICreateTokoProps) => {
     if (res.errors) {
       toast.show({
         ...TOAST_TEMPLATE.error(
-          `Gagal melakukan penambahan toko ${res.data?.insert_store_one?.name}.`,
+          `Gagal melakukan penambahan toko ${res.data?.insert_stores_one?.name}.`,
         ),
       });
     } else {
       reset();
       toast.show({
         ...TOAST_TEMPLATE.success(
-          `Berhasil menambahkan toko ${res.data?.insert_store_one?.name}.`,
+          `Berhasil menambahkan toko ${res.data?.insert_stores_one?.name}.`,
         ),
       });
       navigation.goBack();

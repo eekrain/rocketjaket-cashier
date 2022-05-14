@@ -98,6 +98,7 @@ select_permissions:
     columns:
     - avatar_url
     - default_role
+    - disabled
     - display_name
     - email
     - email_verified
@@ -114,6 +115,7 @@ update_permissions:
 - permission:
     check: {}
     columns:
+    - avatar_url
     - default_role
     - disabled
     - display_name

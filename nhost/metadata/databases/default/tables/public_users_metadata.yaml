@@ -2,7 +2,7 @@ table:
   name: users_metadata
   schema: public
 object_relationships:
-- name: store
+- name: stores
   using:
     foreign_key_constraint_on: store_id
 - name: user
@@ -12,8 +12,8 @@ select_permissions:
 - permission:
     columns:
     - id
-    - user_id
     - store_id
+    - user_id
     filter: {}
   role: administrator
 - permission:
@@ -29,8 +29,8 @@ update_permissions:
 - permission:
     check: {}
     columns:
-    - store_id
     - id
+    - store_id
     - user_id
     filter: {}
   role: administrator

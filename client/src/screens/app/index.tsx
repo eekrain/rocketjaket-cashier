@@ -7,7 +7,7 @@ import DashboardScreen from './DashboardScreen';
 // } from './CashierScreen';
 import ProfileScreen from './ProfileScreen';
 import CustomDrawerContent from '../../components/CustomDrawerContent';
-// import ProdukScreen, {rootProdukRoutes} from './ProdukScreen';
+import ProdukScreen, {rootProdukRoutes} from './ProdukScreen';
 import SettingsScreen, {rootSettingsRoutes} from './SettingsScreen';
 // import InventoryScreen, {rootInventoryRoutes} from './InventoryScreen';
 import UserScreen, {rootUserRoutes} from './UserScreen';
@@ -64,12 +64,12 @@ export const rootAppRoutes: IAppRoutes[] = [
     isHideOnDrawer: true,
     role: ['administrator', 'karyawan'],
   },
-  // {
-  //   name: 'ProdukRoot',
-  //   component: ProdukScreen,
-  //   routeNiceName: 'Produk',
-  //   role: ['administrator', 'karyawan'],
-  // },
+  {
+    name: 'ProdukRoot',
+    component: ProdukScreen,
+    routeNiceName: 'Produk',
+    role: ['administrator', 'karyawan'],
+  },
   // {
   //   name: 'InventoryRoot',
   //   component: InventoryScreen,
@@ -94,7 +94,7 @@ export const allAppRoutes = [
   ...rootAppRoutes,
   ...rootSettingsRoutes,
   ...rootUserRoutes,
-  // ...rootProdukRoutes,
+  ...rootProdukRoutes,
   // ...rootInventoryRoutes,
   // ...rootCashierRoutes,
   // ...rootTransactionRoutes,

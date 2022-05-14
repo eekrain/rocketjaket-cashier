@@ -30,3 +30,10 @@ array_relationships:
       table:
         name: files
         schema: storage
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator
+- permission:
+    filter: {}
+  role: me
