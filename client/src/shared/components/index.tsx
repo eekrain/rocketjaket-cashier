@@ -5,3 +5,5 @@ export * from './RHCheckbox';
 export * from './RHRadio';
 export * from './DismissKeyboardWrapper';
 export * from './MyAvatar';
+export * from './MyImageViewer';
+export * from './SimpleDataGrid';

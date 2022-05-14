@@ -5,6 +5,7 @@ import {generateAvatarName} from '../../utils';
 
 interface Props {
   fallbackText: string;
+  disableErrorFallback?: boolean;
   source?: Source;
   overlay?: boolean;
   overlayColor?: IBoxProps['bgColor'];
@@ -22,6 +23,7 @@ interface Props {
 
 export const MyAvatar = ({
   fallbackText,
+  disableErrorFallback,
   source,
   size,
   width,
@@ -39,7 +41,33 @@ export const MyAvatar = ({
   const [isError, setError] = useState(false);
   return (
     <Box position="relative">
-      {isError || !source?.uri ? (
+      {source?.uri && (!isError || disableErrorFallback) ? (
+        <Box position="relative" overflow="hidden">
+          {topRightElement && (
+            <Box position="absolute" zIndex={2} top={0} right={0}>
+              {topRightElement}
+            </Box>
+          )}
+          <FastImage
+            source={source}
+            style={{
+              borderRadius: borderTopRadius ? undefined : borderRadius,
+              borderTopLeftRadius: borderTopRadius
+                ? borderTopRadius
+                : undefined,
+              borderTopRightRadius: borderTopRadius
+                ? borderTopRadius
+                : undefined,
+              width: size ? size : width,
+              height: size ? size : height,
+            }}
+            resizeMode="cover"
+            onError={() => {
+              setError(true);
+            }}
+          />
+        </Box>
+      ) : (
         <HStack
           position="relative"
           overflow="hidden"
@@ -72,32 +100,6 @@ export const MyAvatar = ({
             {generateAvatarName(fallbackText)}
           </Text>
         </HStack>
-      ) : (
-        <Box position="relative" overflow="hidden">
-          {topRightElement && (
-            <Box position="absolute" zIndex={2} top={0} right={0}>
-              {topRightElement}
-            </Box>
-          )}
-          <FastImage
-            source={source}
-            style={{
-              borderRadius: borderTopRadius ? undefined : borderRadius,
-              borderTopLeftRadius: borderTopRadius
-                ? borderTopRadius
-                : undefined,
-              borderTopRightRadius: borderTopRadius
-                ? borderTopRadius
-                : undefined,
-              width: size ? size : width,
-              height: size ? size : height,
-            }}
-            resizeMode="cover"
-            onError={() => {
-              setError(true);
-            }}
-          />
-        </Box>
       )}
       {overlay && (
         <Box

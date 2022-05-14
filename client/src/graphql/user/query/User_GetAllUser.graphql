@@ -7,7 +7,7 @@ query User_GetAllUser {
     email
     newEmail
     users_metadata {
-      store {
+      stores {
         id
         name
       }

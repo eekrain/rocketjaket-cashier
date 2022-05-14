@@ -77,24 +77,24 @@ const UpdateToko = ({}: IUpdateTokoProps) => {
   }, [getDataToko.loading, isSubmitSuccessful, myAppState]);
 
   useEffect(() => {
-    if (getDataToko.data?.store_by_pk === null && !isErrorOnce) {
+    if (getDataToko.data?.stores_by_pk === null && !isErrorOnce) {
       toast.show({
         ...TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'),
       });
       navigation.goBack();
       setErrorOnce(true);
     } else {
-      if (getDataToko.data?.store_by_pk) {
-        setValue('name', getDataToko.data?.store_by_pk.name);
-        setValue('address', getDataToko.data?.store_by_pk.address || '', {
+      if (getDataToko.data?.stores_by_pk) {
+        setValue('name', getDataToko.data?.stores_by_pk.name);
+        setValue('address', getDataToko.data?.stores_by_pk.address || '', {
           shouldDirty: false,
           shouldValidate: false,
         });
-        setValue('latitude', getDataToko.data?.store_by_pk.latitude || '', {
+        setValue('latitude', getDataToko.data?.stores_by_pk.latitude || '', {
           shouldDirty: false,
           shouldValidate: false,
         });
-        setValue('longitude', getDataToko.data?.store_by_pk.longitude || '', {
+        setValue('longitude', getDataToko.data?.stores_by_pk.longitude || '', {
           shouldDirty: false,
           shouldValidate: false,
         });
@@ -140,14 +140,14 @@ const UpdateToko = ({}: IUpdateTokoProps) => {
     if (res.errors) {
       toast.show({
         ...TOAST_TEMPLATE.error(
-          `Gagal melakukan update toko ${res.data?.update_store_by_pk?.name}.`,
+          `Gagal melakukan update toko ${res.data?.update_stores_by_pk?.name}.`,
         ),
       });
     } else {
       reset(defaultValues);
       toast.show({
         ...TOAST_TEMPLATE.success(
-          `Berhasil update toko ${res.data?.update_store_by_pk?.name}.`,
+          `Berhasil update toko ${res.data?.update_stores_by_pk?.name}.`,
         ),
       });
       navigation.goBack();

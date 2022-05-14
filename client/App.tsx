@@ -24,9 +24,14 @@ import {
   PERMISSIONS,
   RESULTS,
 } from 'react-native-permissions';
+import Config from 'react-native-config';
 
 const App = () => {
   const authStatus = useAuthenticationStatus();
+
+  const [accessTokenLatest, setAccessTokenLatest] = useState(
+    nhost.auth.getAccessToken(),
+  );
 
   const [loadingSplashScreen, setLoadingSplashScreen] = useState(true);
   const loading = useMemo(
@@ -35,14 +40,25 @@ const App = () => {
   );
 
   useEffect(() => {
+    nhost.storage.setAccessToken(accessTokenLatest);
+    nhost.storage.setAdminSecret(Config.NHOST_HASURA_ADMIN_SECRET);
+  }, [accessTokenLatest]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAccessTokenLatest(nhost.auth.getAccessToken());
+    }, 5000);
+
     const splash = setTimeout(() => {
       setLoadingSplashScreen(false);
     }, 1000);
 
     return () => {
+      clearInterval(interval);
       clearTimeout(splash);
     };
-  });
+  }, []);
+
   if (loading) {
     return <SplashScreen />;
   }

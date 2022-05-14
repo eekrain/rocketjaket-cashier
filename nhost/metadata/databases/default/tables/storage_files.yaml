@@ -88,14 +88,41 @@ select_permissions:
     - uploaded_by_user_id
     filter: {}
   role: me
-delete_permissions:
+update_permissions:
 - permission:
-    filter:
-      uploaded_by_user_id:
-        _eq: X-Hasura-User-Id
+    check: {}
+    columns:
+    - is_uploaded
+    - size
+    - bucket_id
+    - etag
+    - mime_type
+    - name
+    - created_at
+    - updated_at
+    - id
+    - uploaded_by_user_id
+    filter: {}
   role: administrator
 - permission:
-    filter:
-      uploaded_by_user_id:
-        _eq: X-Hasura-User-Id
+    check: {}
+    columns:
+    - is_uploaded
+    - size
+    - bucket_id
+    - etag
+    - mime_type
+    - name
+    - created_at
+    - updated_at
+    - id
+    - uploaded_by_user_id
+    filter: {}
+  role: me
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator
+- permission:
+    filter: {}
   role: me

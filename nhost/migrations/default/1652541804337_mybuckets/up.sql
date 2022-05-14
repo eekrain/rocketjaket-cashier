@@ -1,0 +1,3 @@
+SET check_function_bodies = false;
+INSERT INTO storage.buckets (id, created_at, updated_at, download_expiration, min_upload_file_size, max_upload_file_size, cache_control, presigned_urls_enabled) VALUES ('avatarPhoto', '2022-05-14 15:19:46.99758+00', '2022-05-14 15:19:46.99758+00', 30, 1, 50000000, 'max-age=3600', true);
+INSERT INTO storage.buckets (id, created_at, updated_at, download_expiration, min_upload_file_size, max_upload_file_size, cache_control, presigned_urls_enabled) VALUES ('products', '2022-05-14 15:19:46.99758+00', '2022-05-14 15:19:46.99758+00', 30, 1, 50000000, 'max-age=3600', true);

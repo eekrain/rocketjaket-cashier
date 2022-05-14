@@ -1,5 +1,5 @@
 query Store_GetAllStore {
-  store {
+  stores {
     id
     name
     address
