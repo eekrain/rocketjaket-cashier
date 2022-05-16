@@ -1,10 +1,10 @@
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import DashboardScreen from './DashboardScreen';
-// import CashierScreen, {
-//   CashierRootStackParamList,
-//   rootCashierRoutes,
-// } from './CashierScreen';
+import CashierScreen, {
+  CashierRootStackParamList,
+  rootCashierRoutes,
+} from './CashierScreen';
 import ProfileScreen from './ProfileScreen';
 import CustomDrawerContent from '../../components/CustomDrawerContent';
 import ProdukScreen, {rootProdukRoutes} from './ProdukScreen';
@@ -27,7 +27,7 @@ export type AppNavigationParamList = {
   SettingsRoot: undefined;
   InventoryRoot: undefined;
   UserRoot: undefined;
-  // CashierRoot: NavigatorScreenParams<CashierRootStackParamList>;
+  CashierRoot: NavigatorScreenParams<CashierRootStackParamList>;
 };
 
 export type IAppRoutes = {
@@ -45,12 +45,12 @@ export const rootAppRoutes: IAppRoutes[] = [
     routeNiceName: 'Dashboard',
     role: ['administrator'],
   },
-  // {
-  //   name: 'CashierRoot',
-  //   component: CashierScreen,
-  //   routeNiceName: 'Kasir',
-  //   role: ['administrator', 'karyawan'],
-  // },
+  {
+    name: 'CashierRoot',
+    component: CashierScreen,
+    routeNiceName: 'Kasir',
+    role: ['administrator', 'karyawan'],
+  },
   // {
   //   name: 'TransactionRoot',
   //   component: TransactionScreen,
@@ -96,7 +96,7 @@ export const allAppRoutes = [
   ...rootUserRoutes,
   ...rootProdukRoutes,
   ...rootInventoryRoutes,
-  // ...rootCashierRoutes,
+  ...rootCashierRoutes,
   // ...rootTransactionRoutes,
 ];
 
@@ -130,7 +130,7 @@ const AppNavigation = ({}: Props) => {
 export default AppNavigation;
 
 export const getAppIcon = (screenName: keyof AppNavigationParamList) => {
-  // if (screenName === 'CashierRoot') return 'monitor';
+  if (screenName === 'CashierRoot') return 'monitor';
   if (screenName === 'Dashboard') return 'bar-chart';
   // if (screenName === 'TransactionRoot') return 'list';
   if (screenName === 'Profile') return 'user';

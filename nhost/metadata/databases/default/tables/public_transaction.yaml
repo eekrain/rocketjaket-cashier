@@ -1,6 +1,31 @@
 table:
   name: transaction
   schema: public
+object_relationships:
+- name: store
+  using:
+    foreign_key_constraint_on: store_id
+- name: transaction_payment_type_enum
+  using:
+    foreign_key_constraint_on: payment_type
+- name: transaction_status_enum
+  using:
+    foreign_key_constraint_on: transaction_status
+array_relationships:
+- name: transaction_items
+  using:
+    foreign_key_constraint_on:
+      column: transaction_invoice_number
+      table:
+        name: transaction_items
+        schema: public
+- name: transaction_receipts
+  using:
+    foreign_key_constraint_on:
+      column: transaction_invoice_number
+      table:
+        name: transaction_receipts
+        schema: public
 insert_permissions:
 - permission:
     backend_only: false

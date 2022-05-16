@@ -1,2 +1,2 @@
 export * from './TOAST_TEMPLATE';
-// export * from './PAYMENT_METHOD';
+export * from './PAYMENT_METHOD';

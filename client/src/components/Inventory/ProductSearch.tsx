@@ -35,7 +35,9 @@ const ProductSearch = ({control, errors, setSelectedProductId}: Props) => {
     name: 'product_search_term',
   });
 
-  const getAllProducts = useProduk_GetAllProdukQuery();
+  const getAllProducts = useProduk_GetAllProdukQuery({
+    fetchPolicy: 'network-only',
+  });
   const allProducts = useMemo(
     () => getAllProducts.data?.products || [],
     [getAllProducts.data?.products],

@@ -1,4 +1,12 @@
 actions:
+- name: Cashier_CreateTransaction
+  definition:
+    kind: synchronous
+    handler: '{{NHOST_BACKEND_URL}}/v1/functions/actions/Cashier_CreateTransaction'
+    forward_client_headers: true
+  permissions:
+  - role: karyawan
+  - role: administrator
 - name: User_SignUp
   definition:
     kind: synchronous
@@ -20,14 +28,53 @@ actions:
   permissions:
   - role: administrator
 custom_types:
-  enums: []
+  enums:
+  - name: TransactionStatusEnum
+    values:
+    - description: Gagal
+      is_deprecated: null
+      value: failed
+    - description: Refund
+      is_deprecated: null
+      value: refund
+    - description: Refund Sebagian
+      is_deprecated: null
+      value: refund_part
+    - description: Sukses
+      is_deprecated: null
+      value: success
+  - name: TransactionPaymentTypeEnum
+    values:
+    - description: Cash
+      is_deprecated: null
+      value: CASH
+    - description: BCA
+      is_deprecated: null
+      value: EDC_BCA
+    - description: BRI
+      is_deprecated: null
+      value: EDC_BRI
+    - description: MANDIRI
+      is_deprecated: null
+      value: EDC_MANDIRI
+    - description: GOPAY
+      is_deprecated: null
+      value: EWALLET_GOPAY
+    - description: LINKAJA
+      is_deprecated: null
+      value: EWALLET_LINKAJA
+    - description: SHOPEEPAY
+      is_deprecated: null
+      value: EWALLET_SHOPEEPAY
   input_objects:
   - name: InventoryVariantMetadataInsertInput
   - name: InventoryVariantMetadataNeedUpdateInput
   - name: InventoryVariantsMetadaUpsertInput
+  - name: transaction_items_input
   objects:
   - name: User_SignUpOutput
   - name: Whatsapp_GetAuthStatusOutput
   - name: Whatsapp_SignOutOutput
   - name: BulkUpdateVariantsMetadataOutput
+  - name: Cashier_CreateTransactionOutput
   scalars: []
