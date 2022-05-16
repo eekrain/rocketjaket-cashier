@@ -100,13 +100,13 @@ const CreateUser = ({}: ICreateUserProps) => {
   const currDefaultRole = watch('default_role');
   const getAllStore = useStore_GetAllStoreQuery();
   const allStoreOptions = useMemo(() => {
-    const stores = getAllStore.data?.store || [];
+    const stores = getAllStore.data?.stores || [];
 
     return stores.map(store => ({
       value: store.id.toString(),
       label: store.name,
     }));
-  }, [getAllStore.data?.store]);
+  }, [getAllStore.data?.stores]);
 
   const [signUp, _signUpResult] = useUser_SignUpMutation({
     ...getXHasuraContextHeader({role: 'administrator'}),

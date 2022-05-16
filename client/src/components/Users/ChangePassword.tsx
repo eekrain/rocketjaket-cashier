@@ -4,7 +4,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {useForm} from 'react-hook-form';
 import {RHTextInput} from '../../shared/components';
-import {Button, Box, Icon, useToast} from 'native-base';
+import {Button, Icon, useToast} from 'native-base';
 import Feather from 'react-native-vector-icons/Feather';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useChangePassword} from '@nhost/react';

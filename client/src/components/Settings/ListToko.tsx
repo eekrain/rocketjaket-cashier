@@ -22,14 +22,16 @@ import {useMyAppState} from '../../state';
 import {SettingsScreenProps} from '../../screens/app/SettingsScreen';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useNavigation} from '@react-navigation/native';
+import to from 'await-to-js';
+import {checkErrorMessage} from '../../shared/utils';
 
 interface IActionProps {
   id: number;
-  handleDeleteKategori: () => Promise<void>;
+  handleDeleteToko: () => Promise<void>;
   navigation: SettingsScreenProps['ListToko']['navigation'];
 }
 
-const Action = ({id, navigation, handleDeleteKategori}: IActionProps) => {
+const Action = ({id, navigation, handleDeleteToko}: IActionProps) => {
   const myAppState = useMyAppState();
 
   return (
@@ -41,7 +43,7 @@ const Action = ({id, navigation, handleDeleteKategori}: IActionProps) => {
           navigation.navigate('UpdateToko', {storeId: id});
         }}
       />
-      <IconButtonDelete size="sm" onPress={() => handleDeleteKategori()} />
+      <IconButtonDelete size="sm" onPress={() => handleDeleteToko()} />
     </HStack>
   );
 };
@@ -60,12 +62,15 @@ const TokoHome = () => {
     });
 
   const data = useMemo(() => {
-    const handleDeleteKategori = async (id: number, name: string) => {
+    const handleDeleteToko = async (id: number, name: string) => {
       const mutation = async () => {
-        const res = await deleteStoreMutation({variables: {id}});
-        if (res.errors) {
+        const [err, res] = await to(deleteStoreMutation({variables: {id}}));
+        if (err || !res) {
+          const fkError = checkErrorMessage.fkError(err.message)
+            ? `\nMasih ada inventory di dalam toko ${name}.`
+            : '';
           toast.show({
-            ...TOAST_TEMPLATE.error(`Hapus toko ${name} gagal.`),
+            ...TOAST_TEMPLATE.error(`Hapus toko ${name} gagal.${fkError}`),
           });
         } else {
           toast.show({
@@ -100,9 +105,7 @@ const TokoHome = () => {
         <Action
           navigation={navigation}
           id={val.id}
-          handleDeleteKategori={async () =>
-            handleDeleteKategori(val.id, val.name)
-          }
+          handleDeleteToko={async () => handleDeleteToko(val.id, val.name)}
         />
       ),
     }));
