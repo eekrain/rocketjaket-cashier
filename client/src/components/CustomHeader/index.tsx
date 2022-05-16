@@ -16,7 +16,7 @@ import {
 } from 'native-base';
 import {
   useMyUser,
-  getXHasuraContextHeader,
+  // getXHasuraContextHeader,
   getStorageFileUrlWImageTransform,
 } from '../../shared/utils';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -24,11 +24,7 @@ import {useState} from 'react';
 import {allAppRoutes, AppNavigationParamList} from '../../screens/app';
 import {MyAvatar} from '../../shared/components';
 // import {useUser_DeleteFcmTokenByUserIdMutation} from '../../graphql/gql-generated';
-import {
-  useAccessToken,
-  useSignOut,
-  useAuthenticationStatus,
-} from '@nhost/react';
+import {useSignOut, useAuthenticationStatus} from '@nhost/react';
 import {useNavigation} from '@react-navigation/native';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 
@@ -51,7 +47,6 @@ const CustomHeader = ({}: ICustomHeaderProps) => {
     >();
   const route =
     useNavigation<DrawerScreenProps<AppNavigationParamList, any>['route']>();
-  const accessToken = useAccessToken();
   const authStatus = useAuthenticationStatus();
   const myUser = useMyUser();
   // console.log('🚀 ~ file: index.tsx ~ line 49 ~ CustomHeader ~ myUser', myUser);
@@ -146,9 +141,6 @@ const CustomHeader = ({}: ICustomHeaderProps) => {
                     w: 150,
                     q: 60,
                   }),
-                  headers: {
-                    authorization: `Bearer ${accessToken}`,
-                  },
                 }}
                 fallbackText={myUser.displayName || ''}
                 size={50}

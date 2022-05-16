@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import FastImage, {Source} from 'react-native-fast-image';
 import {Box, HStack, Text, IBoxProps} from 'native-base';
 import {generateAvatarName} from '../../utils';
+import {useAccessToken} from '@nhost/react';
 
 interface Props {
   fallbackText: string;
@@ -39,6 +40,8 @@ export const MyAvatar = ({
   overlayColor = 'rgba(255, 255, 255, 0.2)',
 }: Props) => {
   const [isError, setError] = useState(false);
+  const accessToken = useAccessToken();
+
   return (
     <Box position="relative">
       {source?.uri && (!isError || disableErrorFallback) ? (
@@ -49,7 +52,12 @@ export const MyAvatar = ({
             </Box>
           )}
           <FastImage
-            source={source}
+            source={{
+              ...source,
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }}
             style={{
               borderRadius: borderTopRadius ? undefined : borderRadius,
               borderTopLeftRadius: borderTopRadius

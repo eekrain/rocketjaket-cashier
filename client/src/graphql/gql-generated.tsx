@@ -1800,6 +1800,842 @@ export type Files_Variance_Order_By = {
   size?: InputMaybe<Order_By>;
 };
 
+/** columns and relationships of "inventory_product_variants" */
+export type Inventory_Product_Variants = {
+  __typename?: 'inventory_product_variants';
+  id: Scalars['uuid'];
+  /** An object relationship */
+  inventory_product: Inventory_Products;
+  inventory_product_id: Scalars['uuid'];
+  inventory_variant_metadata_id: Scalars['Int'];
+  /** An object relationship */
+  inventory_variants_metadata: Inventory_Variants_Metadata;
+};
+
+/** aggregated selection of "inventory_product_variants" */
+export type Inventory_Product_Variants_Aggregate = {
+  __typename?: 'inventory_product_variants_aggregate';
+  aggregate?: Maybe<Inventory_Product_Variants_Aggregate_Fields>;
+  nodes: Array<Inventory_Product_Variants>;
+};
+
+/** aggregate fields of "inventory_product_variants" */
+export type Inventory_Product_Variants_Aggregate_Fields = {
+  __typename?: 'inventory_product_variants_aggregate_fields';
+  avg?: Maybe<Inventory_Product_Variants_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Inventory_Product_Variants_Max_Fields>;
+  min?: Maybe<Inventory_Product_Variants_Min_Fields>;
+  stddev?: Maybe<Inventory_Product_Variants_Stddev_Fields>;
+  stddev_pop?: Maybe<Inventory_Product_Variants_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Inventory_Product_Variants_Stddev_Samp_Fields>;
+  sum?: Maybe<Inventory_Product_Variants_Sum_Fields>;
+  var_pop?: Maybe<Inventory_Product_Variants_Var_Pop_Fields>;
+  var_samp?: Maybe<Inventory_Product_Variants_Var_Samp_Fields>;
+  variance?: Maybe<Inventory_Product_Variants_Variance_Fields>;
+};
+
+
+/** aggregate fields of "inventory_product_variants" */
+export type Inventory_Product_Variants_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Inventory_Product_Variants_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "inventory_product_variants" */
+export type Inventory_Product_Variants_Aggregate_Order_By = {
+  avg?: InputMaybe<Inventory_Product_Variants_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Inventory_Product_Variants_Max_Order_By>;
+  min?: InputMaybe<Inventory_Product_Variants_Min_Order_By>;
+  stddev?: InputMaybe<Inventory_Product_Variants_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Inventory_Product_Variants_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Inventory_Product_Variants_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Inventory_Product_Variants_Sum_Order_By>;
+  var_pop?: InputMaybe<Inventory_Product_Variants_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Inventory_Product_Variants_Var_Samp_Order_By>;
+  variance?: InputMaybe<Inventory_Product_Variants_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "inventory_product_variants" */
+export type Inventory_Product_Variants_Arr_Rel_Insert_Input = {
+  data: Array<Inventory_Product_Variants_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Inventory_Product_Variants_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Inventory_Product_Variants_Avg_Fields = {
+  __typename?: 'inventory_product_variants_avg_fields';
+  inventory_variant_metadata_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "inventory_product_variants" */
+export type Inventory_Product_Variants_Avg_Order_By = {
+  inventory_variant_metadata_id?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "inventory_product_variants". All fields are combined with a logical 'AND'. */
+export type Inventory_Product_Variants_Bool_Exp = {
+  _and?: InputMaybe<Array<Inventory_Product_Variants_Bool_Exp>>;
+  _not?: InputMaybe<Inventory_Product_Variants_Bool_Exp>;
+  _or?: InputMaybe<Array<Inventory_Product_Variants_Bool_Exp>>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  inventory_product?: InputMaybe<Inventory_Products_Bool_Exp>;
+  inventory_product_id?: InputMaybe<Uuid_Comparison_Exp>;
+  inventory_variant_metadata_id?: InputMaybe<Int_Comparison_Exp>;
+  inventory_variants_metadata?: InputMaybe<Inventory_Variants_Metadata_Bool_Exp>;
+};
+
+/** unique or primary key constraints on table "inventory_product_variants" */
+export enum Inventory_Product_Variants_Constraint {
+  /** unique or primary key constraint */
+  InventoryProductVariantPkey = 'inventory_product_variant_pkey'
+}
+
+/** input type for incrementing numeric columns in table "inventory_product_variants" */
+export type Inventory_Product_Variants_Inc_Input = {
+  inventory_variant_metadata_id?: InputMaybe<Scalars['Int']>;
+};
+
+/** input type for inserting data into table "inventory_product_variants" */
+export type Inventory_Product_Variants_Insert_Input = {
+  id?: InputMaybe<Scalars['uuid']>;
+  inventory_product?: InputMaybe<Inventory_Products_Obj_Rel_Insert_Input>;
+  inventory_product_id?: InputMaybe<Scalars['uuid']>;
+  inventory_variant_metadata_id?: InputMaybe<Scalars['Int']>;
+  inventory_variants_metadata?: InputMaybe<Inventory_Variants_Metadata_Obj_Rel_Insert_Input>;
+};
+
+/** aggregate max on columns */
+export type Inventory_Product_Variants_Max_Fields = {
+  __typename?: 'inventory_product_variants_max_fields';
+  id?: Maybe<Scalars['uuid']>;
+  inventory_product_id?: Maybe<Scalars['uuid']>;
+  inventory_variant_metadata_id?: Maybe<Scalars['Int']>;
+};
+
+/** order by max() on columns of table "inventory_product_variants" */
+export type Inventory_Product_Variants_Max_Order_By = {
+  id?: InputMaybe<Order_By>;
+  inventory_product_id?: InputMaybe<Order_By>;
+  inventory_variant_metadata_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Inventory_Product_Variants_Min_Fields = {
+  __typename?: 'inventory_product_variants_min_fields';
+  id?: Maybe<Scalars['uuid']>;
+  inventory_product_id?: Maybe<Scalars['uuid']>;
+  inventory_variant_metadata_id?: Maybe<Scalars['Int']>;
+};
+
+/** order by min() on columns of table "inventory_product_variants" */
+export type Inventory_Product_Variants_Min_Order_By = {
+  id?: InputMaybe<Order_By>;
+  inventory_product_id?: InputMaybe<Order_By>;
+  inventory_variant_metadata_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "inventory_product_variants" */
+export type Inventory_Product_Variants_Mutation_Response = {
+  __typename?: 'inventory_product_variants_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Inventory_Product_Variants>;
+};
+
+/** on_conflict condition type for table "inventory_product_variants" */
+export type Inventory_Product_Variants_On_Conflict = {
+  constraint: Inventory_Product_Variants_Constraint;
+  update_columns?: Array<Inventory_Product_Variants_Update_Column>;
+  where?: InputMaybe<Inventory_Product_Variants_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "inventory_product_variants". */
+export type Inventory_Product_Variants_Order_By = {
+  id?: InputMaybe<Order_By>;
+  inventory_product?: InputMaybe<Inventory_Products_Order_By>;
+  inventory_product_id?: InputMaybe<Order_By>;
+  inventory_variant_metadata_id?: InputMaybe<Order_By>;
+  inventory_variants_metadata?: InputMaybe<Inventory_Variants_Metadata_Order_By>;
+};
+
+/** primary key columns input for table: inventory_product_variants */
+export type Inventory_Product_Variants_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
+/** select columns of table "inventory_product_variants" */
+export enum Inventory_Product_Variants_Select_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  InventoryProductId = 'inventory_product_id',
+  /** column name */
+  InventoryVariantMetadataId = 'inventory_variant_metadata_id'
+}
+
+/** input type for updating data in table "inventory_product_variants" */
+export type Inventory_Product_Variants_Set_Input = {
+  id?: InputMaybe<Scalars['uuid']>;
+  inventory_product_id?: InputMaybe<Scalars['uuid']>;
+  inventory_variant_metadata_id?: InputMaybe<Scalars['Int']>;
+};
+
+/** aggregate stddev on columns */
+export type Inventory_Product_Variants_Stddev_Fields = {
+  __typename?: 'inventory_product_variants_stddev_fields';
+  inventory_variant_metadata_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev() on columns of table "inventory_product_variants" */
+export type Inventory_Product_Variants_Stddev_Order_By = {
+  inventory_variant_metadata_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Inventory_Product_Variants_Stddev_Pop_Fields = {
+  __typename?: 'inventory_product_variants_stddev_pop_fields';
+  inventory_variant_metadata_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "inventory_product_variants" */
+export type Inventory_Product_Variants_Stddev_Pop_Order_By = {
+  inventory_variant_metadata_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Inventory_Product_Variants_Stddev_Samp_Fields = {
+  __typename?: 'inventory_product_variants_stddev_samp_fields';
+  inventory_variant_metadata_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_samp() on columns of table "inventory_product_variants" */
+export type Inventory_Product_Variants_Stddev_Samp_Order_By = {
+  inventory_variant_metadata_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate sum on columns */
+export type Inventory_Product_Variants_Sum_Fields = {
+  __typename?: 'inventory_product_variants_sum_fields';
+  inventory_variant_metadata_id?: Maybe<Scalars['Int']>;
+};
+
+/** order by sum() on columns of table "inventory_product_variants" */
+export type Inventory_Product_Variants_Sum_Order_By = {
+  inventory_variant_metadata_id?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "inventory_product_variants" */
+export enum Inventory_Product_Variants_Update_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  InventoryProductId = 'inventory_product_id',
+  /** column name */
+  InventoryVariantMetadataId = 'inventory_variant_metadata_id'
+}
+
+/** aggregate var_pop on columns */
+export type Inventory_Product_Variants_Var_Pop_Fields = {
+  __typename?: 'inventory_product_variants_var_pop_fields';
+  inventory_variant_metadata_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_pop() on columns of table "inventory_product_variants" */
+export type Inventory_Product_Variants_Var_Pop_Order_By = {
+  inventory_variant_metadata_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Inventory_Product_Variants_Var_Samp_Fields = {
+  __typename?: 'inventory_product_variants_var_samp_fields';
+  inventory_variant_metadata_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_samp() on columns of table "inventory_product_variants" */
+export type Inventory_Product_Variants_Var_Samp_Order_By = {
+  inventory_variant_metadata_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Inventory_Product_Variants_Variance_Fields = {
+  __typename?: 'inventory_product_variants_variance_fields';
+  inventory_variant_metadata_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "inventory_product_variants" */
+export type Inventory_Product_Variants_Variance_Order_By = {
+  inventory_variant_metadata_id?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "inventory_products" */
+export type Inventory_Products = {
+  __typename?: 'inventory_products';
+  available_qty: Scalars['Int'];
+  created_at: Scalars['timestamptz'];
+  id: Scalars['uuid'];
+  /** An array relationship */
+  inventory_product_variants: Array<Inventory_Product_Variants>;
+  /** An aggregate relationship */
+  inventory_product_variants_aggregate: Inventory_Product_Variants_Aggregate;
+  min_available_qty: Scalars['Int'];
+  override_capital_price?: Maybe<Scalars['Int']>;
+  override_discount?: Maybe<Scalars['Int']>;
+  override_selling_price?: Maybe<Scalars['Int']>;
+  /** An object relationship */
+  product: Products;
+  product_id: Scalars['uuid'];
+  store_id: Scalars['Int'];
+  updated_at: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "inventory_products" */
+export type Inventory_ProductsInventory_Product_VariantsArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Product_Variants_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Product_Variants_Order_By>>;
+  where?: InputMaybe<Inventory_Product_Variants_Bool_Exp>;
+};
+
+
+/** columns and relationships of "inventory_products" */
+export type Inventory_ProductsInventory_Product_Variants_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Product_Variants_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Product_Variants_Order_By>>;
+  where?: InputMaybe<Inventory_Product_Variants_Bool_Exp>;
+};
+
+/** aggregated selection of "inventory_products" */
+export type Inventory_Products_Aggregate = {
+  __typename?: 'inventory_products_aggregate';
+  aggregate?: Maybe<Inventory_Products_Aggregate_Fields>;
+  nodes: Array<Inventory_Products>;
+};
+
+/** aggregate fields of "inventory_products" */
+export type Inventory_Products_Aggregate_Fields = {
+  __typename?: 'inventory_products_aggregate_fields';
+  avg?: Maybe<Inventory_Products_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Inventory_Products_Max_Fields>;
+  min?: Maybe<Inventory_Products_Min_Fields>;
+  stddev?: Maybe<Inventory_Products_Stddev_Fields>;
+  stddev_pop?: Maybe<Inventory_Products_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Inventory_Products_Stddev_Samp_Fields>;
+  sum?: Maybe<Inventory_Products_Sum_Fields>;
+  var_pop?: Maybe<Inventory_Products_Var_Pop_Fields>;
+  var_samp?: Maybe<Inventory_Products_Var_Samp_Fields>;
+  variance?: Maybe<Inventory_Products_Variance_Fields>;
+};
+
+
+/** aggregate fields of "inventory_products" */
+export type Inventory_Products_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Inventory_Products_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** aggregate avg on columns */
+export type Inventory_Products_Avg_Fields = {
+  __typename?: 'inventory_products_avg_fields';
+  available_qty?: Maybe<Scalars['Float']>;
+  min_available_qty?: Maybe<Scalars['Float']>;
+  override_capital_price?: Maybe<Scalars['Float']>;
+  override_discount?: Maybe<Scalars['Float']>;
+  override_selling_price?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** Boolean expression to filter rows from the table "inventory_products". All fields are combined with a logical 'AND'. */
+export type Inventory_Products_Bool_Exp = {
+  _and?: InputMaybe<Array<Inventory_Products_Bool_Exp>>;
+  _not?: InputMaybe<Inventory_Products_Bool_Exp>;
+  _or?: InputMaybe<Array<Inventory_Products_Bool_Exp>>;
+  available_qty?: InputMaybe<Int_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  inventory_product_variants?: InputMaybe<Inventory_Product_Variants_Bool_Exp>;
+  min_available_qty?: InputMaybe<Int_Comparison_Exp>;
+  override_capital_price?: InputMaybe<Int_Comparison_Exp>;
+  override_discount?: InputMaybe<Int_Comparison_Exp>;
+  override_selling_price?: InputMaybe<Int_Comparison_Exp>;
+  product?: InputMaybe<Products_Bool_Exp>;
+  product_id?: InputMaybe<Uuid_Comparison_Exp>;
+  store_id?: InputMaybe<Int_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "inventory_products" */
+export enum Inventory_Products_Constraint {
+  /** unique or primary key constraint */
+  InventoryProductsPkey = 'inventory_products_pkey'
+}
+
+/** input type for incrementing numeric columns in table "inventory_products" */
+export type Inventory_Products_Inc_Input = {
+  available_qty?: InputMaybe<Scalars['Int']>;
+  min_available_qty?: InputMaybe<Scalars['Int']>;
+  override_capital_price?: InputMaybe<Scalars['Int']>;
+  override_discount?: InputMaybe<Scalars['Int']>;
+  override_selling_price?: InputMaybe<Scalars['Int']>;
+  store_id?: InputMaybe<Scalars['Int']>;
+};
+
+/** input type for inserting data into table "inventory_products" */
+export type Inventory_Products_Insert_Input = {
+  available_qty?: InputMaybe<Scalars['Int']>;
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  inventory_product_variants?: InputMaybe<Inventory_Product_Variants_Arr_Rel_Insert_Input>;
+  min_available_qty?: InputMaybe<Scalars['Int']>;
+  override_capital_price?: InputMaybe<Scalars['Int']>;
+  override_discount?: InputMaybe<Scalars['Int']>;
+  override_selling_price?: InputMaybe<Scalars['Int']>;
+  product?: InputMaybe<Products_Obj_Rel_Insert_Input>;
+  product_id?: InputMaybe<Scalars['uuid']>;
+  store_id?: InputMaybe<Scalars['Int']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate max on columns */
+export type Inventory_Products_Max_Fields = {
+  __typename?: 'inventory_products_max_fields';
+  available_qty?: Maybe<Scalars['Int']>;
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  min_available_qty?: Maybe<Scalars['Int']>;
+  override_capital_price?: Maybe<Scalars['Int']>;
+  override_discount?: Maybe<Scalars['Int']>;
+  override_selling_price?: Maybe<Scalars['Int']>;
+  product_id?: Maybe<Scalars['uuid']>;
+  store_id?: Maybe<Scalars['Int']>;
+  updated_at?: Maybe<Scalars['timestamptz']>;
+};
+
+/** aggregate min on columns */
+export type Inventory_Products_Min_Fields = {
+  __typename?: 'inventory_products_min_fields';
+  available_qty?: Maybe<Scalars['Int']>;
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  min_available_qty?: Maybe<Scalars['Int']>;
+  override_capital_price?: Maybe<Scalars['Int']>;
+  override_discount?: Maybe<Scalars['Int']>;
+  override_selling_price?: Maybe<Scalars['Int']>;
+  product_id?: Maybe<Scalars['uuid']>;
+  store_id?: Maybe<Scalars['Int']>;
+  updated_at?: Maybe<Scalars['timestamptz']>;
+};
+
+/** response of any mutation on the table "inventory_products" */
+export type Inventory_Products_Mutation_Response = {
+  __typename?: 'inventory_products_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Inventory_Products>;
+};
+
+/** input type for inserting object relation for remote table "inventory_products" */
+export type Inventory_Products_Obj_Rel_Insert_Input = {
+  data: Inventory_Products_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Inventory_Products_On_Conflict>;
+};
+
+/** on_conflict condition type for table "inventory_products" */
+export type Inventory_Products_On_Conflict = {
+  constraint: Inventory_Products_Constraint;
+  update_columns?: Array<Inventory_Products_Update_Column>;
+  where?: InputMaybe<Inventory_Products_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "inventory_products". */
+export type Inventory_Products_Order_By = {
+  available_qty?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  inventory_product_variants_aggregate?: InputMaybe<Inventory_Product_Variants_Aggregate_Order_By>;
+  min_available_qty?: InputMaybe<Order_By>;
+  override_capital_price?: InputMaybe<Order_By>;
+  override_discount?: InputMaybe<Order_By>;
+  override_selling_price?: InputMaybe<Order_By>;
+  product?: InputMaybe<Products_Order_By>;
+  product_id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: inventory_products */
+export type Inventory_Products_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
+/** select columns of table "inventory_products" */
+export enum Inventory_Products_Select_Column {
+  /** column name */
+  AvailableQty = 'available_qty',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  MinAvailableQty = 'min_available_qty',
+  /** column name */
+  OverrideCapitalPrice = 'override_capital_price',
+  /** column name */
+  OverrideDiscount = 'override_discount',
+  /** column name */
+  OverrideSellingPrice = 'override_selling_price',
+  /** column name */
+  ProductId = 'product_id',
+  /** column name */
+  StoreId = 'store_id',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** input type for updating data in table "inventory_products" */
+export type Inventory_Products_Set_Input = {
+  available_qty?: InputMaybe<Scalars['Int']>;
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  min_available_qty?: InputMaybe<Scalars['Int']>;
+  override_capital_price?: InputMaybe<Scalars['Int']>;
+  override_discount?: InputMaybe<Scalars['Int']>;
+  override_selling_price?: InputMaybe<Scalars['Int']>;
+  product_id?: InputMaybe<Scalars['uuid']>;
+  store_id?: InputMaybe<Scalars['Int']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate stddev on columns */
+export type Inventory_Products_Stddev_Fields = {
+  __typename?: 'inventory_products_stddev_fields';
+  available_qty?: Maybe<Scalars['Float']>;
+  min_available_qty?: Maybe<Scalars['Float']>;
+  override_capital_price?: Maybe<Scalars['Float']>;
+  override_discount?: Maybe<Scalars['Float']>;
+  override_selling_price?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Inventory_Products_Stddev_Pop_Fields = {
+  __typename?: 'inventory_products_stddev_pop_fields';
+  available_qty?: Maybe<Scalars['Float']>;
+  min_available_qty?: Maybe<Scalars['Float']>;
+  override_capital_price?: Maybe<Scalars['Float']>;
+  override_discount?: Maybe<Scalars['Float']>;
+  override_selling_price?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Inventory_Products_Stddev_Samp_Fields = {
+  __typename?: 'inventory_products_stddev_samp_fields';
+  available_qty?: Maybe<Scalars['Float']>;
+  min_available_qty?: Maybe<Scalars['Float']>;
+  override_capital_price?: Maybe<Scalars['Float']>;
+  override_discount?: Maybe<Scalars['Float']>;
+  override_selling_price?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate sum on columns */
+export type Inventory_Products_Sum_Fields = {
+  __typename?: 'inventory_products_sum_fields';
+  available_qty?: Maybe<Scalars['Int']>;
+  min_available_qty?: Maybe<Scalars['Int']>;
+  override_capital_price?: Maybe<Scalars['Int']>;
+  override_discount?: Maybe<Scalars['Int']>;
+  override_selling_price?: Maybe<Scalars['Int']>;
+  store_id?: Maybe<Scalars['Int']>;
+};
+
+/** update columns of table "inventory_products" */
+export enum Inventory_Products_Update_Column {
+  /** column name */
+  AvailableQty = 'available_qty',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  MinAvailableQty = 'min_available_qty',
+  /** column name */
+  OverrideCapitalPrice = 'override_capital_price',
+  /** column name */
+  OverrideDiscount = 'override_discount',
+  /** column name */
+  OverrideSellingPrice = 'override_selling_price',
+  /** column name */
+  ProductId = 'product_id',
+  /** column name */
+  StoreId = 'store_id',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** aggregate var_pop on columns */
+export type Inventory_Products_Var_Pop_Fields = {
+  __typename?: 'inventory_products_var_pop_fields';
+  available_qty?: Maybe<Scalars['Float']>;
+  min_available_qty?: Maybe<Scalars['Float']>;
+  override_capital_price?: Maybe<Scalars['Float']>;
+  override_discount?: Maybe<Scalars['Float']>;
+  override_selling_price?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate var_samp on columns */
+export type Inventory_Products_Var_Samp_Fields = {
+  __typename?: 'inventory_products_var_samp_fields';
+  available_qty?: Maybe<Scalars['Float']>;
+  min_available_qty?: Maybe<Scalars['Float']>;
+  override_capital_price?: Maybe<Scalars['Float']>;
+  override_discount?: Maybe<Scalars['Float']>;
+  override_selling_price?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate variance on columns */
+export type Inventory_Products_Variance_Fields = {
+  __typename?: 'inventory_products_variance_fields';
+  available_qty?: Maybe<Scalars['Float']>;
+  min_available_qty?: Maybe<Scalars['Float']>;
+  override_capital_price?: Maybe<Scalars['Float']>;
+  override_discount?: Maybe<Scalars['Float']>;
+  override_selling_price?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** columns and relationships of "inventory_variants_metadata" */
+export type Inventory_Variants_Metadata = {
+  __typename?: 'inventory_variants_metadata';
+  id: Scalars['Int'];
+  /** An array relationship */
+  inventory_product_variants: Array<Inventory_Product_Variants>;
+  /** An aggregate relationship */
+  inventory_product_variants_aggregate: Inventory_Product_Variants_Aggregate;
+  variant_title: Scalars['String'];
+  variant_value: Scalars['String'];
+};
+
+
+/** columns and relationships of "inventory_variants_metadata" */
+export type Inventory_Variants_MetadataInventory_Product_VariantsArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Product_Variants_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Product_Variants_Order_By>>;
+  where?: InputMaybe<Inventory_Product_Variants_Bool_Exp>;
+};
+
+
+/** columns and relationships of "inventory_variants_metadata" */
+export type Inventory_Variants_MetadataInventory_Product_Variants_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Product_Variants_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Product_Variants_Order_By>>;
+  where?: InputMaybe<Inventory_Product_Variants_Bool_Exp>;
+};
+
+/** aggregated selection of "inventory_variants_metadata" */
+export type Inventory_Variants_Metadata_Aggregate = {
+  __typename?: 'inventory_variants_metadata_aggregate';
+  aggregate?: Maybe<Inventory_Variants_Metadata_Aggregate_Fields>;
+  nodes: Array<Inventory_Variants_Metadata>;
+};
+
+/** aggregate fields of "inventory_variants_metadata" */
+export type Inventory_Variants_Metadata_Aggregate_Fields = {
+  __typename?: 'inventory_variants_metadata_aggregate_fields';
+  avg?: Maybe<Inventory_Variants_Metadata_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Inventory_Variants_Metadata_Max_Fields>;
+  min?: Maybe<Inventory_Variants_Metadata_Min_Fields>;
+  stddev?: Maybe<Inventory_Variants_Metadata_Stddev_Fields>;
+  stddev_pop?: Maybe<Inventory_Variants_Metadata_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Inventory_Variants_Metadata_Stddev_Samp_Fields>;
+  sum?: Maybe<Inventory_Variants_Metadata_Sum_Fields>;
+  var_pop?: Maybe<Inventory_Variants_Metadata_Var_Pop_Fields>;
+  var_samp?: Maybe<Inventory_Variants_Metadata_Var_Samp_Fields>;
+  variance?: Maybe<Inventory_Variants_Metadata_Variance_Fields>;
+};
+
+
+/** aggregate fields of "inventory_variants_metadata" */
+export type Inventory_Variants_Metadata_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Inventory_Variants_Metadata_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** aggregate avg on columns */
+export type Inventory_Variants_Metadata_Avg_Fields = {
+  __typename?: 'inventory_variants_metadata_avg_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** Boolean expression to filter rows from the table "inventory_variants_metadata". All fields are combined with a logical 'AND'. */
+export type Inventory_Variants_Metadata_Bool_Exp = {
+  _and?: InputMaybe<Array<Inventory_Variants_Metadata_Bool_Exp>>;
+  _not?: InputMaybe<Inventory_Variants_Metadata_Bool_Exp>;
+  _or?: InputMaybe<Array<Inventory_Variants_Metadata_Bool_Exp>>;
+  id?: InputMaybe<Int_Comparison_Exp>;
+  inventory_product_variants?: InputMaybe<Inventory_Product_Variants_Bool_Exp>;
+  variant_title?: InputMaybe<String_Comparison_Exp>;
+  variant_value?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "inventory_variants_metadata" */
+export enum Inventory_Variants_Metadata_Constraint {
+  /** unique or primary key constraint */
+  InventoryVariantsMetadataPkey = 'inventory_variants_metadata_pkey'
+}
+
+/** input type for incrementing numeric columns in table "inventory_variants_metadata" */
+export type Inventory_Variants_Metadata_Inc_Input = {
+  id?: InputMaybe<Scalars['Int']>;
+};
+
+/** input type for inserting data into table "inventory_variants_metadata" */
+export type Inventory_Variants_Metadata_Insert_Input = {
+  id?: InputMaybe<Scalars['Int']>;
+  inventory_product_variants?: InputMaybe<Inventory_Product_Variants_Arr_Rel_Insert_Input>;
+  variant_title?: InputMaybe<Scalars['String']>;
+  variant_value?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregate max on columns */
+export type Inventory_Variants_Metadata_Max_Fields = {
+  __typename?: 'inventory_variants_metadata_max_fields';
+  id?: Maybe<Scalars['Int']>;
+  variant_title?: Maybe<Scalars['String']>;
+  variant_value?: Maybe<Scalars['String']>;
+};
+
+/** aggregate min on columns */
+export type Inventory_Variants_Metadata_Min_Fields = {
+  __typename?: 'inventory_variants_metadata_min_fields';
+  id?: Maybe<Scalars['Int']>;
+  variant_title?: Maybe<Scalars['String']>;
+  variant_value?: Maybe<Scalars['String']>;
+};
+
+/** response of any mutation on the table "inventory_variants_metadata" */
+export type Inventory_Variants_Metadata_Mutation_Response = {
+  __typename?: 'inventory_variants_metadata_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Inventory_Variants_Metadata>;
+};
+
+/** input type for inserting object relation for remote table "inventory_variants_metadata" */
+export type Inventory_Variants_Metadata_Obj_Rel_Insert_Input = {
+  data: Inventory_Variants_Metadata_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Inventory_Variants_Metadata_On_Conflict>;
+};
+
+/** on_conflict condition type for table "inventory_variants_metadata" */
+export type Inventory_Variants_Metadata_On_Conflict = {
+  constraint: Inventory_Variants_Metadata_Constraint;
+  update_columns?: Array<Inventory_Variants_Metadata_Update_Column>;
+  where?: InputMaybe<Inventory_Variants_Metadata_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "inventory_variants_metadata". */
+export type Inventory_Variants_Metadata_Order_By = {
+  id?: InputMaybe<Order_By>;
+  inventory_product_variants_aggregate?: InputMaybe<Inventory_Product_Variants_Aggregate_Order_By>;
+  variant_title?: InputMaybe<Order_By>;
+  variant_value?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: inventory_variants_metadata */
+export type Inventory_Variants_Metadata_Pk_Columns_Input = {
+  id: Scalars['Int'];
+};
+
+/** select columns of table "inventory_variants_metadata" */
+export enum Inventory_Variants_Metadata_Select_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  VariantTitle = 'variant_title',
+  /** column name */
+  VariantValue = 'variant_value'
+}
+
+/** input type for updating data in table "inventory_variants_metadata" */
+export type Inventory_Variants_Metadata_Set_Input = {
+  id?: InputMaybe<Scalars['Int']>;
+  variant_title?: InputMaybe<Scalars['String']>;
+  variant_value?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregate stddev on columns */
+export type Inventory_Variants_Metadata_Stddev_Fields = {
+  __typename?: 'inventory_variants_metadata_stddev_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Inventory_Variants_Metadata_Stddev_Pop_Fields = {
+  __typename?: 'inventory_variants_metadata_stddev_pop_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Inventory_Variants_Metadata_Stddev_Samp_Fields = {
+  __typename?: 'inventory_variants_metadata_stddev_samp_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate sum on columns */
+export type Inventory_Variants_Metadata_Sum_Fields = {
+  __typename?: 'inventory_variants_metadata_sum_fields';
+  id?: Maybe<Scalars['Int']>;
+};
+
+/** update columns of table "inventory_variants_metadata" */
+export enum Inventory_Variants_Metadata_Update_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  VariantTitle = 'variant_title',
+  /** column name */
+  VariantValue = 'variant_value'
+}
+
+/** aggregate var_pop on columns */
+export type Inventory_Variants_Metadata_Var_Pop_Fields = {
+  __typename?: 'inventory_variants_metadata_var_pop_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate var_samp on columns */
+export type Inventory_Variants_Metadata_Var_Samp_Fields = {
+  __typename?: 'inventory_variants_metadata_var_samp_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate variance on columns */
+export type Inventory_Variants_Metadata_Variance_Fields = {
+  __typename?: 'inventory_variants_metadata_variance_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
 /** Boolean expression to compare columns of type "jsonb". All fields are combined with logical 'AND'. */
 export type Jsonb_Comparison_Exp = {
   /** is the column contained in the given json value */
@@ -1864,6 +2700,18 @@ export type Mutation_Root = {
   deleteUser?: Maybe<Users>;
   /** delete data from the table: "auth.users" */
   deleteUsers?: Maybe<Users_Mutation_Response>;
+  /** delete data from the table: "inventory_product_variants" */
+  delete_inventory_product_variants?: Maybe<Inventory_Product_Variants_Mutation_Response>;
+  /** delete single row from the table: "inventory_product_variants" */
+  delete_inventory_product_variants_by_pk?: Maybe<Inventory_Product_Variants>;
+  /** delete data from the table: "inventory_products" */
+  delete_inventory_products?: Maybe<Inventory_Products_Mutation_Response>;
+  /** delete single row from the table: "inventory_products" */
+  delete_inventory_products_by_pk?: Maybe<Inventory_Products>;
+  /** delete data from the table: "inventory_variants_metadata" */
+  delete_inventory_variants_metadata?: Maybe<Inventory_Variants_Metadata_Mutation_Response>;
+  /** delete single row from the table: "inventory_variants_metadata" */
+  delete_inventory_variants_metadata_by_pk?: Maybe<Inventory_Variants_Metadata>;
   /** delete data from the table: "product_categories" */
   delete_product_categories?: Maybe<Product_Categories_Mutation_Response>;
   /** delete single row from the table: "product_categories" */
@@ -1916,6 +2764,18 @@ export type Mutation_Root = {
   insertUser?: Maybe<Users>;
   /** insert data into the table: "auth.users" */
   insertUsers?: Maybe<Users_Mutation_Response>;
+  /** insert data into the table: "inventory_product_variants" */
+  insert_inventory_product_variants?: Maybe<Inventory_Product_Variants_Mutation_Response>;
+  /** insert a single row into the table: "inventory_product_variants" */
+  insert_inventory_product_variants_one?: Maybe<Inventory_Product_Variants>;
+  /** insert data into the table: "inventory_products" */
+  insert_inventory_products?: Maybe<Inventory_Products_Mutation_Response>;
+  /** insert a single row into the table: "inventory_products" */
+  insert_inventory_products_one?: Maybe<Inventory_Products>;
+  /** insert data into the table: "inventory_variants_metadata" */
+  insert_inventory_variants_metadata?: Maybe<Inventory_Variants_Metadata_Mutation_Response>;
+  /** insert a single row into the table: "inventory_variants_metadata" */
+  insert_inventory_variants_metadata_one?: Maybe<Inventory_Variants_Metadata>;
   /** insert data into the table: "product_categories" */
   insert_product_categories?: Maybe<Product_Categories_Mutation_Response>;
   /** insert a single row into the table: "product_categories" */
@@ -1968,6 +2828,18 @@ export type Mutation_Root = {
   updateUser?: Maybe<Users>;
   /** update data of the table: "auth.users" */
   updateUsers?: Maybe<Users_Mutation_Response>;
+  /** update data of the table: "inventory_product_variants" */
+  update_inventory_product_variants?: Maybe<Inventory_Product_Variants_Mutation_Response>;
+  /** update single row of the table: "inventory_product_variants" */
+  update_inventory_product_variants_by_pk?: Maybe<Inventory_Product_Variants>;
+  /** update data of the table: "inventory_products" */
+  update_inventory_products?: Maybe<Inventory_Products_Mutation_Response>;
+  /** update single row of the table: "inventory_products" */
+  update_inventory_products_by_pk?: Maybe<Inventory_Products>;
+  /** update data of the table: "inventory_variants_metadata" */
+  update_inventory_variants_metadata?: Maybe<Inventory_Variants_Metadata_Mutation_Response>;
+  /** update single row of the table: "inventory_variants_metadata" */
+  update_inventory_variants_metadata_by_pk?: Maybe<Inventory_Variants_Metadata>;
   /** update data of the table: "product_categories" */
   update_product_categories?: Maybe<Product_Categories_Mutation_Response>;
   /** update single row of the table: "product_categories" */
@@ -2102,6 +2974,42 @@ export type Mutation_RootDeleteUserArgs = {
 /** mutation root */
 export type Mutation_RootDeleteUsersArgs = {
   where: Users_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Inventory_Product_VariantsArgs = {
+  where: Inventory_Product_Variants_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Inventory_Product_Variants_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Inventory_ProductsArgs = {
+  where: Inventory_Products_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Inventory_Products_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Inventory_Variants_MetadataArgs = {
+  where: Inventory_Variants_Metadata_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Inventory_Variants_Metadata_By_PkArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -2276,6 +3184,48 @@ export type Mutation_RootInsertUserArgs = {
 export type Mutation_RootInsertUsersArgs = {
   objects: Array<Users_Insert_Input>;
   on_conflict?: InputMaybe<Users_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Inventory_Product_VariantsArgs = {
+  objects: Array<Inventory_Product_Variants_Insert_Input>;
+  on_conflict?: InputMaybe<Inventory_Product_Variants_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Inventory_Product_Variants_OneArgs = {
+  object: Inventory_Product_Variants_Insert_Input;
+  on_conflict?: InputMaybe<Inventory_Product_Variants_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Inventory_ProductsArgs = {
+  objects: Array<Inventory_Products_Insert_Input>;
+  on_conflict?: InputMaybe<Inventory_Products_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Inventory_Products_OneArgs = {
+  object: Inventory_Products_Insert_Input;
+  on_conflict?: InputMaybe<Inventory_Products_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Inventory_Variants_MetadataArgs = {
+  objects: Array<Inventory_Variants_Metadata_Insert_Input>;
+  on_conflict?: InputMaybe<Inventory_Variants_Metadata_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Inventory_Variants_Metadata_OneArgs = {
+  object: Inventory_Variants_Metadata_Insert_Input;
+  on_conflict?: InputMaybe<Inventory_Variants_Metadata_On_Conflict>;
 };
 
 
@@ -2486,6 +3436,54 @@ export type Mutation_RootUpdateUsersArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Inventory_Product_VariantsArgs = {
+  _inc?: InputMaybe<Inventory_Product_Variants_Inc_Input>;
+  _set?: InputMaybe<Inventory_Product_Variants_Set_Input>;
+  where: Inventory_Product_Variants_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Inventory_Product_Variants_By_PkArgs = {
+  _inc?: InputMaybe<Inventory_Product_Variants_Inc_Input>;
+  _set?: InputMaybe<Inventory_Product_Variants_Set_Input>;
+  pk_columns: Inventory_Product_Variants_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Inventory_ProductsArgs = {
+  _inc?: InputMaybe<Inventory_Products_Inc_Input>;
+  _set?: InputMaybe<Inventory_Products_Set_Input>;
+  where: Inventory_Products_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Inventory_Products_By_PkArgs = {
+  _inc?: InputMaybe<Inventory_Products_Inc_Input>;
+  _set?: InputMaybe<Inventory_Products_Set_Input>;
+  pk_columns: Inventory_Products_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Inventory_Variants_MetadataArgs = {
+  _inc?: InputMaybe<Inventory_Variants_Metadata_Inc_Input>;
+  _set?: InputMaybe<Inventory_Variants_Metadata_Set_Input>;
+  where: Inventory_Variants_Metadata_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Inventory_Variants_Metadata_By_PkArgs = {
+  _inc?: InputMaybe<Inventory_Variants_Metadata_Inc_Input>;
+  _set?: InputMaybe<Inventory_Variants_Metadata_Set_Input>;
+  pk_columns: Inventory_Variants_Metadata_Pk_Columns_Input;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_Product_CategoriesArgs = {
   _inc?: InputMaybe<Product_Categories_Inc_Input>;
   _set?: InputMaybe<Product_Categories_Set_Input>;
@@ -2570,7 +3568,7 @@ export type Product_Categories = {
   description: Scalars['String'];
   id: Scalars['Int'];
   name: Scalars['String'];
-  /** fetch data from the table: "products" */
+  /** An array relationship */
   products: Array<Products>;
   /** An aggregate relationship */
   products_aggregate: Products_Aggregate;
@@ -2790,7 +3788,7 @@ export type Products = {
   created_at: Scalars['timestamptz'];
   discount: Scalars['Int'];
   id: Scalars['uuid'];
-  name?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
   photo_id?: Maybe<Scalars['String']>;
   /** An object relationship */
   product_category: Product_Categories;
@@ -2974,6 +3972,13 @@ export type Products_Mutation_Response = {
   affected_rows: Scalars['Int'];
   /** data from the rows affected by the mutation */
   returning: Array<Products>;
+};
+
+/** input type for inserting object relation for remote table "products" */
+export type Products_Obj_Rel_Insert_Input = {
+  data: Products_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Products_On_Conflict>;
 };
 
 /** on_conflict condition type for table "products" */
@@ -3229,13 +4234,31 @@ export type Query_Root = {
   files: Array<Files>;
   /** fetch aggregated fields from the table: "storage.files" */
   filesAggregate: Files_Aggregate;
+  /** An array relationship */
+  inventory_product_variants: Array<Inventory_Product_Variants>;
+  /** An aggregate relationship */
+  inventory_product_variants_aggregate: Inventory_Product_Variants_Aggregate;
+  /** fetch data from the table: "inventory_product_variants" using primary key columns */
+  inventory_product_variants_by_pk?: Maybe<Inventory_Product_Variants>;
+  /** fetch data from the table: "inventory_products" */
+  inventory_products: Array<Inventory_Products>;
+  /** fetch aggregated fields from the table: "inventory_products" */
+  inventory_products_aggregate: Inventory_Products_Aggregate;
+  /** fetch data from the table: "inventory_products" using primary key columns */
+  inventory_products_by_pk?: Maybe<Inventory_Products>;
+  /** fetch data from the table: "inventory_variants_metadata" */
+  inventory_variants_metadata: Array<Inventory_Variants_Metadata>;
+  /** fetch aggregated fields from the table: "inventory_variants_metadata" */
+  inventory_variants_metadata_aggregate: Inventory_Variants_Metadata_Aggregate;
+  /** fetch data from the table: "inventory_variants_metadata" using primary key columns */
+  inventory_variants_metadata_by_pk?: Maybe<Inventory_Variants_Metadata>;
   /** fetch data from the table: "product_categories" */
   product_categories: Array<Product_Categories>;
   /** fetch aggregated fields from the table: "product_categories" */
   product_categories_aggregate: Product_Categories_Aggregate;
   /** fetch data from the table: "product_categories" using primary key columns */
   product_categories_by_pk?: Maybe<Product_Categories>;
-  /** fetch data from the table: "products" */
+  /** An array relationship */
   products: Array<Products>;
   /** An aggregate relationship */
   products_aggregate: Products_Aggregate;
@@ -3443,6 +4466,75 @@ export type Query_RootFilesAggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Files_Order_By>>;
   where?: InputMaybe<Files_Bool_Exp>;
+};
+
+
+export type Query_RootInventory_Product_VariantsArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Product_Variants_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Product_Variants_Order_By>>;
+  where?: InputMaybe<Inventory_Product_Variants_Bool_Exp>;
+};
+
+
+export type Query_RootInventory_Product_Variants_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Product_Variants_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Product_Variants_Order_By>>;
+  where?: InputMaybe<Inventory_Product_Variants_Bool_Exp>;
+};
+
+
+export type Query_RootInventory_Product_Variants_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootInventory_ProductsArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Products_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Products_Order_By>>;
+  where?: InputMaybe<Inventory_Products_Bool_Exp>;
+};
+
+
+export type Query_RootInventory_Products_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Products_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Products_Order_By>>;
+  where?: InputMaybe<Inventory_Products_Bool_Exp>;
+};
+
+
+export type Query_RootInventory_Products_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootInventory_Variants_MetadataArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Variants_Metadata_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Variants_Metadata_Order_By>>;
+  where?: InputMaybe<Inventory_Variants_Metadata_Bool_Exp>;
+};
+
+
+export type Query_RootInventory_Variants_Metadata_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Variants_Metadata_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Variants_Metadata_Order_By>>;
+  where?: InputMaybe<Inventory_Variants_Metadata_Bool_Exp>;
+};
+
+
+export type Query_RootInventory_Variants_Metadata_By_PkArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -3875,13 +4967,31 @@ export type Subscription_Root = {
   files: Array<Files>;
   /** fetch aggregated fields from the table: "storage.files" */
   filesAggregate: Files_Aggregate;
+  /** An array relationship */
+  inventory_product_variants: Array<Inventory_Product_Variants>;
+  /** An aggregate relationship */
+  inventory_product_variants_aggregate: Inventory_Product_Variants_Aggregate;
+  /** fetch data from the table: "inventory_product_variants" using primary key columns */
+  inventory_product_variants_by_pk?: Maybe<Inventory_Product_Variants>;
+  /** fetch data from the table: "inventory_products" */
+  inventory_products: Array<Inventory_Products>;
+  /** fetch aggregated fields from the table: "inventory_products" */
+  inventory_products_aggregate: Inventory_Products_Aggregate;
+  /** fetch data from the table: "inventory_products" using primary key columns */
+  inventory_products_by_pk?: Maybe<Inventory_Products>;
+  /** fetch data from the table: "inventory_variants_metadata" */
+  inventory_variants_metadata: Array<Inventory_Variants_Metadata>;
+  /** fetch aggregated fields from the table: "inventory_variants_metadata" */
+  inventory_variants_metadata_aggregate: Inventory_Variants_Metadata_Aggregate;
+  /** fetch data from the table: "inventory_variants_metadata" using primary key columns */
+  inventory_variants_metadata_by_pk?: Maybe<Inventory_Variants_Metadata>;
   /** fetch data from the table: "product_categories" */
   product_categories: Array<Product_Categories>;
   /** fetch aggregated fields from the table: "product_categories" */
   product_categories_aggregate: Product_Categories_Aggregate;
   /** fetch data from the table: "product_categories" using primary key columns */
   product_categories_by_pk?: Maybe<Product_Categories>;
-  /** fetch data from the table: "products" */
+  /** An array relationship */
   products: Array<Products>;
   /** An aggregate relationship */
   products_aggregate: Products_Aggregate;
@@ -4089,6 +5199,75 @@ export type Subscription_RootFilesAggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Files_Order_By>>;
   where?: InputMaybe<Files_Bool_Exp>;
+};
+
+
+export type Subscription_RootInventory_Product_VariantsArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Product_Variants_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Product_Variants_Order_By>>;
+  where?: InputMaybe<Inventory_Product_Variants_Bool_Exp>;
+};
+
+
+export type Subscription_RootInventory_Product_Variants_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Product_Variants_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Product_Variants_Order_By>>;
+  where?: InputMaybe<Inventory_Product_Variants_Bool_Exp>;
+};
+
+
+export type Subscription_RootInventory_Product_Variants_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootInventory_ProductsArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Products_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Products_Order_By>>;
+  where?: InputMaybe<Inventory_Products_Bool_Exp>;
+};
+
+
+export type Subscription_RootInventory_Products_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Products_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Products_Order_By>>;
+  where?: InputMaybe<Inventory_Products_Bool_Exp>;
+};
+
+
+export type Subscription_RootInventory_Products_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootInventory_Variants_MetadataArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Variants_Metadata_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Variants_Metadata_Order_By>>;
+  where?: InputMaybe<Inventory_Variants_Metadata_Bool_Exp>;
+};
+
+
+export type Subscription_RootInventory_Variants_Metadata_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Inventory_Variants_Metadata_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Inventory_Variants_Metadata_Order_By>>;
+  where?: InputMaybe<Inventory_Variants_Metadata_Bool_Exp>;
+};
+
+
+export type Subscription_RootInventory_Variants_Metadata_By_PkArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -5063,6 +6242,70 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
+export type Inventory_CreateInventoryProductMutationVariables = Exact<{
+  inventory_product: Inventory_Products_Insert_Input;
+}>;
+
+
+export type Inventory_CreateInventoryProductMutation = { __typename?: 'mutation_root', insert_inventory_products_one?: { __typename?: 'inventory_products', id: any, inventory_product_variants: Array<{ __typename?: 'inventory_product_variants', inventory_variants_metadata: { __typename?: 'inventory_variants_metadata', variant_title: string } }> } | null };
+
+export type Inventory_CreateInventoryVariantMetadataMutationVariables = Exact<{
+  objects: Array<Inventory_Variants_Metadata_Insert_Input> | Inventory_Variants_Metadata_Insert_Input;
+}>;
+
+
+export type Inventory_CreateInventoryVariantMetadataMutation = { __typename?: 'mutation_root', insert_inventory_variants_metadata?: { __typename?: 'inventory_variants_metadata_mutation_response', affected_rows: number, returning: Array<{ __typename?: 'inventory_variants_metadata', id: number, variant_title: string }> } | null };
+
+export type Inventory_DeleteInventoryVariantsMetadataByTitleMutationVariables = Exact<{
+  variant_title?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type Inventory_DeleteInventoryVariantsMetadataByTitleMutation = { __typename?: 'mutation_root', delete_inventory_variants_metadata?: { __typename?: 'inventory_variants_metadata_mutation_response', affected_rows: number } | null };
+
+export type Inventory_UpdateInventoryProductMutationVariables = Exact<{
+  inventory_product_id: Scalars['uuid'];
+  update_rocketjaket_inventory_product_by_pk: Inventory_Products_Set_Input;
+  insert_rocketjaket_inventory_product_variant: Array<Inventory_Product_Variants_Insert_Input> | Inventory_Product_Variants_Insert_Input;
+}>;
+
+
+export type Inventory_UpdateInventoryProductMutation = { __typename?: 'mutation_root', update_inventory_products_by_pk?: { __typename?: 'inventory_products', product: { __typename?: 'products', name: string, product_category: { __typename?: 'product_categories', name: string } } } | null, delete_inventory_product_variants?: { __typename?: 'inventory_product_variants_mutation_response', affected_rows: number } | null, insert_inventory_product_variants?: { __typename?: 'inventory_product_variants_mutation_response', affected_rows: number } | null };
+
+export type Inventory_UpdateInventoryVariantsMetadataMutationVariables = Exact<{
+  upsert: Array<Inventory_Variants_Metadata_Insert_Input> | Inventory_Variants_Metadata_Insert_Input;
+  deleteIds: Array<Scalars['Int']> | Scalars['Int'];
+}>;
+
+
+export type Inventory_UpdateInventoryVariantsMetadataMutation = { __typename?: 'mutation_root', insert_inventory_variants_metadata?: { __typename?: 'inventory_variants_metadata_mutation_response', affected_rows: number } | null, delete_inventory_variants_metadata?: { __typename?: 'inventory_variants_metadata_mutation_response', affected_rows: number } | null };
+
+export type Inventory_GetAllInventoryProductByStoreIdQueryVariables = Exact<{
+  store_id: Scalars['Int'];
+}>;
+
+
+export type Inventory_GetAllInventoryProductByStoreIdQuery = { __typename?: 'query_root', inventory_products: Array<{ __typename?: 'inventory_products', id: any, available_qty: number, min_available_qty: number, override_selling_price?: number | null, override_discount?: number | null, override_capital_price?: number | null, updated_at: any, product: { __typename?: 'products', name: string, capital_price: number, selling_price: number, discount: number, photo_id?: string | null, updated_at: any, product_category: { __typename?: 'product_categories', id: number, name: string } }, inventory_product_variants: Array<{ __typename?: 'inventory_product_variants', inventory_variants_metadata: { __typename?: 'inventory_variants_metadata', variant_title: string, variant_value: string } }> }> };
+
+export type Inventory_GetAllVariantMetadataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type Inventory_GetAllVariantMetadataQuery = { __typename?: 'query_root', inventory_variants_metadata: Array<{ __typename?: 'inventory_variants_metadata', variant_title: string, variant_value: string, id: number }> };
+
+export type Inventory_GetInventoryProductByIdQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['uuid']>;
+}>;
+
+
+export type Inventory_GetInventoryProductByIdQuery = { __typename?: 'query_root', inventory_products_by_pk?: { __typename?: 'inventory_products', available_qty: number, created_at: any, min_available_qty: number, override_capital_price?: number | null, override_discount?: number | null, override_selling_price?: number | null, product_id: any, store_id: number, updated_at: any, inventory_product_variants: Array<{ __typename?: 'inventory_product_variants', inventory_variants_metadata: { __typename?: 'inventory_variants_metadata', id: number, variant_title: string, variant_value: string } }> } | null };
+
+export type Inventory_GetVariantMetadataByTitleQueryVariables = Exact<{
+  variant_title: Scalars['String'];
+}>;
+
+
+export type Inventory_GetVariantMetadataByTitleQuery = { __typename?: 'query_root', inventory_variants_metadata: Array<{ __typename?: 'inventory_variants_metadata', variant_title: string, variant_value: string, id: number }> };
+
 export type Produk_CreateKategoriProdukMutationVariables = Exact<{
   category?: InputMaybe<Product_Categories_Insert_Input>;
 }>;
@@ -5075,7 +6318,7 @@ export type Produk_CreateProdukMutationVariables = Exact<{
 }>;
 
 
-export type Produk_CreateProdukMutation = { __typename?: 'mutation_root', insert_products_one?: { __typename?: 'products', id: any, name?: string | null } | null };
+export type Produk_CreateProdukMutation = { __typename?: 'mutation_root', insert_products_one?: { __typename?: 'products', id: any, name: string } | null };
 
 export type Produk_UpdateKategoriProdukMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -5091,7 +6334,7 @@ export type Produk_UpdateProdukByPkMutationVariables = Exact<{
 }>;
 
 
-export type Produk_UpdateProdukByPkMutation = { __typename?: 'mutation_root', update_products_by_pk?: { __typename?: 'products', id: any, name?: string | null } | null };
+export type Produk_UpdateProdukByPkMutation = { __typename?: 'mutation_root', update_products_by_pk?: { __typename?: 'products', id: any, name: string } | null };
 
 export type Produk_GetAllKategoriProdukQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5101,7 +6344,7 @@ export type Produk_GetAllKategoriProdukQuery = { __typename?: 'query_root', prod
 export type Produk_GetAllProdukQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Produk_GetAllProdukQuery = { __typename?: 'query_root', products: Array<{ __typename?: 'products', name?: string | null, id: any, photo_id?: string | null, capital_price: number, discount: number, selling_price: number, product_category: { __typename?: 'product_categories', name: string } }> };
+export type Produk_GetAllProdukQuery = { __typename?: 'query_root', products: Array<{ __typename?: 'products', name: string, id: any, photo_id?: string | null, capital_price: number, discount: number, selling_price: number, product_category: { __typename?: 'product_categories', name: string } }> };
 
 export type Produk_GetKategoriProdukByPkQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -5115,7 +6358,7 @@ export type Produk_GetProdukByPkQueryVariables = Exact<{
 }>;
 
 
-export type Produk_GetProdukByPkQuery = { __typename?: 'query_root', products_by_pk?: { __typename?: 'products', id: any, name?: string | null, photo_id?: string | null, selling_price: number, discount: number, capital_price: number, product_category_id: number, created_at: any, updated_at: any, product_category: { __typename?: 'product_categories', name: string } } | null };
+export type Produk_GetProdukByPkQuery = { __typename?: 'query_root', products_by_pk?: { __typename?: 'products', id: any, name: string, photo_id?: string | null, selling_price: number, discount: number, capital_price: number, product_category_id: number, created_at: any, updated_at: any, product_category: { __typename?: 'product_categories', name: string } } | null };
 
 export type Store_CreateStoreMutationVariables = Exact<{
   store?: InputMaybe<Stores_Insert_Input>;
@@ -5205,6 +6448,10 @@ export type User_GetUserByIdQuery = { __typename?: 'query_root', user?: { __type
 
 export const namedOperations = {
   Query: {
+    Inventory_GetAllInventoryProductByStoreId: 'Inventory_GetAllInventoryProductByStoreId',
+    Inventory_GetAllVariantMetadata: 'Inventory_GetAllVariantMetadata',
+    Inventory_GetInventoryProductById: 'Inventory_GetInventoryProductById',
+    Inventory_GetVariantMetadataByTitle: 'Inventory_GetVariantMetadataByTitle',
     Produk_GetAllKategoriProduk: 'Produk_GetAllKategoriProduk',
     Produk_GetAllProduk: 'Produk_GetAllProduk',
     Produk_GetKategoriProdukByPK: 'Produk_GetKategoriProdukByPK',
@@ -5216,6 +6463,11 @@ export const namedOperations = {
     User_GetUserById: 'User_GetUserById'
   },
   Mutation: {
+    Inventory_CreateInventoryProduct: 'Inventory_CreateInventoryProduct',
+    Inventory_CreateInventoryVariantMetadata: 'Inventory_CreateInventoryVariantMetadata',
+    Inventory_DeleteInventoryVariantsMetadataByTitle: 'Inventory_DeleteInventoryVariantsMetadataByTitle',
+    Inventory_UpdateInventoryProduct: 'Inventory_UpdateInventoryProduct',
+    Inventory_UpdateInventoryVariantsMetadata: 'Inventory_UpdateInventoryVariantsMetadata',
     Produk_CreateKategoriProduk: 'Produk_CreateKategoriProduk',
     Produk_CreateProduk: 'Produk_CreateProduk',
     Produk_UpdateKategoriProduk: 'Produk_UpdateKategoriProduk',
@@ -5230,6 +6482,397 @@ export const namedOperations = {
   }
 }
 
+export const Inventory_CreateInventoryProductDocument = gql`
+    mutation Inventory_CreateInventoryProduct($inventory_product: inventory_products_insert_input!) {
+  insert_inventory_products_one(object: $inventory_product) {
+    id
+    inventory_product_variants(order_by: {inventory_variant_metadata_id: asc}) {
+      inventory_variants_metadata {
+        variant_title
+      }
+    }
+  }
+}
+    `;
+export type Inventory_CreateInventoryProductMutationFn = Apollo.MutationFunction<Inventory_CreateInventoryProductMutation, Inventory_CreateInventoryProductMutationVariables>;
+
+/**
+ * __useInventory_CreateInventoryProductMutation__
+ *
+ * To run a mutation, you first call `useInventory_CreateInventoryProductMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInventory_CreateInventoryProductMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [inventoryCreateInventoryProductMutation, { data, loading, error }] = useInventory_CreateInventoryProductMutation({
+ *   variables: {
+ *      inventory_product: // value for 'inventory_product'
+ *   },
+ * });
+ */
+export function useInventory_CreateInventoryProductMutation(baseOptions?: Apollo.MutationHookOptions<Inventory_CreateInventoryProductMutation, Inventory_CreateInventoryProductMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Inventory_CreateInventoryProductMutation, Inventory_CreateInventoryProductMutationVariables>(Inventory_CreateInventoryProductDocument, options);
+      }
+export type Inventory_CreateInventoryProductMutationHookResult = ReturnType<typeof useInventory_CreateInventoryProductMutation>;
+export type Inventory_CreateInventoryProductMutationResult = Apollo.MutationResult<Inventory_CreateInventoryProductMutation>;
+export type Inventory_CreateInventoryProductMutationOptions = Apollo.BaseMutationOptions<Inventory_CreateInventoryProductMutation, Inventory_CreateInventoryProductMutationVariables>;
+export const Inventory_CreateInventoryVariantMetadataDocument = gql`
+    mutation Inventory_CreateInventoryVariantMetadata($objects: [inventory_variants_metadata_insert_input!]!) {
+  insert_inventory_variants_metadata(objects: $objects) {
+    returning {
+      id
+      variant_title
+    }
+    affected_rows
+  }
+}
+    `;
+export type Inventory_CreateInventoryVariantMetadataMutationFn = Apollo.MutationFunction<Inventory_CreateInventoryVariantMetadataMutation, Inventory_CreateInventoryVariantMetadataMutationVariables>;
+
+/**
+ * __useInventory_CreateInventoryVariantMetadataMutation__
+ *
+ * To run a mutation, you first call `useInventory_CreateInventoryVariantMetadataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInventory_CreateInventoryVariantMetadataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [inventoryCreateInventoryVariantMetadataMutation, { data, loading, error }] = useInventory_CreateInventoryVariantMetadataMutation({
+ *   variables: {
+ *      objects: // value for 'objects'
+ *   },
+ * });
+ */
+export function useInventory_CreateInventoryVariantMetadataMutation(baseOptions?: Apollo.MutationHookOptions<Inventory_CreateInventoryVariantMetadataMutation, Inventory_CreateInventoryVariantMetadataMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Inventory_CreateInventoryVariantMetadataMutation, Inventory_CreateInventoryVariantMetadataMutationVariables>(Inventory_CreateInventoryVariantMetadataDocument, options);
+      }
+export type Inventory_CreateInventoryVariantMetadataMutationHookResult = ReturnType<typeof useInventory_CreateInventoryVariantMetadataMutation>;
+export type Inventory_CreateInventoryVariantMetadataMutationResult = Apollo.MutationResult<Inventory_CreateInventoryVariantMetadataMutation>;
+export type Inventory_CreateInventoryVariantMetadataMutationOptions = Apollo.BaseMutationOptions<Inventory_CreateInventoryVariantMetadataMutation, Inventory_CreateInventoryVariantMetadataMutationVariables>;
+export const Inventory_DeleteInventoryVariantsMetadataByTitleDocument = gql`
+    mutation Inventory_DeleteInventoryVariantsMetadataByTitle($variant_title: String = "") {
+  delete_inventory_variants_metadata(
+    where: {variant_title: {_eq: $variant_title}}
+  ) {
+    affected_rows
+  }
+}
+    `;
+export type Inventory_DeleteInventoryVariantsMetadataByTitleMutationFn = Apollo.MutationFunction<Inventory_DeleteInventoryVariantsMetadataByTitleMutation, Inventory_DeleteInventoryVariantsMetadataByTitleMutationVariables>;
+
+/**
+ * __useInventory_DeleteInventoryVariantsMetadataByTitleMutation__
+ *
+ * To run a mutation, you first call `useInventory_DeleteInventoryVariantsMetadataByTitleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInventory_DeleteInventoryVariantsMetadataByTitleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [inventoryDeleteInventoryVariantsMetadataByTitleMutation, { data, loading, error }] = useInventory_DeleteInventoryVariantsMetadataByTitleMutation({
+ *   variables: {
+ *      variant_title: // value for 'variant_title'
+ *   },
+ * });
+ */
+export function useInventory_DeleteInventoryVariantsMetadataByTitleMutation(baseOptions?: Apollo.MutationHookOptions<Inventory_DeleteInventoryVariantsMetadataByTitleMutation, Inventory_DeleteInventoryVariantsMetadataByTitleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Inventory_DeleteInventoryVariantsMetadataByTitleMutation, Inventory_DeleteInventoryVariantsMetadataByTitleMutationVariables>(Inventory_DeleteInventoryVariantsMetadataByTitleDocument, options);
+      }
+export type Inventory_DeleteInventoryVariantsMetadataByTitleMutationHookResult = ReturnType<typeof useInventory_DeleteInventoryVariantsMetadataByTitleMutation>;
+export type Inventory_DeleteInventoryVariantsMetadataByTitleMutationResult = Apollo.MutationResult<Inventory_DeleteInventoryVariantsMetadataByTitleMutation>;
+export type Inventory_DeleteInventoryVariantsMetadataByTitleMutationOptions = Apollo.BaseMutationOptions<Inventory_DeleteInventoryVariantsMetadataByTitleMutation, Inventory_DeleteInventoryVariantsMetadataByTitleMutationVariables>;
+export const Inventory_UpdateInventoryProductDocument = gql`
+    mutation Inventory_UpdateInventoryProduct($inventory_product_id: uuid!, $update_rocketjaket_inventory_product_by_pk: inventory_products_set_input!, $insert_rocketjaket_inventory_product_variant: [inventory_product_variants_insert_input!]!) {
+  update_inventory_products_by_pk(
+    pk_columns: {id: $inventory_product_id}
+    _set: $update_rocketjaket_inventory_product_by_pk
+  ) {
+    product {
+      name
+      product_category {
+        name
+      }
+    }
+  }
+  delete_inventory_product_variants(
+    where: {inventory_product_id: {_eq: $inventory_product_id}}
+  ) {
+    affected_rows
+  }
+  insert_inventory_product_variants(
+    objects: $insert_rocketjaket_inventory_product_variant
+  ) {
+    affected_rows
+  }
+}
+    `;
+export type Inventory_UpdateInventoryProductMutationFn = Apollo.MutationFunction<Inventory_UpdateInventoryProductMutation, Inventory_UpdateInventoryProductMutationVariables>;
+
+/**
+ * __useInventory_UpdateInventoryProductMutation__
+ *
+ * To run a mutation, you first call `useInventory_UpdateInventoryProductMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInventory_UpdateInventoryProductMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [inventoryUpdateInventoryProductMutation, { data, loading, error }] = useInventory_UpdateInventoryProductMutation({
+ *   variables: {
+ *      inventory_product_id: // value for 'inventory_product_id'
+ *      update_rocketjaket_inventory_product_by_pk: // value for 'update_rocketjaket_inventory_product_by_pk'
+ *      insert_rocketjaket_inventory_product_variant: // value for 'insert_rocketjaket_inventory_product_variant'
+ *   },
+ * });
+ */
+export function useInventory_UpdateInventoryProductMutation(baseOptions?: Apollo.MutationHookOptions<Inventory_UpdateInventoryProductMutation, Inventory_UpdateInventoryProductMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Inventory_UpdateInventoryProductMutation, Inventory_UpdateInventoryProductMutationVariables>(Inventory_UpdateInventoryProductDocument, options);
+      }
+export type Inventory_UpdateInventoryProductMutationHookResult = ReturnType<typeof useInventory_UpdateInventoryProductMutation>;
+export type Inventory_UpdateInventoryProductMutationResult = Apollo.MutationResult<Inventory_UpdateInventoryProductMutation>;
+export type Inventory_UpdateInventoryProductMutationOptions = Apollo.BaseMutationOptions<Inventory_UpdateInventoryProductMutation, Inventory_UpdateInventoryProductMutationVariables>;
+export const Inventory_UpdateInventoryVariantsMetadataDocument = gql`
+    mutation Inventory_UpdateInventoryVariantsMetadata($upsert: [inventory_variants_metadata_insert_input!]!, $deleteIds: [Int!]!) {
+  insert_inventory_variants_metadata(
+    objects: $upsert
+    on_conflict: {constraint: inventory_variants_metadata_pkey, update_columns: [variant_title, variant_value]}
+  ) {
+    affected_rows
+  }
+  delete_inventory_variants_metadata(where: {id: {_in: $deleteIds}}) {
+    affected_rows
+  }
+}
+    `;
+export type Inventory_UpdateInventoryVariantsMetadataMutationFn = Apollo.MutationFunction<Inventory_UpdateInventoryVariantsMetadataMutation, Inventory_UpdateInventoryVariantsMetadataMutationVariables>;
+
+/**
+ * __useInventory_UpdateInventoryVariantsMetadataMutation__
+ *
+ * To run a mutation, you first call `useInventory_UpdateInventoryVariantsMetadataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInventory_UpdateInventoryVariantsMetadataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [inventoryUpdateInventoryVariantsMetadataMutation, { data, loading, error }] = useInventory_UpdateInventoryVariantsMetadataMutation({
+ *   variables: {
+ *      upsert: // value for 'upsert'
+ *      deleteIds: // value for 'deleteIds'
+ *   },
+ * });
+ */
+export function useInventory_UpdateInventoryVariantsMetadataMutation(baseOptions?: Apollo.MutationHookOptions<Inventory_UpdateInventoryVariantsMetadataMutation, Inventory_UpdateInventoryVariantsMetadataMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Inventory_UpdateInventoryVariantsMetadataMutation, Inventory_UpdateInventoryVariantsMetadataMutationVariables>(Inventory_UpdateInventoryVariantsMetadataDocument, options);
+      }
+export type Inventory_UpdateInventoryVariantsMetadataMutationHookResult = ReturnType<typeof useInventory_UpdateInventoryVariantsMetadataMutation>;
+export type Inventory_UpdateInventoryVariantsMetadataMutationResult = Apollo.MutationResult<Inventory_UpdateInventoryVariantsMetadataMutation>;
+export type Inventory_UpdateInventoryVariantsMetadataMutationOptions = Apollo.BaseMutationOptions<Inventory_UpdateInventoryVariantsMetadataMutation, Inventory_UpdateInventoryVariantsMetadataMutationVariables>;
+export const Inventory_GetAllInventoryProductByStoreIdDocument = gql`
+    query Inventory_GetAllInventoryProductByStoreId($store_id: Int!) {
+  inventory_products(
+    where: {store_id: {_eq: $store_id}}
+    order_by: {product: {name: asc}}
+  ) {
+    id
+    available_qty
+    min_available_qty
+    override_selling_price
+    override_discount
+    override_capital_price
+    updated_at
+    product {
+      name
+      capital_price
+      selling_price
+      discount
+      photo_id
+      updated_at
+      product_category {
+        id
+        name
+      }
+    }
+    inventory_product_variants(order_by: {inventory_variant_metadata_id: asc}) {
+      inventory_variants_metadata {
+        variant_title
+        variant_value
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useInventory_GetAllInventoryProductByStoreIdQuery__
+ *
+ * To run a query within a React component, call `useInventory_GetAllInventoryProductByStoreIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useInventory_GetAllInventoryProductByStoreIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useInventory_GetAllInventoryProductByStoreIdQuery({
+ *   variables: {
+ *      store_id: // value for 'store_id'
+ *   },
+ * });
+ */
+export function useInventory_GetAllInventoryProductByStoreIdQuery(baseOptions: Apollo.QueryHookOptions<Inventory_GetAllInventoryProductByStoreIdQuery, Inventory_GetAllInventoryProductByStoreIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Inventory_GetAllInventoryProductByStoreIdQuery, Inventory_GetAllInventoryProductByStoreIdQueryVariables>(Inventory_GetAllInventoryProductByStoreIdDocument, options);
+      }
+export function useInventory_GetAllInventoryProductByStoreIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Inventory_GetAllInventoryProductByStoreIdQuery, Inventory_GetAllInventoryProductByStoreIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Inventory_GetAllInventoryProductByStoreIdQuery, Inventory_GetAllInventoryProductByStoreIdQueryVariables>(Inventory_GetAllInventoryProductByStoreIdDocument, options);
+        }
+export type Inventory_GetAllInventoryProductByStoreIdQueryHookResult = ReturnType<typeof useInventory_GetAllInventoryProductByStoreIdQuery>;
+export type Inventory_GetAllInventoryProductByStoreIdLazyQueryHookResult = ReturnType<typeof useInventory_GetAllInventoryProductByStoreIdLazyQuery>;
+export type Inventory_GetAllInventoryProductByStoreIdQueryResult = Apollo.QueryResult<Inventory_GetAllInventoryProductByStoreIdQuery, Inventory_GetAllInventoryProductByStoreIdQueryVariables>;
+export const Inventory_GetAllVariantMetadataDocument = gql`
+    query Inventory_GetAllVariantMetadata {
+  inventory_variants_metadata(order_by: {id: asc}) {
+    variant_title
+    variant_value
+    id
+  }
+}
+    `;
+
+/**
+ * __useInventory_GetAllVariantMetadataQuery__
+ *
+ * To run a query within a React component, call `useInventory_GetAllVariantMetadataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useInventory_GetAllVariantMetadataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useInventory_GetAllVariantMetadataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useInventory_GetAllVariantMetadataQuery(baseOptions?: Apollo.QueryHookOptions<Inventory_GetAllVariantMetadataQuery, Inventory_GetAllVariantMetadataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Inventory_GetAllVariantMetadataQuery, Inventory_GetAllVariantMetadataQueryVariables>(Inventory_GetAllVariantMetadataDocument, options);
+      }
+export function useInventory_GetAllVariantMetadataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Inventory_GetAllVariantMetadataQuery, Inventory_GetAllVariantMetadataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Inventory_GetAllVariantMetadataQuery, Inventory_GetAllVariantMetadataQueryVariables>(Inventory_GetAllVariantMetadataDocument, options);
+        }
+export type Inventory_GetAllVariantMetadataQueryHookResult = ReturnType<typeof useInventory_GetAllVariantMetadataQuery>;
+export type Inventory_GetAllVariantMetadataLazyQueryHookResult = ReturnType<typeof useInventory_GetAllVariantMetadataLazyQuery>;
+export type Inventory_GetAllVariantMetadataQueryResult = Apollo.QueryResult<Inventory_GetAllVariantMetadataQuery, Inventory_GetAllVariantMetadataQueryVariables>;
+export const Inventory_GetInventoryProductByIdDocument = gql`
+    query Inventory_GetInventoryProductById($id: uuid = "") {
+  inventory_products_by_pk(id: $id) {
+    available_qty
+    created_at
+    min_available_qty
+    override_capital_price
+    override_discount
+    override_selling_price
+    product_id
+    store_id
+    updated_at
+    inventory_product_variants {
+      inventory_variants_metadata {
+        id
+        variant_title
+        variant_value
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useInventory_GetInventoryProductByIdQuery__
+ *
+ * To run a query within a React component, call `useInventory_GetInventoryProductByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useInventory_GetInventoryProductByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useInventory_GetInventoryProductByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useInventory_GetInventoryProductByIdQuery(baseOptions?: Apollo.QueryHookOptions<Inventory_GetInventoryProductByIdQuery, Inventory_GetInventoryProductByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Inventory_GetInventoryProductByIdQuery, Inventory_GetInventoryProductByIdQueryVariables>(Inventory_GetInventoryProductByIdDocument, options);
+      }
+export function useInventory_GetInventoryProductByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Inventory_GetInventoryProductByIdQuery, Inventory_GetInventoryProductByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Inventory_GetInventoryProductByIdQuery, Inventory_GetInventoryProductByIdQueryVariables>(Inventory_GetInventoryProductByIdDocument, options);
+        }
+export type Inventory_GetInventoryProductByIdQueryHookResult = ReturnType<typeof useInventory_GetInventoryProductByIdQuery>;
+export type Inventory_GetInventoryProductByIdLazyQueryHookResult = ReturnType<typeof useInventory_GetInventoryProductByIdLazyQuery>;
+export type Inventory_GetInventoryProductByIdQueryResult = Apollo.QueryResult<Inventory_GetInventoryProductByIdQuery, Inventory_GetInventoryProductByIdQueryVariables>;
+export const Inventory_GetVariantMetadataByTitleDocument = gql`
+    query Inventory_GetVariantMetadataByTitle($variant_title: String!) {
+  inventory_variants_metadata(
+    where: {variant_title: {_eq: $variant_title}}
+    order_by: {id: asc}
+  ) {
+    variant_title
+    variant_value
+    id
+  }
+}
+    `;
+
+/**
+ * __useInventory_GetVariantMetadataByTitleQuery__
+ *
+ * To run a query within a React component, call `useInventory_GetVariantMetadataByTitleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useInventory_GetVariantMetadataByTitleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useInventory_GetVariantMetadataByTitleQuery({
+ *   variables: {
+ *      variant_title: // value for 'variant_title'
+ *   },
+ * });
+ */
+export function useInventory_GetVariantMetadataByTitleQuery(baseOptions: Apollo.QueryHookOptions<Inventory_GetVariantMetadataByTitleQuery, Inventory_GetVariantMetadataByTitleQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Inventory_GetVariantMetadataByTitleQuery, Inventory_GetVariantMetadataByTitleQueryVariables>(Inventory_GetVariantMetadataByTitleDocument, options);
+      }
+export function useInventory_GetVariantMetadataByTitleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Inventory_GetVariantMetadataByTitleQuery, Inventory_GetVariantMetadataByTitleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Inventory_GetVariantMetadataByTitleQuery, Inventory_GetVariantMetadataByTitleQueryVariables>(Inventory_GetVariantMetadataByTitleDocument, options);
+        }
+export type Inventory_GetVariantMetadataByTitleQueryHookResult = ReturnType<typeof useInventory_GetVariantMetadataByTitleQuery>;
+export type Inventory_GetVariantMetadataByTitleLazyQueryHookResult = ReturnType<typeof useInventory_GetVariantMetadataByTitleLazyQuery>;
+export type Inventory_GetVariantMetadataByTitleQueryResult = Apollo.QueryResult<Inventory_GetVariantMetadataByTitleQuery, Inventory_GetVariantMetadataByTitleQueryVariables>;
 export const Produk_CreateKategoriProdukDocument = gql`
     mutation Produk_CreateKategoriProduk($category: product_categories_insert_input = {}) {
   insert_product_categories_one(object: $category) {

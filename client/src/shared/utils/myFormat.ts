@@ -1,6 +1,11 @@
 import numbro from 'numbro';
 
 export const myNumberFormat = {
+  nullIfBelowZero: (num?: number | null) => {
+    if (!num) return null;
+    else if (num <= 0) return null;
+    else return num;
+  },
   thousandSeparated(num?: number | null, options?: 'nullAsEmpty') {
     if (!num && options === 'nullAsEmpty') {
       return '';

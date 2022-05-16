@@ -45,9 +45,7 @@ import {
 } from 'react-native-image-picker';
 import Feather from 'react-native-vector-icons/Feather';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
-import {useAccessToken} from '@nhost/react';
 import to from 'await-to-js';
-import axios from 'axios';
 
 interface IDefaultValues {
   display_name: string;
@@ -81,7 +79,6 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
   const [isErrorOnce, setErrorOnce] = useState(false);
   const [isDataReady, setDataReady] = useState(false);
   const myUser = useMyUser();
-  const accessToken = useAccessToken();
   const {
     watch,
     handleSubmit,
@@ -323,9 +320,6 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
                             w: 100,
                             q: 60,
                           }),
-                      headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                      },
                     }}
                     disableErrorFallback={true}
                     fallbackText={userDataFetched?.displayName || ''}

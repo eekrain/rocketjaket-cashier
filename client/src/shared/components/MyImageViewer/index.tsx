@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import FastImage, {Source} from 'react-native-fast-image';
 import {Box} from 'native-base';
+import {useAccessToken} from '@nhost/react';
 
 interface Props {
   source: Source;
@@ -19,9 +20,9 @@ export const MyImageViewer = ({
   borderRadius = 0,
   topRightElement,
 }: Props) => {
-  console.log('🚀 ~ file: index.tsx ~ line 22 ~ source', source);
+  const accessToken = useAccessToken();
   const [isError, setError] = useState(false);
-  console.log('🚀 ~ file: index.tsx ~ line 24 ~ isError', isError);
+
   return (
     <Box position="relative">
       <Box position="relative" overflow="hidden">
@@ -34,7 +35,12 @@ export const MyImageViewer = ({
           source={
             isError || !source.uri
               ? require('../../../assets/images/image-not-found.png')
-              : source
+              : {
+                  ...source,
+                  headers: {
+                    authorization: `Bearer ${accessToken}`,
+                  },
+                }
           }
           resizeMode="cover"
           onError={() => {
