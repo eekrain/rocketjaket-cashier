@@ -1,0 +1,17 @@
+table:
+  name: transaction_status_enum
+  schema: public
+is_enum: true
+select_permissions:
+- permission:
+    columns:
+    - title
+    - transaction_status
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - title
+    - transaction_status
+    filter: {}
+  role: karyawan
