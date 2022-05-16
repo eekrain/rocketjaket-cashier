@@ -21,9 +21,13 @@ actions:
   - role: administrator
 custom_types:
   enums: []
-  input_objects: []
+  input_objects:
+  - name: InventoryVariantMetadataInsertInput
+  - name: InventoryVariantMetadataNeedUpdateInput
+  - name: InventoryVariantsMetadaUpsertInput
   objects:
   - name: User_SignUpOutput
   - name: Whatsapp_GetAuthStatusOutput
   - name: Whatsapp_SignOutOutput
+  - name: BulkUpdateVariantsMetadataOutput
   scalars: []

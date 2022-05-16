@@ -1,0 +1,11 @@
+mutation Inventory_CreateInventoryVariantMetadata(
+  $objects: [inventory_variants_metadata_insert_input!]!
+) {
+  insert_inventory_variants_metadata(objects: $objects) {
+    returning {
+      id
+      variant_title
+    }
+    affected_rows
+  }
+}

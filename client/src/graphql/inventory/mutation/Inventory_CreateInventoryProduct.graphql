@@ -1,0 +1,12 @@
+mutation Inventory_CreateInventoryProduct(
+  $inventory_product: inventory_products_insert_input!
+) {
+  insert_inventory_products_one(object: $inventory_product) {
+    id
+    inventory_product_variants(order_by: {inventory_variant_metadata_id: asc}) {
+      inventory_variants_metadata {
+        variant_title
+      }
+    }
+  }
+}

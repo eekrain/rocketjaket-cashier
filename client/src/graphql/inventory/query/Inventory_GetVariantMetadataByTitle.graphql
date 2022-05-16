@@ -1,0 +1,10 @@
+query Inventory_GetVariantMetadataByTitle($variant_title: String!) {
+  inventory_variants_metadata(
+    where: {variant_title: {_eq: $variant_title}}
+    order_by: {id: asc}
+  ) {
+    variant_title
+    variant_value
+    id
+  }
+}
