@@ -20,10 +20,8 @@ import {
   myNumberFormat,
 } from '../../shared/utils';
 import {useMyAppState} from '../../state';
-import FastImage from 'react-native-fast-image';
 import {useNavigation} from '@react-navigation/native';
 import {MyImageViewer} from '../../shared/components';
-import {useAccessToken} from '@nhost/react';
 
 interface IActionProps {
   id: string;
@@ -61,7 +59,6 @@ const Produk = ({}: Props) => {
   //   useProduk_DeleteProdukByPkMutation({
   //     refetchQueries: [namedOperations.Query.Produk_GetAllProduk],
   //   });
-  const accessToken = useAccessToken();
   const toast = useToast();
 
   const data = useMemo(() => {
@@ -126,9 +123,6 @@ const Produk = ({}: Props) => {
                 w: 50,
                 q: 60,
               }),
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
             }}
           />
         ),

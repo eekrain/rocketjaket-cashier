@@ -1,0 +1,9 @@
+mutation Inventory_DeleteInventoryVariantsMetadataByTitle(
+  $variant_title: String = ""
+) {
+  delete_inventory_variants_metadata(
+    where: {variant_title: {_eq: $variant_title}}
+  ) {
+    affected_rows
+  }
+}

@@ -9,7 +9,7 @@ import ProfileScreen from './ProfileScreen';
 import CustomDrawerContent from '../../components/CustomDrawerContent';
 import ProdukScreen, {rootProdukRoutes} from './ProdukScreen';
 import SettingsScreen, {rootSettingsRoutes} from './SettingsScreen';
-// import InventoryScreen, {rootInventoryRoutes} from './InventoryScreen';
+import InventoryScreen, {rootInventoryRoutes} from './InventoryScreen';
 import UserScreen, {rootUserRoutes} from './UserScreen';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {TUserRoleOptions} from '../../types/user';
@@ -70,12 +70,12 @@ export const rootAppRoutes: IAppRoutes[] = [
     routeNiceName: 'Produk',
     role: ['administrator', 'karyawan'],
   },
-  // {
-  //   name: 'InventoryRoot',
-  //   component: InventoryScreen,
-  //   routeNiceName: 'Inventory',
-  //   role: ['administrator', 'karyawan'],
-  // },
+  {
+    name: 'InventoryRoot',
+    component: InventoryScreen,
+    routeNiceName: 'Inventory',
+    role: ['administrator', 'karyawan'],
+  },
   {
     name: 'UserRoot',
     component: UserScreen,
@@ -95,7 +95,7 @@ export const allAppRoutes = [
   ...rootSettingsRoutes,
   ...rootUserRoutes,
   ...rootProdukRoutes,
-  // ...rootInventoryRoutes,
+  ...rootInventoryRoutes,
   // ...rootCashierRoutes,
   // ...rootTransactionRoutes,
 ];

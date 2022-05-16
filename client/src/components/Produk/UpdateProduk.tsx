@@ -53,7 +53,6 @@ import {useState} from 'react';
 import {UpdateProdukNavProps} from '../../screens/app/ProdukScreen';
 import {useMyAppState} from '../../state';
 import dayjs from 'dayjs';
-import {useAccessToken} from '@nhost/react';
 import to from 'await-to-js';
 
 interface IDefaultValues {
@@ -110,7 +109,6 @@ interface AssetWithUpdate extends Asset {
 interface Props extends UpdateProdukNavProps {}
 
 const UpdateProduk = ({navigation, route}: Props) => {
-  const accessToken = useAccessToken();
   const toast = useToast();
   const myAppState = useMyAppState();
   const containerDirection = useBreakpointValue({
@@ -206,7 +204,10 @@ const UpdateProduk = ({navigation, route}: Props) => {
   const [updateProdukMutation, _updateProdukMutationResult] =
     useProduk_UpdateProdukByPkMutation({
       ...getXHasuraContextHeader({role: 'administrator'}),
-      refetchQueries: [namedOperations.Query.Produk_GetAllProduk],
+      refetchQueries: [
+        namedOperations.Query.Produk_GetAllProduk,
+        namedOperations.Query.Inventory_GetAllInventoryProductByStoreId,
+      ],
     });
 
   const handleSubmission = async (data: IDefaultValues) => {
@@ -391,9 +392,6 @@ const UpdateProduk = ({navigation, route}: Props) => {
                             w: 180,
                             q: 60,
                           }),
-                      headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                      },
                     }}
                     size={180}
                   />

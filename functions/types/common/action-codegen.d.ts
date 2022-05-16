@@ -1,5 +1,21 @@
 type Maybe<T> = T | null;
 
+type InventoryVariantMetadataInsertInput = {
+  variant_title?: Maybe<string>;
+  variant_value?: Maybe<string>;
+};
+
+type InventoryVariantMetadataNeedUpdateInput = {
+  id: number;
+  variant_value?: Maybe<string>;
+};
+
+type InventoryVariantsMetadaUpsertInput = {
+  id?: Maybe<number>;
+  variant_title?: Maybe<string>;
+  variant_value?: Maybe<string>;
+};
+
 type User_SignUpOutput = {
   email?: Maybe<string>;
   displayName?: Maybe<string>;
@@ -22,6 +38,11 @@ type Whatsapp_GetAuthStatusOutput = {
 
 type Whatsapp_SignOutOutput = {
   is_success: boolean;
+};
+
+type BulkUpdateVariantsMetadataOutput = {
+  variant_title?: Maybe<string>;
+  is_any_update?: Maybe<boolean>;
 };
 
 type Query = {
