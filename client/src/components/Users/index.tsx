@@ -125,7 +125,7 @@ const UserHome = ({}: IUserHomeProps) => {
         : null,
       store_name:
         val.defaultRole !== UserRolesEnum.administrator
-          ? val.users_metadata?.[0]?.store?.name || ''
+          ? val.users_metadata?.[0]?.stores?.name || ''
           : '',
       photo: (
         <MyAvatar

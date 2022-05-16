@@ -5,6 +5,9 @@ object_relationships:
 - name: product
   using:
     foreign_key_constraint_on: product_id
+- name: store
+  using:
+    foreign_key_constraint_on: store_id
 array_relationships:
 - name: inventory_product_variants
   using:
