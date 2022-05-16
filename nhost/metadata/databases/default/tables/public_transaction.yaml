@@ -1,0 +1,104 @@
+table:
+  name: transaction
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - invoice_number
+    - karyawan_name
+    - total_transaction
+    - cash_in_amount
+    - cash_change
+    - transaction_status
+    - payment_type
+    - refund_reason
+    - store_id
+    - created_at
+    - updated_at
+  role: administrator
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - cash_change
+    - cash_in_amount
+    - store_id
+    - total_transaction
+    - invoice_number
+    - karyawan_name
+    - payment_type
+    - refund_reason
+    - transaction_status
+    - created_at
+    - updated_at
+  role: karyawan
+select_permissions:
+- permission:
+    columns:
+    - cash_change
+    - cash_in_amount
+    - store_id
+    - total_transaction
+    - invoice_number
+    - karyawan_name
+    - payment_type
+    - refund_reason
+    - transaction_status
+    - created_at
+    - updated_at
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - cash_change
+    - cash_in_amount
+    - store_id
+    - total_transaction
+    - invoice_number
+    - karyawan_name
+    - payment_type
+    - refund_reason
+    - transaction_status
+    - created_at
+    - updated_at
+    filter: {}
+  role: karyawan
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - cash_change
+    - cash_in_amount
+    - store_id
+    - total_transaction
+    - invoice_number
+    - karyawan_name
+    - payment_type
+    - refund_reason
+    - transaction_status
+    - created_at
+    - updated_at
+    filter: {}
+  role: administrator
+- permission:
+    check: {}
+    columns:
+    - cash_change
+    - cash_in_amount
+    - store_id
+    - total_transaction
+    - invoice_number
+    - karyawan_name
+    - payment_type
+    - refund_reason
+    - transaction_status
+    - created_at
+    - updated_at
+    filter: {}
+  role: karyawan
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator

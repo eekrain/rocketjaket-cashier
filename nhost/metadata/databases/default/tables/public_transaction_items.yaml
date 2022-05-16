@@ -1,0 +1,116 @@
+table:
+  name: transaction_items
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - transaction_invoice_number
+    - product_name
+    - capital_price
+    - selling_price
+    - discount
+    - purchase_qty
+    - subtotal
+    - profit
+    - transaction_status
+    - inventory_product_id
+    - created_at
+    - updated_at
+  role: administrator
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - capital_price
+    - discount
+    - profit
+    - purchase_qty
+    - selling_price
+    - subtotal
+    - product_name
+    - transaction_invoice_number
+    - transaction_status
+    - created_at
+    - updated_at
+    - id
+    - inventory_product_id
+  role: karyawan
+select_permissions:
+- permission:
+    columns:
+    - capital_price
+    - discount
+    - profit
+    - purchase_qty
+    - selling_price
+    - subtotal
+    - product_name
+    - transaction_invoice_number
+    - transaction_status
+    - created_at
+    - updated_at
+    - id
+    - inventory_product_id
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - capital_price
+    - discount
+    - profit
+    - purchase_qty
+    - selling_price
+    - subtotal
+    - product_name
+    - transaction_invoice_number
+    - transaction_status
+    - created_at
+    - updated_at
+    - id
+    - inventory_product_id
+    filter: {}
+  role: karyawan
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - capital_price
+    - discount
+    - profit
+    - purchase_qty
+    - selling_price
+    - subtotal
+    - product_name
+    - transaction_invoice_number
+    - transaction_status
+    - created_at
+    - updated_at
+    - id
+    - inventory_product_id
+    filter: {}
+  role: administrator
+- permission:
+    check: {}
+    columns:
+    - capital_price
+    - discount
+    - profit
+    - purchase_qty
+    - selling_price
+    - subtotal
+    - product_name
+    - transaction_invoice_number
+    - transaction_status
+    - created_at
+    - updated_at
+    - id
+    - inventory_product_id
+    filter: {}
+  role: karyawan
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator
