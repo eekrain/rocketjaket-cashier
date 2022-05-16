@@ -13,7 +13,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import {ProdukScreenProps} from '../../screens/app/ProdukScreen';
 import {
   useProduk_GetAllKategoriProdukQuery,
-  // useProduk_DeleteKategoriProdukMutation,
+  useProduk_DeleteKategoriProdukIdMutation,
   namedOperations,
 } from '../../graphql/gql-generated';
 import CustomTable from '../CustomTable';
@@ -22,6 +22,8 @@ import {ButtonEdit, IconButtonDelete} from '../Buttons';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useMyAppState} from '../../state';
 import {useNavigation} from '@react-navigation/native';
+import to from 'await-to-js';
+import {checkErrorMessage} from '../../shared/utils';
 
 interface IActionProps {
   id: number;
@@ -54,46 +56,51 @@ const KategoriProduk = ({}: Props) => {
   const getAllKategoriProduk = useProduk_GetAllKategoriProdukQuery();
   const toast = useToast();
 
-  // const [deleteKategoriMutation, _deleteKategoriMutationResult] =
-  //   useProduk_DeleteKategoriProdukMutation({
-  //     refetchQueries: [namedOperations.Query.Produk_GetAllKategoriProduk],
-  //   });
+  const [deleteKategoriMutation, _deleteKategoriMutationResult] =
+    useProduk_DeleteKategoriProdukIdMutation({
+      refetchQueries: [namedOperations.Query.Produk_GetAllKategoriProduk],
+    });
 
   const data = useMemo(() => {
-    // const handleDeleteKategori = async (id: number, name: string) => {
-    //   const mutation = async () => {
-    //     const res = await deleteKategoriMutation({variables: {id}});
-    //     if (res.errors) {
-    //       toast.show({
-    //         ...TOAST_TEMPLATE.error(`Delete kategori produk ${name} gagal.`),
-    //       });
-    //     } else {
-    //       toast.show({
-    //         ...TOAST_TEMPLATE.success(
-    //           `Delete kategori produk ${name} berhasil.`,
-    //         ),
-    //       });
-    //     }
-    //   };
-    //   Alert.alert(
-    //     'Hapus Kategori Produk',
-    //     `Kategori produk ${name} akan dihapus. Lanjutkan?`,
-    //     [
-    //       {
-    //         text: 'Cancel',
-    //         style: 'cancel',
-    //       },
-    //       {
-    //         onPress: () => mutation(),
-    //         text: 'Hapus',
-    //         style: 'destructive',
-    //       },
-    //     ],
-    //     {
-    //       cancelable: true,
-    //     },
-    //   );
-    // };
+    const handleDeleteKategori = async (id: number, name: string) => {
+      const mutation = async () => {
+        const [err, res] = await to(deleteKategoriMutation({variables: {id}}));
+        if (err || !res) {
+          const errFk = checkErrorMessage.fkError(err.message)
+            ? `\nMasih ada produk yang berada dalam kategori ${name}.`
+            : '';
+          toast.show({
+            ...TOAST_TEMPLATE.error(
+              `Delete kategori produk ${name} gagal.${errFk}`,
+            ),
+          });
+        } else {
+          toast.show({
+            ...TOAST_TEMPLATE.success(
+              `Delete kategori produk ${name} berhasil.`,
+            ),
+          });
+        }
+      };
+      Alert.alert(
+        'Hapus Kategori Produk',
+        `Kategori produk ${name} akan dihapus. Lanjutkan?`,
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            onPress: () => mutation(),
+            text: 'Hapus',
+            style: 'destructive',
+          },
+        ],
+        {
+          cancelable: true,
+        },
+      );
+    };
     const temp = getAllKategoriProduk.data?.product_categories || [];
 
     const withAction = temp.map(val => ({
@@ -104,9 +111,7 @@ const KategoriProduk = ({}: Props) => {
             id: val.id,
             navigation,
           }}
-          handleDeleteKategori={async () => {
-            // handleDeleteKategori(val.id, val.name);
-          }}
+          handleDeleteKategori={() => handleDeleteKategori(val.id, val.name)}
         />
       ),
     }));

@@ -6263,6 +6263,13 @@ export type Inventory_DeleteInventoryVariantsMetadataByTitleMutationVariables = 
 
 export type Inventory_DeleteInventoryVariantsMetadataByTitleMutation = { __typename?: 'mutation_root', delete_inventory_variants_metadata?: { __typename?: 'inventory_variants_metadata_mutation_response', affected_rows: number } | null };
 
+export type Inventory_DeleteOneInventoryProductByIdMutationVariables = Exact<{
+  inventory_product_id: Scalars['uuid'];
+}>;
+
+
+export type Inventory_DeleteOneInventoryProductByIdMutation = { __typename?: 'mutation_root', delete_inventory_products_by_pk?: { __typename?: 'inventory_products', id: any } | null };
+
 export type Inventory_UpdateInventoryProductMutationVariables = Exact<{
   inventory_product_id: Scalars['uuid'];
   update_rocketjaket_inventory_product_by_pk: Inventory_Products_Set_Input;
@@ -6319,6 +6326,20 @@ export type Produk_CreateProdukMutationVariables = Exact<{
 
 
 export type Produk_CreateProdukMutation = { __typename?: 'mutation_root', insert_products_one?: { __typename?: 'products', id: any, name: string } | null };
+
+export type Produk_DeleteKategoriProdukIdMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type Produk_DeleteKategoriProdukIdMutation = { __typename?: 'mutation_root', delete_product_categories_by_pk?: { __typename?: 'product_categories', id: number, name: string } | null };
+
+export type Produk_DeleteProdukByIdMutationVariables = Exact<{
+  id: Scalars['uuid'];
+}>;
+
+
+export type Produk_DeleteProdukByIdMutation = { __typename?: 'mutation_root', delete_products_by_pk?: { __typename?: 'products', id: any, name: string } | null };
 
 export type Produk_UpdateKategoriProdukMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -6466,10 +6487,13 @@ export const namedOperations = {
     Inventory_CreateInventoryProduct: 'Inventory_CreateInventoryProduct',
     Inventory_CreateInventoryVariantMetadata: 'Inventory_CreateInventoryVariantMetadata',
     Inventory_DeleteInventoryVariantsMetadataByTitle: 'Inventory_DeleteInventoryVariantsMetadataByTitle',
+    Inventory_DeleteOneInventoryProductById: 'Inventory_DeleteOneInventoryProductById',
     Inventory_UpdateInventoryProduct: 'Inventory_UpdateInventoryProduct',
     Inventory_UpdateInventoryVariantsMetadata: 'Inventory_UpdateInventoryVariantsMetadata',
     Produk_CreateKategoriProduk: 'Produk_CreateKategoriProduk',
     Produk_CreateProduk: 'Produk_CreateProduk',
+    Produk_DeleteKategoriProdukId: 'Produk_DeleteKategoriProdukId',
+    Produk_DeleteProdukById: 'Produk_DeleteProdukById',
     Produk_UpdateKategoriProduk: 'Produk_UpdateKategoriProduk',
     Produk_UpdateProdukByPK: 'Produk_UpdateProdukByPK',
     Store_CreateStore: 'Store_CreateStore',
@@ -6592,6 +6616,39 @@ export function useInventory_DeleteInventoryVariantsMetadataByTitleMutation(base
 export type Inventory_DeleteInventoryVariantsMetadataByTitleMutationHookResult = ReturnType<typeof useInventory_DeleteInventoryVariantsMetadataByTitleMutation>;
 export type Inventory_DeleteInventoryVariantsMetadataByTitleMutationResult = Apollo.MutationResult<Inventory_DeleteInventoryVariantsMetadataByTitleMutation>;
 export type Inventory_DeleteInventoryVariantsMetadataByTitleMutationOptions = Apollo.BaseMutationOptions<Inventory_DeleteInventoryVariantsMetadataByTitleMutation, Inventory_DeleteInventoryVariantsMetadataByTitleMutationVariables>;
+export const Inventory_DeleteOneInventoryProductByIdDocument = gql`
+    mutation Inventory_DeleteOneInventoryProductById($inventory_product_id: uuid!) {
+  delete_inventory_products_by_pk(id: $inventory_product_id) {
+    id
+  }
+}
+    `;
+export type Inventory_DeleteOneInventoryProductByIdMutationFn = Apollo.MutationFunction<Inventory_DeleteOneInventoryProductByIdMutation, Inventory_DeleteOneInventoryProductByIdMutationVariables>;
+
+/**
+ * __useInventory_DeleteOneInventoryProductByIdMutation__
+ *
+ * To run a mutation, you first call `useInventory_DeleteOneInventoryProductByIdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInventory_DeleteOneInventoryProductByIdMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [inventoryDeleteOneInventoryProductByIdMutation, { data, loading, error }] = useInventory_DeleteOneInventoryProductByIdMutation({
+ *   variables: {
+ *      inventory_product_id: // value for 'inventory_product_id'
+ *   },
+ * });
+ */
+export function useInventory_DeleteOneInventoryProductByIdMutation(baseOptions?: Apollo.MutationHookOptions<Inventory_DeleteOneInventoryProductByIdMutation, Inventory_DeleteOneInventoryProductByIdMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Inventory_DeleteOneInventoryProductByIdMutation, Inventory_DeleteOneInventoryProductByIdMutationVariables>(Inventory_DeleteOneInventoryProductByIdDocument, options);
+      }
+export type Inventory_DeleteOneInventoryProductByIdMutationHookResult = ReturnType<typeof useInventory_DeleteOneInventoryProductByIdMutation>;
+export type Inventory_DeleteOneInventoryProductByIdMutationResult = Apollo.MutationResult<Inventory_DeleteOneInventoryProductByIdMutation>;
+export type Inventory_DeleteOneInventoryProductByIdMutationOptions = Apollo.BaseMutationOptions<Inventory_DeleteOneInventoryProductByIdMutation, Inventory_DeleteOneInventoryProductByIdMutationVariables>;
 export const Inventory_UpdateInventoryProductDocument = gql`
     mutation Inventory_UpdateInventoryProduct($inventory_product_id: uuid!, $update_rocketjaket_inventory_product_by_pk: inventory_products_set_input!, $insert_rocketjaket_inventory_product_variant: [inventory_product_variants_insert_input!]!) {
   update_inventory_products_by_pk(
@@ -6941,6 +6998,74 @@ export function useProduk_CreateProdukMutation(baseOptions?: Apollo.MutationHook
 export type Produk_CreateProdukMutationHookResult = ReturnType<typeof useProduk_CreateProdukMutation>;
 export type Produk_CreateProdukMutationResult = Apollo.MutationResult<Produk_CreateProdukMutation>;
 export type Produk_CreateProdukMutationOptions = Apollo.BaseMutationOptions<Produk_CreateProdukMutation, Produk_CreateProdukMutationVariables>;
+export const Produk_DeleteKategoriProdukIdDocument = gql`
+    mutation Produk_DeleteKategoriProdukId($id: Int!) {
+  delete_product_categories_by_pk(id: $id) {
+    id
+    name
+  }
+}
+    `;
+export type Produk_DeleteKategoriProdukIdMutationFn = Apollo.MutationFunction<Produk_DeleteKategoriProdukIdMutation, Produk_DeleteKategoriProdukIdMutationVariables>;
+
+/**
+ * __useProduk_DeleteKategoriProdukIdMutation__
+ *
+ * To run a mutation, you first call `useProduk_DeleteKategoriProdukIdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useProduk_DeleteKategoriProdukIdMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [produkDeleteKategoriProdukIdMutation, { data, loading, error }] = useProduk_DeleteKategoriProdukIdMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useProduk_DeleteKategoriProdukIdMutation(baseOptions?: Apollo.MutationHookOptions<Produk_DeleteKategoriProdukIdMutation, Produk_DeleteKategoriProdukIdMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Produk_DeleteKategoriProdukIdMutation, Produk_DeleteKategoriProdukIdMutationVariables>(Produk_DeleteKategoriProdukIdDocument, options);
+      }
+export type Produk_DeleteKategoriProdukIdMutationHookResult = ReturnType<typeof useProduk_DeleteKategoriProdukIdMutation>;
+export type Produk_DeleteKategoriProdukIdMutationResult = Apollo.MutationResult<Produk_DeleteKategoriProdukIdMutation>;
+export type Produk_DeleteKategoriProdukIdMutationOptions = Apollo.BaseMutationOptions<Produk_DeleteKategoriProdukIdMutation, Produk_DeleteKategoriProdukIdMutationVariables>;
+export const Produk_DeleteProdukByIdDocument = gql`
+    mutation Produk_DeleteProdukById($id: uuid!) {
+  delete_products_by_pk(id: $id) {
+    id
+    name
+  }
+}
+    `;
+export type Produk_DeleteProdukByIdMutationFn = Apollo.MutationFunction<Produk_DeleteProdukByIdMutation, Produk_DeleteProdukByIdMutationVariables>;
+
+/**
+ * __useProduk_DeleteProdukByIdMutation__
+ *
+ * To run a mutation, you first call `useProduk_DeleteProdukByIdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useProduk_DeleteProdukByIdMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [produkDeleteProdukByIdMutation, { data, loading, error }] = useProduk_DeleteProdukByIdMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useProduk_DeleteProdukByIdMutation(baseOptions?: Apollo.MutationHookOptions<Produk_DeleteProdukByIdMutation, Produk_DeleteProdukByIdMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Produk_DeleteProdukByIdMutation, Produk_DeleteProdukByIdMutationVariables>(Produk_DeleteProdukByIdDocument, options);
+      }
+export type Produk_DeleteProdukByIdMutationHookResult = ReturnType<typeof useProduk_DeleteProdukByIdMutation>;
+export type Produk_DeleteProdukByIdMutationResult = Apollo.MutationResult<Produk_DeleteProdukByIdMutation>;
+export type Produk_DeleteProdukByIdMutationOptions = Apollo.BaseMutationOptions<Produk_DeleteProdukByIdMutation, Produk_DeleteProdukByIdMutationVariables>;
 export const Produk_UpdateKategoriProdukDocument = gql`
     mutation Produk_UpdateKategoriProduk($id: Int!, $category: product_categories_set_input!) {
   update_product_categories_by_pk(pk_columns: {id: $id}, _set: $category) {

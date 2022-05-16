@@ -40,6 +40,10 @@ const ProductSearch = ({control, errors, setSelectedProductId}: Props) => {
     () => getAllProducts.data?.products || [],
     [getAllProducts.data?.products],
   );
+  // console.log(
+  //   '🚀 ~ file: ProductSearch.tsx ~ line 43 ~ ProductSearch ~ allProducts',
+  //   allProducts,
+  // );
 
   const searchData: ISearchData[] = useMemo(() => {
     return allProducts.map(pdk => ({

@@ -14,7 +14,7 @@ import {
   useStore_GetAllStoreQuery,
   useInventory_GetAllInventoryProductByStoreIdQuery,
   namedOperations,
-  // useInventory_BulkDeleteOneInventoryProductByPkMutation,
+  useInventory_DeleteOneInventoryProductByIdMutation,
 } from '../../graphql/gql-generated';
 import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
@@ -28,6 +28,8 @@ import {
   myNumberFormat,
 } from '../../shared/utils';
 import {nanoid} from 'nanoid/non-secure';
+import {TOAST_TEMPLATE} from '../../shared/constants';
+import to from 'await-to-js';
 
 interface IActionProps {
   navigation: InventoryScreenProps['InventoryHome']['navigation'];
@@ -161,52 +163,55 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
     }));
   }, [getAllInventory.data?.inventory_products]);
 
-  // const [
-  //   deleteInventoryProductMutation,
-  //   _deleteInventoryProductMutationResult,
-  // ] = useInventory_BulkDeleteOneInventoryProductByPkMutation({
-  //   refetchQueries: [
-  //     namedOperations.Query.Inventory_GetAllInventoryProductByStorePK,
-  //   ],
-  // });
+  const [
+    deleteInventoryProductMutation,
+    _deleteInventoryProductMutationResult,
+  ] = useInventory_DeleteOneInventoryProductByIdMutation({
+    refetchQueries: [
+      namedOperations.Query.Inventory_GetAllInventoryProductByStoreId,
+    ],
+  });
 
   const data = useMemo(() => {
-    // const handleDeleteKategori = async (id: string, name: string) => {
-    //   const mutation = async () => {
-    //     const res = await deleteInventoryProductMutation({
-    //       variables: {inventory_product_id: id},
-    //     });
-    //     if (res.errors) {
-    //       toast.show({
-    //         ...TOAST_TEMPLATE.error(`Hapus inventory produk ${name} gagal.`),
-    //       });
-    //     } else {
-    //       toast.show({
-    //         ...TOAST_TEMPLATE.success(
-    //           `Hapus inventory produk ${name} berhasil.`,
-    //         ),
-    //       });
-    //     }
-    //   };
-    //   Alert.alert(
-    //     'Hapus Toko',
-    //     `Inventory produk ${name} akan dihapus. Lanjutkan?`,
-    //     [
-    //       {
-    //         text: 'Cancel',
-    //         style: 'cancel',
-    //       },
-    //       {
-    //         onPress: () => mutation(),
-    //         text: 'Hapus',
-    //         style: 'destructive',
-    //       },
-    //     ],
-    //     {
-    //       cancelable: true,
-    //     },
-    //   );
-    // };
+    const handleDeleteKategori = async (id: string, name: string) => {
+      const mutation = async () => {
+        const [err, res] = await to(
+          deleteInventoryProductMutation({
+            variables: {inventory_product_id: id},
+          }),
+        );
+        if (err || !res) {
+          toast.show({
+            ...TOAST_TEMPLATE.error(`Hapus inventory produk ${name} gagal.`),
+          });
+        } else {
+          toast.show({
+            ...TOAST_TEMPLATE.success(
+              `Hapus inventory produk ${name} berhasil.`,
+            ),
+          });
+        }
+      };
+      Alert.alert(
+        'Hapus Toko',
+        `Inventory produk ${name} akan dihapus. Lanjutkan?`,
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            onPress: () => mutation(),
+            text: 'Hapus',
+            style: 'destructive',
+          },
+        ],
+        {
+          cancelable: true,
+        },
+      );
+    };
+
     const withAction = allInventoryProduct.map(val => ({
       ...val,
       photo: (
@@ -227,9 +232,9 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
           storeName={selectedStoreName}
           inventoryProductId={val.id}
           navigation={navigation}
-          handleDeleteKategori={async () => {
-            // handleDeleteKategori(val.id, val.product_label),
-          }}
+          handleDeleteKategori={() =>
+            handleDeleteKategori(val.id, val.product_label)
+          }
         />
       ),
     }));

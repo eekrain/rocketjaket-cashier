@@ -102,13 +102,13 @@ const UpdateUser = ({}: IUpdateUserProps) => {
 
   const getAllStore = useStore_GetAllStoreQuery();
   const allStoreOptions = useMemo(() => {
-    const stores = getAllStore.data?.store || [];
+    const stores = getAllStore.data?.stores || [];
 
     return stores.map(store => ({
       value: store.id.toString(),
       label: store.name,
     }));
-  }, [getAllStore.data?.store]);
+  }, [getAllStore.data?.stores]);
 
   const getUserById = useUser_GetUserByIdQuery({
     ...getXHasuraContextHeader({role: 'administrator'}),
@@ -129,10 +129,6 @@ const UpdateUser = ({}: IUpdateUserProps) => {
   const userData = useMemo(() => {
     return getUserById.data?.user;
   }, [getUserById.data?.user]);
-  // console.log(
-  //   '🚀 ~ file: UpdateUser.tsx ~ line 128 ~ userData ~ userData',
-  //   userData,
-  // );
 
   useEffect(() => {
     if (userData === null && !isErrorOnce) {

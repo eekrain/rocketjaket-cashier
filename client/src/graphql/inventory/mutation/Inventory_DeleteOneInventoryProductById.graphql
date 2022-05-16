@@ -1,0 +1,5 @@
+mutation Inventory_DeleteOneInventoryProductById($inventory_product_id: uuid!) {
+  delete_inventory_products_by_pk(id: $inventory_product_id) {
+    id
+  }
+}
