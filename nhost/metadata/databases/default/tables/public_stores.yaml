@@ -2,6 +2,13 @@ table:
   name: stores
   schema: public
 array_relationships:
+- name: inventory_products
+  using:
+    foreign_key_constraint_on:
+      column: store_id
+      table:
+        name: inventory_products
+        schema: public
 - name: users_metadata
   using:
     foreign_key_constraint_on:

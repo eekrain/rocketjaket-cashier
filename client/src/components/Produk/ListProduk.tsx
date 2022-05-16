@@ -8,20 +8,28 @@ import {
   useToast,
   ScrollView,
 } from 'native-base';
-import {RefreshControl} from 'react-native';
+import {Alert, RefreshControl} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import {ProdukScreenProps} from '../../screens/app/ProdukScreen';
-import {useProduk_GetAllProdukQuery} from '../../graphql/gql-generated';
+import {
+  namedOperations,
+  useProduk_GetAllProdukQuery,
+  useProduk_DeleteProdukByIdMutation,
+} from '../../graphql/gql-generated';
 import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
 import {IconButtonDelete, ButtonEdit} from '../Buttons';
 import {
+  checkErrorMessage,
   getStorageFileUrlWImageTransform,
   myNumberFormat,
+  nhost,
 } from '../../shared/utils';
 import {useMyAppState} from '../../state';
 import {useNavigation} from '@react-navigation/native';
 import {MyImageViewer} from '../../shared/components';
+import {TOAST_TEMPLATE} from '../../shared/constants';
+import to from 'await-to-js';
 
 interface IActionProps {
   id: string;
@@ -55,56 +63,60 @@ const Produk = ({}: Props) => {
   const navigation =
     useNavigation<ProdukScreenProps['ProdukHome']['navigation']>();
   const getAllProduk = useProduk_GetAllProdukQuery();
-  // const [deleteProdukMutation, _deleteProdukMutationResult] =
-  //   useProduk_DeleteProdukByPkMutation({
-  //     refetchQueries: [namedOperations.Query.Produk_GetAllProduk],
-  //   });
+  const [deleteProdukMutation, _deleteProdukMutationResult] =
+    useProduk_DeleteProdukByIdMutation({
+      refetchQueries: [namedOperations.Query.Produk_GetAllProduk],
+    });
   const toast = useToast();
 
   const data = useMemo(() => {
-    // const handleDeleteProduk = async (
-    //   id: string,
-    //   name: string,
-    //   product_photo_url: string,
-    // ) => {
-    //   const mutation = async () => {
-    //     if (product_photo_url && product_photo_url !== '') {
-    //       const res = await storage.delete(`/${product_photo_url}`);
-    //       console.log(
-    //         '🚀 ~ file: ListProduk.tsx ~ line 99 ~ mutation ~ res',
-    //         res,
-    //       );
-    //     }
-    //     const res = await deleteProdukMutation({variables: {id}});
-    //     if (res.errors) {
-    //       toast.show({
-    //         ...TOAST_TEMPLATE.error(`Delete produk ${name} gagal.`),
-    //       });
-    //     } else {
-    //       toast.show({
-    //         ...TOAST_TEMPLATE.success(`Delete produk ${name} berhasil.`),
-    //       });
-    //     }
-    //   };
-    //   Alert.alert(
-    //     'Hapus Produk',
-    //     `Kategori produk ${name} akan dihapus. Lanjutkan?`,
-    //     [
-    //       {
-    //         text: 'Cancel',
-    //         style: 'cancel',
-    //       },
-    //       {
-    //         onPress: () => mutation(),
-    //         text: 'Hapus',
-    //         style: 'destructive',
-    //       },
-    //     ],
-    //     {
-    //       cancelable: true,
-    //     },
-    //   );
-    // };
+    const handleDeleteProduk = async (
+      id: string,
+      name: string,
+      photo_id?: string | null,
+    ) => {
+      const mutation = async () => {
+        if (photo_id && photo_id !== '') {
+          const [err, res] = await to(nhost.storage.delete({fileId: photo_id}));
+          console.log(
+            '🚀 ~ file: ListProduk.tsx ~ line 80 ~ mutation ~ err',
+            err,
+          );
+        }
+        const [err, res] = await to(deleteProdukMutation({variables: {id}}));
+        if (err || !res) {
+          const errFk = checkErrorMessage.fkError(err.message)
+            ? `\nProduk ${name} masih ada di dalam inventory.`
+            : '';
+          toast.show({
+            ...TOAST_TEMPLATE.error(`Delete produk ${name} gagal.${errFk}`),
+          });
+        } else {
+          toast.show({
+            ...TOAST_TEMPLATE.success(`Delete produk ${name} berhasil.`),
+          });
+        }
+      };
+      Alert.alert(
+        'Hapus Produk',
+        `Kategori produk ${name} akan dihapus. Lanjutkan?`,
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            onPress: () => mutation(),
+            text: 'Hapus',
+            style: 'destructive',
+          },
+        ],
+        {
+          cancelable: true,
+        },
+      );
+    };
+
     const temp = getAllProduk.data?.products || [];
 
     const withComponent = temp.map(produk => {
@@ -132,9 +144,9 @@ const Produk = ({}: Props) => {
               id: produk.id,
               navigation,
             }}
-            handleDeleteKategori={async () => {
-              // handleDeleteProduk(produk.id, produk.name, produk.photo_url || '')
-            }}
+            handleDeleteKategori={() =>
+              handleDeleteProduk(produk.id, produk.name, produk.photo_id)
+            }
           />
         ),
       };
