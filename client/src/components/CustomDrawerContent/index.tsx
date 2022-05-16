@@ -68,7 +68,7 @@ const CustomDrawerContent = (props: Props) => {
       const temp2 = !route.isHideOnDrawer ? temp1 : null;
       return temp2;
     });
-  }, [myUser, routeItem]);
+  }, [myUser.roles, routeItem]);
 
   return (
     <DrawerContentScrollView {...props}>

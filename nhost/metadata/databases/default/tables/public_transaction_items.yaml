@@ -1,6 +1,16 @@
 table:
   name: transaction_items
   schema: public
+object_relationships:
+- name: inventory_product
+  using:
+    foreign_key_constraint_on: inventory_product_id
+- name: transaction
+  using:
+    foreign_key_constraint_on: transaction_invoice_number
+- name: transaction_status_enum
+  using:
+    foreign_key_constraint_on: transaction_status
 insert_permissions:
 - permission:
     backend_only: false
