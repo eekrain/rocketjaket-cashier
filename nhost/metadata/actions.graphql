@@ -1,4 +1,15 @@
 type Mutation {
+  Cashier_CreateTransaction(
+    karyawan_name: String
+    payment_type: TransactionPaymentTypeEnum!
+    total_transaction: Int!
+    cash_in_amount: Int!
+    transaction_items: [transaction_items_input!]!
+    store_id: Int!
+  ): Cashier_CreateTransactionOutput
+}
+
+type Mutation {
   User_SignUp(
     email: String!
     password: String!
@@ -16,6 +27,23 @@ type Mutation {
   Whatsapp_SignOut: Whatsapp_SignOutOutput
 }
 
+enum TransactionStatusEnum {
+  """ Gagal """ failed
+  """ Refund """ refund
+  """ Refund Sebagian """ refund_part
+  """ Sukses """ success
+}
+
+enum TransactionPaymentTypeEnum {
+  """ Cash """ CASH
+  """ BCA """ EDC_BCA
+  """ BRI """ EDC_BRI
+  """ MANDIRI """ EDC_MANDIRI
+  """ GOPAY """ EWALLET_GOPAY
+  """ LINKAJA """ EWALLET_LINKAJA
+  """ SHOPEEPAY """ EWALLET_SHOPEEPAY
+}
+
 input InventoryVariantMetadataInsertInput {
   variant_title: String
   variant_value: String
@@ -30,6 +58,17 @@ input InventoryVariantsMetadaUpsertInput {
   id: Int
   variant_title: String
   variant_value: String
+}
+
+input transaction_items_input {
+  product_inventory_id: uuid!
+  product_name_concise: String!
+  capital_price: Int!
+  selling_price: Int!
+  discount: Int!
+  purchace_qty: Int!
+  inventory_product_updated_at: String!
+  product_updated_at: String!
 }
 
 type User_SignUpOutput {
@@ -59,5 +98,17 @@ type Whatsapp_SignOutOutput {
 type BulkUpdateVariantsMetadataOutput {
   variant_title: String
   is_any_update: Boolean
+}
+
+type Cashier_CreateTransactionOutput {
+  isError: Boolean!
+  errorMessage: String
+  invoice_number: String
+  total_transaction: Int!
+  cash_change: Int
+  cash_in_amount: Int!
+  payment_type: String!
+  store_id: Int!
+  transaction_status: TransactionStatusEnum!
 }
 

@@ -1,0 +1,7 @@
+query Inventory_GetInventoryProductAvailableQtytByIds($_in: [uuid!]!) {
+  inventory_products(where: { id: { _in: $_in } }) {
+    id
+    updated_at
+    available_qty
+  }
+}

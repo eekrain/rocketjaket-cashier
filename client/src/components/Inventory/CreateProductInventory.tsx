@@ -112,7 +112,7 @@ const CreateProductInventory = ({
     variables: {
       id: selectedProductId,
     },
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
