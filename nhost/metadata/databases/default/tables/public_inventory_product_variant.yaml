@@ -1,0 +1,3 @@
+table:
+  name: inventory_product_variant
+  schema: public

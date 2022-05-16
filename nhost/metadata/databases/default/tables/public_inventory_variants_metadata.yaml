@@ -1,0 +1,41 @@
+table:
+  name: inventory_variants_metadata
+  schema: public
+array_relationships:
+- name: inventory_product_variants
+  using:
+    foreign_key_constraint_on:
+      column: inventory_variant_metadata_id
+      table:
+        name: inventory_product_variants
+        schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - variant_title
+    - variant_value
+  role: administrator
+select_permissions:
+- permission:
+    columns:
+    - id
+    - variant_title
+    - variant_value
+    filter: {}
+  role: administrator
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - id
+    - variant_title
+    - variant_value
+    filter: {}
+  role: administrator
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator

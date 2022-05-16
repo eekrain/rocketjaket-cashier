@@ -16,6 +16,22 @@ type Mutation {
   Whatsapp_SignOut: Whatsapp_SignOutOutput
 }
 
+input InventoryVariantMetadataInsertInput {
+  variant_title: String
+  variant_value: String
+}
+
+input InventoryVariantMetadataNeedUpdateInput {
+  id: Int!
+  variant_value: String
+}
+
+input InventoryVariantsMetadaUpsertInput {
+  id: Int
+  variant_title: String
+  variant_value: String
+}
+
 type User_SignUpOutput {
   email: String
   displayName: String
@@ -38,5 +54,10 @@ type Whatsapp_GetAuthStatusOutput {
 
 type Whatsapp_SignOutOutput {
   is_success: Boolean!
+}
+
+type BulkUpdateVariantsMetadataOutput {
+  variant_title: String
+  is_any_update: Boolean
 }
 
