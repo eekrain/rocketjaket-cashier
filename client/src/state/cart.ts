@@ -2,10 +2,10 @@ import create from 'zustand';
 import {createTrackedSelector} from 'react-tracked';
 
 export interface ICartItem {
-  product_photo_url: string;
+  product_photo_id?: string | null;
   product_inventory_id: string;
+  product_name_concise: string;
   product_name: string;
-  variant: string;
   capital_price: number;
   selling_price: number;
   discount: number;
