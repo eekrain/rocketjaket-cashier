@@ -124,3 +124,14 @@ delete_permissions:
 - permission:
     filter: {}
   role: administrator
+event_triggers:
+- definition:
+    enable_manual: false
+    insert:
+      columns: "*"
+  name: UpdateAvailableQtyOnInsertTransactionItem
+  retry_conf:
+    interval_sec: 30
+    num_retries: 10
+    timeout_sec: 60
+  webhook: "{{NHOST_BACKEND_URL}}/v1/functions/events/UpdateAvailableQtyOnInsertTransactionItem"
