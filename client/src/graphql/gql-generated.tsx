@@ -1495,6 +1495,30 @@ export type Customers = {
   id: Scalars['uuid'];
   name: Scalars['String'];
   phone_number: Scalars['String'];
+  /** An array relationship */
+  transaction_receipts: Array<Transaction_Receipts>;
+  /** An aggregate relationship */
+  transaction_receipts_aggregate: Transaction_Receipts_Aggregate;
+};
+
+
+/** columns and relationships of "customers" */
+export type CustomersTransaction_ReceiptsArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_Receipts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_Receipts_Order_By>>;
+  where?: InputMaybe<Transaction_Receipts_Bool_Exp>;
+};
+
+
+/** columns and relationships of "customers" */
+export type CustomersTransaction_Receipts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_Receipts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_Receipts_Order_By>>;
+  where?: InputMaybe<Transaction_Receipts_Bool_Exp>;
 };
 
 /** aggregated selection of "customers" */
@@ -1528,6 +1552,7 @@ export type Customers_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   phone_number?: InputMaybe<String_Comparison_Exp>;
+  transaction_receipts?: InputMaybe<Transaction_Receipts_Bool_Exp>;
 };
 
 /** unique or primary key constraints on table "customers" */
@@ -1542,6 +1567,7 @@ export type Customers_Insert_Input = {
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
   phone_number?: InputMaybe<Scalars['String']>;
+  transaction_receipts?: InputMaybe<Transaction_Receipts_Arr_Rel_Insert_Input>;
 };
 
 /** aggregate max on columns */
@@ -1591,6 +1617,7 @@ export type Customers_Order_By = {
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   phone_number?: InputMaybe<Order_By>;
+  transaction_receipts_aggregate?: InputMaybe<Transaction_Receipts_Aggregate_Order_By>;
 };
 
 /** primary key columns input for table: customers */
@@ -9092,6 +9119,20 @@ export type Whatsapp_GetAuthStatusQueryVariables = Exact<{ [key: string]: never;
 
 export type Whatsapp_GetAuthStatusQuery = { __typename?: 'query_root', Whatsapp_GetAuthStatus?: { __typename?: 'Whatsapp_GetAuthStatusOutput', client_phone_number?: string | null, client_name?: string | null, client_platform?: string | null, client_state?: string | null, errorMessage?: string | null, qrcode?: string | null, is_authenticated: boolean, is_qr_ready: boolean, is_client_ready: boolean, isError: boolean } | null };
 
+export type Transaction_GetAllTransactionByStoreIdQueryVariables = Exact<{
+  store_id?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type Transaction_GetAllTransactionByStoreIdQuery = { __typename?: 'query_root', transaction: Array<{ __typename?: 'transaction', cash_change: number, cash_in_amount: number, created_at: any, invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, store_id: number, total_transaction: number, updated_at: any, karyawan_name: string, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', id: any, inventory_product_id: any, product_name: string, profit: number }> }> };
+
+export type Transaction_GetTransactionByPkQueryVariables = Exact<{
+  invoice_number: Scalars['String'];
+}>;
+
+
+export type Transaction_GetTransactionByPkQuery = { __typename?: 'query_root', transaction_by_pk?: { __typename?: 'transaction', cash_change: number, cash_in_amount: number, created_at: any, invoice_number: string, total_transaction: number, updated_at: any, karyawan_name: string, transaction_status: Transaction_Status_Enum_Enum, store: { __typename?: 'stores', name: string, address: string }, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', created_at: any, capital_price: number, discount: number, id: any, inventory_product_id: any, product_name: string, profit: number, purchase_qty: number, selling_price: number, subtotal: number, updated_at: any, transaction_status: Transaction_Status_Enum_Enum, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string }, inventory_product: { __typename?: 'inventory_products', override_capital_price?: number | null, override_selling_price?: number | null, override_discount?: number | null, available_qty: number, updated_at: any, product: { __typename?: 'products', photo_id?: string | null, name: string, capital_price: number, selling_price: number, discount: number, updated_at: any }, inventory_product_variants: Array<{ __typename?: 'inventory_product_variants', inventory_variant_metadata_id: number }> } }>, transaction_receipts: Array<{ __typename?: 'transaction_receipts', created_at: any, is_sent: boolean, transaction_receipt_type_enum: { __typename?: 'transaction_receipt_type_enum', receipt_type: string, title: string }, customer: { __typename?: 'customers', id: any, email: string, name: string, phone_number: string } }> } | null };
+
 export type User_SignUpMutationVariables = Exact<{
   defaultRole?: InputMaybe<Scalars['String']>;
   defaultStore?: InputMaybe<Scalars['Int']>;
@@ -9147,6 +9188,8 @@ export const namedOperations = {
     Store_GetAllStore: 'Store_GetAllStore',
     Store_GetStoreByPK: 'Store_GetStoreByPK',
     Whatsapp_GetAuthStatus: 'Whatsapp_GetAuthStatus',
+    Transaction_GetAllTransactionByStoreId: 'Transaction_GetAllTransactionByStoreId',
+    Transaction_GetTransactionByPK: 'Transaction_GetTransactionByPK',
     User_GetAllUser: 'User_GetAllUser',
     User_GetUserById: 'User_GetUserById'
   },
@@ -10336,6 +10379,159 @@ export function useWhatsapp_GetAuthStatusLazyQuery(baseOptions?: Apollo.LazyQuer
 export type Whatsapp_GetAuthStatusQueryHookResult = ReturnType<typeof useWhatsapp_GetAuthStatusQuery>;
 export type Whatsapp_GetAuthStatusLazyQueryHookResult = ReturnType<typeof useWhatsapp_GetAuthStatusLazyQuery>;
 export type Whatsapp_GetAuthStatusQueryResult = Apollo.QueryResult<Whatsapp_GetAuthStatusQuery, Whatsapp_GetAuthStatusQueryVariables>;
+export const Transaction_GetAllTransactionByStoreIdDocument = gql`
+    query Transaction_GetAllTransactionByStoreId($store_id: Int) {
+  transaction(where: {store_id: {_eq: $store_id}}) {
+    cash_change
+    cash_in_amount
+    created_at
+    invoice_number
+    payment_type
+    store_id
+    total_transaction
+    updated_at
+    karyawan_name
+    transaction_status_enum {
+      transaction_status
+      title
+    }
+    transaction_items {
+      id
+      inventory_product_id
+      product_name
+      profit
+    }
+  }
+}
+    `;
+
+/**
+ * __useTransaction_GetAllTransactionByStoreIdQuery__
+ *
+ * To run a query within a React component, call `useTransaction_GetAllTransactionByStoreIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransaction_GetAllTransactionByStoreIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransaction_GetAllTransactionByStoreIdQuery({
+ *   variables: {
+ *      store_id: // value for 'store_id'
+ *   },
+ * });
+ */
+export function useTransaction_GetAllTransactionByStoreIdQuery(baseOptions?: Apollo.QueryHookOptions<Transaction_GetAllTransactionByStoreIdQuery, Transaction_GetAllTransactionByStoreIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Transaction_GetAllTransactionByStoreIdQuery, Transaction_GetAllTransactionByStoreIdQueryVariables>(Transaction_GetAllTransactionByStoreIdDocument, options);
+      }
+export function useTransaction_GetAllTransactionByStoreIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Transaction_GetAllTransactionByStoreIdQuery, Transaction_GetAllTransactionByStoreIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Transaction_GetAllTransactionByStoreIdQuery, Transaction_GetAllTransactionByStoreIdQueryVariables>(Transaction_GetAllTransactionByStoreIdDocument, options);
+        }
+export type Transaction_GetAllTransactionByStoreIdQueryHookResult = ReturnType<typeof useTransaction_GetAllTransactionByStoreIdQuery>;
+export type Transaction_GetAllTransactionByStoreIdLazyQueryHookResult = ReturnType<typeof useTransaction_GetAllTransactionByStoreIdLazyQuery>;
+export type Transaction_GetAllTransactionByStoreIdQueryResult = Apollo.QueryResult<Transaction_GetAllTransactionByStoreIdQuery, Transaction_GetAllTransactionByStoreIdQueryVariables>;
+export const Transaction_GetTransactionByPkDocument = gql`
+    query Transaction_GetTransactionByPK($invoice_number: String!) {
+  transaction_by_pk(invoice_number: $invoice_number) {
+    cash_change
+    cash_in_amount
+    created_at
+    invoice_number
+    store {
+      name
+      address
+    }
+    total_transaction
+    transaction_status_enum {
+      transaction_status
+      title
+    }
+    updated_at
+    karyawan_name
+    transaction_items {
+      created_at
+      capital_price
+      discount
+      id
+      inventory_product_id
+      product_name
+      profit
+      purchase_qty
+      selling_price
+      subtotal
+      updated_at
+      transaction_status_enum {
+        title
+        transaction_status
+      }
+      transaction_status
+      inventory_product {
+        product {
+          photo_id
+          name
+          capital_price
+          selling_price
+          discount
+          updated_at
+        }
+        inventory_product_variants {
+          inventory_variant_metadata_id
+        }
+        override_capital_price
+        override_selling_price
+        override_discount
+        available_qty
+        updated_at
+      }
+    }
+    transaction_status
+    transaction_receipts(order_by: {created_at: desc_nulls_last}) {
+      created_at
+      is_sent
+      transaction_receipt_type_enum {
+        receipt_type
+        title
+      }
+      customer {
+        id
+        email
+        name
+        phone_number
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useTransaction_GetTransactionByPkQuery__
+ *
+ * To run a query within a React component, call `useTransaction_GetTransactionByPkQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransaction_GetTransactionByPkQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransaction_GetTransactionByPkQuery({
+ *   variables: {
+ *      invoice_number: // value for 'invoice_number'
+ *   },
+ * });
+ */
+export function useTransaction_GetTransactionByPkQuery(baseOptions: Apollo.QueryHookOptions<Transaction_GetTransactionByPkQuery, Transaction_GetTransactionByPkQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Transaction_GetTransactionByPkQuery, Transaction_GetTransactionByPkQueryVariables>(Transaction_GetTransactionByPkDocument, options);
+      }
+export function useTransaction_GetTransactionByPkLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Transaction_GetTransactionByPkQuery, Transaction_GetTransactionByPkQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Transaction_GetTransactionByPkQuery, Transaction_GetTransactionByPkQueryVariables>(Transaction_GetTransactionByPkDocument, options);
+        }
+export type Transaction_GetTransactionByPkQueryHookResult = ReturnType<typeof useTransaction_GetTransactionByPkQuery>;
+export type Transaction_GetTransactionByPkLazyQueryHookResult = ReturnType<typeof useTransaction_GetTransactionByPkLazyQuery>;
+export type Transaction_GetTransactionByPkQueryResult = Apollo.QueryResult<Transaction_GetTransactionByPkQuery, Transaction_GetTransactionByPkQueryVariables>;
 export const User_SignUpDocument = gql`
     mutation User_SignUp($defaultRole: String = "karyawan", $defaultStore: Int = null, $displayName: String!, $email: String!, $password: String!) {
   User_SignUp(
