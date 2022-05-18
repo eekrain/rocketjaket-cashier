@@ -2274,6 +2274,10 @@ export type Inventory_Products = {
   /** An object relationship */
   store: Stores;
   store_id: Scalars['Int'];
+  /** fetch data from the table: "transaction_items" */
+  transaction_items: Array<Transaction_Items>;
+  /** An aggregate relationship */
+  transaction_items_aggregate: Transaction_Items_Aggregate;
   updated_at: Scalars['timestamptz'];
 };
 
@@ -2295,6 +2299,26 @@ export type Inventory_ProductsInventory_Product_Variants_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Inventory_Product_Variants_Order_By>>;
   where?: InputMaybe<Inventory_Product_Variants_Bool_Exp>;
+};
+
+
+/** columns and relationships of "inventory_products" */
+export type Inventory_ProductsTransaction_ItemsArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_Items_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_Items_Order_By>>;
+  where?: InputMaybe<Transaction_Items_Bool_Exp>;
+};
+
+
+/** columns and relationships of "inventory_products" */
+export type Inventory_ProductsTransaction_Items_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_Items_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_Items_Order_By>>;
+  where?: InputMaybe<Transaction_Items_Bool_Exp>;
 };
 
 /** aggregated selection of "inventory_products" */
@@ -2387,6 +2411,7 @@ export type Inventory_Products_Bool_Exp = {
   product_id?: InputMaybe<Uuid_Comparison_Exp>;
   store?: InputMaybe<Stores_Bool_Exp>;
   store_id?: InputMaybe<Int_Comparison_Exp>;
+  transaction_items?: InputMaybe<Transaction_Items_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
@@ -2420,6 +2445,7 @@ export type Inventory_Products_Insert_Input = {
   product_id?: InputMaybe<Scalars['uuid']>;
   store?: InputMaybe<Stores_Obj_Rel_Insert_Input>;
   store_id?: InputMaybe<Scalars['Int']>;
+  transaction_items?: InputMaybe<Transaction_Items_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -2518,6 +2544,7 @@ export type Inventory_Products_Order_By = {
   product_id?: InputMaybe<Order_By>;
   store?: InputMaybe<Stores_Order_By>;
   store_id?: InputMaybe<Order_By>;
+  transaction_items_aggregate?: InputMaybe<Transaction_Items_Aggregate_Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
 
@@ -8927,6 +8954,13 @@ export type Inventory_GetAllInventoryProductByStoreIdQueryVariables = Exact<{
 
 export type Inventory_GetAllInventoryProductByStoreIdQuery = { __typename?: 'query_root', inventory_products: Array<{ __typename?: 'inventory_products', id: any, available_qty: number, min_available_qty: number, override_selling_price?: number | null, override_discount?: number | null, override_capital_price?: number | null, updated_at: any, product: { __typename?: 'products', name: string, capital_price: number, selling_price: number, discount: number, photo_id?: string | null, updated_at: any, product_category: { __typename?: 'product_categories', id: number, name: string } }, inventory_product_variants: Array<{ __typename?: 'inventory_product_variants', inventory_variants_metadata: { __typename?: 'inventory_variants_metadata', variant_title: string, variant_value: string } }> }> };
 
+export type Inventory_GetAllInventoryProductByStoreIdSubscriptionSubscriptionVariables = Exact<{
+  store_id: Scalars['Int'];
+}>;
+
+
+export type Inventory_GetAllInventoryProductByStoreIdSubscriptionSubscription = { __typename?: 'subscription_root', inventory_products: Array<{ __typename?: 'inventory_products', id: any, available_qty: number, min_available_qty: number, override_selling_price?: number | null, override_discount?: number | null, override_capital_price?: number | null, updated_at: any, product: { __typename?: 'products', name: string, capital_price: number, selling_price: number, discount: number, photo_id?: string | null, updated_at: any, product_category: { __typename?: 'product_categories', id: number, name: string } }, inventory_product_variants: Array<{ __typename?: 'inventory_product_variants', inventory_variants_metadata: { __typename?: 'inventory_variants_metadata', variant_title: string, variant_value: string } }> }> };
+
 export type Inventory_GetAllVariantMetadataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -9137,6 +9171,9 @@ export const namedOperations = {
     User_SignUp: 'User_SignUp',
     User_UpdateUserByUserId: 'User_UpdateUserByUserId',
     User_UpdateUserForAdmin: 'User_UpdateUserForAdmin'
+  },
+  Subscription: {
+    Inventory_GetAllInventoryProductByStoreIdSubscription: 'Inventory_GetAllInventoryProductByStoreIdSubscription'
   }
 }
 
@@ -9491,6 +9528,63 @@ export function useInventory_GetAllInventoryProductByStoreIdLazyQuery(baseOption
 export type Inventory_GetAllInventoryProductByStoreIdQueryHookResult = ReturnType<typeof useInventory_GetAllInventoryProductByStoreIdQuery>;
 export type Inventory_GetAllInventoryProductByStoreIdLazyQueryHookResult = ReturnType<typeof useInventory_GetAllInventoryProductByStoreIdLazyQuery>;
 export type Inventory_GetAllInventoryProductByStoreIdQueryResult = Apollo.QueryResult<Inventory_GetAllInventoryProductByStoreIdQuery, Inventory_GetAllInventoryProductByStoreIdQueryVariables>;
+export const Inventory_GetAllInventoryProductByStoreIdSubscriptionDocument = gql`
+    subscription Inventory_GetAllInventoryProductByStoreIdSubscription($store_id: Int!) {
+  inventory_products(
+    where: {store_id: {_eq: $store_id}}
+    order_by: {product: {name: asc}}
+  ) {
+    id
+    available_qty
+    min_available_qty
+    override_selling_price
+    override_discount
+    override_capital_price
+    updated_at
+    product {
+      name
+      capital_price
+      selling_price
+      discount
+      photo_id
+      updated_at
+      product_category {
+        id
+        name
+      }
+    }
+    inventory_product_variants(order_by: {inventory_variant_metadata_id: asc}) {
+      inventory_variants_metadata {
+        variant_title
+        variant_value
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription({
+ *   variables: {
+ *      store_id: // value for 'store_id'
+ *   },
+ * });
+ */
+export function useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription(baseOptions: Apollo.SubscriptionHookOptions<Inventory_GetAllInventoryProductByStoreIdSubscriptionSubscription, Inventory_GetAllInventoryProductByStoreIdSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<Inventory_GetAllInventoryProductByStoreIdSubscriptionSubscription, Inventory_GetAllInventoryProductByStoreIdSubscriptionSubscriptionVariables>(Inventory_GetAllInventoryProductByStoreIdSubscriptionDocument, options);
+      }
+export type Inventory_GetAllInventoryProductByStoreIdSubscriptionSubscriptionHookResult = ReturnType<typeof useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription>;
+export type Inventory_GetAllInventoryProductByStoreIdSubscriptionSubscriptionResult = Apollo.SubscriptionResult<Inventory_GetAllInventoryProductByStoreIdSubscriptionSubscription>;
 export const Inventory_GetAllVariantMetadataDocument = gql`
     query Inventory_GetAllVariantMetadata {
   inventory_variants_metadata(order_by: {id: asc}) {

@@ -2275,6 +2275,10 @@ export type Inventory_Products = {
   /** An object relationship */
   store: Stores;
   store_id: Scalars['Int'];
+  /** fetch data from the table: "transaction_items" */
+  transaction_items: Array<Transaction_Items>;
+  /** An aggregate relationship */
+  transaction_items_aggregate: Transaction_Items_Aggregate;
   updated_at: Scalars['timestamptz'];
 };
 
@@ -2296,6 +2300,26 @@ export type Inventory_ProductsInventory_Product_Variants_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Inventory_Product_Variants_Order_By>>;
   where?: InputMaybe<Inventory_Product_Variants_Bool_Exp>;
+};
+
+
+/** columns and relationships of "inventory_products" */
+export type Inventory_ProductsTransaction_ItemsArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_Items_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_Items_Order_By>>;
+  where?: InputMaybe<Transaction_Items_Bool_Exp>;
+};
+
+
+/** columns and relationships of "inventory_products" */
+export type Inventory_ProductsTransaction_Items_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_Items_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_Items_Order_By>>;
+  where?: InputMaybe<Transaction_Items_Bool_Exp>;
 };
 
 /** aggregated selection of "inventory_products" */
@@ -2388,6 +2412,7 @@ export type Inventory_Products_Bool_Exp = {
   product_id?: InputMaybe<Uuid_Comparison_Exp>;
   store?: InputMaybe<Stores_Bool_Exp>;
   store_id?: InputMaybe<Int_Comparison_Exp>;
+  transaction_items?: InputMaybe<Transaction_Items_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
@@ -2421,6 +2446,7 @@ export type Inventory_Products_Insert_Input = {
   product_id?: InputMaybe<Scalars['uuid']>;
   store?: InputMaybe<Stores_Obj_Rel_Insert_Input>;
   store_id?: InputMaybe<Scalars['Int']>;
+  transaction_items?: InputMaybe<Transaction_Items_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -2519,6 +2545,7 @@ export type Inventory_Products_Order_By = {
   product_id?: InputMaybe<Order_By>;
   store?: InputMaybe<Stores_Order_By>;
   store_id?: InputMaybe<Order_By>;
+  transaction_items_aggregate?: InputMaybe<Transaction_Items_Aggregate_Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
 
@@ -6837,11 +6864,10 @@ export type Transaction_Items_Input = {
   discount: Scalars['Int'];
   inventory_product_updated_at: Scalars['String'];
   product_inventory_id: Scalars['uuid'];
-  product_name: Scalars['String'];
+  product_name_concise: Scalars['String'];
   product_updated_at: Scalars['String'];
   purchace_qty: Scalars['Int'];
   selling_price: Scalars['Int'];
-  variant: Scalars['String'];
 };
 
 /** input type for inserting data into table "transaction_items" */
@@ -8865,12 +8891,27 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
+export type Inventory_UpdateInventoryProductByIdMutationVariables = Exact<{
+  id: Scalars['uuid'];
+  updateInventory?: InputMaybe<Inventory_Products_Set_Input>;
+}>;
+
+
+export type Inventory_UpdateInventoryProductByIdMutation = { __typename?: 'mutation_root', update_inventory_products_by_pk?: { __typename?: 'inventory_products', available_qty: number, min_available_qty: number, product: { __typename?: 'products', name: string, product_category: { __typename?: 'product_categories', name: string } } } | null };
+
 export type Inventory_GetInventoryProductAvailableQtytByIdsQueryVariables = Exact<{
   _in: Array<Scalars['uuid']> | Scalars['uuid'];
 }>;
 
 
 export type Inventory_GetInventoryProductAvailableQtytByIdsQuery = { __typename?: 'query_root', inventory_products: Array<{ __typename?: 'inventory_products', id: any, updated_at: any, available_qty: number }> };
+
+export type Inventory_GetInventoryProductByIdQueryVariables = Exact<{
+  id: Scalars['uuid'];
+}>;
+
+
+export type Inventory_GetInventoryProductByIdQuery = { __typename?: 'query_root', inventory_products_by_pk?: { __typename?: 'inventory_products', available_qty: number, min_available_qty: number, product: { __typename?: 'products', name: string } } | null };
 
 export type Transaction_CreateOneTransactionMutationVariables = Exact<{
   object?: InputMaybe<Transaction_Insert_Input>;
@@ -8911,12 +8952,37 @@ export type User_GetUserByEmailQueryVariables = Exact<{
 export type User_GetUserByEmailQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: any }> };
 
 
+export const Inventory_UpdateInventoryProductByIdDocument = gql`
+    mutation Inventory_UpdateInventoryProductById($id: uuid!, $updateInventory: inventory_products_set_input = {}) {
+  update_inventory_products_by_pk(pk_columns: {id: $id}, _set: $updateInventory) {
+    available_qty
+    min_available_qty
+    product {
+      name
+      product_category {
+        name
+      }
+    }
+  }
+}
+    `;
 export const Inventory_GetInventoryProductAvailableQtytByIdsDocument = gql`
     query Inventory_GetInventoryProductAvailableQtytByIds($_in: [uuid!]!) {
   inventory_products(where: {id: {_in: $_in}}) {
     id
     updated_at
     available_qty
+  }
+}
+    `;
+export const Inventory_GetInventoryProductByIdDocument = gql`
+    query Inventory_GetInventoryProductById($id: uuid!) {
+  inventory_products_by_pk(id: $id) {
+    available_qty
+    min_available_qty
+    product {
+      name
+    }
   }
 }
     `;
@@ -8977,7 +9043,9 @@ export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, str
 
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
+const Inventory_UpdateInventoryProductByIdDocumentString = print(Inventory_UpdateInventoryProductByIdDocument);
 const Inventory_GetInventoryProductAvailableQtytByIdsDocumentString = print(Inventory_GetInventoryProductAvailableQtytByIdsDocument);
+const Inventory_GetInventoryProductByIdDocumentString = print(Inventory_GetInventoryProductByIdDocument);
 const Transaction_CreateOneTransactionDocumentString = print(Transaction_CreateOneTransactionDocument);
 const Transaction_GetLastTransactionNumberDocumentString = print(Transaction_GetLastTransactionNumberDocument);
 const User_DeleteUserDocumentString = print(User_DeleteUserDocument);
@@ -8985,8 +9053,14 @@ const User_UpdateUserDocumentString = print(User_UpdateUserDocument);
 const User_GetUserByEmailDocumentString = print(User_GetUserByEmailDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    Inventory_UpdateInventoryProductById(variables: Inventory_UpdateInventoryProductByIdMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Inventory_UpdateInventoryProductByIdMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Inventory_UpdateInventoryProductByIdMutation>(Inventory_UpdateInventoryProductByIdDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Inventory_UpdateInventoryProductById', 'mutation');
+    },
     Inventory_GetInventoryProductAvailableQtytByIds(variables: Inventory_GetInventoryProductAvailableQtytByIdsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Inventory_GetInventoryProductAvailableQtytByIdsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Inventory_GetInventoryProductAvailableQtytByIdsQuery>(Inventory_GetInventoryProductAvailableQtytByIdsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Inventory_GetInventoryProductAvailableQtytByIds', 'query');
+    },
+    Inventory_GetInventoryProductById(variables: Inventory_GetInventoryProductByIdQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Inventory_GetInventoryProductByIdQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Inventory_GetInventoryProductByIdQuery>(Inventory_GetInventoryProductByIdDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Inventory_GetInventoryProductById', 'query');
     },
     Transaction_CreateOneTransaction(variables?: Transaction_CreateOneTransactionMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_CreateOneTransactionMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_CreateOneTransactionMutation>(Transaction_CreateOneTransactionDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_CreateOneTransaction', 'mutation');
