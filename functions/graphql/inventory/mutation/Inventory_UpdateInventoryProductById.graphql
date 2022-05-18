@@ -1,0 +1,18 @@
+mutation Inventory_UpdateInventoryProductById(
+  $id: uuid!
+  $updateInventory: inventory_products_set_input = {}
+) {
+  update_inventory_products_by_pk(
+    pk_columns: { id: $id }
+    _set: $updateInventory
+  ) {
+    available_qty
+    min_available_qty
+    product {
+      name
+      product_category {
+        name
+      }
+    }
+  }
+}

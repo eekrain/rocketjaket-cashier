@@ -16,6 +16,13 @@ array_relationships:
       table:
         name: inventory_product_variants
         schema: public
+- name: transaction_items
+  using:
+    foreign_key_constraint_on:
+      column: inventory_product_id
+      table:
+        name: transaction_items
+        schema: public
 insert_permissions:
 - permission:
     backend_only: false
