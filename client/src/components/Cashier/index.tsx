@@ -4,6 +4,7 @@ import ProductsContent from './ProductsContent';
 import withAppLayout from '../Layout/AppLayout';
 import {
   useInventory_GetAllInventoryProductByStoreIdQuery,
+  useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription,
   useProduk_GetAllKategoriProdukQuery,
   useStore_GetAllStoreQuery,
   useStore_GetStoreByPkQuery,
@@ -96,7 +97,7 @@ const CashierHome = ({route}: Props) => {
   }, [getStoreActive.data?.stores_by_pk]);
 
   const getAllInventoryProduct =
-    useInventory_GetAllInventoryProductByStoreIdQuery({
+    useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription({
       variables: {store_id: parseInt(selectedStoreId || '0', 10)},
     });
   const inventoryProductData: {

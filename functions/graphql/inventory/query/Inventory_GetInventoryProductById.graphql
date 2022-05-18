@@ -1,0 +1,9 @@
+query Inventory_GetInventoryProductById($id: uuid!) {
+  inventory_products_by_pk(id: $id) {
+    available_qty
+    min_available_qty
+    product {
+      name
+    }
+  }
+}
