@@ -1,0 +1,70 @@
+query Transaction_GetTransactionByPK($invoice_number: String!) {
+  transaction_by_pk(invoice_number: $invoice_number) {
+    cash_change
+    cash_in_amount
+    created_at
+    invoice_number
+    store {
+      name
+      address
+    }
+    total_transaction
+    transaction_status_enum {
+      transaction_status
+      title
+    }
+    updated_at
+    karyawan_name
+    transaction_items {
+      created_at
+      capital_price
+      discount
+      id
+      inventory_product_id
+      product_name
+      profit
+      purchase_qty
+      selling_price
+      subtotal
+      updated_at
+      transaction_status_enum {
+        title
+        transaction_status
+      }
+      transaction_status
+      inventory_product {
+        product {
+          photo_id
+          name
+          capital_price
+          selling_price
+          discount
+          updated_at
+        }
+        inventory_product_variants {
+          inventory_variant_metadata_id
+        }
+        override_capital_price
+        override_selling_price
+        override_discount
+        available_qty
+        updated_at
+      }
+    }
+    transaction_status
+    transaction_receipts(order_by: {created_at: desc_nulls_last}) {
+      created_at
+      is_sent
+      transaction_receipt_type_enum {
+        receipt_type
+        title
+      }
+      customer {
+        id
+        email
+        name
+        phone_number
+      }
+    }
+  }
+}

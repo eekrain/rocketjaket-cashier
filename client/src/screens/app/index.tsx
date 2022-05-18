@@ -13,15 +13,15 @@ import InventoryScreen, {rootInventoryRoutes} from './InventoryScreen';
 import UserScreen, {rootUserRoutes} from './UserScreen';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {TUserRoleOptions} from '../../types/user';
-// import TransactionScreen, {
-//   rootTransactionRoutes,
-//   TransactionRootStackParamList,
-// } from './TransactionScreen';
+import TransactionScreen, {
+  rootTransactionRoutes,
+  TransactionRootStackParamList,
+} from './TransactionScreen';
 import {NavigatorScreenParams} from '@react-navigation/native';
 
 export type AppNavigationParamList = {
   Dashboard: undefined;
-  // TransactionRoot: NavigatorScreenParams<TransactionRootStackParamList>;
+  TransactionRoot: NavigatorScreenParams<TransactionRootStackParamList>;
   Profile: undefined;
   ProdukRoot: undefined;
   SettingsRoot: undefined;
@@ -51,12 +51,12 @@ export const rootAppRoutes: IAppRoutes[] = [
     routeNiceName: 'Kasir',
     role: ['administrator', 'karyawan'],
   },
-  // {
-  //   name: 'TransactionRoot',
-  //   component: TransactionScreen,
-  //   routeNiceName: 'Transaksi',
-  //   role: ['administrator'],
-  // },
+  {
+    name: 'TransactionRoot',
+    component: TransactionScreen,
+    routeNiceName: 'Transaksi',
+    role: ['administrator'],
+  },
   {
     name: 'Profile',
     component: ProfileScreen,
@@ -97,7 +97,7 @@ export const allAppRoutes = [
   ...rootProdukRoutes,
   ...rootInventoryRoutes,
   ...rootCashierRoutes,
-  // ...rootTransactionRoutes,
+  ...rootTransactionRoutes,
 ];
 
 export type AppScreenProps = {
@@ -132,7 +132,7 @@ export default AppNavigation;
 export const getAppIcon = (screenName: keyof AppNavigationParamList) => {
   if (screenName === 'CashierRoot') return 'monitor';
   if (screenName === 'Dashboard') return 'bar-chart';
-  // if (screenName === 'TransactionRoot') return 'list';
+  if (screenName === 'TransactionRoot') return 'list';
   if (screenName === 'Profile') return 'user';
   if (screenName === 'ProdukRoot') return 'shopping-bag';
   if (screenName === 'SettingsRoot') return 'settings';
