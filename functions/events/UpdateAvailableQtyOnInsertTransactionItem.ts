@@ -5,10 +5,10 @@ import to from "await-to-js";
 export default async (req: Request, res: Response) => {
   const eventData: UpdateAvailableQtyOnInsertTransactionItem_EventData =
     req.body.event.data;
-  console.log(
-    "🚀 ~ file: UpdateAvailableQtyOnInsertTransactionItem.ts ~ line 6 ~ handler ~ eventData",
-    eventData
-  );
+  // console.log(
+  //   "🚀 ~ file: UpdateAvailableQtyOnInsertTransactionItem.ts ~ line 6 ~ handler ~ eventData",
+  //   eventData
+  // );
 
   const sdk = getAdminSdk();
 
@@ -32,10 +32,10 @@ export default async (req: Request, res: Response) => {
     ? qtyBefore - eventData.new.purchase_qty
     : qtyBefore;
 
-  console.log(
-    "🚀 ~ file: UpdateAvailableQtyOnInsertTransactionItem.ts ~ line 32 ~ newAvailableQty",
-    newAvailableQty
-  );
+  // console.log(
+  //   "🚀 ~ file: UpdateAvailableQtyOnInsertTransactionItem.ts ~ line 32 ~ newAvailableQty",
+  //   newAvailableQty
+  // );
 
   const [errUpdate, resUpdate] = await to(
     sdk.Inventory_UpdateInventoryProductById({
