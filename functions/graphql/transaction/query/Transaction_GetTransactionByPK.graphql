@@ -1,0 +1,25 @@
+query Transaction_GetTransactionByPK($invoice_number: String!) {
+  transaction_by_pk(invoice_number: $invoice_number) {
+    cash_change
+    cash_in_amount
+    created_at
+    invoice_number
+    payment_type
+    total_transaction
+    transaction_items {
+      subtotal
+      product_name
+      purchase_qty
+      transaction_status_enum {
+        title
+        transaction_status
+      }
+      transaction_status
+    }
+    transaction_status_enum {
+      title
+      transaction_status
+    }
+    transaction_status
+  }
+}

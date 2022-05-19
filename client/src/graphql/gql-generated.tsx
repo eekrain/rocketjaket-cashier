@@ -45,6 +45,13 @@ export type Cashier_CreateTransactionOutput = {
   transaction_status: TransactionStatusEnum;
 };
 
+export type CustomerInput = {
+  email?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  phone_number?: InputMaybe<Scalars['String']>;
+};
+
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['Int']>;
@@ -108,6 +115,13 @@ export enum TransactionPaymentTypeEnum {
   EwalletShopeepay = 'EWALLET_SHOPEEPAY'
 }
 
+export enum TransactionReceiptTypeEnum {
+  /** Email */
+  Email = 'email',
+  /** Whatsapp */
+  Whatsapp = 'whatsapp'
+}
+
 export enum TransactionStatusEnum {
   /** Gagal */
   Failed = 'failed',
@@ -118,6 +132,17 @@ export enum TransactionStatusEnum {
   /** Sukses */
   Success = 'success'
 }
+
+export type Transaction_SendReceiptOutput = {
+  __typename?: 'Transaction_SendReceiptOutput';
+  created_at: Scalars['timestamptz'];
+  email?: Maybe<Scalars['String']>;
+  errorMessage?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  isError?: Maybe<Scalars['Boolean']>;
+  name?: Maybe<Scalars['String']>;
+  phone_number?: Maybe<Scalars['String']>;
+};
 
 export type User_SignUpOutput = {
   __typename?: 'User_SignUpOutput';
@@ -1491,6 +1516,7 @@ export type Citext_Comparison_Exp = {
 /** columns and relationships of "customers" */
 export type Customers = {
   __typename?: 'customers';
+  created_at: Scalars['timestamptz'];
   email: Scalars['String'];
   id: Scalars['uuid'];
   name: Scalars['String'];
@@ -1499,6 +1525,7 @@ export type Customers = {
   transaction_receipts: Array<Transaction_Receipts>;
   /** An aggregate relationship */
   transaction_receipts_aggregate: Transaction_Receipts_Aggregate;
+  updated_at?: Maybe<Scalars['timestamptz']>;
 };
 
 
@@ -1548,44 +1575,54 @@ export type Customers_Bool_Exp = {
   _and?: InputMaybe<Array<Customers_Bool_Exp>>;
   _not?: InputMaybe<Customers_Bool_Exp>;
   _or?: InputMaybe<Array<Customers_Bool_Exp>>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   email?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   phone_number?: InputMaybe<String_Comparison_Exp>;
   transaction_receipts?: InputMaybe<Transaction_Receipts_Bool_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "customers" */
 export enum Customers_Constraint {
+  /** unique or primary key constraint */
+  CustomersPhoneNumberEmailKey = 'customers_phone_number_email_key',
   /** unique or primary key constraint */
   CustomersPkey = 'customers_pkey'
 }
 
 /** input type for inserting data into table "customers" */
 export type Customers_Insert_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']>;
   email?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
   phone_number?: InputMaybe<Scalars['String']>;
   transaction_receipts?: InputMaybe<Transaction_Receipts_Arr_Rel_Insert_Input>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
 };
 
 /** aggregate max on columns */
 export type Customers_Max_Fields = {
   __typename?: 'customers_max_fields';
+  created_at?: Maybe<Scalars['timestamptz']>;
   email?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
   phone_number?: Maybe<Scalars['String']>;
+  updated_at?: Maybe<Scalars['timestamptz']>;
 };
 
 /** aggregate min on columns */
 export type Customers_Min_Fields = {
   __typename?: 'customers_min_fields';
+  created_at?: Maybe<Scalars['timestamptz']>;
   email?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
   phone_number?: Maybe<Scalars['String']>;
+  updated_at?: Maybe<Scalars['timestamptz']>;
 };
 
 /** response of any mutation on the table "customers" */
@@ -1613,11 +1650,13 @@ export type Customers_On_Conflict = {
 
 /** Ordering options when selecting data from "customers". */
 export type Customers_Order_By = {
+  created_at?: InputMaybe<Order_By>;
   email?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   phone_number?: InputMaybe<Order_By>;
   transaction_receipts_aggregate?: InputMaybe<Transaction_Receipts_Aggregate_Order_By>;
+  updated_at?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: customers */
@@ -1628,33 +1667,43 @@ export type Customers_Pk_Columns_Input = {
 /** select columns of table "customers" */
 export enum Customers_Select_Column {
   /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
   Email = 'email',
   /** column name */
   Id = 'id',
   /** column name */
   Name = 'name',
   /** column name */
-  PhoneNumber = 'phone_number'
+  PhoneNumber = 'phone_number',
+  /** column name */
+  UpdatedAt = 'updated_at'
 }
 
 /** input type for updating data in table "customers" */
 export type Customers_Set_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']>;
   email?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
   phone_number?: InputMaybe<Scalars['String']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
 };
 
 /** update columns of table "customers" */
 export enum Customers_Update_Column {
   /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
   Email = 'email',
   /** column name */
   Id = 'id',
   /** column name */
   Name = 'name',
   /** column name */
-  PhoneNumber = 'phone_number'
+  PhoneNumber = 'phone_number',
+  /** column name */
+  UpdatedAt = 'updated_at'
 }
 
 /** columns and relationships of "storage.files" */
@@ -3035,6 +3084,7 @@ export type Jsonb_Comparison_Exp = {
 export type Mutation_Root = {
   __typename?: 'mutation_root';
   Cashier_CreateTransaction?: Maybe<Cashier_CreateTransactionOutput>;
+  Transaction_SendReceipt?: Maybe<Transaction_SendReceiptOutput>;
   User_SignUp?: Maybe<User_SignUpOutput>;
   Whatsapp_SignOut?: Maybe<Whatsapp_SignOutOutput>;
   /** delete single row from the table: "auth.providers" */
@@ -3324,6 +3374,14 @@ export type Mutation_RootCashier_CreateTransactionArgs = {
   store_id: Scalars['Int'];
   total_transaction: Scalars['Int'];
   transaction_items: Array<Transaction_Items_Input>;
+};
+
+
+/** mutation root */
+export type Mutation_RootTransaction_SendReceiptArgs = {
+  customer: CustomerInput;
+  invoice_number: Scalars['String'];
+  receipt_type: TransactionReceiptTypeEnum;
 };
 
 
@@ -9119,6 +9177,15 @@ export type Whatsapp_GetAuthStatusQueryVariables = Exact<{ [key: string]: never;
 
 export type Whatsapp_GetAuthStatusQuery = { __typename?: 'query_root', Whatsapp_GetAuthStatus?: { __typename?: 'Whatsapp_GetAuthStatusOutput', client_phone_number?: string | null, client_name?: string | null, client_platform?: string | null, client_state?: string | null, errorMessage?: string | null, qrcode?: string | null, is_authenticated: boolean, is_qr_ready: boolean, is_client_ready: boolean, isError: boolean } | null };
 
+export type Transaction_SendReceiptToCustomerMutationVariables = Exact<{
+  invoice_number: Scalars['String'];
+  customer: CustomerInput;
+  receipt_type: TransactionReceiptTypeEnum;
+}>;
+
+
+export type Transaction_SendReceiptToCustomerMutation = { __typename?: 'mutation_root', Transaction_SendReceipt?: { __typename?: 'Transaction_SendReceiptOutput', id?: any | null, name?: string | null, phone_number?: string | null, email?: string | null, created_at: any, isError?: boolean | null, errorMessage?: string | null } | null };
+
 export type Transaction_GetAllTransactionByStoreIdQueryVariables = Exact<{
   store_id?: InputMaybe<Scalars['Int']>;
 }>;
@@ -9211,6 +9278,7 @@ export const namedOperations = {
     Store_DeleteStoreByPK: 'Store_DeleteStoreByPK',
     Store_UpdateStore: 'Store_UpdateStore',
     Whatsapp_SignOut: 'Whatsapp_SignOut',
+    Transaction_SendReceiptToCustomer: 'Transaction_SendReceiptToCustomer',
     User_SignUp: 'User_SignUp',
     User_UpdateUserByUserId: 'User_UpdateUserByUserId',
     User_UpdateUserForAdmin: 'User_UpdateUserForAdmin'
@@ -10379,6 +10447,51 @@ export function useWhatsapp_GetAuthStatusLazyQuery(baseOptions?: Apollo.LazyQuer
 export type Whatsapp_GetAuthStatusQueryHookResult = ReturnType<typeof useWhatsapp_GetAuthStatusQuery>;
 export type Whatsapp_GetAuthStatusLazyQueryHookResult = ReturnType<typeof useWhatsapp_GetAuthStatusLazyQuery>;
 export type Whatsapp_GetAuthStatusQueryResult = Apollo.QueryResult<Whatsapp_GetAuthStatusQuery, Whatsapp_GetAuthStatusQueryVariables>;
+export const Transaction_SendReceiptToCustomerDocument = gql`
+    mutation Transaction_SendReceiptToCustomer($invoice_number: String!, $customer: CustomerInput!, $receipt_type: TransactionReceiptTypeEnum!) {
+  Transaction_SendReceipt(
+    invoice_number: $invoice_number
+    customer: $customer
+    receipt_type: $receipt_type
+  ) {
+    id
+    name
+    phone_number
+    email
+    created_at
+    isError
+    errorMessage
+  }
+}
+    `;
+export type Transaction_SendReceiptToCustomerMutationFn = Apollo.MutationFunction<Transaction_SendReceiptToCustomerMutation, Transaction_SendReceiptToCustomerMutationVariables>;
+
+/**
+ * __useTransaction_SendReceiptToCustomerMutation__
+ *
+ * To run a mutation, you first call `useTransaction_SendReceiptToCustomerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTransaction_SendReceiptToCustomerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [transactionSendReceiptToCustomerMutation, { data, loading, error }] = useTransaction_SendReceiptToCustomerMutation({
+ *   variables: {
+ *      invoice_number: // value for 'invoice_number'
+ *      customer: // value for 'customer'
+ *      receipt_type: // value for 'receipt_type'
+ *   },
+ * });
+ */
+export function useTransaction_SendReceiptToCustomerMutation(baseOptions?: Apollo.MutationHookOptions<Transaction_SendReceiptToCustomerMutation, Transaction_SendReceiptToCustomerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Transaction_SendReceiptToCustomerMutation, Transaction_SendReceiptToCustomerMutationVariables>(Transaction_SendReceiptToCustomerDocument, options);
+      }
+export type Transaction_SendReceiptToCustomerMutationHookResult = ReturnType<typeof useTransaction_SendReceiptToCustomerMutation>;
+export type Transaction_SendReceiptToCustomerMutationResult = Apollo.MutationResult<Transaction_SendReceiptToCustomerMutation>;
+export type Transaction_SendReceiptToCustomerMutationOptions = Apollo.BaseMutationOptions<Transaction_SendReceiptToCustomerMutation, Transaction_SendReceiptToCustomerMutationVariables>;
 export const Transaction_GetAllTransactionByStoreIdDocument = gql`
     query Transaction_GetAllTransactionByStoreId($store_id: Int) {
   transaction(where: {store_id: {_eq: $store_id}}) {

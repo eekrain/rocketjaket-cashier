@@ -1,0 +1,11 @@
+mutation Transaction_CreateTransactionReceipt(
+  $receipt: transaction_receipts_insert_input!
+) {
+  insert_transaction_receipts_one(object: $receipt) {
+    id
+    is_sent
+    receipt_type
+    transaction_invoice_number
+    created_at
+  }
+}

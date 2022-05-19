@@ -1,0 +1,12 @@
+query Customer_GetCustomerByEmailOrPhone($_or: [customers_bool_exp!] = {}) {
+  customers(
+    where: { _or: $_or }
+    limit: 1
+    order_by: { updated_at: desc, created_at: desc }
+  ) {
+    id
+    name
+    phone_number
+    email
+  }
+}
