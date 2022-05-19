@@ -1,0 +1,14 @@
+mutation Customer_CreateCustomer($customer: customers_insert_input!) {
+  insert_customers_one(
+    object: $customer
+    on_conflict: {
+      constraint: customers_pkey
+      update_columns: [name, email, phone_number]
+    }
+  ) {
+    id
+    name
+    email
+    phone_number
+  }
+}

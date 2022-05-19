@@ -46,6 +46,13 @@ export type Cashier_CreateTransactionOutput = {
   transaction_status: TransactionStatusEnum;
 };
 
+export type CustomerInput = {
+  email?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  phone_number?: InputMaybe<Scalars['String']>;
+};
+
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['Int']>;
@@ -109,6 +116,13 @@ export enum TransactionPaymentTypeEnum {
   EwalletShopeepay = 'EWALLET_SHOPEEPAY'
 }
 
+export enum TransactionReceiptTypeEnum {
+  /** Email */
+  Email = 'email',
+  /** Whatsapp */
+  Whatsapp = 'whatsapp'
+}
+
 export enum TransactionStatusEnum {
   /** Gagal */
   Failed = 'failed',
@@ -119,6 +133,17 @@ export enum TransactionStatusEnum {
   /** Sukses */
   Success = 'success'
 }
+
+export type Transaction_SendReceiptOutput = {
+  __typename?: 'Transaction_SendReceiptOutput';
+  created_at: Scalars['timestamptz'];
+  email?: Maybe<Scalars['String']>;
+  errorMessage?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  isError?: Maybe<Scalars['Boolean']>;
+  name?: Maybe<Scalars['String']>;
+  phone_number?: Maybe<Scalars['String']>;
+};
 
 export type User_SignUpOutput = {
   __typename?: 'User_SignUpOutput';
@@ -1492,10 +1517,36 @@ export type Citext_Comparison_Exp = {
 /** columns and relationships of "customers" */
 export type Customers = {
   __typename?: 'customers';
+  created_at: Scalars['timestamptz'];
   email: Scalars['String'];
   id: Scalars['uuid'];
   name: Scalars['String'];
   phone_number: Scalars['String'];
+  /** An array relationship */
+  transaction_receipts: Array<Transaction_Receipts>;
+  /** An aggregate relationship */
+  transaction_receipts_aggregate: Transaction_Receipts_Aggregate;
+  updated_at?: Maybe<Scalars['timestamptz']>;
+};
+
+
+/** columns and relationships of "customers" */
+export type CustomersTransaction_ReceiptsArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_Receipts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_Receipts_Order_By>>;
+  where?: InputMaybe<Transaction_Receipts_Bool_Exp>;
+};
+
+
+/** columns and relationships of "customers" */
+export type CustomersTransaction_Receipts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_Receipts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_Receipts_Order_By>>;
+  where?: InputMaybe<Transaction_Receipts_Bool_Exp>;
 };
 
 /** aggregated selection of "customers" */
@@ -1525,42 +1576,54 @@ export type Customers_Bool_Exp = {
   _and?: InputMaybe<Array<Customers_Bool_Exp>>;
   _not?: InputMaybe<Customers_Bool_Exp>;
   _or?: InputMaybe<Array<Customers_Bool_Exp>>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   email?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   phone_number?: InputMaybe<String_Comparison_Exp>;
+  transaction_receipts?: InputMaybe<Transaction_Receipts_Bool_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "customers" */
 export enum Customers_Constraint {
+  /** unique or primary key constraint */
+  CustomersPhoneNumberEmailKey = 'customers_phone_number_email_key',
   /** unique or primary key constraint */
   CustomersPkey = 'customers_pkey'
 }
 
 /** input type for inserting data into table "customers" */
 export type Customers_Insert_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']>;
   email?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
   phone_number?: InputMaybe<Scalars['String']>;
+  transaction_receipts?: InputMaybe<Transaction_Receipts_Arr_Rel_Insert_Input>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
 };
 
 /** aggregate max on columns */
 export type Customers_Max_Fields = {
   __typename?: 'customers_max_fields';
+  created_at?: Maybe<Scalars['timestamptz']>;
   email?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
   phone_number?: Maybe<Scalars['String']>;
+  updated_at?: Maybe<Scalars['timestamptz']>;
 };
 
 /** aggregate min on columns */
 export type Customers_Min_Fields = {
   __typename?: 'customers_min_fields';
+  created_at?: Maybe<Scalars['timestamptz']>;
   email?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
   phone_number?: Maybe<Scalars['String']>;
+  updated_at?: Maybe<Scalars['timestamptz']>;
 };
 
 /** response of any mutation on the table "customers" */
@@ -1588,10 +1651,13 @@ export type Customers_On_Conflict = {
 
 /** Ordering options when selecting data from "customers". */
 export type Customers_Order_By = {
+  created_at?: InputMaybe<Order_By>;
   email?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   phone_number?: InputMaybe<Order_By>;
+  transaction_receipts_aggregate?: InputMaybe<Transaction_Receipts_Aggregate_Order_By>;
+  updated_at?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: customers */
@@ -1602,33 +1668,43 @@ export type Customers_Pk_Columns_Input = {
 /** select columns of table "customers" */
 export enum Customers_Select_Column {
   /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
   Email = 'email',
   /** column name */
   Id = 'id',
   /** column name */
   Name = 'name',
   /** column name */
-  PhoneNumber = 'phone_number'
+  PhoneNumber = 'phone_number',
+  /** column name */
+  UpdatedAt = 'updated_at'
 }
 
 /** input type for updating data in table "customers" */
 export type Customers_Set_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']>;
   email?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
   phone_number?: InputMaybe<Scalars['String']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
 };
 
 /** update columns of table "customers" */
 export enum Customers_Update_Column {
   /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
   Email = 'email',
   /** column name */
   Id = 'id',
   /** column name */
   Name = 'name',
   /** column name */
-  PhoneNumber = 'phone_number'
+  PhoneNumber = 'phone_number',
+  /** column name */
+  UpdatedAt = 'updated_at'
 }
 
 /** columns and relationships of "storage.files" */
@@ -3009,6 +3085,7 @@ export type Jsonb_Comparison_Exp = {
 export type Mutation_Root = {
   __typename?: 'mutation_root';
   Cashier_CreateTransaction?: Maybe<Cashier_CreateTransactionOutput>;
+  Transaction_SendReceipt?: Maybe<Transaction_SendReceiptOutput>;
   User_SignUp?: Maybe<User_SignUpOutput>;
   Whatsapp_SignOut?: Maybe<Whatsapp_SignOutOutput>;
   /** delete single row from the table: "auth.providers" */
@@ -3298,6 +3375,14 @@ export type Mutation_RootCashier_CreateTransactionArgs = {
   store_id: Scalars['Int'];
   total_transaction: Scalars['Int'];
   transaction_items: Array<Transaction_Items_Input>;
+};
+
+
+/** mutation root */
+export type Mutation_RootTransaction_SendReceiptArgs = {
+  customer: CustomerInput;
+  invoice_number: Scalars['String'];
+  receipt_type: TransactionReceiptTypeEnum;
 };
 
 
@@ -8891,6 +8976,20 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
+export type Customer_CreateCustomerMutationVariables = Exact<{
+  customer: Customers_Insert_Input;
+}>;
+
+
+export type Customer_CreateCustomerMutation = { __typename?: 'mutation_root', insert_customers_one?: { __typename?: 'customers', id: any, name: string, email: string, phone_number: string } | null };
+
+export type Customer_GetCustomerByEmailOrPhoneQueryVariables = Exact<{
+  _or?: InputMaybe<Array<Customers_Bool_Exp> | Customers_Bool_Exp>;
+}>;
+
+
+export type Customer_GetCustomerByEmailOrPhoneQuery = { __typename?: 'query_root', customers: Array<{ __typename?: 'customers', id: any, name: string, phone_number: string, email: string }> };
+
 export type Inventory_UpdateInventoryProductByIdMutationVariables = Exact<{
   id: Scalars['uuid'];
   updateInventory?: InputMaybe<Inventory_Products_Set_Input>;
@@ -8920,12 +9019,26 @@ export type Transaction_CreateOneTransactionMutationVariables = Exact<{
 
 export type Transaction_CreateOneTransactionMutation = { __typename?: 'mutation_root', insert_transaction_one?: { __typename?: 'transaction', invoice_number: string } | null };
 
+export type Transaction_CreateTransactionReceiptMutationVariables = Exact<{
+  receipt: Transaction_Receipts_Insert_Input;
+}>;
+
+
+export type Transaction_CreateTransactionReceiptMutation = { __typename?: 'mutation_root', insert_transaction_receipts_one?: { __typename?: 'transaction_receipts', id: any, is_sent: boolean, receipt_type: Transaction_Receipt_Type_Enum_Enum, transaction_invoice_number: string, created_at: any } | null };
+
 export type Transaction_GetLastTransactionNumberQueryVariables = Exact<{
   created_at_gte?: InputMaybe<Scalars['timestamptz']>;
 }>;
 
 
 export type Transaction_GetLastTransactionNumberQuery = { __typename?: 'query_root', transaction: Array<{ __typename?: 'transaction', invoice_number: string, created_at: any }> };
+
+export type Transaction_GetTransactionByPkQueryVariables = Exact<{
+  invoice_number: Scalars['String'];
+}>;
+
+
+export type Transaction_GetTransactionByPkQuery = { __typename?: 'query_root', transaction_by_pk?: { __typename?: 'transaction', cash_change: number, cash_in_amount: number, created_at: any, invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, total_transaction: number, transaction_status: Transaction_Status_Enum_Enum, transaction_items: Array<{ __typename?: 'transaction_items', subtotal: number, product_name: string, purchase_qty: number, transaction_status: Transaction_Status_Enum_Enum, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string } }>, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string } } | null };
 
 export type User_DeleteUserMutationVariables = Exact<{
   email?: InputMaybe<Scalars['citext']>;
@@ -8952,6 +9065,33 @@ export type User_GetUserByEmailQueryVariables = Exact<{
 export type User_GetUserByEmailQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: any }> };
 
 
+export const Customer_CreateCustomerDocument = gql`
+    mutation Customer_CreateCustomer($customer: customers_insert_input!) {
+  insert_customers_one(
+    object: $customer
+    on_conflict: {constraint: customers_pkey, update_columns: [name, email, phone_number]}
+  ) {
+    id
+    name
+    email
+    phone_number
+  }
+}
+    `;
+export const Customer_GetCustomerByEmailOrPhoneDocument = gql`
+    query Customer_GetCustomerByEmailOrPhone($_or: [customers_bool_exp!] = {}) {
+  customers(
+    where: {_or: $_or}
+    limit: 1
+    order_by: {updated_at: desc, created_at: desc}
+  ) {
+    id
+    name
+    phone_number
+    email
+  }
+}
+    `;
 export const Inventory_UpdateInventoryProductByIdDocument = gql`
     mutation Inventory_UpdateInventoryProductById($id: uuid!, $updateInventory: inventory_products_set_input = {}) {
   update_inventory_products_by_pk(pk_columns: {id: $id}, _set: $updateInventory) {
@@ -8993,6 +9133,17 @@ export const Transaction_CreateOneTransactionDocument = gql`
   }
 }
     `;
+export const Transaction_CreateTransactionReceiptDocument = gql`
+    mutation Transaction_CreateTransactionReceipt($receipt: transaction_receipts_insert_input!) {
+  insert_transaction_receipts_one(object: $receipt) {
+    id
+    is_sent
+    receipt_type
+    transaction_invoice_number
+    created_at
+  }
+}
+    `;
 export const Transaction_GetLastTransactionNumberDocument = gql`
     query Transaction_GetLastTransactionNumber($created_at_gte: timestamptz = "") {
   transaction(
@@ -9002,6 +9153,33 @@ export const Transaction_GetLastTransactionNumberDocument = gql`
   ) {
     invoice_number
     created_at
+  }
+}
+    `;
+export const Transaction_GetTransactionByPkDocument = gql`
+    query Transaction_GetTransactionByPK($invoice_number: String!) {
+  transaction_by_pk(invoice_number: $invoice_number) {
+    cash_change
+    cash_in_amount
+    created_at
+    invoice_number
+    payment_type
+    total_transaction
+    transaction_items {
+      subtotal
+      product_name
+      purchase_qty
+      transaction_status_enum {
+        title
+        transaction_status
+      }
+      transaction_status
+    }
+    transaction_status_enum {
+      title
+      transaction_status
+    }
+    transaction_status
   }
 }
     `;
@@ -9043,16 +9221,26 @@ export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, str
 
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
+const Customer_CreateCustomerDocumentString = print(Customer_CreateCustomerDocument);
+const Customer_GetCustomerByEmailOrPhoneDocumentString = print(Customer_GetCustomerByEmailOrPhoneDocument);
 const Inventory_UpdateInventoryProductByIdDocumentString = print(Inventory_UpdateInventoryProductByIdDocument);
 const Inventory_GetInventoryProductAvailableQtytByIdsDocumentString = print(Inventory_GetInventoryProductAvailableQtytByIdsDocument);
 const Inventory_GetInventoryProductByIdDocumentString = print(Inventory_GetInventoryProductByIdDocument);
 const Transaction_CreateOneTransactionDocumentString = print(Transaction_CreateOneTransactionDocument);
+const Transaction_CreateTransactionReceiptDocumentString = print(Transaction_CreateTransactionReceiptDocument);
 const Transaction_GetLastTransactionNumberDocumentString = print(Transaction_GetLastTransactionNumberDocument);
+const Transaction_GetTransactionByPkDocumentString = print(Transaction_GetTransactionByPkDocument);
 const User_DeleteUserDocumentString = print(User_DeleteUserDocument);
 const User_UpdateUserDocumentString = print(User_UpdateUserDocument);
 const User_GetUserByEmailDocumentString = print(User_GetUserByEmailDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    Customer_CreateCustomer(variables: Customer_CreateCustomerMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Customer_CreateCustomerMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Customer_CreateCustomerMutation>(Customer_CreateCustomerDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Customer_CreateCustomer', 'mutation');
+    },
+    Customer_GetCustomerByEmailOrPhone(variables?: Customer_GetCustomerByEmailOrPhoneQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Customer_GetCustomerByEmailOrPhoneQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Customer_GetCustomerByEmailOrPhoneQuery>(Customer_GetCustomerByEmailOrPhoneDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Customer_GetCustomerByEmailOrPhone', 'query');
+    },
     Inventory_UpdateInventoryProductById(variables: Inventory_UpdateInventoryProductByIdMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Inventory_UpdateInventoryProductByIdMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Inventory_UpdateInventoryProductByIdMutation>(Inventory_UpdateInventoryProductByIdDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Inventory_UpdateInventoryProductById', 'mutation');
     },
@@ -9065,8 +9253,14 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     Transaction_CreateOneTransaction(variables?: Transaction_CreateOneTransactionMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_CreateOneTransactionMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_CreateOneTransactionMutation>(Transaction_CreateOneTransactionDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_CreateOneTransaction', 'mutation');
     },
+    Transaction_CreateTransactionReceipt(variables: Transaction_CreateTransactionReceiptMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_CreateTransactionReceiptMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_CreateTransactionReceiptMutation>(Transaction_CreateTransactionReceiptDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_CreateTransactionReceipt', 'mutation');
+    },
     Transaction_GetLastTransactionNumber(variables?: Transaction_GetLastTransactionNumberQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_GetLastTransactionNumberQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_GetLastTransactionNumberQuery>(Transaction_GetLastTransactionNumberDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_GetLastTransactionNumber', 'query');
+    },
+    Transaction_GetTransactionByPK(variables: Transaction_GetTransactionByPkQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_GetTransactionByPkQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_GetTransactionByPkQuery>(Transaction_GetTransactionByPkDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_GetTransactionByPK', 'query');
     },
     User_DeleteUser(variables?: User_DeleteUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: User_DeleteUserMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<User_DeleteUserMutation>(User_DeleteUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'User_DeleteUser', 'mutation');

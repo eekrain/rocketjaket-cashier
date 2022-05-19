@@ -13,7 +13,7 @@ import {
 } from 'native-base';
 import {Alert, RefreshControl} from 'react-native';
 import {
-  namedOperations,
+  // namedOperations,
   Transaction_Status_Enum_Enum,
   useStore_GetAllStoreQuery,
   useStore_GetStoreByPkQuery,

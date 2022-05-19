@@ -290,6 +290,10 @@ const UpdateTransaction = ({navigation, route}: Props) => {
                         ),
                       },
                       {
+                        title: 'Diproses oleh',
+                        value: dataTransaction?.karyawan_name || '',
+                      },
+                      {
                         title: 'Customer',
                         value:
                           dataTransaction?.transaction_receipts?.[0]?.customer

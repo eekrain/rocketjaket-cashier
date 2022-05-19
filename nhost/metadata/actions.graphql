@@ -10,6 +10,14 @@ type Mutation {
 }
 
 type Mutation {
+  Transaction_SendReceipt(
+    customer: CustomerInput!
+    receipt_type: TransactionReceiptTypeEnum!
+    invoice_number: String!
+  ): Transaction_SendReceiptOutput
+}
+
+type Mutation {
   User_SignUp(
     email: String!
     password: String!
@@ -44,6 +52,11 @@ enum TransactionPaymentTypeEnum {
   """ SHOPEEPAY """ EWALLET_SHOPEEPAY
 }
 
+enum TransactionReceiptTypeEnum {
+  """ Email """ email
+  """ Whatsapp """ whatsapp
+}
+
 input InventoryVariantMetadataInsertInput {
   variant_title: String
   variant_value: String
@@ -69,6 +82,13 @@ input transaction_items_input {
   purchace_qty: Int!
   inventory_product_updated_at: String!
   product_updated_at: String!
+}
+
+input CustomerInput {
+  id: uuid
+  email: String
+  name: String
+  phone_number: String
 }
 
 type User_SignUpOutput {
@@ -110,5 +130,24 @@ type Cashier_CreateTransactionOutput {
   payment_type: String!
   store_id: Int!
   transaction_status: TransactionStatusEnum!
+}
+
+type sendReceiptOutput {
+  email: String
+  id: uuid!
+  name: String
+  phone_number: String
+  created_at: timestamptz!
+  is_sent: Boolean!
+}
+
+type Transaction_SendReceiptOutput {
+  email: String
+  id: uuid
+  name: String
+  phone_number: String
+  created_at: timestamptz!
+  isError: Boolean
+  errorMessage: String
 }
 

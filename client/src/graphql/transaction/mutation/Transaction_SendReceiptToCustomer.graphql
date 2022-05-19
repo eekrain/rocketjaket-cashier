@@ -1,0 +1,19 @@
+mutation Transaction_SendReceiptToCustomer(
+  $invoice_number: String!
+  $customer: CustomerInput!
+  $receipt_type: TransactionReceiptTypeEnum!
+) {
+  Transaction_SendReceipt(
+    invoice_number: $invoice_number
+    customer: $customer
+    receipt_type: $receipt_type
+  ) {
+    id
+    name
+    phone_number
+    email
+    created_at
+    isError
+    errorMessage
+  }
+}

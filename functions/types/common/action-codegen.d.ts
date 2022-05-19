@@ -2,6 +2,8 @@ type Maybe<T> = T | null;
 
 type uuid = string;
 
+type timestamptz = string;
+
 enum TransactionStatusEnum {
   failed = "failed",
   refund = "refund",
@@ -17,6 +19,11 @@ enum TransactionPaymentTypeEnum {
   EWALLET_GOPAY = "EWALLET_GOPAY",
   EWALLET_LINKAJA = "EWALLET_LINKAJA",
   EWALLET_SHOPEEPAY = "EWALLET_SHOPEEPAY",
+}
+
+enum TransactionReceiptTypeEnum {
+  email = "email",
+  whatsapp = "whatsapp",
 }
 
 type InventoryVariantMetadataInsertInput = {
@@ -44,6 +51,13 @@ type transaction_items_input = {
   purchace_qty: number;
   inventory_product_updated_at: string;
   product_updated_at: string;
+};
+
+type CustomerInput = {
+  id?: Maybe<uuid>;
+  email?: Maybe<string>;
+  name?: Maybe<string>;
+  phone_number?: Maybe<string>;
 };
 
 type User_SignUpOutput = {
@@ -84,7 +98,26 @@ type Cashier_CreateTransactionOutput = {
   cash_in_amount: number;
   payment_type: string;
   store_id: number;
-  transaction_status: `${TransactionStatusEnum}`;
+  transaction_status: TransactionStatusEnum;
+};
+
+type sendReceiptOutput = {
+  email?: Maybe<string>;
+  id: uuid;
+  name?: Maybe<string>;
+  phone_number?: Maybe<string>;
+  created_at: timestamptz;
+  is_sent: boolean;
+};
+
+type Transaction_SendReceiptOutput = {
+  email?: Maybe<string>;
+  id?: Maybe<uuid>;
+  name?: Maybe<string>;
+  phone_number?: Maybe<string>;
+  created_at: timestamptz;
+  isError?: Maybe<boolean>;
+  errorMessage?: Maybe<string>;
 };
 
 type Query = {
@@ -93,6 +126,7 @@ type Query = {
 
 type Mutation = {
   Cashier_CreateTransaction?: Maybe<Cashier_CreateTransactionOutput>;
+  Transaction_SendReceipt?: Maybe<Transaction_SendReceiptOutput>;
   User_SignUp?: Maybe<User_SignUpOutput>;
   Whatsapp_SignOut?: Maybe<Whatsapp_SignOutOutput>;
 };
@@ -106,6 +140,12 @@ type Cashier_CreateTransactionArgs = {
   cash_in_amount: number;
   transaction_items: Array<transaction_items_input>;
   store_id: number;
+};
+
+type Transaction_SendReceiptArgs = {
+  customer: CustomerInput;
+  receipt_type: TransactionReceiptTypeEnum;
+  invoice_number: string;
 };
 
 type User_SignUpArgs = {
