@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createTrackedSelector} from 'react-tracked';
 import Config from 'react-native-config';
 import {useMemo} from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 
 export const nhost = new NhostClient({
   backendUrl: Config.NHOST_BACKEND_URL,

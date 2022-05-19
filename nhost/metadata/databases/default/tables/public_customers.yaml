@@ -18,6 +18,8 @@ insert_permissions:
     - name
     - phone_number
     - email
+    - created_at
+    - updated_at
   role: administrator
 - permission:
     backend_only: false
@@ -26,6 +28,8 @@ insert_permissions:
     - email
     - name
     - phone_number
+    - created_at
+    - updated_at
     - id
   role: karyawan
 select_permissions:
@@ -34,6 +38,8 @@ select_permissions:
     - email
     - name
     - phone_number
+    - created_at
+    - updated_at
     - id
     filter: {}
   role: administrator
@@ -42,6 +48,8 @@ select_permissions:
     - email
     - name
     - phone_number
+    - created_at
+    - updated_at
     - id
     filter: {}
   role: karyawan
@@ -52,6 +60,8 @@ update_permissions:
     - email
     - name
     - phone_number
+    - created_at
+    - updated_at
     - id
     filter: {}
   role: administrator
@@ -61,6 +71,8 @@ update_permissions:
     - email
     - name
     - phone_number
+    - created_at
+    - updated_at
     - id
     filter: {}
   role: karyawan

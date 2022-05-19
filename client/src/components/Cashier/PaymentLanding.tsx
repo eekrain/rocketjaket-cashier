@@ -7,10 +7,13 @@ import {useForm} from 'react-hook-form';
 import {
   Cashier_CreateTransactionMutation,
   TransactionPaymentTypeEnum,
-  Transaction_Receipt_Type_Enum,
-  // useCashier_SendReceiptToCustomerMutation,
+  namedOperations,
+  useTransaction_SendReceiptToCustomerMutation,
+  TransactionReceiptTypeEnum,
 } from '../../graphql/gql-generated';
 import SendReceiptForm from './SendReceiptForm';
+import Config from 'react-native-config';
+import to from 'await-to-js';
 
 interface Props {
   paymentProcessResult:
@@ -26,8 +29,11 @@ export interface ISendReceiptFormDefaultValues {
 }
 
 const defaultValues: ISendReceiptFormDefaultValues = {
-  customer_name: 'Budi',
-  phone_number: myNumberFormat.phoneNumber('81252154853', 'withoutFirst'),
+  customer_name: Config.APP_ENV === 'development' ? 'Budi' : '',
+  phone_number:
+    Config.APP_ENV === 'development'
+      ? myNumberFormat.phoneNumber('81252154853', 'withoutFirst')
+      : '',
 };
 
 const PaymentLanding = ({paymentProcessResult, setModalPayOpen}: Props) => {
@@ -40,73 +46,56 @@ const PaymentLanding = ({paymentProcessResult, setModalPayOpen}: Props) => {
     defaultValues,
   });
 
-  // const [sendReceipt, _sendReceiptStatus] =
-  //   useCashier_SendReceiptToCustomerMutation();
+  const [sendReceipt, _sendReceiptStatus] =
+    useTransaction_SendReceiptToCustomerMutation({
+      refetchQueries: [namedOperations.Query.Transaction_GetTransactionByPK],
+    });
 
   const handleSubmission = async (data: ISendReceiptFormDefaultValues) => {
-    // console.log(
-    //   '🚀 ~ file: PaymentLanding.tsx ~ line 61 ~ handleSubmission ~ data',
-    //   data,
-    // );
-    // if (
-    //   paymentProcessResult &&
-    //   paymentProcessResult !== 'error' &&
-    //   paymentProcessResult.invoice_number
-    // ) {
-    //   const resReceipt = await sendReceipt({
-    //     variables: {
-    //       customer: {
-    //         name: myTextFormat.titleCase(data.customer_name),
-    //         phone_number: myNumberFormat.phoneNumber(
-    //           data.phone_number,
-    //           'cleanBareNumberOnly',
-    //         ),
-    //       },
-    //       invoice_number: paymentProcessResult.invoice_number,
-    //       receipt_type: TransactionReceiptTypeEnum.Whatsapp,
-    //     },
-    //   }).catch(error => {
-    //     console.log(
-    //       '🚀 ~ file: PaymentLanding.tsx ~ line 80 ~ handleSubmission ~ error',
-    //       error,
-    //     );
-    //     toast.show({
-    //       ...TOAST_TEMPLATE.error(
-    //         `Gagal melakukan pengiriman nota untuk customer ${data.customer_name}.`,
-    //       ),
-    //     });
-    //   });
-    //   console.log(
-    //     '🚀 ~ file: PaymentLanding.tsx ~ line 63 ~ resReceipt',
-    //     resReceipt,
-    //   );
-    //   if (resReceipt && resReceipt.errors) {
-    //     console.log(
-    //       '🚀 ~ file: PaymentLanding.tsx ~ line 80 ~ handleSubmission ~ resReceipt.errors',
-    //       resReceipt.errors,
-    //     );
-    //     toast.show({
-    //       ...TOAST_TEMPLATE.error(
-    //         `Gagal melakukan pengiriman nota untuk customer ${data.customer_name}.`,
-    //       ),
-    //     });
-    //   } else if (resReceipt && resReceipt.data) {
-    //     toast.show({
-    //       ...TOAST_TEMPLATE.success(
-    //         `Berhasil melakukan pengiriman nota untuk customer ${data.customer_name}.`,
-    //       ),
-    //     });
-    //   }
-    // } else if (
-    //   paymentProcessResult &&
-    //   paymentProcessResult !== 'error' &&
-    //   !paymentProcessResult.payment_type
-    // ) {
-    //   console.log(
-    //     '🚀 ~ file: PaymentLanding.tsx ~ line 64 ~ paymentProcessResult.invoice_number is invalid',
-    //   );
-    // }
-    // setModalPayOpen(false);
+    console.log(
+      '🚀 ~ file: PaymentLanding.tsx ~ line 54 ~ handleSubmission ~ data',
+      data,
+    );
+    if (
+      paymentProcessResult &&
+      paymentProcessResult !== 'error' &&
+      paymentProcessResult.invoice_number
+    ) {
+      const [err, res] = await to(
+        sendReceipt({
+          variables: {
+            customer: {
+              name: myTextFormat.titleCase(data.customer_name),
+              phone_number: myNumberFormat.phoneNumber(
+                data.phone_number,
+                'cleanBareNumberOnly',
+              ),
+            },
+            invoice_number: paymentProcessResult.invoice_number,
+            receipt_type: TransactionReceiptTypeEnum.Whatsapp,
+          },
+        }),
+      );
+
+      if (err || res.data?.Transaction_SendReceipt?.isError === true) {
+        console.log(
+          '🚀 ~ file: ModalSendReceipt.tsx ~ line 76 ~ handleSubmission ~ err',
+          err,
+        );
+        toast.show({
+          ...TOAST_TEMPLATE.error(
+            `Gagal melakukan pengiriman nota untuk customer ${data.customer_name}.\n${res?.data?.Transaction_SendReceipt?.errorMessage}`,
+          ),
+        });
+      } else {
+        toast.show({
+          ...TOAST_TEMPLATE.success(
+            `Berhasil melakukan pengiriman nota untuk customer ${data.customer_name}.`,
+          ),
+        });
+      }
+    }
+    setModalPayOpen(false);
   };
 
   return (
