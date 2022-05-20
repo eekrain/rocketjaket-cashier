@@ -1,0 +1,32 @@
+mutation Transaction_UpdateTransactionForRefund(
+  $invoice_number: String!
+  $main_transaction_status: transaction_status_enum_enum!
+  $items_transaction_status: transaction_status_enum_enum!
+  $refund_reason: String!
+) {
+  update_transaction_by_pk(
+    pk_columns: { invoice_number: $invoice_number }
+    _set: {
+      transaction_status: $main_transaction_status
+      refund_reason: $refund_reason
+    }
+  ) {
+    invoice_number
+    payment_type
+    refund_reason
+    total_transaction
+  }
+  update_transaction_items(
+    where: { transaction_invoice_number: { _eq: $invoice_number } }
+    _set: { transaction_status: $items_transaction_status }
+  ) {
+    affected_rows
+    returning {
+      transaction_invoice_number
+      transaction_status_enum {
+        title
+        transaction_status
+      }
+    }
+  }
+}

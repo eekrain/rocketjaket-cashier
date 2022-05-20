@@ -4,15 +4,13 @@ import React, {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {
   namedOperations,
-  Transaction_Receipt_Type_Enum_Enum,
-  Transaction_Status_Enum_Enum,
-  // useCashier_SendReceiptToCustomerMutation,
-  // useTransaction_RefundTransactionMutation,
+  TransactionRefundType,
+  useTransaction_RefundTransactionMutation,
 } from '../../graphql/gql-generated';
 import {RHRadio, RHTextInput} from '../../shared/components';
 import {TOAST_TEMPLATE} from '../../shared/constants';
-import {myNumberFormat, myTextFormat} from '../../shared/utils';
-import SendReceiptForm from '../Cashier/SendReceiptForm';
+import {myNumberFormat} from '../../shared/utils';
+import to from 'await-to-js';
 
 interface IModalRefundConfirmationDefaultValues {
   refund_reason: string;
@@ -64,71 +62,54 @@ const ModalRefundConfirmation = ({
     }
   }, [select_reason_option, setValue]);
 
-  // const [refundTransaction, _refundTransactionStatus] =
-  //   useTransaction_RefundTransactionMutation({
-  //     refetchQueries: [
-  //       namedOperations.Query.Transaction_GetTransactionByPK,
-  //       namedOperations.Query.Transaction_GetAllTransactionByStoreId,
-  //     ],
-  //   });
+  const [refundTransaction, _refundTransactionStatus] =
+    useTransaction_RefundTransactionMutation({
+      refetchQueries: [
+        namedOperations.Query.Transaction_GetTransactionByPK,
+        namedOperations.Query.Transaction_GetAllTransactionByStoreId,
+      ],
+    });
 
   const handleSubmission = async (
     data: IModalRefundConfirmationDefaultValues,
   ) => {
-    // console.log(
-    //   '🚀 ~ file: ModalRefundConfirmation.tsx ~ line 62 ~ data',
-    //   data,
-    // );
-    // const resRefund = await refundTransaction({
-    //   variables: {
-    //     invoice_number,
-    //     isRefundAll,
-    //     refund_reason: data.refund_reason,
-    //   },
-    // }).catch(error => {
-    //   console.log(
-    //     '🚀 ~ file: PaymentLanding.tsx ~ line 80 ~ handleSubmission ~ error',
-    //     error,
-    //   );
-    //   toast.show({
-    //     ...TOAST_TEMPLATE.error(
-    //       `Gagal melakukan ${
-    //         isRefundAll ? 'refund semua' : 'refund sebagian'
-    //       } untuk invoice ${invoice_number}.`,
-    //     ),
-    //   });
-    // });
-    // console.log(
-    //   '🚀 ~ file: ModalRefundConfirmation.tsx ~ line 83 ~ resRefund',
-    //   resRefund,
-    // );
-    // if (
-    //   resRefund &&
-    //   resRefund.data &&
-    //   resRefund.data.refundTransaction?.is_success
-    // ) {
-    //   toast.show({
-    //     ...TOAST_TEMPLATE.success(
-    //       `Berhasil melakukan ${
-    //         isRefundAll ? 'refund semua' : 'refund sebagian'
-    //       } untuk invoice ${invoice_number}.`,
-    //     ),
-    //   });
-    // } else {
-    //   console.log(
-    //     '🚀 ~ file: ModalRefundConfirmation.tsx ~ line 88 ~ resRefund.errors',
-    //     resRefund?.errors,
-    //   );
-    //   toast.show({
-    //     ...TOAST_TEMPLATE.error(
-    //       `Gagal melakukan ${
-    //         isRefundAll ? 'refund semua' : 'refund sebagian'
-    //       } untuk invoice ${invoice_number}.`,
-    //     ),
-    //   });
-    // }
-    // setModalRefundOpen(false);
-    // setModalReceiptOpen(true);
+    console.log(
+      '🚀 ~ file: ModalRefundConfirmation.tsx ~ line 74 ~ data',
+      data,
+    );
+
+    const [err, res] = await to(
+      refundTransaction({
+        variables: {
+          invoice_number,
+          refund_type: TransactionRefundType.RefundAll,
+          refund_reason: data.refund_reason,
+        },
+      }),
+    );
+    if (err || res.data?.Transaction_RefundTransaction?.is_success === false) {
+      console.log(
+        '🚀 ~ file: ModalRefundConfirmation.tsx ~ line 91 ~ err',
+        err,
+      );
+      toast.show({
+        ...TOAST_TEMPLATE.error(
+          `Gagal melakukan ${
+            isRefundAll ? 'refund semua' : 'refund sebagian'
+          } untuk invoice ${invoice_number}.`,
+        ),
+      });
+    } else {
+      toast.show({
+        ...TOAST_TEMPLATE.success(
+          `Berhasil melakukan ${
+            isRefundAll ? 'refund semua' : 'refund sebagian'
+          } untuk invoice ${invoice_number}.`,
+        ),
+      });
+    }
+    setModalRefundOpen(false);
+    setModalReceiptOpen(true);
   };
 
   return (
