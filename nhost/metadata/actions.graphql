@@ -166,6 +166,7 @@ type Transaction_SendReceiptOutput {
 
 type Transaction_RefundTransactionOutput {
   invoice_number: String!
-  is_success: Boolean!
+  isError: Boolean!
+  errorMessage: String
 }
 
