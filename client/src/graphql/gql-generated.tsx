@@ -142,8 +142,9 @@ export enum TransactionStatusEnum {
 
 export type Transaction_RefundTransactionOutput = {
   __typename?: 'Transaction_RefundTransactionOutput';
+  errorMessage?: Maybe<Scalars['String']>;
   invoice_number: Scalars['String'];
-  is_success: Scalars['Boolean'];
+  isError: Scalars['Boolean'];
 };
 
 export type Transaction_SendReceiptOutput = {
@@ -9206,7 +9207,7 @@ export type Transaction_RefundTransactionMutationVariables = Exact<{
 }>;
 
 
-export type Transaction_RefundTransactionMutation = { __typename?: 'mutation_root', Transaction_RefundTransaction?: { __typename?: 'Transaction_RefundTransactionOutput', invoice_number: string, is_success: boolean } | null };
+export type Transaction_RefundTransactionMutation = { __typename?: 'mutation_root', Transaction_RefundTransaction?: { __typename?: 'Transaction_RefundTransactionOutput', invoice_number: string, isError: boolean, errorMessage?: string | null } | null };
 
 export type Transaction_SendReceiptToCustomerMutationVariables = Exact<{
   invoice_number: Scalars['String'];
@@ -10487,7 +10488,8 @@ export const Transaction_RefundTransactionDocument = gql`
     refund_type: $refund_type
   ) {
     invoice_number
-    is_success
+    isError
+    errorMessage
   }
 }
     `;

@@ -103,7 +103,7 @@ type Cashier_CreateTransactionOutput = {
   cash_in_amount: number;
   payment_type: string;
   store_id: number;
-  transaction_status: `${TransactionStatusEnum}`;
+  transaction_status: TransactionStatusEnum;
 };
 
 type sendReceiptOutput = {
@@ -127,7 +127,8 @@ type Transaction_SendReceiptOutput = {
 
 type Transaction_RefundTransactionOutput = {
   invoice_number: string;
-  is_success: boolean;
+  isError: boolean;
+  errorMessage?: Maybe<string>;
 };
 
 type Query = {
@@ -155,7 +156,7 @@ type Cashier_CreateTransactionArgs = {
 
 type Transaction_RefundTransactionArgs = {
   invoice_number: string;
-  refund_type: `${TransactionRefundType}`;
+  refund_type: TransactionRefundType;
   refund_reason: string;
 };
 

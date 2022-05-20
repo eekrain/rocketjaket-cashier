@@ -13,7 +13,6 @@ import {
 } from 'native-base';
 import {Alert, RefreshControl} from 'react-native';
 import {
-  // namedOperations,
   Transaction_Status_Enum_Enum,
   useStore_GetAllStoreQuery,
   useStore_GetStoreByPkQuery,
@@ -21,19 +20,15 @@ import {
 } from '../../graphql/gql-generated';
 import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
-import {IconButtonDelete, ButtonEdit} from '../Buttons';
+import {ButtonEdit} from '../Buttons';
 import {myNumberFormat, useMyUser} from '../../shared/utils';
 import {useMyAppState} from '../../state';
-import {TOAST_TEMPLATE} from '../../shared/constants';
 import withAppLayout from '../Layout/AppLayout';
 import {useForm} from 'react-hook-form';
 import {UserRolesEnum} from '../../types/user';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {RHSelect} from '../../shared/components';
-import {
-  ListTransactionNavProps,
-  TransactionRootStackParamList,
-} from '../../screens/app/TransactionScreen';
+import {ListTransactionNavProps} from '../../screens/app/TransactionScreen';
 import dayjs from 'dayjs';
 
 export interface IDefaultValues {

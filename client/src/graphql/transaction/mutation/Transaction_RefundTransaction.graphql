@@ -9,6 +9,7 @@ mutation Transaction_RefundTransaction(
     refund_type: $refund_type
   ) {
     invoice_number
-    is_success
+    isError
+    errorMessage
   }
 }

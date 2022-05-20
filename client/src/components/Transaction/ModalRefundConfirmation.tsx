@@ -28,7 +28,6 @@ interface Props {
   modalRefundOpen: boolean;
   setModalRefundOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setModalReceiptOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isRefundAll: boolean;
   refund_total: number;
 }
 
@@ -37,7 +36,6 @@ const ModalRefundConfirmation = ({
   invoice_number,
   modalRefundOpen,
   setModalRefundOpen,
-  isRefundAll,
   refund_total,
   setModalReceiptOpen,
 }: Props) => {
@@ -87,29 +85,25 @@ const ModalRefundConfirmation = ({
         },
       }),
     );
-    if (err || res.data?.Transaction_RefundTransaction?.is_success === false) {
+    if (err || res.data?.Transaction_RefundTransaction?.isError === true) {
       console.log(
         '🚀 ~ file: ModalRefundConfirmation.tsx ~ line 91 ~ err',
         err,
       );
       toast.show({
         ...TOAST_TEMPLATE.error(
-          `Gagal melakukan ${
-            isRefundAll ? 'refund semua' : 'refund sebagian'
-          } untuk invoice ${invoice_number}.`,
+          `Gagal melakukan refund semua untuk invoice ${invoice_number}.${res?.data?.Transaction_RefundTransaction?.errorMessage}`,
         ),
       });
     } else {
       toast.show({
         ...TOAST_TEMPLATE.success(
-          `Berhasil melakukan ${
-            isRefundAll ? 'refund semua' : 'refund sebagian'
-          } untuk invoice ${invoice_number}.`,
+          `Berhasil melakukan refund semua untuk invoice ${invoice_number}.`,
         ),
       });
+      setModalReceiptOpen(true);
     }
     setModalRefundOpen(false);
-    setModalReceiptOpen(true);
   };
 
   return (
@@ -149,7 +143,7 @@ const ModalRefundConfirmation = ({
           )}
           <HStack justifyContent="center" mt="6">
             <Button
-              // isLoading={_refundTransactionStatus.loading}
+              isLoading={_refundTransactionStatus.loading}
               w={['full', 'full', '40']}
               onPress={handleSubmit(handleSubmission)}>
               Proses Refund
