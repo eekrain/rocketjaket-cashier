@@ -138,8 +138,7 @@ const PaymentLanding = ({paymentProcessResult, setModalPayOpen}: Props) => {
             <SendReceiptForm
               control={control}
               errors={errors}
-              isLoading={false}
-              // isLoading={_sendReceiptStatus.loading}
+              isLoading={_sendReceiptStatus.loading}
               handleSubmit={handleSubmit(handleSubmission)}
             />
           </Center>

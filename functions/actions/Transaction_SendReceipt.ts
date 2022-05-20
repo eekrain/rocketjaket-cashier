@@ -7,6 +7,7 @@ import {
   Transaction_GetTransactionByPkQuery,
   Transaction_Receipt_Type_Enum_Enum,
   Transaction_Status_Enum_Enum,
+  TransactionRefundType as Transaction_Refund_Type,
 } from "../graphql/gql-generated";
 import { getAdminSdk } from "../utils";
 import { myNumberFormat } from "../utils/myFormat";
@@ -204,39 +205,66 @@ const sendWhatsappMessage = async (
   let isError = true;
   let errorMessage: string = "";
   if (customer?.phone_number) {
-    const message = {
-      success: `Terimakasih ${
-        customer.name
-      } telah berbelanja di Rocketjaket!\nInvoice: ${
-        params.invoice_number
-      }\nItem dibeli:\n${invoice.transaction_by_pk?.transaction_items
-        .map((item) => {
-          return `${item.product_name}(x${
-            item.purchase_qty
-          }): ${myNumberFormat.rp(item.subtotal)}`;
-        })
-        .join("\n")}\nTotal: ${myNumberFormat.rp(
-        invoice.transaction_by_pk?.total_transaction
-      )}`,
-      refundAll: `Transaksi anda dengan nomor invoice ${
+    let message = "";
+    const item_bought = invoice.transaction_by_pk?.transaction_items
+      .filter(
+        (item) =>
+          item.transaction_status === Transaction_Status_Enum_Enum.Success
+      )
+      .map((item) => {
+        return `${item.product_name}(x${
+          item.purchase_qty
+        }): ${myNumberFormat.rp(item.subtotal)}`;
+      })
+      .join("\n");
+    const item_refunded = invoice.transaction_by_pk?.transaction_items
+      .filter(
+        (item) =>
+          item.transaction_status === Transaction_Status_Enum_Enum.Refund ||
+          item.transaction_status === Transaction_Status_Enum_Enum.RefundPart
+      )
+      .map((item) => {
+        return `${item.product_name}(x${
+          item.purchase_qty
+        }): - ${myNumberFormat.rp(item.subtotal)}`;
+      })
+      .join("\n");
+    if (
+      invoice.transaction_by_pk?.transaction_status ===
+      Transaction_Status_Enum_Enum.Refund
+    ) {
+      message = `Transaksi anda dengan nomor invoice ${
         params.invoice_number
       } telah di-refund.\nTotal dana yang di-refund sebesar ${myNumberFormat.rp(
         invoice.transaction_by_pk?.total_transaction
-      )}.\nMohon maaf atas ketidaknyamanan.`,
-    };
-    // const tes
+      )}.\nMohon maaf atas ketidaknyamanan-nya.`;
+    } else if (
+      invoice.transaction_by_pk?.transaction_status ===
+      Transaction_Status_Enum_Enum.RefundPart
+    ) {
+      message = `Terimakasih ${
+        customer.name
+      } telah berbelanja di Rocketjaket!\nInvoice: ${
+        params.invoice_number
+      }\nItem dibeli:\n${item_bought}\n
+        Item di-refund:\n${item_refunded}\n
+        Total: ${myNumberFormat.rp(
+          invoice.transaction_by_pk?.total_transaction
+        )}`;
+    } else {
+      message = `Terimakasih ${
+        customer.name
+      } telah berbelanja di Rocketjaket!\nInvoice: ${
+        params.invoice_number
+      }\nItem dibeli:\n${item_bought}\nTotal: ${myNumberFormat.rp(
+        invoice.transaction_by_pk?.total_transaction
+      )}`;
+    }
     const [errWa, resWa] = await to(
       axios.post<MyWASendMessageResponse>(
         `${process.env.WHATSAPP_API_URL}/chat/sendmessage/${params.customer?.phone_number}`,
         {
-          message:
-            invoice.transaction_by_pk?.transaction_status ===
-            Transaction_Status_Enum_Enum.Success
-              ? message.success
-              : invoice.transaction_by_pk?.transaction_status ===
-                Transaction_Status_Enum_Enum.Refund
-              ? message.refundAll
-              : "",
+          message,
         },
         {
           headers: {
