@@ -17,7 +17,7 @@ const defaultValues: ISendReceiptFormDefaultValues = {
   customer_name: Config.APP_ENV === 'development' ? 'Budi' : '',
   phone_number:
     Config.APP_ENV === 'development'
-      ? myNumberFormat.phoneNumber('81252154853', 'withoutFirst')
+      ? myNumberFormat.phoneNumber('1', 'withoutFirst')
       : '',
 };
 
@@ -98,7 +98,6 @@ const ModalSendReceipt = ({
         ),
       });
     }
-
     setModalReceiptOpen(false);
   };
 
@@ -113,8 +112,7 @@ const ModalSendReceipt = ({
             errors={errors}
             w="full"
             handleSubmit={handleSubmit(handleSubmission)}
-            isLoading={false}
-            // isLoading={_sendReceiptStatus.loading}
+            isLoading={_sendReceiptStatus.loading}
           />
         </Box>
       </Modal.Content>

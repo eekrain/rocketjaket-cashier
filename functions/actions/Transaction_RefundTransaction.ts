@@ -12,7 +12,8 @@ export default async (req: Request, res: Response) => {
 
   const defaultOutput: Transaction_RefundTransactionOutput = {
     invoice_number: params.invoice_number,
-    is_success: false,
+    isError: true,
+    errorMessage: "",
   };
   const sdk = getAdminSdk();
 
@@ -27,7 +28,11 @@ export default async (req: Request, res: Response) => {
       "🚀 ~ file: Transaction_RefundTransaction.ts ~ line 21 ~ errFoundTransact",
       errFoundTransact
     );
-    res.send(defaultOutput);
+    const out: Transaction_RefundTransactionOutput = {
+      ...defaultOutput,
+      errorMessage: errFoundTransact.message,
+    };
+    res.send(out);
   }
 
   if (params.refund_type === "refund_all") {
@@ -44,19 +49,27 @@ export default async (req: Request, res: Response) => {
         "🚀 ~ file: Transaction_RefundTransaction.ts ~ line 43 ~ errRefund",
         errRefund
       );
-      res.send(defaultOutput);
+      const out: Transaction_RefundTransactionOutput = {
+        ...defaultOutput,
+        errorMessage: errRefund.message,
+      };
+      res.send(out);
     }
     console.log(
       "🚀 ~ file: Transaction_RefundTransaction.ts ~ line 43 ~ resRefund",
       resRefund
     );
 
-    const output: Transaction_RefundTransactionOutput = {
-      invoice_number: params.invoice_number,
-      is_success: true,
+    const out: Transaction_RefundTransactionOutput = {
+      ...defaultOutput,
+      isError: false,
     };
-    res.send(output);
+    res.send(out);
   } else {
-    res.send(defaultOutput);
+    const out: Transaction_RefundTransactionOutput = {
+      ...defaultOutput,
+      errorMessage: "Refund type not found in the TransactionRefundType!",
+    };
+    res.send(out);
   }
 };

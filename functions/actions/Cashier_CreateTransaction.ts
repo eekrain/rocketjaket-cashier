@@ -23,7 +23,8 @@ export default async (req: Request, res: Response) => {
     payment_type: params.payment_type,
     store_id: params.store_id,
     total_transaction: params.total_transaction,
-    transaction_status: "failed",
+    transaction_status:
+      Transaction_Status_Enum_Enum.Failed as unknown as TransactionStatusEnum,
     cash_change: null,
     errorMessage: null,
     invoice_number: null,
@@ -164,7 +165,8 @@ export default async (req: Request, res: Response) => {
     total_transaction: params.total_transaction,
     cash_in_amount: params.cash_in_amount,
     store_id: params.store_id,
-    transaction_status: "success",
+    transaction_status:
+      Transaction_Status_Enum_Enum.Success as unknown as TransactionStatusEnum,
     isError: false,
     errorMessage: null,
   };

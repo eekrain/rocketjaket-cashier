@@ -255,7 +255,6 @@ const UpdateTransaction = ({navigation, route}: Props) => {
           <ModalRefundConfirmation
             title="Refund Semua"
             invoice_number={route.params.transaction_invoice_number}
-            isRefundAll={true}
             modalRefundOpen={modalRefundOpen}
             setModalRefundOpen={setModalRefundOpen}
             setModalReceiptOpen={setModalReceiptOpen}
