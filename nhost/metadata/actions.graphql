@@ -10,6 +10,14 @@ type Mutation {
 }
 
 type Mutation {
+  Transaction_RefundTransaction(
+    invoice_number: String!
+    refund_type: TransactionRefundType!
+    refund_reason: String!
+  ): Transaction_RefundTransactionOutput
+}
+
+type Mutation {
   Transaction_SendReceipt(
     customer: CustomerInput!
     receipt_type: TransactionReceiptTypeEnum!
@@ -55,6 +63,11 @@ enum TransactionPaymentTypeEnum {
 enum TransactionReceiptTypeEnum {
   """ Email """ email
   """ Whatsapp """ whatsapp
+}
+
+enum TransactionRefundType {
+  """ refund_all """ refund_all
+  """ refund_part """ refund_part
 }
 
 input InventoryVariantMetadataInsertInput {
@@ -149,5 +162,10 @@ type Transaction_SendReceiptOutput {
   created_at: timestamptz!
   isError: Boolean
   errorMessage: String
+}
+
+type Transaction_RefundTransactionOutput {
+  invoice_number: String!
+  is_success: Boolean!
 }
 

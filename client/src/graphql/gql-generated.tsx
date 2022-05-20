@@ -122,6 +122,13 @@ export enum TransactionReceiptTypeEnum {
   Whatsapp = 'whatsapp'
 }
 
+export enum TransactionRefundType {
+  /** refund_all */
+  RefundAll = 'refund_all',
+  /** refund_part */
+  RefundPart = 'refund_part'
+}
+
 export enum TransactionStatusEnum {
   /** Gagal */
   Failed = 'failed',
@@ -132,6 +139,12 @@ export enum TransactionStatusEnum {
   /** Sukses */
   Success = 'success'
 }
+
+export type Transaction_RefundTransactionOutput = {
+  __typename?: 'Transaction_RefundTransactionOutput';
+  invoice_number: Scalars['String'];
+  is_success: Scalars['Boolean'];
+};
 
 export type Transaction_SendReceiptOutput = {
   __typename?: 'Transaction_SendReceiptOutput';
@@ -1517,9 +1530,9 @@ export type Citext_Comparison_Exp = {
 export type Customers = {
   __typename?: 'customers';
   created_at: Scalars['timestamptz'];
-  email: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
   id: Scalars['uuid'];
-  name: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
   phone_number: Scalars['String'];
   /** An array relationship */
   transaction_receipts: Array<Transaction_Receipts>;
@@ -3084,6 +3097,7 @@ export type Jsonb_Comparison_Exp = {
 export type Mutation_Root = {
   __typename?: 'mutation_root';
   Cashier_CreateTransaction?: Maybe<Cashier_CreateTransactionOutput>;
+  Transaction_RefundTransaction?: Maybe<Transaction_RefundTransactionOutput>;
   Transaction_SendReceipt?: Maybe<Transaction_SendReceiptOutput>;
   User_SignUp?: Maybe<User_SignUpOutput>;
   Whatsapp_SignOut?: Maybe<Whatsapp_SignOutOutput>;
@@ -3374,6 +3388,14 @@ export type Mutation_RootCashier_CreateTransactionArgs = {
   store_id: Scalars['Int'];
   total_transaction: Scalars['Int'];
   transaction_items: Array<Transaction_Items_Input>;
+};
+
+
+/** mutation root */
+export type Mutation_RootTransaction_RefundTransactionArgs = {
+  invoice_number: Scalars['String'];
+  refund_reason: Scalars['String'];
+  refund_type: TransactionRefundType;
 };
 
 
@@ -9177,6 +9199,15 @@ export type Whatsapp_GetAuthStatusQueryVariables = Exact<{ [key: string]: never;
 
 export type Whatsapp_GetAuthStatusQuery = { __typename?: 'query_root', Whatsapp_GetAuthStatus?: { __typename?: 'Whatsapp_GetAuthStatusOutput', client_phone_number?: string | null, client_name?: string | null, client_platform?: string | null, client_state?: string | null, errorMessage?: string | null, qrcode?: string | null, is_authenticated: boolean, is_qr_ready: boolean, is_client_ready: boolean, isError: boolean } | null };
 
+export type Transaction_RefundTransactionMutationVariables = Exact<{
+  invoice_number: Scalars['String'];
+  refund_reason: Scalars['String'];
+  refund_type: TransactionRefundType;
+}>;
+
+
+export type Transaction_RefundTransactionMutation = { __typename?: 'mutation_root', Transaction_RefundTransaction?: { __typename?: 'Transaction_RefundTransactionOutput', invoice_number: string, is_success: boolean } | null };
+
 export type Transaction_SendReceiptToCustomerMutationVariables = Exact<{
   invoice_number: Scalars['String'];
   customer: CustomerInput;
@@ -9198,7 +9229,7 @@ export type Transaction_GetTransactionByPkQueryVariables = Exact<{
 }>;
 
 
-export type Transaction_GetTransactionByPkQuery = { __typename?: 'query_root', transaction_by_pk?: { __typename?: 'transaction', cash_change: number, cash_in_amount: number, created_at: any, invoice_number: string, total_transaction: number, updated_at: any, karyawan_name: string, transaction_status: Transaction_Status_Enum_Enum, store: { __typename?: 'stores', name: string, address: string }, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', created_at: any, capital_price: number, discount: number, id: any, inventory_product_id: any, product_name: string, profit: number, purchase_qty: number, selling_price: number, subtotal: number, updated_at: any, transaction_status: Transaction_Status_Enum_Enum, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string }, inventory_product: { __typename?: 'inventory_products', override_capital_price?: number | null, override_selling_price?: number | null, override_discount?: number | null, available_qty: number, updated_at: any, product: { __typename?: 'products', photo_id?: string | null, name: string, capital_price: number, selling_price: number, discount: number, updated_at: any }, inventory_product_variants: Array<{ __typename?: 'inventory_product_variants', inventory_variant_metadata_id: number }> } }>, transaction_receipts: Array<{ __typename?: 'transaction_receipts', created_at: any, is_sent: boolean, transaction_receipt_type_enum: { __typename?: 'transaction_receipt_type_enum', receipt_type: string, title: string }, customer: { __typename?: 'customers', id: any, email: string, name: string, phone_number: string } }> } | null };
+export type Transaction_GetTransactionByPkQuery = { __typename?: 'query_root', transaction_by_pk?: { __typename?: 'transaction', cash_change: number, cash_in_amount: number, created_at: any, invoice_number: string, total_transaction: number, updated_at: any, karyawan_name: string, transaction_status: Transaction_Status_Enum_Enum, store: { __typename?: 'stores', name: string, address: string }, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', created_at: any, capital_price: number, discount: number, id: any, inventory_product_id: any, product_name: string, profit: number, purchase_qty: number, selling_price: number, subtotal: number, updated_at: any, transaction_status: Transaction_Status_Enum_Enum, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string }, inventory_product: { __typename?: 'inventory_products', override_capital_price?: number | null, override_selling_price?: number | null, override_discount?: number | null, available_qty: number, updated_at: any, product: { __typename?: 'products', photo_id?: string | null, name: string, capital_price: number, selling_price: number, discount: number, updated_at: any }, inventory_product_variants: Array<{ __typename?: 'inventory_product_variants', inventory_variant_metadata_id: number }> } }>, transaction_receipts: Array<{ __typename?: 'transaction_receipts', created_at: any, is_sent: boolean, transaction_receipt_type_enum: { __typename?: 'transaction_receipt_type_enum', receipt_type: string, title: string }, customer: { __typename?: 'customers', id: any, email?: string | null, name?: string | null, phone_number: string } }> } | null };
 
 export type User_SignUpMutationVariables = Exact<{
   defaultRole?: InputMaybe<Scalars['String']>;
@@ -9278,6 +9309,7 @@ export const namedOperations = {
     Store_DeleteStoreByPK: 'Store_DeleteStoreByPK',
     Store_UpdateStore: 'Store_UpdateStore',
     Whatsapp_SignOut: 'Whatsapp_SignOut',
+    Transaction_RefundTransaction: 'Transaction_RefundTransaction',
     Transaction_SendReceiptToCustomer: 'Transaction_SendReceiptToCustomer',
     User_SignUp: 'User_SignUp',
     User_UpdateUserByUserId: 'User_UpdateUserByUserId',
@@ -10447,6 +10479,46 @@ export function useWhatsapp_GetAuthStatusLazyQuery(baseOptions?: Apollo.LazyQuer
 export type Whatsapp_GetAuthStatusQueryHookResult = ReturnType<typeof useWhatsapp_GetAuthStatusQuery>;
 export type Whatsapp_GetAuthStatusLazyQueryHookResult = ReturnType<typeof useWhatsapp_GetAuthStatusLazyQuery>;
 export type Whatsapp_GetAuthStatusQueryResult = Apollo.QueryResult<Whatsapp_GetAuthStatusQuery, Whatsapp_GetAuthStatusQueryVariables>;
+export const Transaction_RefundTransactionDocument = gql`
+    mutation Transaction_RefundTransaction($invoice_number: String!, $refund_reason: String!, $refund_type: TransactionRefundType!) {
+  Transaction_RefundTransaction(
+    invoice_number: $invoice_number
+    refund_reason: $refund_reason
+    refund_type: $refund_type
+  ) {
+    invoice_number
+    is_success
+  }
+}
+    `;
+export type Transaction_RefundTransactionMutationFn = Apollo.MutationFunction<Transaction_RefundTransactionMutation, Transaction_RefundTransactionMutationVariables>;
+
+/**
+ * __useTransaction_RefundTransactionMutation__
+ *
+ * To run a mutation, you first call `useTransaction_RefundTransactionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTransaction_RefundTransactionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [transactionRefundTransactionMutation, { data, loading, error }] = useTransaction_RefundTransactionMutation({
+ *   variables: {
+ *      invoice_number: // value for 'invoice_number'
+ *      refund_reason: // value for 'refund_reason'
+ *      refund_type: // value for 'refund_type'
+ *   },
+ * });
+ */
+export function useTransaction_RefundTransactionMutation(baseOptions?: Apollo.MutationHookOptions<Transaction_RefundTransactionMutation, Transaction_RefundTransactionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Transaction_RefundTransactionMutation, Transaction_RefundTransactionMutationVariables>(Transaction_RefundTransactionDocument, options);
+      }
+export type Transaction_RefundTransactionMutationHookResult = ReturnType<typeof useTransaction_RefundTransactionMutation>;
+export type Transaction_RefundTransactionMutationResult = Apollo.MutationResult<Transaction_RefundTransactionMutation>;
+export type Transaction_RefundTransactionMutationOptions = Apollo.BaseMutationOptions<Transaction_RefundTransactionMutation, Transaction_RefundTransactionMutationVariables>;
 export const Transaction_SendReceiptToCustomerDocument = gql`
     mutation Transaction_SendReceiptToCustomer($invoice_number: String!, $customer: CustomerInput!, $receipt_type: TransactionReceiptTypeEnum!) {
   Transaction_SendReceipt(
