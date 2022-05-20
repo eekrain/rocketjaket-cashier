@@ -26,6 +26,11 @@ enum TransactionReceiptTypeEnum {
   whatsapp = "whatsapp",
 }
 
+enum TransactionRefundType {
+  refund_all = "refund_all",
+  refund_part = "refund_part",
+}
+
 type InventoryVariantMetadataInsertInput = {
   variant_title?: Maybe<string>;
   variant_value?: Maybe<string>;
@@ -98,7 +103,7 @@ type Cashier_CreateTransactionOutput = {
   cash_in_amount: number;
   payment_type: string;
   store_id: number;
-  transaction_status: TransactionStatusEnum;
+  transaction_status: `${TransactionStatusEnum}`;
 };
 
 type sendReceiptOutput = {
@@ -120,12 +125,18 @@ type Transaction_SendReceiptOutput = {
   errorMessage?: Maybe<string>;
 };
 
+type Transaction_RefundTransactionOutput = {
+  invoice_number: string;
+  is_success: boolean;
+};
+
 type Query = {
   Whatsapp_GetAuthStatus?: Maybe<Whatsapp_GetAuthStatusOutput>;
 };
 
 type Mutation = {
   Cashier_CreateTransaction?: Maybe<Cashier_CreateTransactionOutput>;
+  Transaction_RefundTransaction?: Maybe<Transaction_RefundTransactionOutput>;
   Transaction_SendReceipt?: Maybe<Transaction_SendReceiptOutput>;
   User_SignUp?: Maybe<User_SignUpOutput>;
   Whatsapp_SignOut?: Maybe<Whatsapp_SignOutOutput>;
@@ -140,6 +151,12 @@ type Cashier_CreateTransactionArgs = {
   cash_in_amount: number;
   transaction_items: Array<transaction_items_input>;
   store_id: number;
+};
+
+type Transaction_RefundTransactionArgs = {
+  invoice_number: string;
+  refund_type: `${TransactionRefundType}`;
+  refund_reason: string;
 };
 
 type Transaction_SendReceiptArgs = {
