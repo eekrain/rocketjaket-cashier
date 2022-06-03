@@ -1,0 +1,7 @@
+mutation Transaction_InsertTransactionItems(
+  $objects: [transaction_items_insert_input!]!
+) {
+  insert_transaction_items(objects: $objects) {
+    affected_rows
+  }
+}

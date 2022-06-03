@@ -135,3 +135,13 @@ event_triggers:
     num_retries: 10
     timeout_sec: 60
   webhook: "{{NHOST_BACKEND_URL}}/v1/functions/events/UpdateAvailableQtyOnInsertTransactionItem"
+- definition:
+    enable_manual: false
+    update:
+      columns: "*"
+  name: UpdateAvailableQtyOnUpdateTransactionItem
+  retry_conf:
+    interval_sec: 10
+    num_retries: 0
+    timeout_sec: 60
+  webhook: "{{NHOST_BACKEND_URL}}/v1/functions/events/UpdateAvailableQtyOnUpdateTransactionItem"

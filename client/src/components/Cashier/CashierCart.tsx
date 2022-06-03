@@ -31,9 +31,11 @@ import {
   namedOperations,
   TransactionPaymentTypeEnum,
   TransactionStatusEnum,
+  Transaction_GetTransactionByPkQuery,
   Transaction_Items_Input,
   // Transaction_Items,
   useCashier_CreateTransactionMutation,
+  useTransaction_GetTransactionByPkQuery,
 } from '../../graphql/gql-generated';
 import * as yup from 'yup';
 import {useApolloClient} from '@apollo/client';
@@ -70,6 +72,10 @@ interface Props {
 
 const CashierCart = ({route}: Props) => {
   const myCart = useMyCart();
+  console.log(
+    '🚀 ~ file: CashierCart.tsx ~ line 73 ~ CashierCart ~ myCart.cartItems',
+    myCart.cartItems,
+  );
   const myUser = useMyUser();
   const [isModalPayOpen, setModalPayOpen] = useState(false);
   const [formPayStep, setFormPayStep] = useState<0 | 1>(0);
@@ -101,11 +107,23 @@ const CashierCart = ({route}: Props) => {
     }
   }, [isModalPayOpen, reset]);
 
+  const getTransactionRefundData = useTransaction_GetTransactionByPkQuery({
+    variables: {
+      invoice_number: route.params?.invoiceNumberRefundPart || '',
+    },
+  });
+  const transactionRefundData:
+    | Transaction_GetTransactionByPkQuery['transaction_by_pk']
+    | null = useMemo(() => {
+    return getTransactionRefundData.data?.transaction_by_pk || null;
+  }, [getTransactionRefundData.data?.transaction_by_pk]);
+
   const [createTransactionMutation, _createTransactionMutationResult] =
     useCashier_CreateTransactionMutation({
       refetchQueries: [
         namedOperations.Query.Inventory_GetAllInventoryProductByStoreId,
-        // namedOperations.Query.Transaction_GetAllTransactionByStoreId,
+        namedOperations.Query.Transaction_GetAllTransactionByStoreId,
+        namedOperations.Query.Transaction_GetTransactionByPK,
       ],
     });
 
@@ -304,6 +322,8 @@ const CashierCart = ({route}: Props) => {
                 errors={errors}
                 formValue={formValue}
                 setValue={setValue}
+                route={route}
+                transactionRefundData={transactionRefundData}
               />
             )}
             {formPayStep === 1 && (
@@ -477,6 +497,7 @@ const cartItem = (
                 available_qty: item.available_qty,
                 inventory_product_updated_at: item.inventory_product_updated_at,
                 product_updated_at: item.product_updated_at,
+                qty: 1,
               });
             }}
             size="sm"

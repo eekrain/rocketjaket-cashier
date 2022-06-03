@@ -21,24 +21,13 @@ import {Alert, StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import {useMyAppState} from '../../state';
 import {TOAST_TEMPLATE} from '../../shared/constants';
-import FastImage from 'react-native-fast-image';
-import useCountDown from 'react-countdown-hook';
 import {myNumberFormat} from '../../shared/utils';
-
-const initialTime = 20 * 1000; // initial time in milliseconds, defaults to 60000
-const interval = 1000; // interval to change remaining time amount, defaults to 1000
 
 interface ITokoHomeProps {}
 
 const WhatsappHome = ({}: ITokoHomeProps) => {
   const myAppState = useMyAppState();
   const toast = useToast();
-  const [timeLeft, {start: startCountdown}] = useCountDown(
-    initialTime,
-    interval,
-  );
-  const [waiting, setWaiting] = useState(false);
-  const [doneWaiting, setDoneWaiting] = useState(true);
 
   const colTitleW = useBreakpointValue({
     base: '40%',
@@ -65,32 +54,20 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
   const getWAAuthStatus = useWhatsapp_GetAuthStatusQuery({
     fetchPolicy: 'network-only',
   });
-  console.log(
-    '🚀 ~ file: WhatsappHome.tsx ~ line 66 ~ WhatsappHome ~ getWAAuthStatus',
-    getWAAuthStatus.error,
-  );
-
-  useEffect(() => {
-    if (timeLeft === 0 && waiting && !doneWaiting) {
-      setWaiting(false);
-      setDoneWaiting(true);
-      getWAAuthStatus.refetch();
-    }
-  }, [doneWaiting, getWAAuthStatus, timeLeft, waiting]);
 
   useEffect(() => {
     myAppState.setLoadingWholePage(getWAAuthStatus.loading);
   }, [getWAAuthStatus.loading, myAppState]);
 
   const WAAuthStatus = useMemo(() => {
-    return getWAAuthStatus.data?.Whatsapp_GetAuthStatus;
+    return getWAAuthStatus.data?.Whatsapp_GetAuthStatus || null;
   }, [getWAAuthStatus.data?.Whatsapp_GetAuthStatus]);
 
   const [whatsappSignout] = useWhatsapp_SignOutMutation({});
 
   const handleWhatsappSignout = useCallback(async () => {
     const doSignout = async () => {
-      const res = await whatsappSignout().catch(error => {
+      await whatsappSignout().catch(error => {
         console.log(
           '🚀 ~ file: WhatsappHome.tsx ~ line 71 ~ res ~ error',
           error,
@@ -99,12 +76,6 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
           ...TOAST_TEMPLATE.error('Gagal melakukan sign out whatsapp!'),
         });
       });
-
-      if (res && res.data?.Whatsapp_SignOut?.is_success) {
-        startCountdown();
-        setWaiting(true);
-        setDoneWaiting(false);
-      }
     };
     Alert.alert(
       'Signout Whatsapp',
@@ -124,26 +95,10 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
         cancelable: true,
       },
     );
-  }, [WAAuthStatus?.client_name, startCountdown, toast, whatsappSignout]);
+  }, [WAAuthStatus?.client_name, toast, whatsappSignout]);
 
   return (
     <Box>
-      <Modal isOpen={waiting && timeLeft > 0} size="xl">
-        <Modal.Content>
-          <Modal.Header>Tunggu! Sedang Refresh Server!</Modal.Header>
-          <Stack direction="column" px="3" pt="3" pb="6" alignItems="center">
-            <Text fontSize="xl" mb="4">
-              Waktu tunggu tersisa {timeLeft / 1000}
-            </Text>
-            <FastImage
-              style={{width: 50, height: 50, alignSelf: 'center'}}
-              source={require('../../assets/images/indicator5.gif')}
-              resizeMode={FastImage.resizeMode.contain}
-            />
-          </Stack>
-        </Modal.Content>
-      </Modal>
-
       <HStack mb="10" mt="4" justifyContent="space-between">
         <Heading fontSize="xl">Whatsapp</Heading>
         <Button

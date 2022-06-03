@@ -11,6 +11,7 @@ import {
   Heading,
   Button,
   Center,
+  useToast,
 } from 'native-base';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {
@@ -21,10 +22,14 @@ import {
 import {UserRolesEnum} from '../../types/user';
 import {Control, UseFormSetValue} from 'react-hook-form';
 import {MyAvatar, MyImageViewer, RHTextInput} from '../../shared/components';
-import {IDefaultValues, IInventoryProductData} from '.';
+import {clearReturn, IDefaultValues, IInventoryProductData} from '.';
 import {useMyCart} from '../../state';
 import {CashierHomeNavProps} from '../../screens/app/CashierScreen';
 import FastImage from 'react-native-fast-image';
+import {ButtonCancelDelete} from '../Buttons';
+import {CommonActions, useNavigation} from '@react-navigation/native';
+import {UpdateTransactionNavProps} from '../../screens/app/TransactionScreen';
+import {TOAST_TEMPLATE} from '../../shared/constants';
 
 interface Props {
   route: CashierHomeNavProps['route'];
@@ -67,15 +72,35 @@ const ProductsContent = ({
   searchedInventoryProductData,
 }: Props) => {
   const myUser = useMyUser();
+  const myCart = useMyCart();
   const roles = useMemo(() => myUser.roles, [myUser.roles]);
+  const navigation = useNavigation<UpdateTransactionNavProps['navigation']>();
+  const toast = useToast();
 
   return (
     <ScrollView w={['full', 'full', '4/6']}>
       <Stack w="full" direction="column" space="3" pb="100">
         {route.params?.invoiceNumberRefundPart && (
-          <Heading fontSize="xl" mb="2">
-            Refund Sebagian Invoice {route.params.invoiceNumberRefundPart}
-          </Heading>
+          <HStack alignItems="center" justifyContent="space-between">
+            <Heading fontSize="xl" mb="2">
+              Retur Invoice {route.params.invoiceNumberRefundPart}
+            </Heading>
+
+            <ButtonCancelDelete
+              customText="Cancel Retur"
+              variant={'solid'}
+              onPress={() => {
+                toast.show({
+                  ...TOAST_TEMPLATE.cancelled('Refund transaksi tidak jadi.'),
+                });
+                clearReturn(
+                  navigation,
+                  myCart,
+                  route.params?.invoiceNumberRefundPart,
+                );
+              }}
+            />
+          </HStack>
         )}
         <HStack space="4" alignItems="center">
           <Heading fontSize="xl">Toko {dataStoreActive?.name}</Heading>
@@ -171,6 +196,7 @@ const ProductItem = ({product}: {product: IInventoryProductData}) => {
             available_qty: product.available_qty,
             inventory_product_updated_at: product.inventory_product_updated_at,
             product_updated_at: product.product_updated_at,
+            qty: 1,
           });
         }
       }}>

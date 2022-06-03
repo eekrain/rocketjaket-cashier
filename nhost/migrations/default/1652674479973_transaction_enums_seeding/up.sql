@@ -12,6 +12,6 @@ INSERT INTO transaction_payment_type_enum (payment_type, title) VALUES ('EDC_MAN
 
 
 INSERT INTO transaction_status_enum (transaction_status, title) VALUES ('success', 'Sukses');
-INSERT INTO transaction_status_enum (transaction_status, title) VALUES ('refund', 'Refund');
+INSERT INTO transaction_status_enum (transaction_status, title) VALUES ('return_all', 'Retur Total');
+INSERT INTO transaction_status_enum (transaction_status, title) VALUES ('return_part', 'Retur Sebagian');
 INSERT INTO transaction_status_enum (transaction_status, title) VALUES ('failed', 'Gagal');
-INSERT INTO transaction_status_enum (transaction_status, title) VALUES ('refund_part', 'Refund Sebagian');

@@ -9,8 +9,6 @@ import {
   ScrollView,
   useToast,
   Text,
-  Popover,
-  useContrastText,
   Badge,
   Icon,
 } from 'native-base';
@@ -25,20 +23,17 @@ import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {SimpleDataGrid, DismissKeyboardWrapper} from '../../shared/components';
-import {ButtonBack} from '../Buttons';
+import {ButtonBack, ButtonReturn} from '../Buttons';
 import {useEffect} from 'react';
-import {useMyAppState, useMyCart} from '../../state';
+import {ICartItem, useMyAppState, useMyCart} from '../../state';
 import {UpdateTransactionNavProps} from '../../screens/app/TransactionScreen';
-import {
-  getStorageFileUrlWImageTransform,
-  myNumberFormat,
-} from '../../shared/utils';
+import {myNumberFormat} from '../../shared/utils';
 import CustomTable from '../CustomTable';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import ModalSendReceipt from './ModalSendReceipt';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import ModalRefundConfirmation from './ModalRefundConfirmation';
+import {useNavigation} from '@react-navigation/native';
 
 dayjs.extend(isSameOrBefore);
 
@@ -58,15 +53,15 @@ const defaultValues: IDefaultValues = {name: '', description: ''};
 
 interface Props extends UpdateTransactionNavProps {}
 
-const UpdateTransaction = ({navigation, route}: Props) => {
-  const bgLight = 'white';
-  const colorContrastLight = useContrastText(bgLight);
+const UpdateTransaction = ({route}: Props) => {
   const toast = useToast();
   const myAppState = useMyAppState();
   const myCart = useMyCart();
   const [isErrorOnce, setErrorOnce] = useState(false);
   const [modalReceiptOpen, setModalReceiptOpen] = useState(false);
   const [modalRefundOpen, setModalRefundOpen] = useState(false);
+
+  const navigation = useNavigation<any>();
 
   const {
     handleSubmit,
@@ -92,7 +87,8 @@ const UpdateTransaction = ({navigation, route}: Props) => {
     return (
       dataTransaction?.transaction_items.map(item => ({
         ...item,
-        transaction_status:
+        product_photo_id: item?.inventory_product?.product.photo_id,
+        transaction_status_badge:
           item.transaction_status_enum.transaction_status === 'success' ? (
             <Badge colorScheme="success">
               {item.transaction_status_enum.title}
@@ -102,32 +98,22 @@ const UpdateTransaction = ({navigation, route}: Props) => {
               {item.transaction_status_enum.title}
             </Badge>
           ),
-        selling_price_real: item.selling_price,
         selling_price_formatted: myNumberFormat.rp(item.selling_price),
-        discount_real: item.discount,
-        discount:
-          item.transaction_status === Transaction_Status_Enum_Enum.Success
-            ? (item.selling_price * item.purchase_qty * item.discount) / 100
-            : 0,
         discount_formatted: myNumberFormat.rpDiscount(
           item.transaction_status === Transaction_Status_Enum_Enum.Success
             ? (item.selling_price * item.purchase_qty * item.discount) / 100
             : 0,
         ),
-        capital_price_real: item.capital_price,
-        subtotal:
-          item.transaction_status === Transaction_Status_Enum_Enum.Success
-            ? item.subtotal
-            : 0,
-        subtotal_formatted: myNumberFormat.rp(
-          item.transaction_status === Transaction_Status_Enum_Enum.Success
-            ? item.subtotal
-            : 0,
-        ),
+        subtotal: item.subtotal,
+        subtotal_formatted: myNumberFormat.rp(item.subtotal),
         profit_formatted: myNumberFormat.rp(item.profit),
       })) || []
     );
   }, [dataTransaction?.transaction_items]);
+  // console.log(
+  //   '🚀 ~ file: UpdateTransaction.tsx ~ line 132 ~ dataTransactionItems ~ dataTransactionItems',
+  //   dataTransactionItems,
+  // );
 
   const dataTransactionReceipt = useMemo(() => {
     return (
@@ -199,36 +185,34 @@ const UpdateTransaction = ({navigation, route}: Props) => {
     toast,
   ]);
 
-  const handleRefundPart = useCallback(() => {
-    // myCart.clearCart();
-    // myCart.handleSetCartItem(
-    //   dataTransactionItems.map(item => ({
-    //     product_photo_url: getStorageFileUrlWImageTransform({
-    //       fileKey: item.inventory_product.product.photo_url,
-    //       w: 100,
-    //       q: 60,
-    //     }),
-    //     product_inventory_id: item.inventory_product_id,
-    //     product_name: item.inventory_product.product.name,
-    //     variant: item.inventory_product.inventory_product_variants
-    //       .map(x => x.inventory_variant_metadata_id)
-    //       .join(' / '),
-    //     capital_price: item.capital_price_real,
-    //     selling_price: item.selling_price_real,
-    //     discount: item.discount_real,
-    //     available_qty: item.inventory_product.available_qty,
-    //     product_updated_at: item.inventory_product.product.updated_at,
-    //     inventory_product_updated_at: item.inventory_product.updated_at,
-    //     qty: item.purchase_qty,
-    //     transaction_item_id: item.id,
-    //   })),
-    // );
-    // navigation.navigate('CashierRoot', {
-    //   screen: 'CashierHome',
-    //   params: {
-    //     invoiceNumberRefundPart: route.params.transaction_invoice_number,
-    //   },
-    // });
+  const handleRefund = useCallback(() => {
+    myCart.clearCart();
+    const refundItems: ICartItem[] = dataTransactionItems.map(item => ({
+      product_photo_id: item.product_photo_id,
+      product_inventory_id: item.inventory_product_id,
+      product_name: item.product_name.split(' / ')?.[1] || '',
+      product_name_concise: item.product_name,
+      available_qty: item.purchase_qty,
+      capital_price: item.capital_price,
+      selling_price: item.selling_price,
+      discount: item.discount,
+      inventory_product_updated_at: item?.inventory_product?.product.updated_at,
+      product_updated_at: item?.inventory_product?.product.updated_at,
+      qty: item.purchase_qty,
+      transaction_item_id: item.id,
+    }));
+    console.log(
+      '🚀 ~ file: UpdateTransaction.tsx ~ line 217 ~ handleRefundPart ~ refundItems',
+      refundItems,
+    );
+    myCart.handleSetCartItems(refundItems);
+
+    navigation.navigate('CashierRoot', {
+      screen: 'CashierHome',
+      params: {
+        invoiceNumberRefundPart: route.params.transaction_invoice_number,
+      },
+    });
   }, [
     dataTransactionItems,
     myCart,
@@ -251,14 +235,6 @@ const UpdateTransaction = ({navigation, route}: Props) => {
                 'withoutFirst',
               ) || ''
             }
-          />
-          <ModalRefundConfirmation
-            title="Refund Semua"
-            invoice_number={route.params.transaction_invoice_number}
-            modalRefundOpen={modalRefundOpen}
-            setModalRefundOpen={setModalRefundOpen}
-            setModalReceiptOpen={setModalReceiptOpen}
-            refund_total={dataTransaction?.total_transaction || 0}
           />
 
           <Heading fontSize="xl" mb="10">
@@ -319,7 +295,7 @@ const UpdateTransaction = ({navigation, route}: Props) => {
                               Transaction_Status_Enum_Enum.Failed ||
                             dataTransaction.transaction_status_enum
                               .transaction_status ===
-                              Transaction_Status_Enum_Enum.Refund
+                              Transaction_Status_Enum_Enum.ReturnAll
                           ? 'danger'
                           : 'warning'
                       }>
@@ -331,7 +307,11 @@ const UpdateTransaction = ({navigation, route}: Props) => {
                   Item Dibeli
                 </Text>
                 <CustomTable
-                  data={dataTransactionItems}
+                  data={dataTransactionItems.filter(
+                    item =>
+                      item.transaction_status ===
+                      Transaction_Status_Enum_Enum.Success,
+                  )}
                   rowHeight={50}
                   headerHeight={40}
                   columns={[
@@ -367,7 +347,7 @@ const UpdateTransaction = ({navigation, route}: Props) => {
                     },
                     {
                       Header: 'Status',
-                      accessor: 'transaction_status',
+                      accessor: 'transaction_status_badge',
                       widthRatio: 0.4,
                       isDisableSort: true,
                     },
@@ -376,26 +356,44 @@ const UpdateTransaction = ({navigation, route}: Props) => {
                     {
                       accessor: 'discount_formatted',
                       value: myNumberFormat.rpDiscount(
-                        dataTransactionItems.reduce(
-                          (prevVal: number, currentVal) =>
-                            prevVal + currentVal.discount,
-                          0,
-                        ),
+                        dataTransactionItems
+                          .filter(
+                            item =>
+                              item.transaction_status ===
+                              Transaction_Status_Enum_Enum.Success,
+                          )
+                          .reduce(
+                            (prevVal: number, currentVal) =>
+                              prevVal + currentVal.discount,
+                            0,
+                          ),
                       ),
                     },
                     {
                       accessor: 'subtotal_formatted',
                       value: myNumberFormat.rp(
-                        dataTransactionItems.reduce(
-                          (prevVal: number, currentVal) =>
-                            prevVal + currentVal.subtotal,
-                          0,
-                        ),
+                        dataTransactionItems
+                          .filter(
+                            item =>
+                              item.transaction_status ===
+                              Transaction_Status_Enum_Enum.Success,
+                          )
+                          .reduce(
+                            (prevVal: number, currentVal) =>
+                              prevVal + currentVal.subtotal,
+                            0,
+                          ),
                       ),
                     },
                     {
                       accessor: 'purchase_qty',
                       value: dataTransactionItems
+                        .filter(
+                          item =>
+                            item.transaction_status ===
+                            Transaction_Status_Enum_Enum.Success,
+                        )
+
                         .reduce(
                           (prevVal: number, currentVal) =>
                             prevVal + currentVal.purchase_qty,
@@ -408,7 +406,69 @@ const UpdateTransaction = ({navigation, route}: Props) => {
                   withPagination={false}
                   withTableHeader={false}
                 />
-                <HStack alignItems="center" mt="4" mb="2">
+
+                {dataTransaction?.transaction_status ===
+                  Transaction_Status_Enum_Enum.ReturnAll ||
+                dataTransaction?.transaction_status ===
+                  Transaction_Status_Enum_Enum.ReturnPart ? (
+                  <>
+                    <Text fontWeight="semibold" mb={2}>
+                      Item Diretur
+                    </Text>
+                    <CustomTable
+                      data={dataTransactionItems.filter(
+                        item =>
+                          item.transaction_status !==
+                          Transaction_Status_Enum_Enum.Success,
+                      )}
+                      rowHeight={50}
+                      headerHeight={40}
+                      columns={[
+                        {
+                          Header: 'Produk',
+                          accessor: 'product_name',
+                          widthRatio: 0.8,
+                          isDisableSort: true,
+                        },
+                        {
+                          Header: 'Harga Jual',
+                          accessor: 'selling_price_formatted',
+                          widthRatio: 0.5,
+                          isDisableSort: true,
+                        },
+                        {
+                          Header: 'Qty',
+                          accessor: 'purchase_qty',
+                          widthRatio: 0.3,
+                          isDisableSort: true,
+                        },
+                        {
+                          Header: 'Total Discount',
+                          accessor: 'discount_formatted',
+                          widthRatio: 0.5,
+                          isDisableSort: true,
+                        },
+                        {
+                          Header: 'Subtotal',
+                          accessor: 'subtotal_formatted',
+                          widthRatio: 0.5,
+                          isDisableSort: true,
+                        },
+                        {
+                          Header: 'Status',
+                          accessor: 'transaction_status_badge',
+                          widthRatio: 0.4,
+                          isDisableSort: true,
+                        },
+                      ]}
+                      isLoading={false}
+                      withPagination={false}
+                      withTableHeader={false}
+                    />
+                  </>
+                ) : undefined}
+
+                <HStack alignItems="center" mt="6" mb="2">
                   <Text fontWeight="semibold">Log Pengiriman Nota</Text>
                   <Button
                     ml="4"
@@ -464,47 +524,19 @@ const UpdateTransaction = ({navigation, route}: Props) => {
               <HStack justifyContent="flex-end" mt="8" space="4">
                 {dataTransaction?.transaction_status_enum.transaction_status ===
                   TransactionStatusEnum.Success && (
-                  <Popover
-                    placement="top right"
-                    offset={-22}
-                    trigger={triggerProps => {
-                      return (
-                        <Button {...triggerProps} colorScheme="milano_red">
-                          Refund
-                        </Button>
-                      );
-                    }}>
-                    <Popover.Content
-                      accessibilityLabel="Refund Transaksi"
-                      w="40">
-                      <Popover.Body>
-                        <Button
-                          onPress={() => {
-                            handleRefundPart();
-                          }}
-                          justifyContent="flex-start"
-                          bg={bgLight}
-                          _text={{color: colorContrastLight}}
-                          variant="ghost">
-                          Refund Sebagian
-                        </Button>
-                        <Button
-                          onPress={() => {
-                            const isAllowed = checkRefundAbility();
-                            if (isAllowed) {
-                              setModalRefundOpen(true);
-                            }
-                          }}
-                          justifyContent="flex-start"
-                          bg={bgLight}
-                          _text={{color: colorContrastLight}}
-                          variant="ghost">
-                          Refund Semua
-                        </Button>
-                      </Popover.Body>
-                    </Popover.Content>
-                  </Popover>
+                  <ButtonReturn
+                    onPress={() => {
+                      const isAllowed = checkRefundAbility();
+                      if (isAllowed) {
+                        handleRefund();
+                      }
+                    }}
+                    justifyContent="flex-start"
+                    variant="solid"
+                    customText="Retur Transaksi"
+                  />
                 )}
+
                 <ButtonBack onPress={() => navigation.goBack()} />
               </HStack>
             </VStack>
