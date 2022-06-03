@@ -88,16 +88,16 @@ export const myNumberFormat = {
       bareNumber.slice(7).length > 0 ? `-${bareNumber.slice(7)}` : '';
 
     if (format === 'with+62') {
-      console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ with+62');
+      // console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ with+62');
       return `+62 ${part1}${part2}${part3}`;
     } else if (format === 'with0') {
-      console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ with0');
+      // console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ with0');
       return `0${part1}${part2}${part3}`;
     } else if (format === 'withoutFirst') {
-      console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ withoutFirst');
+      // console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ withoutFirst');
       return `${part1}${part2}${part3}`;
     } else {
-      console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ else');
+      // console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ else');
       return text;
     }
   },

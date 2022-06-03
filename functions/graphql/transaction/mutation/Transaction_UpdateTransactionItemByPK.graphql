@@ -1,0 +1,11 @@
+mutation Transaction_UpdateTransactionItemByPK(
+  $transaction_item_id: uuid!
+  $transaction_item: transaction_items_set_input!
+) {
+  update_transaction_items_by_pk(
+    pk_columns: { id: $transaction_item_id }
+    _set: $transaction_item
+  ) {
+    id
+  }
+}

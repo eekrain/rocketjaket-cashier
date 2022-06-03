@@ -129,7 +129,7 @@ const Produk = ({navigation}: Props) => {
               : transaction.transaction_status_enum.transaction_status ===
                   Transaction_Status_Enum_Enum.Failed ||
                 transaction.transaction_status_enum.transaction_status ===
-                  Transaction_Status_Enum_Enum.Refund
+                  Transaction_Status_Enum_Enum.ReturnAll
               ? 'danger'
               : 'warning'
           }>

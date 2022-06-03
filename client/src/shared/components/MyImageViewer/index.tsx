@@ -20,7 +20,7 @@ export const MyImageViewer = ({
   borderRadius = 0,
   topRightElement,
 }: Props) => {
-  console.log('🚀 ~ file: index.tsx ~ line 23 ~ source', source);
+  // console.log('🚀 ~ file: index.tsx ~ line 23 ~ source', source);
   const accessToken = useAccessToken();
   const [isError, setError] = useState(false);
 

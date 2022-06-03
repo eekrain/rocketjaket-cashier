@@ -7,7 +7,6 @@ import {
   Transaction_GetTransactionByPkQuery,
   Transaction_Receipt_Type_Enum_Enum,
   Transaction_Status_Enum_Enum,
-  TransactionRefundType as Transaction_Refund_Type,
 } from "../graphql/gql-generated";
 import { getAdminSdk } from "../utils";
 import { myNumberFormat } from "../utils/myFormat";
@@ -220,8 +219,8 @@ const sendWhatsappMessage = async (
     const item_refunded = invoice.transaction_by_pk?.transaction_items
       .filter(
         (item) =>
-          item.transaction_status === Transaction_Status_Enum_Enum.Refund ||
-          item.transaction_status === Transaction_Status_Enum_Enum.RefundPart
+          item.transaction_status === Transaction_Status_Enum_Enum.ReturnAll ||
+          item.transaction_status === Transaction_Status_Enum_Enum.ReturnPart
       )
       .map((item) => {
         return `${item.product_name}(x${
@@ -231,7 +230,7 @@ const sendWhatsappMessage = async (
       .join("\n");
     if (
       invoice.transaction_by_pk?.transaction_status ===
-      Transaction_Status_Enum_Enum.Refund
+      Transaction_Status_Enum_Enum.ReturnAll
     ) {
       message = `Transaksi anda dengan nomor invoice ${
         params.invoice_number
@@ -240,7 +239,7 @@ const sendWhatsappMessage = async (
       )}.\nMohon maaf atas ketidaknyamanan-nya.`;
     } else if (
       invoice.transaction_by_pk?.transaction_status ===
-      Transaction_Status_Enum_Enum.RefundPart
+      Transaction_Status_Enum_Enum.ReturnPart
     ) {
       message = `Terimakasih ${
         customer.name
