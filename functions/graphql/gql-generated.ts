@@ -36,13 +36,13 @@ export type Boolean_Comparison_Exp = {
 export type Cashier_CreateTransactionOutput = {
   __typename?: 'Cashier_CreateTransactionOutput';
   cash_change?: Maybe<Scalars['Int']>;
-  cash_in_amount: Scalars['Int'];
+  cash_in_amount?: Maybe<Scalars['Int']>;
   errorMessage?: Maybe<Scalars['String']>;
   invoice_number?: Maybe<Scalars['String']>;
   isError: Scalars['Boolean'];
-  payment_type: Scalars['String'];
-  store_id: Scalars['Int'];
-  total_transaction: Scalars['Int'];
+  payment_type?: Maybe<Scalars['String']>;
+  store_id?: Maybe<Scalars['Int']>;
+  total_transaction?: Maybe<Scalars['Int']>;
   transaction_status: TransactionStatusEnum;
 };
 
@@ -99,6 +99,13 @@ export type String_Comparison_Exp = {
   _similar?: InputMaybe<Scalars['String']>;
 };
 
+export enum TotalTransactionCompare {
+  /** minus */
+  Minus = 'minus',
+  /** plus */
+  Plus = 'plus'
+}
+
 export enum TransactionPaymentTypeEnum {
   /** Cash */
   Cash = 'CASH',
@@ -123,28 +130,42 @@ export enum TransactionReceiptTypeEnum {
   Whatsapp = 'whatsapp'
 }
 
-export enum TransactionRefundType {
-  /** refund_all */
-  RefundAll = 'refund_all',
-  /** refund_part */
-  RefundPart = 'refund_part'
+export enum TransactionReturnType {
+  /** ReturSemua */
+  ReturnAll = 'return_all',
+  /** ReturSebagian */
+  ReturnPart = 'return_part'
 }
 
 export enum TransactionStatusEnum {
   /** Gagal */
   Failed = 'failed',
-  /** Refund */
-  Refund = 'refund',
-  /** Refund Sebagian */
-  RefundPart = 'refund_part',
+  /** ReturSemua */
+  ReturnAll = 'return_all',
+  /** ReturSebagian */
+  ReturnPart = 'return_part',
   /** Sukses */
   Success = 'success'
 }
 
-export type Transaction_RefundTransactionOutput = {
-  __typename?: 'Transaction_RefundTransactionOutput';
-  invoice_number: Scalars['String'];
-  is_success: Scalars['Boolean'];
+export type Transaction_ReturnTransactionOutput = {
+  __typename?: 'Transaction_ReturnTransactionOutput';
+  cash_change?: Maybe<Scalars['Int']>;
+  cash_in_amount?: Maybe<Scalars['Int']>;
+  errorMessage?: Maybe<Scalars['String']>;
+  invoice_number?: Maybe<Scalars['String']>;
+  isError: Scalars['Boolean'];
+  return_type?: Maybe<TransactionReturnType>;
+  total_transaction?: Maybe<Scalars['Int']>;
+  total_transaction_compare?: Maybe<TotalTransactionCompare>;
+};
+
+export type Transaction_ReturnedItem = {
+  capital_price: Scalars['Int'];
+  discount: Scalars['Int'];
+  returned_qty: Scalars['Int'];
+  selling_price: Scalars['Int'];
+  transaction_item_id: Scalars['String'];
 };
 
 export type Transaction_SendReceiptOutput = {
@@ -3098,7 +3119,7 @@ export type Jsonb_Comparison_Exp = {
 export type Mutation_Root = {
   __typename?: 'mutation_root';
   Cashier_CreateTransaction?: Maybe<Cashier_CreateTransactionOutput>;
-  Transaction_RefundTransaction?: Maybe<Transaction_RefundTransactionOutput>;
+  Transaction_ReturnTransaction?: Maybe<Transaction_ReturnTransactionOutput>;
   Transaction_SendReceipt?: Maybe<Transaction_SendReceiptOutput>;
   User_SignUp?: Maybe<User_SignUpOutput>;
   Whatsapp_SignOut?: Maybe<Whatsapp_SignOutOutput>;
@@ -3393,10 +3414,15 @@ export type Mutation_RootCashier_CreateTransactionArgs = {
 
 
 /** mutation root */
-export type Mutation_RootTransaction_RefundTransactionArgs = {
+export type Mutation_RootTransaction_ReturnTransactionArgs = {
+  added_items?: InputMaybe<Array<Transaction_Items_Input>>;
+  cash_in_amount: Scalars['Int'];
   invoice_number: Scalars['String'];
-  refund_reason: Scalars['String'];
-  refund_type: TransactionRefundType;
+  karyawan_name: Scalars['String'];
+  return_reason: Scalars['String'];
+  return_type: TransactionReturnType;
+  returned_items?: InputMaybe<Array<Transaction_ReturnedItem>>;
+  total_transaction: Scalars['Int'];
 };
 
 
@@ -6673,7 +6699,7 @@ export type Transaction = {
   invoice_number: Scalars['String'];
   karyawan_name: Scalars['String'];
   payment_type: Transaction_Payment_Type_Enum_Enum;
-  refund_reason?: Maybe<Scalars['String']>;
+  return_reason?: Maybe<Scalars['String']>;
   /** An object relationship */
   store: Stores;
   store_id: Scalars['Int'];
@@ -6784,7 +6810,7 @@ export type Transaction_Bool_Exp = {
   invoice_number?: InputMaybe<String_Comparison_Exp>;
   karyawan_name?: InputMaybe<String_Comparison_Exp>;
   payment_type?: InputMaybe<Transaction_Payment_Type_Enum_Enum_Comparison_Exp>;
-  refund_reason?: InputMaybe<String_Comparison_Exp>;
+  return_reason?: InputMaybe<String_Comparison_Exp>;
   store?: InputMaybe<Stores_Bool_Exp>;
   store_id?: InputMaybe<Int_Comparison_Exp>;
   total_transaction?: InputMaybe<Int_Comparison_Exp>;
@@ -6818,7 +6844,7 @@ export type Transaction_Insert_Input = {
   invoice_number?: InputMaybe<Scalars['String']>;
   karyawan_name?: InputMaybe<Scalars['String']>;
   payment_type?: InputMaybe<Transaction_Payment_Type_Enum_Enum>;
-  refund_reason?: InputMaybe<Scalars['String']>;
+  return_reason?: InputMaybe<Scalars['String']>;
   store?: InputMaybe<Stores_Obj_Rel_Insert_Input>;
   store_id?: InputMaybe<Scalars['Int']>;
   total_transaction?: InputMaybe<Scalars['Int']>;
@@ -6838,8 +6864,8 @@ export type Transaction_Items = {
   discount: Scalars['Int'];
   id: Scalars['uuid'];
   /** An object relationship */
-  inventory_product: Inventory_Products;
-  inventory_product_id: Scalars['uuid'];
+  inventory_product?: Maybe<Inventory_Products>;
+  inventory_product_id?: Maybe<Scalars['uuid']>;
   product_name: Scalars['String'];
   profit: Scalars['Int'];
   purchase_qty: Scalars['Int'];
@@ -7336,7 +7362,7 @@ export type Transaction_Max_Fields = {
   created_at?: Maybe<Scalars['timestamptz']>;
   invoice_number?: Maybe<Scalars['String']>;
   karyawan_name?: Maybe<Scalars['String']>;
-  refund_reason?: Maybe<Scalars['String']>;
+  return_reason?: Maybe<Scalars['String']>;
   store_id?: Maybe<Scalars['Int']>;
   total_transaction?: Maybe<Scalars['Int']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
@@ -7350,7 +7376,7 @@ export type Transaction_Min_Fields = {
   created_at?: Maybe<Scalars['timestamptz']>;
   invoice_number?: Maybe<Scalars['String']>;
   karyawan_name?: Maybe<Scalars['String']>;
-  refund_reason?: Maybe<Scalars['String']>;
+  return_reason?: Maybe<Scalars['String']>;
   store_id?: Maybe<Scalars['Int']>;
   total_transaction?: Maybe<Scalars['Int']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
@@ -7387,7 +7413,7 @@ export type Transaction_Order_By = {
   invoice_number?: InputMaybe<Order_By>;
   karyawan_name?: InputMaybe<Order_By>;
   payment_type?: InputMaybe<Order_By>;
-  refund_reason?: InputMaybe<Order_By>;
+  return_reason?: InputMaybe<Order_By>;
   store?: InputMaybe<Stores_Order_By>;
   store_id?: InputMaybe<Order_By>;
   total_transaction?: InputMaybe<Order_By>;
@@ -7899,7 +7925,7 @@ export enum Transaction_Select_Column {
   /** column name */
   PaymentType = 'payment_type',
   /** column name */
-  RefundReason = 'refund_reason',
+  ReturnReason = 'return_reason',
   /** column name */
   StoreId = 'store_id',
   /** column name */
@@ -7918,7 +7944,7 @@ export type Transaction_Set_Input = {
   invoice_number?: InputMaybe<Scalars['String']>;
   karyawan_name?: InputMaybe<Scalars['String']>;
   payment_type?: InputMaybe<Transaction_Payment_Type_Enum_Enum>;
-  refund_reason?: InputMaybe<Scalars['String']>;
+  return_reason?: InputMaybe<Scalars['String']>;
   store_id?: InputMaybe<Scalars['Int']>;
   total_transaction?: InputMaybe<Scalars['Int']>;
   transaction_status?: InputMaybe<Transaction_Status_Enum_Enum>;
@@ -7972,10 +7998,10 @@ export enum Transaction_Status_Enum_Constraint {
 export enum Transaction_Status_Enum_Enum {
   /** Gagal */
   Failed = 'failed',
-  /** Refund */
-  Refund = 'refund',
-  /** Refund Sebagian */
-  RefundPart = 'refund_part',
+  /** Retur Semua */
+  ReturnAll = 'return_all',
+  /** Retur Sebagian */
+  ReturnPart = 'return_part',
   /** Sukses */
   Success = 'success'
 }
@@ -8116,7 +8142,7 @@ export enum Transaction_Update_Column {
   /** column name */
   PaymentType = 'payment_type',
   /** column name */
-  RefundReason = 'refund_reason',
+  ReturnReason = 'return_reason',
   /** column name */
   StoreId = 'store_id',
   /** column name */
@@ -9041,6 +9067,13 @@ export type Transaction_CreateOneTransactionMutationVariables = Exact<{
 
 export type Transaction_CreateOneTransactionMutation = { __typename?: 'mutation_root', insert_transaction_one?: { __typename?: 'transaction', invoice_number: string } | null };
 
+export type Transaction_CreateOneTransactionItemMutationVariables = Exact<{
+  object?: InputMaybe<Transaction_Items_Insert_Input>;
+}>;
+
+
+export type Transaction_CreateOneTransactionItemMutation = { __typename?: 'mutation_root', insert_transaction_items_one?: { __typename?: 'transaction_items', id: any } | null };
+
 export type Transaction_CreateTransactionReceiptMutationVariables = Exact<{
   receipt: Transaction_Receipts_Insert_Input;
 }>;
@@ -9048,15 +9081,39 @@ export type Transaction_CreateTransactionReceiptMutationVariables = Exact<{
 
 export type Transaction_CreateTransactionReceiptMutation = { __typename?: 'mutation_root', insert_transaction_receipts_one?: { __typename?: 'transaction_receipts', id: any, is_sent: boolean, receipt_type: Transaction_Receipt_Type_Enum_Enum, transaction_invoice_number: string, created_at: any } | null };
 
-export type Transaction_UpdateTransactionForRefundMutationVariables = Exact<{
-  invoice_number: Scalars['String'];
-  main_transaction_status: Transaction_Status_Enum_Enum;
-  items_transaction_status: Transaction_Status_Enum_Enum;
-  refund_reason: Scalars['String'];
+export type Transaction_InsertTransactionItemsMutationVariables = Exact<{
+  objects: Array<Transaction_Items_Insert_Input> | Transaction_Items_Insert_Input;
 }>;
 
 
-export type Transaction_UpdateTransactionForRefundMutation = { __typename?: 'mutation_root', update_transaction_by_pk?: { __typename?: 'transaction', invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, refund_reason?: string | null, total_transaction: number } | null, update_transaction_items?: { __typename?: 'transaction_items_mutation_response', affected_rows: number, returning: Array<{ __typename?: 'transaction_items', transaction_invoice_number: string, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string } }> } | null };
+export type Transaction_InsertTransactionItemsMutation = { __typename?: 'mutation_root', insert_transaction_items?: { __typename?: 'transaction_items_mutation_response', affected_rows: number } | null };
+
+export type Transaction_UpdateMainTransactionMutationVariables = Exact<{
+  invoice_number: Scalars['String'];
+  main_transaction: Transaction_Set_Input;
+}>;
+
+
+export type Transaction_UpdateMainTransactionMutation = { __typename?: 'mutation_root', update_transaction_by_pk?: { __typename?: 'transaction', invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, return_reason?: string | null, total_transaction: number } | null };
+
+export type Transaction_UpdateTransactionForRefundAllMutationVariables = Exact<{
+  invoice_number: Scalars['String'];
+  main_transaction_status: Transaction_Status_Enum_Enum;
+  items_transaction_status: Transaction_Status_Enum_Enum;
+  return_reason: Scalars['String'];
+  karyawan_name: Scalars['String'];
+}>;
+
+
+export type Transaction_UpdateTransactionForRefundAllMutation = { __typename?: 'mutation_root', update_transaction_by_pk?: { __typename?: 'transaction', invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, return_reason?: string | null, total_transaction: number } | null, update_transaction_items?: { __typename?: 'transaction_items_mutation_response', affected_rows: number, returning: Array<{ __typename?: 'transaction_items', transaction_invoice_number: string, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string } }> } | null };
+
+export type Transaction_UpdateTransactionItemByPkMutationVariables = Exact<{
+  transaction_item_id: Scalars['uuid'];
+  transaction_item: Transaction_Items_Set_Input;
+}>;
+
+
+export type Transaction_UpdateTransactionItemByPkMutation = { __typename?: 'mutation_root', update_transaction_items_by_pk?: { __typename?: 'transaction_items', id: any } | null };
 
 export type Transaction_GetLastTransactionNumberQueryVariables = Exact<{
   created_at_gte?: InputMaybe<Scalars['timestamptz']>;
@@ -9165,6 +9222,13 @@ export const Transaction_CreateOneTransactionDocument = gql`
   }
 }
     `;
+export const Transaction_CreateOneTransactionItemDocument = gql`
+    mutation Transaction_CreateOneTransactionItem($object: transaction_items_insert_input = {}) {
+  insert_transaction_items_one(object: $object) {
+    id
+  }
+}
+    `;
 export const Transaction_CreateTransactionReceiptDocument = gql`
     mutation Transaction_CreateTransactionReceipt($receipt: transaction_receipts_insert_input!) {
   insert_transaction_receipts_one(object: $receipt) {
@@ -9176,15 +9240,35 @@ export const Transaction_CreateTransactionReceiptDocument = gql`
   }
 }
     `;
-export const Transaction_UpdateTransactionForRefundDocument = gql`
-    mutation Transaction_UpdateTransactionForRefund($invoice_number: String!, $main_transaction_status: transaction_status_enum_enum!, $items_transaction_status: transaction_status_enum_enum!, $refund_reason: String!) {
+export const Transaction_InsertTransactionItemsDocument = gql`
+    mutation Transaction_InsertTransactionItems($objects: [transaction_items_insert_input!]!) {
+  insert_transaction_items(objects: $objects) {
+    affected_rows
+  }
+}
+    `;
+export const Transaction_UpdateMainTransactionDocument = gql`
+    mutation Transaction_UpdateMainTransaction($invoice_number: String!, $main_transaction: transaction_set_input!) {
   update_transaction_by_pk(
     pk_columns: {invoice_number: $invoice_number}
-    _set: {transaction_status: $main_transaction_status, refund_reason: $refund_reason}
+    _set: $main_transaction
   ) {
     invoice_number
     payment_type
-    refund_reason
+    return_reason
+    total_transaction
+  }
+}
+    `;
+export const Transaction_UpdateTransactionForRefundAllDocument = gql`
+    mutation Transaction_UpdateTransactionForRefundAll($invoice_number: String!, $main_transaction_status: transaction_status_enum_enum!, $items_transaction_status: transaction_status_enum_enum!, $return_reason: String!, $karyawan_name: String!) {
+  update_transaction_by_pk(
+    pk_columns: {invoice_number: $invoice_number}
+    _set: {transaction_status: $main_transaction_status, return_reason: $return_reason, cash_change: 0, cash_in_amount: 0, payment_type: CASH, karyawan_name: $karyawan_name, total_transaction: 0}
+  ) {
+    invoice_number
+    payment_type
+    return_reason
     total_transaction
   }
   update_transaction_items(
@@ -9199,6 +9283,16 @@ export const Transaction_UpdateTransactionForRefundDocument = gql`
         transaction_status
       }
     }
+  }
+}
+    `;
+export const Transaction_UpdateTransactionItemByPkDocument = gql`
+    mutation Transaction_UpdateTransactionItemByPK($transaction_item_id: uuid!, $transaction_item: transaction_items_set_input!) {
+  update_transaction_items_by_pk(
+    pk_columns: {id: $transaction_item_id}
+    _set: $transaction_item
+  ) {
+    id
   }
 }
     `;
@@ -9285,8 +9379,12 @@ const Inventory_UpdateInventoryProductByIdDocumentString = print(Inventory_Updat
 const Inventory_GetInventoryProductAvailableQtytByIdsDocumentString = print(Inventory_GetInventoryProductAvailableQtytByIdsDocument);
 const Inventory_GetInventoryProductByIdDocumentString = print(Inventory_GetInventoryProductByIdDocument);
 const Transaction_CreateOneTransactionDocumentString = print(Transaction_CreateOneTransactionDocument);
+const Transaction_CreateOneTransactionItemDocumentString = print(Transaction_CreateOneTransactionItemDocument);
 const Transaction_CreateTransactionReceiptDocumentString = print(Transaction_CreateTransactionReceiptDocument);
-const Transaction_UpdateTransactionForRefundDocumentString = print(Transaction_UpdateTransactionForRefundDocument);
+const Transaction_InsertTransactionItemsDocumentString = print(Transaction_InsertTransactionItemsDocument);
+const Transaction_UpdateMainTransactionDocumentString = print(Transaction_UpdateMainTransactionDocument);
+const Transaction_UpdateTransactionForRefundAllDocumentString = print(Transaction_UpdateTransactionForRefundAllDocument);
+const Transaction_UpdateTransactionItemByPkDocumentString = print(Transaction_UpdateTransactionItemByPkDocument);
 const Transaction_GetLastTransactionNumberDocumentString = print(Transaction_GetLastTransactionNumberDocument);
 const Transaction_GetTransactionByPkDocumentString = print(Transaction_GetTransactionByPkDocument);
 const User_DeleteUserDocumentString = print(User_DeleteUserDocument);
@@ -9312,11 +9410,23 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     Transaction_CreateOneTransaction(variables?: Transaction_CreateOneTransactionMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_CreateOneTransactionMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_CreateOneTransactionMutation>(Transaction_CreateOneTransactionDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_CreateOneTransaction', 'mutation');
     },
+    Transaction_CreateOneTransactionItem(variables?: Transaction_CreateOneTransactionItemMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_CreateOneTransactionItemMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_CreateOneTransactionItemMutation>(Transaction_CreateOneTransactionItemDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_CreateOneTransactionItem', 'mutation');
+    },
     Transaction_CreateTransactionReceipt(variables: Transaction_CreateTransactionReceiptMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_CreateTransactionReceiptMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_CreateTransactionReceiptMutation>(Transaction_CreateTransactionReceiptDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_CreateTransactionReceipt', 'mutation');
     },
-    Transaction_UpdateTransactionForRefund(variables: Transaction_UpdateTransactionForRefundMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_UpdateTransactionForRefundMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_UpdateTransactionForRefundMutation>(Transaction_UpdateTransactionForRefundDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_UpdateTransactionForRefund', 'mutation');
+    Transaction_InsertTransactionItems(variables: Transaction_InsertTransactionItemsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_InsertTransactionItemsMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_InsertTransactionItemsMutation>(Transaction_InsertTransactionItemsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_InsertTransactionItems', 'mutation');
+    },
+    Transaction_UpdateMainTransaction(variables: Transaction_UpdateMainTransactionMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_UpdateMainTransactionMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_UpdateMainTransactionMutation>(Transaction_UpdateMainTransactionDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_UpdateMainTransaction', 'mutation');
+    },
+    Transaction_UpdateTransactionForRefundAll(variables: Transaction_UpdateTransactionForRefundAllMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_UpdateTransactionForRefundAllMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_UpdateTransactionForRefundAllMutation>(Transaction_UpdateTransactionForRefundAllDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_UpdateTransactionForRefundAll', 'mutation');
+    },
+    Transaction_UpdateTransactionItemByPK(variables: Transaction_UpdateTransactionItemByPkMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_UpdateTransactionItemByPkMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_UpdateTransactionItemByPkMutation>(Transaction_UpdateTransactionItemByPkDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_UpdateTransactionItemByPK', 'mutation');
     },
     Transaction_GetLastTransactionNumber(variables?: Transaction_GetLastTransactionNumberQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_GetLastTransactionNumberQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_GetLastTransactionNumberQuery>(Transaction_GetLastTransactionNumberDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_GetLastTransactionNumber', 'query');

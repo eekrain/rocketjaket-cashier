@@ -1,19 +1,25 @@
-mutation Transaction_UpdateTransactionForRefund(
+mutation Transaction_UpdateTransactionForRefundAll(
   $invoice_number: String!
   $main_transaction_status: transaction_status_enum_enum!
   $items_transaction_status: transaction_status_enum_enum!
-  $refund_reason: String!
+  $return_reason: String!
+  $karyawan_name: String!
 ) {
   update_transaction_by_pk(
     pk_columns: { invoice_number: $invoice_number }
     _set: {
       transaction_status: $main_transaction_status
-      refund_reason: $refund_reason
+      return_reason: $return_reason
+      cash_change: 0
+      cash_in_amount: 0
+      payment_type: CASH
+      karyawan_name: $karyawan_name
+      total_transaction: 0
     }
   ) {
     invoice_number
     payment_type
-    refund_reason
+    return_reason
     total_transaction
   }
   update_transaction_items(

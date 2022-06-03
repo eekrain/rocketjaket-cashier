@@ -178,7 +178,7 @@ const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
           alignItems="center"
           mb="10"
           mt="4">
-          <Heading fontSize="xl">List Inventory / Stok Produk</Heading>
+          <Heading fontSize="xl">List Kemungkinan Variasi Produk</Heading>
           <Button
             onPress={() => {
               navigation.navigate('CreateProductVariants');

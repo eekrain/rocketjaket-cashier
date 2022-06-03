@@ -7,13 +7,13 @@ actions:
   permissions:
   - role: karyawan
   - role: administrator
-- name: Transaction_RefundTransaction
+- name: Transaction_ReturnTransaction
   definition:
     kind: synchronous
-    handler: '{{NHOST_BACKEND_URL}}/v1/functions/actions/Transaction_RefundTransaction'
+    handler: '{{NHOST_BACKEND_URL}}/v1/functions/actions/Transaction_ReturnTransaction'
   permissions:
-  - role: karyawan
   - role: administrator
+  - role: karyawan
 - name: Transaction_SendReceipt
   definition:
     kind: synchronous
@@ -48,12 +48,12 @@ custom_types:
     - description: Gagal
       is_deprecated: null
       value: failed
-    - description: Refund
+    - description: ReturSemua
       is_deprecated: null
-      value: refund
-    - description: Refund Sebagian
+      value: return_all
+    - description: ReturSebagian
       is_deprecated: null
-      value: refund_part
+      value: return_part
     - description: Sukses
       is_deprecated: null
       value: success
@@ -88,20 +88,29 @@ custom_types:
     - description: Whatsapp
       is_deprecated: null
       value: whatsapp
-  - name: TransactionRefundType
+  - name: TransactionReturnType
     values:
-    - description: refund_all
+    - description: ReturSemua
       is_deprecated: null
-      value: refund_all
-    - description: refund_part
+      value: return_all
+    - description: ReturSebagian
       is_deprecated: null
-      value: refund_part
+      value: return_part
+  - name: TotalTransactionCompare
+    values:
+    - description: plus
+      is_deprecated: null
+      value: plus
+    - description: minus
+      is_deprecated: null
+      value: minus
   input_objects:
   - name: InventoryVariantMetadataInsertInput
   - name: InventoryVariantMetadataNeedUpdateInput
   - name: InventoryVariantsMetadaUpsertInput
   - name: transaction_items_input
   - name: CustomerInput
+  - name: Transaction_ReturnedItem
   objects:
   - name: User_SignUpOutput
   - name: Whatsapp_GetAuthStatusOutput
@@ -111,4 +120,5 @@ custom_types:
   - name: sendReceiptOutput
   - name: Transaction_SendReceiptOutput
   - name: Transaction_RefundTransactionOutput
+  - name: Transaction_ReturnTransactionOutput
   scalars: []

@@ -10,6 +10,6 @@ DELETE FROM transaction_payment_type_enum WHERE payment_type='EWALLET_SHOPEEPAY'
 DELETE FROM transaction_payment_type_enum WHERE payment_type='EWALLET_GOPAY';
 
 DELETE FROM transaction_status_enum WHERE transaction_status='success';
-DELETE FROM transaction_status_enum WHERE transaction_status='refund';
+DELETE FROM transaction_status_enum WHERE transaction_status='return_all';
+DELETE FROM transaction_status_enum WHERE transaction_status='return_part';
 DELETE FROM transaction_status_enum WHERE transaction_status='failed';
-DELETE FROM transaction_status_enum WHERE transaction_status='refund_part';

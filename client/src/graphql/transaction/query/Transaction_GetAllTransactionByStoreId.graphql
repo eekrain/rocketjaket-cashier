@@ -13,7 +13,7 @@ query Transaction_GetAllTransactionByStoreId($store_id: Int) {
       transaction_status
       title
     }
-    transaction_items {
+    transaction_items(where: {transaction_status: {_eq: success}}) {
       id
       inventory_product_id
       product_name

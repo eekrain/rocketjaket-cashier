@@ -3,7 +3,6 @@ import {Box, Stack, Modal} from 'native-base';
 import ProductsContent from './ProductsContent';
 import withAppLayout from '../Layout/AppLayout';
 import {
-  useInventory_GetAllInventoryProductByStoreIdQuery,
   useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription,
   useProduk_GetAllKategoriProdukQuery,
   useStore_GetAllStoreQuery,
@@ -20,7 +19,10 @@ import {RHSelect} from '../../shared/components';
 import {Alert} from 'react-native';
 import CashierCart from './CashierCart';
 import {CashierHomeNavProps} from '../../screens/app/CashierScreen';
-import {useMyAppState} from '../../state';
+import {ICart, useMyAppState} from '../../state';
+import Cart from './Cart';
+import {UpdateTransactionNavProps} from '../../screens/app/TransactionScreen';
+import {CommonActions} from '@react-navigation/native';
 
 export interface IDefaultValues {
   search_term: string;
@@ -286,10 +288,33 @@ const CashierHome = ({route}: Props) => {
           }
           searchedInventoryProductData={searchedInventoryProductData}
         />
-        <CashierCart route={route} />
+        <Cart />
       </Stack>
     </Box>
   );
+};
+
+export const clearReturn = (
+  navigation: UpdateTransactionNavProps['navigation'],
+  myCart: ICart,
+  transaction_invoice_number: string = '',
+) => {
+  myCart.clearCart();
+  navigation.dispatch(
+    CommonActions.reset({
+      routes: [
+        {
+          name: 'CashierHome',
+          params: {invoiceNumberRefundPart: null},
+        },
+      ],
+    }),
+  );
+  if (transaction_invoice_number !== '')
+    navigation.navigate('UpdateTransaction', {
+      transaction_invoice_number,
+    });
+  else navigation.navigate('ListTransaction');
 };
 
 export default withAppLayout(CashierHome);
