@@ -10,11 +10,16 @@ type Mutation {
 }
 
 type Mutation {
-  Transaction_RefundTransaction(
+  Transaction_ReturnTransaction(
     invoice_number: String!
-    refund_type: TransactionRefundType!
-    refund_reason: String!
-  ): Transaction_RefundTransactionOutput
+    karyawan_name: String!
+    return_type: TransactionReturnType!
+    return_reason: String!
+    total_transaction: Int!
+    cash_in_amount: Int!
+    returned_items: [Transaction_ReturnedItem!]
+    added_items: [transaction_items_input!]
+  ): Transaction_ReturnTransactionOutput
 }
 
 type Mutation {
@@ -45,8 +50,8 @@ type Mutation {
 
 enum TransactionStatusEnum {
   """ Gagal """ failed
-  """ Refund """ refund
-  """ Refund Sebagian """ refund_part
+  """ ReturSemua """ return_all
+  """ ReturSebagian """ return_part
   """ Sukses """ success
 }
 
@@ -65,9 +70,14 @@ enum TransactionReceiptTypeEnum {
   """ Whatsapp """ whatsapp
 }
 
-enum TransactionRefundType {
-  """ refund_all """ refund_all
-  """ refund_part """ refund_part
+enum TransactionReturnType {
+  """ ReturSemua """ return_all
+  """ ReturSebagian """ return_part
+}
+
+enum TotalTransactionCompare {
+  """ plus """ plus
+  """ minus """ minus
 }
 
 input InventoryVariantMetadataInsertInput {
@@ -104,6 +114,14 @@ input CustomerInput {
   phone_number: String
 }
 
+input Transaction_ReturnedItem {
+  transaction_item_id: String!
+  capital_price: Int!
+  selling_price: Int!
+  discount: Int!
+  returned_qty: Int!
+}
+
 type User_SignUpOutput {
   email: String
   displayName: String
@@ -137,11 +155,11 @@ type Cashier_CreateTransactionOutput {
   isError: Boolean!
   errorMessage: String
   invoice_number: String
-  total_transaction: Int!
+  total_transaction: Int
   cash_change: Int
-  cash_in_amount: Int!
-  payment_type: String!
-  store_id: Int!
+  cash_in_amount: Int
+  payment_type: String
+  store_id: Int
   transaction_status: TransactionStatusEnum!
 }
 
@@ -165,8 +183,24 @@ type Transaction_SendReceiptOutput {
 }
 
 type Transaction_RefundTransactionOutput {
-  invoice_number: String!
+  invoice_number: String
   isError: Boolean!
   errorMessage: String
+  total_transaction: Int
+  cash_in_amount: Int
+  cash_change: Int
+  return_type: TransactionReturnType
+  total_transaction_compare: TotalTransactionCompare
+}
+
+type Transaction_ReturnTransactionOutput {
+  invoice_number: String
+  isError: Boolean!
+  errorMessage: String
+  total_transaction: Int
+  cash_in_amount: Int
+  cash_change: Int
+  return_type: TransactionReturnType
+  total_transaction_compare: TotalTransactionCompare
 }
 

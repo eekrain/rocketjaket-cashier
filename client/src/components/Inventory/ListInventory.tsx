@@ -173,7 +173,7 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
   });
 
   const data = useMemo(() => {
-    const handleDeleteKategori = async (id: string, name: string) => {
+    const handleDeleteInventory = async (id: string, name: string) => {
       const mutation = async () => {
         const [err, res] = await to(
           deleteInventoryProductMutation({
@@ -181,8 +181,14 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
           }),
         );
         if (err || !res) {
+          console.log(
+            '🚀 ~ file: ListInventory.tsx ~ line 184 ~ mutation ~ err',
+            err,
+          );
           toast.show({
-            ...TOAST_TEMPLATE.error(`Hapus inventory produk ${name} gagal.`),
+            ...TOAST_TEMPLATE.error(
+              `Hapus inventory produk ${name} gagal.${err.message}`,
+            ),
           });
         } else {
           toast.show({
@@ -233,7 +239,7 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
           inventoryProductId={val.id}
           navigation={navigation}
           handleDeleteKategori={() =>
-            handleDeleteKategori(val.id, val.product_label)
+            handleDeleteInventory(val.id, val.product_label)
           }
         />
       ),

@@ -38,7 +38,7 @@ insert_permissions:
     - cash_change
     - transaction_status
     - payment_type
-    - refund_reason
+    - return_reason
     - store_id
     - created_at
     - updated_at
@@ -54,7 +54,7 @@ insert_permissions:
     - invoice_number
     - karyawan_name
     - payment_type
-    - refund_reason
+    - return_reason
     - transaction_status
     - created_at
     - updated_at
@@ -69,7 +69,7 @@ select_permissions:
     - invoice_number
     - karyawan_name
     - payment_type
-    - refund_reason
+    - return_reason
     - transaction_status
     - created_at
     - updated_at
@@ -84,7 +84,7 @@ select_permissions:
     - invoice_number
     - karyawan_name
     - payment_type
-    - refund_reason
+    - return_reason
     - transaction_status
     - created_at
     - updated_at
@@ -101,7 +101,7 @@ update_permissions:
     - invoice_number
     - karyawan_name
     - payment_type
-    - refund_reason
+    - return_reason
     - transaction_status
     - created_at
     - updated_at
@@ -117,7 +117,7 @@ update_permissions:
     - invoice_number
     - karyawan_name
     - payment_type
-    - refund_reason
+    - return_reason
     - transaction_status
     - created_at
     - updated_at

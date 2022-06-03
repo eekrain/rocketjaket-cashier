@@ -35,13 +35,13 @@ export type Boolean_Comparison_Exp = {
 export type Cashier_CreateTransactionOutput = {
   __typename?: 'Cashier_CreateTransactionOutput';
   cash_change?: Maybe<Scalars['Int']>;
-  cash_in_amount: Scalars['Int'];
+  cash_in_amount?: Maybe<Scalars['Int']>;
   errorMessage?: Maybe<Scalars['String']>;
   invoice_number?: Maybe<Scalars['String']>;
   isError: Scalars['Boolean'];
-  payment_type: Scalars['String'];
-  store_id: Scalars['Int'];
-  total_transaction: Scalars['Int'];
+  payment_type?: Maybe<Scalars['String']>;
+  store_id?: Maybe<Scalars['Int']>;
+  total_transaction?: Maybe<Scalars['Int']>;
   transaction_status: TransactionStatusEnum;
 };
 
@@ -98,6 +98,13 @@ export type String_Comparison_Exp = {
   _similar?: InputMaybe<Scalars['String']>;
 };
 
+export enum TotalTransactionCompare {
+  /** minus */
+  Minus = 'minus',
+  /** plus */
+  Plus = 'plus'
+}
+
 export enum TransactionPaymentTypeEnum {
   /** Cash */
   Cash = 'CASH',
@@ -122,29 +129,42 @@ export enum TransactionReceiptTypeEnum {
   Whatsapp = 'whatsapp'
 }
 
-export enum TransactionRefundType {
-  /** refund_all */
-  RefundAll = 'refund_all',
-  /** refund_part */
-  RefundPart = 'refund_part'
+export enum TransactionReturnType {
+  /** ReturSemua */
+  ReturnAll = 'return_all',
+  /** ReturSebagian */
+  ReturnPart = 'return_part'
 }
 
 export enum TransactionStatusEnum {
   /** Gagal */
   Failed = 'failed',
-  /** Refund */
-  Refund = 'refund',
-  /** Refund Sebagian */
-  RefundPart = 'refund_part',
+  /** ReturSemua */
+  ReturnAll = 'return_all',
+  /** ReturSebagian */
+  ReturnPart = 'return_part',
   /** Sukses */
   Success = 'success'
 }
 
-export type Transaction_RefundTransactionOutput = {
-  __typename?: 'Transaction_RefundTransactionOutput';
+export type Transaction_ReturnTransactionOutput = {
+  __typename?: 'Transaction_ReturnTransactionOutput';
+  cash_change?: Maybe<Scalars['Int']>;
+  cash_in_amount?: Maybe<Scalars['Int']>;
   errorMessage?: Maybe<Scalars['String']>;
-  invoice_number: Scalars['String'];
+  invoice_number?: Maybe<Scalars['String']>;
   isError: Scalars['Boolean'];
+  return_type?: Maybe<TransactionReturnType>;
+  total_transaction?: Maybe<Scalars['Int']>;
+  total_transaction_compare?: Maybe<TotalTransactionCompare>;
+};
+
+export type Transaction_ReturnedItem = {
+  capital_price: Scalars['Int'];
+  discount: Scalars['Int'];
+  returned_qty: Scalars['Int'];
+  selling_price: Scalars['Int'];
+  transaction_item_id: Scalars['String'];
 };
 
 export type Transaction_SendReceiptOutput = {
@@ -3098,7 +3118,7 @@ export type Jsonb_Comparison_Exp = {
 export type Mutation_Root = {
   __typename?: 'mutation_root';
   Cashier_CreateTransaction?: Maybe<Cashier_CreateTransactionOutput>;
-  Transaction_RefundTransaction?: Maybe<Transaction_RefundTransactionOutput>;
+  Transaction_ReturnTransaction?: Maybe<Transaction_ReturnTransactionOutput>;
   Transaction_SendReceipt?: Maybe<Transaction_SendReceiptOutput>;
   User_SignUp?: Maybe<User_SignUpOutput>;
   Whatsapp_SignOut?: Maybe<Whatsapp_SignOutOutput>;
@@ -3393,10 +3413,15 @@ export type Mutation_RootCashier_CreateTransactionArgs = {
 
 
 /** mutation root */
-export type Mutation_RootTransaction_RefundTransactionArgs = {
+export type Mutation_RootTransaction_ReturnTransactionArgs = {
+  added_items?: InputMaybe<Array<Transaction_Items_Input>>;
+  cash_in_amount: Scalars['Int'];
   invoice_number: Scalars['String'];
-  refund_reason: Scalars['String'];
-  refund_type: TransactionRefundType;
+  karyawan_name: Scalars['String'];
+  return_reason: Scalars['String'];
+  return_type: TransactionReturnType;
+  returned_items?: InputMaybe<Array<Transaction_ReturnedItem>>;
+  total_transaction: Scalars['Int'];
 };
 
 
@@ -6673,7 +6698,7 @@ export type Transaction = {
   invoice_number: Scalars['String'];
   karyawan_name: Scalars['String'];
   payment_type: Transaction_Payment_Type_Enum_Enum;
-  refund_reason?: Maybe<Scalars['String']>;
+  return_reason?: Maybe<Scalars['String']>;
   /** An object relationship */
   store: Stores;
   store_id: Scalars['Int'];
@@ -6784,7 +6809,7 @@ export type Transaction_Bool_Exp = {
   invoice_number?: InputMaybe<String_Comparison_Exp>;
   karyawan_name?: InputMaybe<String_Comparison_Exp>;
   payment_type?: InputMaybe<Transaction_Payment_Type_Enum_Enum_Comparison_Exp>;
-  refund_reason?: InputMaybe<String_Comparison_Exp>;
+  return_reason?: InputMaybe<String_Comparison_Exp>;
   store?: InputMaybe<Stores_Bool_Exp>;
   store_id?: InputMaybe<Int_Comparison_Exp>;
   total_transaction?: InputMaybe<Int_Comparison_Exp>;
@@ -6818,7 +6843,7 @@ export type Transaction_Insert_Input = {
   invoice_number?: InputMaybe<Scalars['String']>;
   karyawan_name?: InputMaybe<Scalars['String']>;
   payment_type?: InputMaybe<Transaction_Payment_Type_Enum_Enum>;
-  refund_reason?: InputMaybe<Scalars['String']>;
+  return_reason?: InputMaybe<Scalars['String']>;
   store?: InputMaybe<Stores_Obj_Rel_Insert_Input>;
   store_id?: InputMaybe<Scalars['Int']>;
   total_transaction?: InputMaybe<Scalars['Int']>;
@@ -6838,8 +6863,8 @@ export type Transaction_Items = {
   discount: Scalars['Int'];
   id: Scalars['uuid'];
   /** An object relationship */
-  inventory_product: Inventory_Products;
-  inventory_product_id: Scalars['uuid'];
+  inventory_product?: Maybe<Inventory_Products>;
+  inventory_product_id?: Maybe<Scalars['uuid']>;
   product_name: Scalars['String'];
   profit: Scalars['Int'];
   purchase_qty: Scalars['Int'];
@@ -7336,7 +7361,7 @@ export type Transaction_Max_Fields = {
   created_at?: Maybe<Scalars['timestamptz']>;
   invoice_number?: Maybe<Scalars['String']>;
   karyawan_name?: Maybe<Scalars['String']>;
-  refund_reason?: Maybe<Scalars['String']>;
+  return_reason?: Maybe<Scalars['String']>;
   store_id?: Maybe<Scalars['Int']>;
   total_transaction?: Maybe<Scalars['Int']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
@@ -7350,7 +7375,7 @@ export type Transaction_Min_Fields = {
   created_at?: Maybe<Scalars['timestamptz']>;
   invoice_number?: Maybe<Scalars['String']>;
   karyawan_name?: Maybe<Scalars['String']>;
-  refund_reason?: Maybe<Scalars['String']>;
+  return_reason?: Maybe<Scalars['String']>;
   store_id?: Maybe<Scalars['Int']>;
   total_transaction?: Maybe<Scalars['Int']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
@@ -7387,7 +7412,7 @@ export type Transaction_Order_By = {
   invoice_number?: InputMaybe<Order_By>;
   karyawan_name?: InputMaybe<Order_By>;
   payment_type?: InputMaybe<Order_By>;
-  refund_reason?: InputMaybe<Order_By>;
+  return_reason?: InputMaybe<Order_By>;
   store?: InputMaybe<Stores_Order_By>;
   store_id?: InputMaybe<Order_By>;
   total_transaction?: InputMaybe<Order_By>;
@@ -7899,7 +7924,7 @@ export enum Transaction_Select_Column {
   /** column name */
   PaymentType = 'payment_type',
   /** column name */
-  RefundReason = 'refund_reason',
+  ReturnReason = 'return_reason',
   /** column name */
   StoreId = 'store_id',
   /** column name */
@@ -7918,7 +7943,7 @@ export type Transaction_Set_Input = {
   invoice_number?: InputMaybe<Scalars['String']>;
   karyawan_name?: InputMaybe<Scalars['String']>;
   payment_type?: InputMaybe<Transaction_Payment_Type_Enum_Enum>;
-  refund_reason?: InputMaybe<Scalars['String']>;
+  return_reason?: InputMaybe<Scalars['String']>;
   store_id?: InputMaybe<Scalars['Int']>;
   total_transaction?: InputMaybe<Scalars['Int']>;
   transaction_status?: InputMaybe<Transaction_Status_Enum_Enum>;
@@ -7972,10 +7997,10 @@ export enum Transaction_Status_Enum_Constraint {
 export enum Transaction_Status_Enum_Enum {
   /** Gagal */
   Failed = 'failed',
-  /** Refund */
-  Refund = 'refund',
-  /** Refund Sebagian */
-  RefundPart = 'refund_part',
+  /** Retur Semua */
+  ReturnAll = 'return_all',
+  /** Retur Sebagian */
+  ReturnPart = 'return_part',
   /** Sukses */
   Success = 'success'
 }
@@ -8116,7 +8141,7 @@ export enum Transaction_Update_Column {
   /** column name */
   PaymentType = 'payment_type',
   /** column name */
-  RefundReason = 'refund_reason',
+  ReturnReason = 'return_reason',
   /** column name */
   StoreId = 'store_id',
   /** column name */
@@ -9008,7 +9033,7 @@ export type Cashier_CreateTransactionMutationVariables = Exact<{
 }>;
 
 
-export type Cashier_CreateTransactionMutation = { __typename?: 'mutation_root', Cashier_CreateTransaction?: { __typename?: 'Cashier_CreateTransactionOutput', invoice_number?: string | null, cash_change?: number | null, payment_type: string, total_transaction: number, cash_in_amount: number, transaction_status: TransactionStatusEnum, store_id: number, isError: boolean, errorMessage?: string | null } | null };
+export type Cashier_CreateTransactionMutation = { __typename?: 'mutation_root', Cashier_CreateTransaction?: { __typename?: 'Cashier_CreateTransactionOutput', invoice_number?: string | null, cash_change?: number | null, payment_type?: string | null, total_transaction?: number | null, cash_in_amount?: number | null, transaction_status: TransactionStatusEnum, store_id?: number | null, isError: boolean, errorMessage?: string | null } | null };
 
 export type Inventory_CreateInventoryProductMutationVariables = Exact<{
   inventory_product: Inventory_Products_Insert_Input;
@@ -9200,14 +9225,19 @@ export type Whatsapp_GetAuthStatusQueryVariables = Exact<{ [key: string]: never;
 
 export type Whatsapp_GetAuthStatusQuery = { __typename?: 'query_root', Whatsapp_GetAuthStatus?: { __typename?: 'Whatsapp_GetAuthStatusOutput', client_phone_number?: string | null, client_name?: string | null, client_platform?: string | null, client_state?: string | null, errorMessage?: string | null, qrcode?: string | null, is_authenticated: boolean, is_qr_ready: boolean, is_client_ready: boolean, isError: boolean } | null };
 
-export type Transaction_RefundTransactionMutationVariables = Exact<{
+export type Transaction_ReturnTransactionMutationVariables = Exact<{
   invoice_number: Scalars['String'];
-  refund_reason: Scalars['String'];
-  refund_type: TransactionRefundType;
+  return_reason: Scalars['String'];
+  return_type: TransactionReturnType;
+  cash_in_amount: Scalars['Int'];
+  total_transaction: Scalars['Int'];
+  returned_items: Array<Transaction_ReturnedItem> | Transaction_ReturnedItem;
+  karyawan_name: Scalars['String'];
+  added_items: Array<Transaction_Items_Input> | Transaction_Items_Input;
 }>;
 
 
-export type Transaction_RefundTransactionMutation = { __typename?: 'mutation_root', Transaction_RefundTransaction?: { __typename?: 'Transaction_RefundTransactionOutput', invoice_number: string, isError: boolean, errorMessage?: string | null } | null };
+export type Transaction_ReturnTransactionMutation = { __typename?: 'mutation_root', Transaction_ReturnTransaction?: { __typename?: 'Transaction_ReturnTransactionOutput', invoice_number?: string | null, isError: boolean, errorMessage?: string | null, total_transaction?: number | null, cash_in_amount?: number | null, cash_change?: number | null, return_type?: TransactionReturnType | null, total_transaction_compare?: TotalTransactionCompare | null } | null };
 
 export type Transaction_SendReceiptToCustomerMutationVariables = Exact<{
   invoice_number: Scalars['String'];
@@ -9223,14 +9253,14 @@ export type Transaction_GetAllTransactionByStoreIdQueryVariables = Exact<{
 }>;
 
 
-export type Transaction_GetAllTransactionByStoreIdQuery = { __typename?: 'query_root', transaction: Array<{ __typename?: 'transaction', cash_change: number, cash_in_amount: number, created_at: any, invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, store_id: number, total_transaction: number, updated_at: any, karyawan_name: string, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', id: any, inventory_product_id: any, product_name: string, profit: number }> }> };
+export type Transaction_GetAllTransactionByStoreIdQuery = { __typename?: 'query_root', transaction: Array<{ __typename?: 'transaction', cash_change: number, cash_in_amount: number, created_at: any, invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, store_id: number, total_transaction: number, updated_at: any, karyawan_name: string, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', id: any, inventory_product_id?: any | null, product_name: string, profit: number }> }> };
 
 export type Transaction_GetTransactionByPkQueryVariables = Exact<{
   invoice_number: Scalars['String'];
 }>;
 
 
-export type Transaction_GetTransactionByPkQuery = { __typename?: 'query_root', transaction_by_pk?: { __typename?: 'transaction', cash_change: number, cash_in_amount: number, created_at: any, invoice_number: string, total_transaction: number, updated_at: any, karyawan_name: string, transaction_status: Transaction_Status_Enum_Enum, store: { __typename?: 'stores', name: string, address: string }, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', created_at: any, capital_price: number, discount: number, id: any, inventory_product_id: any, product_name: string, profit: number, purchase_qty: number, selling_price: number, subtotal: number, updated_at: any, transaction_status: Transaction_Status_Enum_Enum, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string }, inventory_product: { __typename?: 'inventory_products', override_capital_price?: number | null, override_selling_price?: number | null, override_discount?: number | null, available_qty: number, updated_at: any, product: { __typename?: 'products', photo_id?: string | null, name: string, capital_price: number, selling_price: number, discount: number, updated_at: any }, inventory_product_variants: Array<{ __typename?: 'inventory_product_variants', inventory_variant_metadata_id: number }> } }>, transaction_receipts: Array<{ __typename?: 'transaction_receipts', created_at: any, is_sent: boolean, transaction_receipt_type_enum: { __typename?: 'transaction_receipt_type_enum', receipt_type: string, title: string }, customer: { __typename?: 'customers', id: any, email?: string | null, name?: string | null, phone_number: string } }> } | null };
+export type Transaction_GetTransactionByPkQuery = { __typename?: 'query_root', transaction_by_pk?: { __typename?: 'transaction', cash_change: number, cash_in_amount: number, created_at: any, invoice_number: string, total_transaction: number, updated_at: any, karyawan_name: string, transaction_status: Transaction_Status_Enum_Enum, store: { __typename?: 'stores', name: string, address: string }, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', created_at: any, capital_price: number, discount: number, id: any, inventory_product_id?: any | null, product_name: string, profit: number, purchase_qty: number, selling_price: number, subtotal: number, updated_at: any, transaction_status: Transaction_Status_Enum_Enum, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string }, inventory_product?: { __typename?: 'inventory_products', override_capital_price?: number | null, override_selling_price?: number | null, override_discount?: number | null, available_qty: number, updated_at: any, product: { __typename?: 'products', photo_id?: string | null, name: string, capital_price: number, selling_price: number, discount: number, updated_at: any }, inventory_product_variants: Array<{ __typename?: 'inventory_product_variants', inventory_variant_metadata_id: number }> } | null }>, transaction_receipts: Array<{ __typename?: 'transaction_receipts', created_at: any, is_sent: boolean, transaction_receipt_type_enum: { __typename?: 'transaction_receipt_type_enum', receipt_type: string, title: string }, customer: { __typename?: 'customers', id: any, email?: string | null, name?: string | null, phone_number: string } }> } | null };
 
 export type User_SignUpMutationVariables = Exact<{
   defaultRole?: InputMaybe<Scalars['String']>;
@@ -9310,7 +9340,7 @@ export const namedOperations = {
     Store_DeleteStoreByPK: 'Store_DeleteStoreByPK',
     Store_UpdateStore: 'Store_UpdateStore',
     Whatsapp_SignOut: 'Whatsapp_SignOut',
-    Transaction_RefundTransaction: 'Transaction_RefundTransaction',
+    Transaction_ReturnTransaction: 'Transaction_ReturnTransaction',
     Transaction_SendReceiptToCustomer: 'Transaction_SendReceiptToCustomer',
     User_SignUp: 'User_SignUp',
     User_UpdateUserByUserId: 'User_UpdateUserByUserId',
@@ -10480,47 +10510,62 @@ export function useWhatsapp_GetAuthStatusLazyQuery(baseOptions?: Apollo.LazyQuer
 export type Whatsapp_GetAuthStatusQueryHookResult = ReturnType<typeof useWhatsapp_GetAuthStatusQuery>;
 export type Whatsapp_GetAuthStatusLazyQueryHookResult = ReturnType<typeof useWhatsapp_GetAuthStatusLazyQuery>;
 export type Whatsapp_GetAuthStatusQueryResult = Apollo.QueryResult<Whatsapp_GetAuthStatusQuery, Whatsapp_GetAuthStatusQueryVariables>;
-export const Transaction_RefundTransactionDocument = gql`
-    mutation Transaction_RefundTransaction($invoice_number: String!, $refund_reason: String!, $refund_type: TransactionRefundType!) {
-  Transaction_RefundTransaction(
+export const Transaction_ReturnTransactionDocument = gql`
+    mutation Transaction_ReturnTransaction($invoice_number: String!, $return_reason: String!, $return_type: TransactionReturnType!, $cash_in_amount: Int!, $total_transaction: Int!, $returned_items: [Transaction_ReturnedItem!]!, $karyawan_name: String!, $added_items: [transaction_items_input!]!) {
+  Transaction_ReturnTransaction(
     invoice_number: $invoice_number
-    refund_reason: $refund_reason
-    refund_type: $refund_type
+    return_reason: $return_reason
+    return_type: $return_type
+    cash_in_amount: $cash_in_amount
+    total_transaction: $total_transaction
+    karyawan_name: $karyawan_name
+    returned_items: $returned_items
+    added_items: $added_items
   ) {
     invoice_number
     isError
     errorMessage
+    total_transaction
+    cash_in_amount
+    cash_change
+    return_type
+    total_transaction_compare
   }
 }
     `;
-export type Transaction_RefundTransactionMutationFn = Apollo.MutationFunction<Transaction_RefundTransactionMutation, Transaction_RefundTransactionMutationVariables>;
+export type Transaction_ReturnTransactionMutationFn = Apollo.MutationFunction<Transaction_ReturnTransactionMutation, Transaction_ReturnTransactionMutationVariables>;
 
 /**
- * __useTransaction_RefundTransactionMutation__
+ * __useTransaction_ReturnTransactionMutation__
  *
- * To run a mutation, you first call `useTransaction_RefundTransactionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useTransaction_RefundTransactionMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useTransaction_ReturnTransactionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTransaction_ReturnTransactionMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [transactionRefundTransactionMutation, { data, loading, error }] = useTransaction_RefundTransactionMutation({
+ * const [transactionReturnTransactionMutation, { data, loading, error }] = useTransaction_ReturnTransactionMutation({
  *   variables: {
  *      invoice_number: // value for 'invoice_number'
- *      refund_reason: // value for 'refund_reason'
- *      refund_type: // value for 'refund_type'
+ *      return_reason: // value for 'return_reason'
+ *      return_type: // value for 'return_type'
+ *      cash_in_amount: // value for 'cash_in_amount'
+ *      total_transaction: // value for 'total_transaction'
+ *      returned_items: // value for 'returned_items'
+ *      karyawan_name: // value for 'karyawan_name'
+ *      added_items: // value for 'added_items'
  *   },
  * });
  */
-export function useTransaction_RefundTransactionMutation(baseOptions?: Apollo.MutationHookOptions<Transaction_RefundTransactionMutation, Transaction_RefundTransactionMutationVariables>) {
+export function useTransaction_ReturnTransactionMutation(baseOptions?: Apollo.MutationHookOptions<Transaction_ReturnTransactionMutation, Transaction_ReturnTransactionMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<Transaction_RefundTransactionMutation, Transaction_RefundTransactionMutationVariables>(Transaction_RefundTransactionDocument, options);
+        return Apollo.useMutation<Transaction_ReturnTransactionMutation, Transaction_ReturnTransactionMutationVariables>(Transaction_ReturnTransactionDocument, options);
       }
-export type Transaction_RefundTransactionMutationHookResult = ReturnType<typeof useTransaction_RefundTransactionMutation>;
-export type Transaction_RefundTransactionMutationResult = Apollo.MutationResult<Transaction_RefundTransactionMutation>;
-export type Transaction_RefundTransactionMutationOptions = Apollo.BaseMutationOptions<Transaction_RefundTransactionMutation, Transaction_RefundTransactionMutationVariables>;
+export type Transaction_ReturnTransactionMutationHookResult = ReturnType<typeof useTransaction_ReturnTransactionMutation>;
+export type Transaction_ReturnTransactionMutationResult = Apollo.MutationResult<Transaction_ReturnTransactionMutation>;
+export type Transaction_ReturnTransactionMutationOptions = Apollo.BaseMutationOptions<Transaction_ReturnTransactionMutation, Transaction_ReturnTransactionMutationVariables>;
 export const Transaction_SendReceiptToCustomerDocument = gql`
     mutation Transaction_SendReceiptToCustomer($invoice_number: String!, $customer: CustomerInput!, $receipt_type: TransactionReceiptTypeEnum!) {
   Transaction_SendReceipt(
@@ -10582,7 +10627,7 @@ export const Transaction_GetAllTransactionByStoreIdDocument = gql`
       transaction_status
       title
     }
-    transaction_items {
+    transaction_items(where: {transaction_status: {_eq: success}}) {
       id
       inventory_product_id
       product_name

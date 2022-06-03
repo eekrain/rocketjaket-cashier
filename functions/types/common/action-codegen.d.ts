@@ -6,8 +6,8 @@ type timestamptz = string;
 
 enum TransactionStatusEnum {
   failed = "failed",
-  refund = "refund",
-  refund_part = "refund_part",
+  return_all = "return_all",
+  return_part = "return_part",
   success = "success",
 }
 
@@ -26,9 +26,14 @@ enum TransactionReceiptTypeEnum {
   whatsapp = "whatsapp",
 }
 
-enum TransactionRefundType {
-  refund_all = "refund_all",
-  refund_part = "refund_part",
+enum TransactionReturnType {
+  return_all = "return_all",
+  return_part = "return_part",
+}
+
+enum TotalTransactionCompare {
+  plus = "plus",
+  minus = "minus",
 }
 
 type InventoryVariantMetadataInsertInput = {
@@ -65,6 +70,14 @@ type CustomerInput = {
   phone_number?: Maybe<string>;
 };
 
+type Transaction_ReturnedItem = {
+  transaction_item_id: string;
+  capital_price: number;
+  selling_price: number;
+  discount: number;
+  returned_qty: number;
+};
+
 type User_SignUpOutput = {
   email?: Maybe<string>;
   displayName?: Maybe<string>;
@@ -98,11 +111,11 @@ type Cashier_CreateTransactionOutput = {
   isError: boolean;
   errorMessage?: Maybe<string>;
   invoice_number?: Maybe<string>;
-  total_transaction: number;
+  total_transaction?: Maybe<number>;
   cash_change?: Maybe<number>;
-  cash_in_amount: number;
-  payment_type: string;
-  store_id: number;
+  cash_in_amount?: Maybe<number>;
+  payment_type?: Maybe<string>;
+  store_id?: Maybe<number>;
   transaction_status: TransactionStatusEnum;
 };
 
@@ -126,9 +139,25 @@ type Transaction_SendReceiptOutput = {
 };
 
 type Transaction_RefundTransactionOutput = {
-  invoice_number: string;
+  invoice_number?: Maybe<string>;
   isError: boolean;
   errorMessage?: Maybe<string>;
+  total_transaction?: Maybe<number>;
+  cash_in_amount?: Maybe<number>;
+  cash_change?: Maybe<number>;
+  return_type?: Maybe<TransactionReturnType>;
+  total_transaction_compare?: Maybe<TotalTransactionCompare>;
+};
+
+type Transaction_ReturnTransactionOutput = {
+  invoice_number?: Maybe<string>;
+  isError: boolean;
+  errorMessage?: Maybe<string>;
+  total_transaction?: Maybe<number>;
+  cash_in_amount?: Maybe<number>;
+  cash_change?: Maybe<number>;
+  return_type?: Maybe<TransactionReturnType>;
+  total_transaction_compare?: Maybe<TotalTransactionCompare>;
 };
 
 type Query = {
@@ -137,7 +166,7 @@ type Query = {
 
 type Mutation = {
   Cashier_CreateTransaction?: Maybe<Cashier_CreateTransactionOutput>;
-  Transaction_RefundTransaction?: Maybe<Transaction_RefundTransactionOutput>;
+  Transaction_ReturnTransaction?: Maybe<Transaction_ReturnTransactionOutput>;
   Transaction_SendReceipt?: Maybe<Transaction_SendReceiptOutput>;
   User_SignUp?: Maybe<User_SignUpOutput>;
   Whatsapp_SignOut?: Maybe<Whatsapp_SignOutOutput>;
@@ -154,10 +183,15 @@ type Cashier_CreateTransactionArgs = {
   store_id: number;
 };
 
-type Transaction_RefundTransactionArgs = {
+type Transaction_ReturnTransactionArgs = {
   invoice_number: string;
-  refund_type: TransactionRefundType;
-  refund_reason: string;
+  karyawan_name: string;
+  return_type: TransactionReturnType;
+  return_reason: string;
+  total_transaction: number;
+  cash_in_amount: number;
+  returned_items: Array<Transaction_ReturnedItem>;
+  added_items: Array<transaction_items_input>;
 };
 
 type Transaction_SendReceiptArgs = {

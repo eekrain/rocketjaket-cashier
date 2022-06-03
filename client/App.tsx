@@ -32,6 +32,10 @@ const App = () => {
   const [accessTokenLatest, setAccessTokenLatest] = useState(
     nhost.auth.getAccessToken(),
   );
+  // console.log(
+  //   '🚀 ~ file: App.tsx ~ line 35 ~ App ~ accessTokenLatest',
+  //   accessTokenLatest,
+  // );
 
   const [loadingSplashScreen, setLoadingSplashScreen] = useState(true);
   const loading = useMemo(
