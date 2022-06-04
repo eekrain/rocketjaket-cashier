@@ -61,13 +61,15 @@ const CustomDrawerContent = (props: Props) => {
   );
 
   const routes = useMemo(() => {
-    return rootAppRoutes.map((route, index) => {
-      const temp1 = route.role.some(r => myUser.roles.includes(r))
-        ? routeItem(route, index)
-        : null;
-      const temp2 = !route.isHideOnDrawer ? temp1 : null;
-      return temp2;
-    });
+    return rootAppRoutes
+      .filter(route => route.name !== 'Notification')
+      .map((route, index) => {
+        const temp1 = route.role.some(r => myUser.roles.includes(r))
+          ? routeItem(route, index)
+          : null;
+        const temp2 = !route.isHideOnDrawer ? temp1 : null;
+        return temp2;
+      });
   }, [myUser.roles, routeItem]);
 
   return (

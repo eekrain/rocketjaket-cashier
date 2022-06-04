@@ -1,0 +1,7 @@
+mutation Notification_BulkMarkAsRead(
+  $objects: [notification_read_user_insert_input!] = {}
+) {
+  insert_notification_read_user(objects: $objects) {
+    affected_rows
+  }
+}

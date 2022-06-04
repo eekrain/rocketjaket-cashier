@@ -96,17 +96,30 @@ select_permissions:
   role: administrator
 - permission:
     columns:
+    - disabled
+    - email_verified
+    - is_anonymous
+    - phone_number_verified
+    - locale
+    - metadata
+    - active_mfa_type
     - avatar_url
     - default_role
-    - disabled
     - display_name
-    - email
-    - email_verified
-    - id
-    - is_anonymous
-    - new_email
+    - otp_hash
+    - otp_method_last_used
+    - password_hash
     - phone_number
-    - phone_number_verified
+    - ticket
+    - totp_secret
+    - created_at
+    - last_seen
+    - otp_hash_expires_at
+    - ticket_expires_at
+    - updated_at
+    - email
+    - new_email
+    - id
     filter:
       id:
         _eq: X-Hasura-User-Id

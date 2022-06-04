@@ -21,18 +21,18 @@ interface IGetXHasuraRoleHeader {
 }
 
 interface IHasuraHeader {
-  'x-hasura-role': TUserRoleOptions | null;
-  'x-hasura-user-id': string | null;
+  'x-hasura-role'?: TUserRoleOptions | null;
+  'x-hasura-user-id'?: string | null;
 }
 
 export const getXHasuraContextHeader = ({
   role = null,
   withUserId = false,
 }: IGetXHasuraRoleHeader) => {
-  const headers: IHasuraHeader = {
-    'x-hasura-role': role,
-    'x-hasura-user-id': null,
-  };
+  const headers: IHasuraHeader = {};
+  if (role) {
+    headers['x-hasura-role'] = role;
+  }
 
   if (withUserId) {
     const user = nhost.auth.getUser();
@@ -43,20 +43,14 @@ export const getXHasuraContextHeader = ({
 };
 
 interface INhostAuthStore {
-  fcmToken: string | null;
   store_id: number | null;
-  updateFcmToken: (newFcmToken: string | null) => void;
   updateStoreId: (newStoreId: number | null) => void;
 }
 
 const useStore = create<INhostAuthStore>()(
   persist(
     set => ({
-      fcmToken: null as INhostAuthStore['fcmToken'],
       store_id: null as INhostAuthStore['store_id'],
-      updateFcmToken: newFcmToken => {
-        set(state => ({...state, fcmToken: newFcmToken}));
-      },
       updateStoreId: newStoreId => {
         set(state => ({...state, store_id: newStoreId}));
       },

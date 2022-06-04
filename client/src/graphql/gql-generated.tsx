@@ -13,6 +13,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  bigint: any;
   citext: any;
   jsonb: any;
   timestamptz: any;
@@ -204,6 +205,108 @@ export type Whatsapp_SignOutOutput = {
   __typename?: 'Whatsapp_SignOutOutput';
   is_success: Scalars['Boolean'];
 };
+
+/** columns and relationships of "active_fcm_tokens" */
+export type Active_Fcm_Tokens = {
+  __typename?: 'active_fcm_tokens';
+  fcm_token: Scalars['String'];
+};
+
+/** aggregated selection of "active_fcm_tokens" */
+export type Active_Fcm_Tokens_Aggregate = {
+  __typename?: 'active_fcm_tokens_aggregate';
+  aggregate?: Maybe<Active_Fcm_Tokens_Aggregate_Fields>;
+  nodes: Array<Active_Fcm_Tokens>;
+};
+
+/** aggregate fields of "active_fcm_tokens" */
+export type Active_Fcm_Tokens_Aggregate_Fields = {
+  __typename?: 'active_fcm_tokens_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<Active_Fcm_Tokens_Max_Fields>;
+  min?: Maybe<Active_Fcm_Tokens_Min_Fields>;
+};
+
+
+/** aggregate fields of "active_fcm_tokens" */
+export type Active_Fcm_Tokens_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Active_Fcm_Tokens_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Boolean expression to filter rows from the table "active_fcm_tokens". All fields are combined with a logical 'AND'. */
+export type Active_Fcm_Tokens_Bool_Exp = {
+  _and?: InputMaybe<Array<Active_Fcm_Tokens_Bool_Exp>>;
+  _not?: InputMaybe<Active_Fcm_Tokens_Bool_Exp>;
+  _or?: InputMaybe<Array<Active_Fcm_Tokens_Bool_Exp>>;
+  fcm_token?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "active_fcm_tokens" */
+export enum Active_Fcm_Tokens_Constraint {
+  /** unique or primary key constraint */
+  ActiveFcmTokensPkey = 'active_fcm_tokens_pkey'
+}
+
+/** input type for inserting data into table "active_fcm_tokens" */
+export type Active_Fcm_Tokens_Insert_Input = {
+  fcm_token?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregate max on columns */
+export type Active_Fcm_Tokens_Max_Fields = {
+  __typename?: 'active_fcm_tokens_max_fields';
+  fcm_token?: Maybe<Scalars['String']>;
+};
+
+/** aggregate min on columns */
+export type Active_Fcm_Tokens_Min_Fields = {
+  __typename?: 'active_fcm_tokens_min_fields';
+  fcm_token?: Maybe<Scalars['String']>;
+};
+
+/** response of any mutation on the table "active_fcm_tokens" */
+export type Active_Fcm_Tokens_Mutation_Response = {
+  __typename?: 'active_fcm_tokens_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Active_Fcm_Tokens>;
+};
+
+/** on_conflict condition type for table "active_fcm_tokens" */
+export type Active_Fcm_Tokens_On_Conflict = {
+  constraint: Active_Fcm_Tokens_Constraint;
+  update_columns?: Array<Active_Fcm_Tokens_Update_Column>;
+  where?: InputMaybe<Active_Fcm_Tokens_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "active_fcm_tokens". */
+export type Active_Fcm_Tokens_Order_By = {
+  fcm_token?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: active_fcm_tokens */
+export type Active_Fcm_Tokens_Pk_Columns_Input = {
+  fcm_token: Scalars['String'];
+};
+
+/** select columns of table "active_fcm_tokens" */
+export enum Active_Fcm_Tokens_Select_Column {
+  /** column name */
+  FcmToken = 'fcm_token'
+}
+
+/** input type for updating data in table "active_fcm_tokens" */
+export type Active_Fcm_Tokens_Set_Input = {
+  fcm_token?: InputMaybe<Scalars['String']>;
+};
+
+/** update columns of table "active_fcm_tokens" */
+export enum Active_Fcm_Tokens_Update_Column {
+  /** column name */
+  FcmToken = 'fcm_token'
+}
 
 /** columns and relationships of "auth.provider_requests" */
 export type AuthProviderRequests = {
@@ -1223,6 +1326,19 @@ export enum AuthUserRoles_Update_Column {
   /** column name */
   UserId = 'userId'
 }
+
+/** Boolean expression to compare columns of type "bigint". All fields are combined with logical 'AND'. */
+export type Bigint_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars['bigint']>;
+  _gt?: InputMaybe<Scalars['bigint']>;
+  _gte?: InputMaybe<Scalars['bigint']>;
+  _in?: InputMaybe<Array<Scalars['bigint']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']>;
+  _lt?: InputMaybe<Scalars['bigint']>;
+  _lte?: InputMaybe<Scalars['bigint']>;
+  _neq?: InputMaybe<Scalars['bigint']>;
+  _nin?: InputMaybe<Array<Scalars['bigint']>>;
+};
 
 /** columns and relationships of "storage.buckets" */
 export type Buckets = {
@@ -3158,6 +3274,10 @@ export type Mutation_Root = {
   deleteUser?: Maybe<Users>;
   /** delete data from the table: "auth.users" */
   deleteUsers?: Maybe<Users_Mutation_Response>;
+  /** delete data from the table: "active_fcm_tokens" */
+  delete_active_fcm_tokens?: Maybe<Active_Fcm_Tokens_Mutation_Response>;
+  /** delete single row from the table: "active_fcm_tokens" */
+  delete_active_fcm_tokens_by_pk?: Maybe<Active_Fcm_Tokens>;
   /** delete data from the table: "customers" */
   delete_customers?: Maybe<Customers_Mutation_Response>;
   /** delete single row from the table: "customers" */
@@ -3174,6 +3294,14 @@ export type Mutation_Root = {
   delete_inventory_variants_metadata?: Maybe<Inventory_Variants_Metadata_Mutation_Response>;
   /** delete single row from the table: "inventory_variants_metadata" */
   delete_inventory_variants_metadata_by_pk?: Maybe<Inventory_Variants_Metadata>;
+  /** delete data from the table: "notification" */
+  delete_notification?: Maybe<Notification_Mutation_Response>;
+  /** delete single row from the table: "notification" */
+  delete_notification_by_pk?: Maybe<Notification>;
+  /** delete data from the table: "notification_read_user" */
+  delete_notification_read_user?: Maybe<Notification_Read_User_Mutation_Response>;
+  /** delete single row from the table: "notification_read_user" */
+  delete_notification_read_user_by_pk?: Maybe<Notification_Read_User>;
   /** delete data from the table: "product_categories" */
   delete_product_categories?: Maybe<Product_Categories_Mutation_Response>;
   /** delete single row from the table: "product_categories" */
@@ -3250,6 +3378,10 @@ export type Mutation_Root = {
   insertUser?: Maybe<Users>;
   /** insert data into the table: "auth.users" */
   insertUsers?: Maybe<Users_Mutation_Response>;
+  /** insert data into the table: "active_fcm_tokens" */
+  insert_active_fcm_tokens?: Maybe<Active_Fcm_Tokens_Mutation_Response>;
+  /** insert a single row into the table: "active_fcm_tokens" */
+  insert_active_fcm_tokens_one?: Maybe<Active_Fcm_Tokens>;
   /** insert data into the table: "customers" */
   insert_customers?: Maybe<Customers_Mutation_Response>;
   /** insert a single row into the table: "customers" */
@@ -3266,6 +3398,14 @@ export type Mutation_Root = {
   insert_inventory_variants_metadata?: Maybe<Inventory_Variants_Metadata_Mutation_Response>;
   /** insert a single row into the table: "inventory_variants_metadata" */
   insert_inventory_variants_metadata_one?: Maybe<Inventory_Variants_Metadata>;
+  /** insert data into the table: "notification" */
+  insert_notification?: Maybe<Notification_Mutation_Response>;
+  /** insert a single row into the table: "notification" */
+  insert_notification_one?: Maybe<Notification>;
+  /** insert data into the table: "notification_read_user" */
+  insert_notification_read_user?: Maybe<Notification_Read_User_Mutation_Response>;
+  /** insert a single row into the table: "notification_read_user" */
+  insert_notification_read_user_one?: Maybe<Notification_Read_User>;
   /** insert data into the table: "product_categories" */
   insert_product_categories?: Maybe<Product_Categories_Mutation_Response>;
   /** insert a single row into the table: "product_categories" */
@@ -3342,6 +3482,10 @@ export type Mutation_Root = {
   updateUser?: Maybe<Users>;
   /** update data of the table: "auth.users" */
   updateUsers?: Maybe<Users_Mutation_Response>;
+  /** update data of the table: "active_fcm_tokens" */
+  update_active_fcm_tokens?: Maybe<Active_Fcm_Tokens_Mutation_Response>;
+  /** update single row of the table: "active_fcm_tokens" */
+  update_active_fcm_tokens_by_pk?: Maybe<Active_Fcm_Tokens>;
   /** update data of the table: "customers" */
   update_customers?: Maybe<Customers_Mutation_Response>;
   /** update single row of the table: "customers" */
@@ -3358,6 +3502,14 @@ export type Mutation_Root = {
   update_inventory_variants_metadata?: Maybe<Inventory_Variants_Metadata_Mutation_Response>;
   /** update single row of the table: "inventory_variants_metadata" */
   update_inventory_variants_metadata_by_pk?: Maybe<Inventory_Variants_Metadata>;
+  /** update data of the table: "notification" */
+  update_notification?: Maybe<Notification_Mutation_Response>;
+  /** update single row of the table: "notification" */
+  update_notification_by_pk?: Maybe<Notification>;
+  /** update data of the table: "notification_read_user" */
+  update_notification_read_user?: Maybe<Notification_Read_User_Mutation_Response>;
+  /** update single row of the table: "notification_read_user" */
+  update_notification_read_user_by_pk?: Maybe<Notification_Read_User>;
   /** update data of the table: "product_categories" */
   update_product_categories?: Maybe<Product_Categories_Mutation_Response>;
   /** update single row of the table: "product_categories" */
@@ -3552,6 +3704,18 @@ export type Mutation_RootDeleteUsersArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_Active_Fcm_TokensArgs = {
+  where: Active_Fcm_Tokens_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Active_Fcm_Tokens_By_PkArgs = {
+  fcm_token: Scalars['String'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_CustomersArgs = {
   where: Customers_Bool_Exp;
 };
@@ -3596,6 +3760,30 @@ export type Mutation_RootDelete_Inventory_Variants_MetadataArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Inventory_Variants_Metadata_By_PkArgs = {
   id: Scalars['Int'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_NotificationArgs = {
+  where: Notification_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Notification_By_PkArgs = {
+  id: Scalars['bigint'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Notification_Read_UserArgs = {
+  where: Notification_Read_User_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Notification_Read_User_By_PkArgs = {
+  id: Scalars['bigint'];
 };
 
 
@@ -3846,6 +4034,20 @@ export type Mutation_RootInsertUsersArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_Active_Fcm_TokensArgs = {
+  objects: Array<Active_Fcm_Tokens_Insert_Input>;
+  on_conflict?: InputMaybe<Active_Fcm_Tokens_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Active_Fcm_Tokens_OneArgs = {
+  object: Active_Fcm_Tokens_Insert_Input;
+  on_conflict?: InputMaybe<Active_Fcm_Tokens_On_Conflict>;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_CustomersArgs = {
   objects: Array<Customers_Insert_Input>;
   on_conflict?: InputMaybe<Customers_On_Conflict>;
@@ -3898,6 +4100,34 @@ export type Mutation_RootInsert_Inventory_Variants_MetadataArgs = {
 export type Mutation_RootInsert_Inventory_Variants_Metadata_OneArgs = {
   object: Inventory_Variants_Metadata_Insert_Input;
   on_conflict?: InputMaybe<Inventory_Variants_Metadata_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_NotificationArgs = {
+  objects: Array<Notification_Insert_Input>;
+  on_conflict?: InputMaybe<Notification_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Notification_OneArgs = {
+  object: Notification_Insert_Input;
+  on_conflict?: InputMaybe<Notification_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Notification_Read_UserArgs = {
+  objects: Array<Notification_Read_User_Insert_Input>;
+  on_conflict?: InputMaybe<Notification_Read_User_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Notification_Read_User_OneArgs = {
+  object: Notification_Read_User_Insert_Input;
+  on_conflict?: InputMaybe<Notification_Read_User_On_Conflict>;
 };
 
 
@@ -4192,6 +4422,20 @@ export type Mutation_RootUpdateUsersArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Active_Fcm_TokensArgs = {
+  _set?: InputMaybe<Active_Fcm_Tokens_Set_Input>;
+  where: Active_Fcm_Tokens_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Active_Fcm_Tokens_By_PkArgs = {
+  _set?: InputMaybe<Active_Fcm_Tokens_Set_Input>;
+  pk_columns: Active_Fcm_Tokens_Pk_Columns_Input;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_CustomersArgs = {
   _set?: InputMaybe<Customers_Set_Input>;
   where: Customers_Bool_Exp;
@@ -4250,6 +4494,38 @@ export type Mutation_RootUpdate_Inventory_Variants_Metadata_By_PkArgs = {
   _inc?: InputMaybe<Inventory_Variants_Metadata_Inc_Input>;
   _set?: InputMaybe<Inventory_Variants_Metadata_Set_Input>;
   pk_columns: Inventory_Variants_Metadata_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_NotificationArgs = {
+  _inc?: InputMaybe<Notification_Inc_Input>;
+  _set?: InputMaybe<Notification_Set_Input>;
+  where: Notification_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Notification_By_PkArgs = {
+  _inc?: InputMaybe<Notification_Inc_Input>;
+  _set?: InputMaybe<Notification_Set_Input>;
+  pk_columns: Notification_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Notification_Read_UserArgs = {
+  _inc?: InputMaybe<Notification_Read_User_Inc_Input>;
+  _set?: InputMaybe<Notification_Read_User_Set_Input>;
+  where: Notification_Read_User_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Notification_Read_User_By_PkArgs = {
+  _inc?: InputMaybe<Notification_Read_User_Inc_Input>;
+  _set?: InputMaybe<Notification_Read_User_Set_Input>;
+  pk_columns: Notification_Read_User_Pk_Columns_Input;
 };
 
 
@@ -4402,6 +4678,513 @@ export type Mutation_RootUpdate_Users_Metadata_By_PkArgs = {
   _inc?: InputMaybe<Users_Metadata_Inc_Input>;
   _set?: InputMaybe<Users_Metadata_Set_Input>;
   pk_columns: Users_Metadata_Pk_Columns_Input;
+};
+
+/** columns and relationships of "notification" */
+export type Notification = {
+  __typename?: 'notification';
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id: Scalars['bigint'];
+  notification_body?: Maybe<Scalars['String']>;
+  /** An array relationship */
+  notification_read_users: Array<Notification_Read_User>;
+  /** An aggregate relationship */
+  notification_read_users_aggregate: Notification_Read_User_Aggregate;
+  notification_title?: Maybe<Scalars['String']>;
+};
+
+
+/** columns and relationships of "notification" */
+export type NotificationNotification_Read_UsersArgs = {
+  distinct_on?: InputMaybe<Array<Notification_Read_User_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Notification_Read_User_Order_By>>;
+  where?: InputMaybe<Notification_Read_User_Bool_Exp>;
+};
+
+
+/** columns and relationships of "notification" */
+export type NotificationNotification_Read_Users_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Notification_Read_User_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Notification_Read_User_Order_By>>;
+  where?: InputMaybe<Notification_Read_User_Bool_Exp>;
+};
+
+/** aggregated selection of "notification" */
+export type Notification_Aggregate = {
+  __typename?: 'notification_aggregate';
+  aggregate?: Maybe<Notification_Aggregate_Fields>;
+  nodes: Array<Notification>;
+};
+
+/** aggregate fields of "notification" */
+export type Notification_Aggregate_Fields = {
+  __typename?: 'notification_aggregate_fields';
+  avg?: Maybe<Notification_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Notification_Max_Fields>;
+  min?: Maybe<Notification_Min_Fields>;
+  stddev?: Maybe<Notification_Stddev_Fields>;
+  stddev_pop?: Maybe<Notification_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Notification_Stddev_Samp_Fields>;
+  sum?: Maybe<Notification_Sum_Fields>;
+  var_pop?: Maybe<Notification_Var_Pop_Fields>;
+  var_samp?: Maybe<Notification_Var_Samp_Fields>;
+  variance?: Maybe<Notification_Variance_Fields>;
+};
+
+
+/** aggregate fields of "notification" */
+export type Notification_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Notification_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** aggregate avg on columns */
+export type Notification_Avg_Fields = {
+  __typename?: 'notification_avg_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** Boolean expression to filter rows from the table "notification". All fields are combined with a logical 'AND'. */
+export type Notification_Bool_Exp = {
+  _and?: InputMaybe<Array<Notification_Bool_Exp>>;
+  _not?: InputMaybe<Notification_Bool_Exp>;
+  _or?: InputMaybe<Array<Notification_Bool_Exp>>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Bigint_Comparison_Exp>;
+  notification_body?: InputMaybe<String_Comparison_Exp>;
+  notification_read_users?: InputMaybe<Notification_Read_User_Bool_Exp>;
+  notification_title?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "notification" */
+export enum Notification_Constraint {
+  /** unique or primary key constraint */
+  NotificationPkey = 'notification_pkey'
+}
+
+/** input type for incrementing numeric columns in table "notification" */
+export type Notification_Inc_Input = {
+  id?: InputMaybe<Scalars['bigint']>;
+};
+
+/** input type for inserting data into table "notification" */
+export type Notification_Insert_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['bigint']>;
+  notification_body?: InputMaybe<Scalars['String']>;
+  notification_read_users?: InputMaybe<Notification_Read_User_Arr_Rel_Insert_Input>;
+  notification_title?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregate max on columns */
+export type Notification_Max_Fields = {
+  __typename?: 'notification_max_fields';
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['bigint']>;
+  notification_body?: Maybe<Scalars['String']>;
+  notification_title?: Maybe<Scalars['String']>;
+};
+
+/** aggregate min on columns */
+export type Notification_Min_Fields = {
+  __typename?: 'notification_min_fields';
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['bigint']>;
+  notification_body?: Maybe<Scalars['String']>;
+  notification_title?: Maybe<Scalars['String']>;
+};
+
+/** response of any mutation on the table "notification" */
+export type Notification_Mutation_Response = {
+  __typename?: 'notification_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Notification>;
+};
+
+/** on_conflict condition type for table "notification" */
+export type Notification_On_Conflict = {
+  constraint: Notification_Constraint;
+  update_columns?: Array<Notification_Update_Column>;
+  where?: InputMaybe<Notification_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "notification". */
+export type Notification_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  notification_body?: InputMaybe<Order_By>;
+  notification_read_users_aggregate?: InputMaybe<Notification_Read_User_Aggregate_Order_By>;
+  notification_title?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: notification */
+export type Notification_Pk_Columns_Input = {
+  id: Scalars['bigint'];
+};
+
+/**
+ * Map of notification that has been read by the user
+ *
+ *
+ * columns and relationships of "notification_read_user"
+ *
+ */
+export type Notification_Read_User = {
+  __typename?: 'notification_read_user';
+  id: Scalars['bigint'];
+  notification_id: Scalars['Int'];
+  user_id: Scalars['uuid'];
+};
+
+/** aggregated selection of "notification_read_user" */
+export type Notification_Read_User_Aggregate = {
+  __typename?: 'notification_read_user_aggregate';
+  aggregate?: Maybe<Notification_Read_User_Aggregate_Fields>;
+  nodes: Array<Notification_Read_User>;
+};
+
+/** aggregate fields of "notification_read_user" */
+export type Notification_Read_User_Aggregate_Fields = {
+  __typename?: 'notification_read_user_aggregate_fields';
+  avg?: Maybe<Notification_Read_User_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Notification_Read_User_Max_Fields>;
+  min?: Maybe<Notification_Read_User_Min_Fields>;
+  stddev?: Maybe<Notification_Read_User_Stddev_Fields>;
+  stddev_pop?: Maybe<Notification_Read_User_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Notification_Read_User_Stddev_Samp_Fields>;
+  sum?: Maybe<Notification_Read_User_Sum_Fields>;
+  var_pop?: Maybe<Notification_Read_User_Var_Pop_Fields>;
+  var_samp?: Maybe<Notification_Read_User_Var_Samp_Fields>;
+  variance?: Maybe<Notification_Read_User_Variance_Fields>;
+};
+
+
+/** aggregate fields of "notification_read_user" */
+export type Notification_Read_User_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Notification_Read_User_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "notification_read_user" */
+export type Notification_Read_User_Aggregate_Order_By = {
+  avg?: InputMaybe<Notification_Read_User_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Notification_Read_User_Max_Order_By>;
+  min?: InputMaybe<Notification_Read_User_Min_Order_By>;
+  stddev?: InputMaybe<Notification_Read_User_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Notification_Read_User_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Notification_Read_User_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Notification_Read_User_Sum_Order_By>;
+  var_pop?: InputMaybe<Notification_Read_User_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Notification_Read_User_Var_Samp_Order_By>;
+  variance?: InputMaybe<Notification_Read_User_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "notification_read_user" */
+export type Notification_Read_User_Arr_Rel_Insert_Input = {
+  data: Array<Notification_Read_User_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Notification_Read_User_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Notification_Read_User_Avg_Fields = {
+  __typename?: 'notification_read_user_avg_fields';
+  id?: Maybe<Scalars['Float']>;
+  notification_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "notification_read_user" */
+export type Notification_Read_User_Avg_Order_By = {
+  id?: InputMaybe<Order_By>;
+  notification_id?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "notification_read_user". All fields are combined with a logical 'AND'. */
+export type Notification_Read_User_Bool_Exp = {
+  _and?: InputMaybe<Array<Notification_Read_User_Bool_Exp>>;
+  _not?: InputMaybe<Notification_Read_User_Bool_Exp>;
+  _or?: InputMaybe<Array<Notification_Read_User_Bool_Exp>>;
+  id?: InputMaybe<Bigint_Comparison_Exp>;
+  notification_id?: InputMaybe<Int_Comparison_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "notification_read_user" */
+export enum Notification_Read_User_Constraint {
+  /** unique or primary key constraint */
+  NotificationReadUserPkey = 'notification_read_user_pkey'
+}
+
+/** input type for incrementing numeric columns in table "notification_read_user" */
+export type Notification_Read_User_Inc_Input = {
+  id?: InputMaybe<Scalars['bigint']>;
+  notification_id?: InputMaybe<Scalars['Int']>;
+};
+
+/** input type for inserting data into table "notification_read_user" */
+export type Notification_Read_User_Insert_Input = {
+  id?: InputMaybe<Scalars['bigint']>;
+  notification_id?: InputMaybe<Scalars['Int']>;
+  user_id?: InputMaybe<Scalars['uuid']>;
+};
+
+/** aggregate max on columns */
+export type Notification_Read_User_Max_Fields = {
+  __typename?: 'notification_read_user_max_fields';
+  id?: Maybe<Scalars['bigint']>;
+  notification_id?: Maybe<Scalars['Int']>;
+  user_id?: Maybe<Scalars['uuid']>;
+};
+
+/** order by max() on columns of table "notification_read_user" */
+export type Notification_Read_User_Max_Order_By = {
+  id?: InputMaybe<Order_By>;
+  notification_id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Notification_Read_User_Min_Fields = {
+  __typename?: 'notification_read_user_min_fields';
+  id?: Maybe<Scalars['bigint']>;
+  notification_id?: Maybe<Scalars['Int']>;
+  user_id?: Maybe<Scalars['uuid']>;
+};
+
+/** order by min() on columns of table "notification_read_user" */
+export type Notification_Read_User_Min_Order_By = {
+  id?: InputMaybe<Order_By>;
+  notification_id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "notification_read_user" */
+export type Notification_Read_User_Mutation_Response = {
+  __typename?: 'notification_read_user_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Notification_Read_User>;
+};
+
+/** on_conflict condition type for table "notification_read_user" */
+export type Notification_Read_User_On_Conflict = {
+  constraint: Notification_Read_User_Constraint;
+  update_columns?: Array<Notification_Read_User_Update_Column>;
+  where?: InputMaybe<Notification_Read_User_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "notification_read_user". */
+export type Notification_Read_User_Order_By = {
+  id?: InputMaybe<Order_By>;
+  notification_id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: notification_read_user */
+export type Notification_Read_User_Pk_Columns_Input = {
+  id: Scalars['bigint'];
+};
+
+/** select columns of table "notification_read_user" */
+export enum Notification_Read_User_Select_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  NotificationId = 'notification_id',
+  /** column name */
+  UserId = 'user_id'
+}
+
+/** input type for updating data in table "notification_read_user" */
+export type Notification_Read_User_Set_Input = {
+  id?: InputMaybe<Scalars['bigint']>;
+  notification_id?: InputMaybe<Scalars['Int']>;
+  user_id?: InputMaybe<Scalars['uuid']>;
+};
+
+/** aggregate stddev on columns */
+export type Notification_Read_User_Stddev_Fields = {
+  __typename?: 'notification_read_user_stddev_fields';
+  id?: Maybe<Scalars['Float']>;
+  notification_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev() on columns of table "notification_read_user" */
+export type Notification_Read_User_Stddev_Order_By = {
+  id?: InputMaybe<Order_By>;
+  notification_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Notification_Read_User_Stddev_Pop_Fields = {
+  __typename?: 'notification_read_user_stddev_pop_fields';
+  id?: Maybe<Scalars['Float']>;
+  notification_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "notification_read_user" */
+export type Notification_Read_User_Stddev_Pop_Order_By = {
+  id?: InputMaybe<Order_By>;
+  notification_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Notification_Read_User_Stddev_Samp_Fields = {
+  __typename?: 'notification_read_user_stddev_samp_fields';
+  id?: Maybe<Scalars['Float']>;
+  notification_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_samp() on columns of table "notification_read_user" */
+export type Notification_Read_User_Stddev_Samp_Order_By = {
+  id?: InputMaybe<Order_By>;
+  notification_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate sum on columns */
+export type Notification_Read_User_Sum_Fields = {
+  __typename?: 'notification_read_user_sum_fields';
+  id?: Maybe<Scalars['bigint']>;
+  notification_id?: Maybe<Scalars['Int']>;
+};
+
+/** order by sum() on columns of table "notification_read_user" */
+export type Notification_Read_User_Sum_Order_By = {
+  id?: InputMaybe<Order_By>;
+  notification_id?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "notification_read_user" */
+export enum Notification_Read_User_Update_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  NotificationId = 'notification_id',
+  /** column name */
+  UserId = 'user_id'
+}
+
+/** aggregate var_pop on columns */
+export type Notification_Read_User_Var_Pop_Fields = {
+  __typename?: 'notification_read_user_var_pop_fields';
+  id?: Maybe<Scalars['Float']>;
+  notification_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_pop() on columns of table "notification_read_user" */
+export type Notification_Read_User_Var_Pop_Order_By = {
+  id?: InputMaybe<Order_By>;
+  notification_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Notification_Read_User_Var_Samp_Fields = {
+  __typename?: 'notification_read_user_var_samp_fields';
+  id?: Maybe<Scalars['Float']>;
+  notification_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_samp() on columns of table "notification_read_user" */
+export type Notification_Read_User_Var_Samp_Order_By = {
+  id?: InputMaybe<Order_By>;
+  notification_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Notification_Read_User_Variance_Fields = {
+  __typename?: 'notification_read_user_variance_fields';
+  id?: Maybe<Scalars['Float']>;
+  notification_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "notification_read_user" */
+export type Notification_Read_User_Variance_Order_By = {
+  id?: InputMaybe<Order_By>;
+  notification_id?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "notification" */
+export enum Notification_Select_Column {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  NotificationBody = 'notification_body',
+  /** column name */
+  NotificationTitle = 'notification_title'
+}
+
+/** input type for updating data in table "notification" */
+export type Notification_Set_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['bigint']>;
+  notification_body?: InputMaybe<Scalars['String']>;
+  notification_title?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregate stddev on columns */
+export type Notification_Stddev_Fields = {
+  __typename?: 'notification_stddev_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Notification_Stddev_Pop_Fields = {
+  __typename?: 'notification_stddev_pop_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Notification_Stddev_Samp_Fields = {
+  __typename?: 'notification_stddev_samp_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate sum on columns */
+export type Notification_Sum_Fields = {
+  __typename?: 'notification_sum_fields';
+  id?: Maybe<Scalars['bigint']>;
+};
+
+/** update columns of table "notification" */
+export enum Notification_Update_Column {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  NotificationBody = 'notification_body',
+  /** column name */
+  NotificationTitle = 'notification_title'
+}
+
+/** aggregate var_pop on columns */
+export type Notification_Var_Pop_Fields = {
+  __typename?: 'notification_var_pop_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate var_samp on columns */
+export type Notification_Var_Samp_Fields = {
+  __typename?: 'notification_var_samp_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate variance on columns */
+export type Notification_Variance_Fields = {
+  __typename?: 'notification_variance_fields';
+  id?: Maybe<Scalars['Float']>;
 };
 
 /** column ordering options */
@@ -5044,6 +5827,12 @@ export type Products_Variance_Order_By = {
 export type Query_Root = {
   __typename?: 'query_root';
   Whatsapp_GetAuthStatus?: Maybe<Whatsapp_GetAuthStatusOutput>;
+  /** fetch data from the table: "active_fcm_tokens" */
+  active_fcm_tokens: Array<Active_Fcm_Tokens>;
+  /** fetch aggregated fields from the table: "active_fcm_tokens" */
+  active_fcm_tokens_aggregate: Active_Fcm_Tokens_Aggregate;
+  /** fetch data from the table: "active_fcm_tokens" using primary key columns */
+  active_fcm_tokens_by_pk?: Maybe<Active_Fcm_Tokens>;
   /** fetch data from the table: "auth.providers" using primary key columns */
   authProvider?: Maybe<AuthProviders>;
   /** fetch data from the table: "auth.provider_requests" using primary key columns */
@@ -5116,6 +5905,18 @@ export type Query_Root = {
   inventory_variants_metadata_aggregate: Inventory_Variants_Metadata_Aggregate;
   /** fetch data from the table: "inventory_variants_metadata" using primary key columns */
   inventory_variants_metadata_by_pk?: Maybe<Inventory_Variants_Metadata>;
+  /** fetch data from the table: "notification" */
+  notification: Array<Notification>;
+  /** fetch aggregated fields from the table: "notification" */
+  notification_aggregate: Notification_Aggregate;
+  /** fetch data from the table: "notification" using primary key columns */
+  notification_by_pk?: Maybe<Notification>;
+  /** fetch data from the table: "notification_read_user" */
+  notification_read_user: Array<Notification_Read_User>;
+  /** fetch aggregated fields from the table: "notification_read_user" */
+  notification_read_user_aggregate: Notification_Read_User_Aggregate;
+  /** fetch data from the table: "notification_read_user" using primary key columns */
+  notification_read_user_by_pk?: Maybe<Notification_Read_User>;
   /** fetch data from the table: "product_categories" */
   product_categories: Array<Product_Categories>;
   /** fetch aggregated fields from the table: "product_categories" */
@@ -5182,6 +5983,29 @@ export type Query_Root = {
   users_metadata_aggregate: Users_Metadata_Aggregate;
   /** fetch data from the table: "users_metadata" using primary key columns */
   users_metadata_by_pk?: Maybe<Users_Metadata>;
+};
+
+
+export type Query_RootActive_Fcm_TokensArgs = {
+  distinct_on?: InputMaybe<Array<Active_Fcm_Tokens_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Active_Fcm_Tokens_Order_By>>;
+  where?: InputMaybe<Active_Fcm_Tokens_Bool_Exp>;
+};
+
+
+export type Query_RootActive_Fcm_Tokens_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Active_Fcm_Tokens_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Active_Fcm_Tokens_Order_By>>;
+  where?: InputMaybe<Active_Fcm_Tokens_Bool_Exp>;
+};
+
+
+export type Query_RootActive_Fcm_Tokens_By_PkArgs = {
+  fcm_token: Scalars['String'];
 };
 
 
@@ -5458,6 +6282,52 @@ export type Query_RootInventory_Variants_Metadata_AggregateArgs = {
 
 export type Query_RootInventory_Variants_Metadata_By_PkArgs = {
   id: Scalars['Int'];
+};
+
+
+export type Query_RootNotificationArgs = {
+  distinct_on?: InputMaybe<Array<Notification_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Notification_Order_By>>;
+  where?: InputMaybe<Notification_Bool_Exp>;
+};
+
+
+export type Query_RootNotification_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Notification_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Notification_Order_By>>;
+  where?: InputMaybe<Notification_Bool_Exp>;
+};
+
+
+export type Query_RootNotification_By_PkArgs = {
+  id: Scalars['bigint'];
+};
+
+
+export type Query_RootNotification_Read_UserArgs = {
+  distinct_on?: InputMaybe<Array<Notification_Read_User_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Notification_Read_User_Order_By>>;
+  where?: InputMaybe<Notification_Read_User_Bool_Exp>;
+};
+
+
+export type Query_RootNotification_Read_User_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Notification_Read_User_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Notification_Read_User_Order_By>>;
+  where?: InputMaybe<Notification_Read_User_Bool_Exp>;
+};
+
+
+export type Query_RootNotification_Read_User_By_PkArgs = {
+  id: Scalars['bigint'];
 };
 
 
@@ -6007,6 +6877,12 @@ export type Stores_Variance_Fields = {
 
 export type Subscription_Root = {
   __typename?: 'subscription_root';
+  /** fetch data from the table: "active_fcm_tokens" */
+  active_fcm_tokens: Array<Active_Fcm_Tokens>;
+  /** fetch aggregated fields from the table: "active_fcm_tokens" */
+  active_fcm_tokens_aggregate: Active_Fcm_Tokens_Aggregate;
+  /** fetch data from the table: "active_fcm_tokens" using primary key columns */
+  active_fcm_tokens_by_pk?: Maybe<Active_Fcm_Tokens>;
   /** fetch data from the table: "auth.providers" using primary key columns */
   authProvider?: Maybe<AuthProviders>;
   /** fetch data from the table: "auth.provider_requests" using primary key columns */
@@ -6079,6 +6955,18 @@ export type Subscription_Root = {
   inventory_variants_metadata_aggregate: Inventory_Variants_Metadata_Aggregate;
   /** fetch data from the table: "inventory_variants_metadata" using primary key columns */
   inventory_variants_metadata_by_pk?: Maybe<Inventory_Variants_Metadata>;
+  /** fetch data from the table: "notification" */
+  notification: Array<Notification>;
+  /** fetch aggregated fields from the table: "notification" */
+  notification_aggregate: Notification_Aggregate;
+  /** fetch data from the table: "notification" using primary key columns */
+  notification_by_pk?: Maybe<Notification>;
+  /** fetch data from the table: "notification_read_user" */
+  notification_read_user: Array<Notification_Read_User>;
+  /** fetch aggregated fields from the table: "notification_read_user" */
+  notification_read_user_aggregate: Notification_Read_User_Aggregate;
+  /** fetch data from the table: "notification_read_user" using primary key columns */
+  notification_read_user_by_pk?: Maybe<Notification_Read_User>;
   /** fetch data from the table: "product_categories" */
   product_categories: Array<Product_Categories>;
   /** fetch aggregated fields from the table: "product_categories" */
@@ -6145,6 +7033,29 @@ export type Subscription_Root = {
   users_metadata_aggregate: Users_Metadata_Aggregate;
   /** fetch data from the table: "users_metadata" using primary key columns */
   users_metadata_by_pk?: Maybe<Users_Metadata>;
+};
+
+
+export type Subscription_RootActive_Fcm_TokensArgs = {
+  distinct_on?: InputMaybe<Array<Active_Fcm_Tokens_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Active_Fcm_Tokens_Order_By>>;
+  where?: InputMaybe<Active_Fcm_Tokens_Bool_Exp>;
+};
+
+
+export type Subscription_RootActive_Fcm_Tokens_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Active_Fcm_Tokens_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Active_Fcm_Tokens_Order_By>>;
+  where?: InputMaybe<Active_Fcm_Tokens_Bool_Exp>;
+};
+
+
+export type Subscription_RootActive_Fcm_Tokens_By_PkArgs = {
+  fcm_token: Scalars['String'];
 };
 
 
@@ -6421,6 +7332,52 @@ export type Subscription_RootInventory_Variants_Metadata_AggregateArgs = {
 
 export type Subscription_RootInventory_Variants_Metadata_By_PkArgs = {
   id: Scalars['Int'];
+};
+
+
+export type Subscription_RootNotificationArgs = {
+  distinct_on?: InputMaybe<Array<Notification_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Notification_Order_By>>;
+  where?: InputMaybe<Notification_Bool_Exp>;
+};
+
+
+export type Subscription_RootNotification_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Notification_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Notification_Order_By>>;
+  where?: InputMaybe<Notification_Bool_Exp>;
+};
+
+
+export type Subscription_RootNotification_By_PkArgs = {
+  id: Scalars['bigint'];
+};
+
+
+export type Subscription_RootNotification_Read_UserArgs = {
+  distinct_on?: InputMaybe<Array<Notification_Read_User_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Notification_Read_User_Order_By>>;
+  where?: InputMaybe<Notification_Read_User_Bool_Exp>;
+};
+
+
+export type Subscription_RootNotification_Read_User_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Notification_Read_User_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Notification_Read_User_Order_By>>;
+  where?: InputMaybe<Notification_Read_User_Bool_Exp>;
+};
+
+
+export type Subscription_RootNotification_Read_User_By_PkArgs = {
+  id: Scalars['bigint'];
 };
 
 
@@ -7997,7 +8954,7 @@ export enum Transaction_Status_Enum_Constraint {
 export enum Transaction_Status_Enum_Enum {
   /** Gagal */
   Failed = 'failed',
-  /** Retur Semua */
+  /** Retur Total */
   ReturnAll = 'return_all',
   /** Retur Sebagian */
   ReturnPart = 'return_part',
@@ -9113,6 +10070,41 @@ export type Inventory_GetVariantMetadataByTitleQueryVariables = Exact<{
 
 export type Inventory_GetVariantMetadataByTitleQuery = { __typename?: 'query_root', inventory_variants_metadata: Array<{ __typename?: 'inventory_variants_metadata', variant_title: string, variant_value: string, id: number }> };
 
+export type Notification_BulkMarkAsReadMutationVariables = Exact<{
+  objects?: InputMaybe<Array<Notification_Read_User_Insert_Input> | Notification_Read_User_Insert_Input>;
+}>;
+
+
+export type Notification_BulkMarkAsReadMutation = { __typename?: 'mutation_root', insert_notification_read_user?: { __typename?: 'notification_read_user_mutation_response', affected_rows: number } | null };
+
+export type Notification_DeleteFcmTokenMutationVariables = Exact<{
+  fcm_token: Scalars['String'];
+}>;
+
+
+export type Notification_DeleteFcmTokenMutation = { __typename?: 'mutation_root', delete_active_fcm_tokens_by_pk?: { __typename?: 'active_fcm_tokens', fcm_token: string } | null };
+
+export type Notification_DeleteReadNotificationsMutationVariables = Exact<{
+  _in: Array<Scalars['bigint']> | Scalars['bigint'];
+}>;
+
+
+export type Notification_DeleteReadNotificationsMutation = { __typename?: 'mutation_root', delete_notification?: { __typename?: 'notification_mutation_response', affected_rows: number } | null };
+
+export type Notification_InsertFcmTokenMutationVariables = Exact<{
+  object: Active_Fcm_Tokens_Insert_Input;
+}>;
+
+
+export type Notification_InsertFcmTokenMutation = { __typename?: 'mutation_root', insert_active_fcm_tokens_one?: { __typename?: 'active_fcm_tokens', fcm_token: string } | null };
+
+export type Notification_GetNotificationsWithReadStatusByUserIdSubscriptionVariables = Exact<{
+  user_id: Scalars['uuid'];
+}>;
+
+
+export type Notification_GetNotificationsWithReadStatusByUserIdSubscription = { __typename?: 'subscription_root', notification: Array<{ __typename?: 'notification', id: any, notification_body?: string | null, notification_title?: string | null, created_at?: any | null, notification_read_users: Array<{ __typename?: 'notification_read_user', user_id: any }> }> };
+
 export type Produk_CreateKategoriProdukMutationVariables = Exact<{
   category?: InputMaybe<Product_Categories_Insert_Input>;
 }>;
@@ -9330,6 +10322,10 @@ export const namedOperations = {
     Inventory_DeleteOneInventoryProductById: 'Inventory_DeleteOneInventoryProductById',
     Inventory_UpdateInventoryProduct: 'Inventory_UpdateInventoryProduct',
     Inventory_UpdateInventoryVariantsMetadata: 'Inventory_UpdateInventoryVariantsMetadata',
+    Notification_BulkMarkAsRead: 'Notification_BulkMarkAsRead',
+    Notification_DeleteFcmToken: 'Notification_DeleteFcmToken',
+    Notification_DeleteReadNotifications: 'Notification_DeleteReadNotifications',
+    Notification_InsertFcmToken: 'Notification_InsertFcmToken',
     Produk_CreateKategoriProduk: 'Produk_CreateKategoriProduk',
     Produk_CreateProduk: 'Produk_CreateProduk',
     Produk_DeleteKategoriProdukId: 'Produk_DeleteKategoriProdukId',
@@ -9347,7 +10343,8 @@ export const namedOperations = {
     User_UpdateUserForAdmin: 'User_UpdateUserForAdmin'
   },
   Subscription: {
-    Inventory_GetAllInventoryProductByStoreIdSubscription: 'Inventory_GetAllInventoryProductByStoreIdSubscription'
+    Inventory_GetAllInventoryProductByStoreIdSubscription: 'Inventory_GetAllInventoryProductByStoreIdSubscription',
+    Notification_GetNotificationsWithReadStatusByUserId: 'Notification_GetNotificationsWithReadStatusByUserId'
   }
 }
 
@@ -9885,6 +10882,177 @@ export function useInventory_GetVariantMetadataByTitleLazyQuery(baseOptions?: Ap
 export type Inventory_GetVariantMetadataByTitleQueryHookResult = ReturnType<typeof useInventory_GetVariantMetadataByTitleQuery>;
 export type Inventory_GetVariantMetadataByTitleLazyQueryHookResult = ReturnType<typeof useInventory_GetVariantMetadataByTitleLazyQuery>;
 export type Inventory_GetVariantMetadataByTitleQueryResult = Apollo.QueryResult<Inventory_GetVariantMetadataByTitleQuery, Inventory_GetVariantMetadataByTitleQueryVariables>;
+export const Notification_BulkMarkAsReadDocument = gql`
+    mutation Notification_BulkMarkAsRead($objects: [notification_read_user_insert_input!] = {}) {
+  insert_notification_read_user(objects: $objects) {
+    affected_rows
+  }
+}
+    `;
+export type Notification_BulkMarkAsReadMutationFn = Apollo.MutationFunction<Notification_BulkMarkAsReadMutation, Notification_BulkMarkAsReadMutationVariables>;
+
+/**
+ * __useNotification_BulkMarkAsReadMutation__
+ *
+ * To run a mutation, you first call `useNotification_BulkMarkAsReadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useNotification_BulkMarkAsReadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [notificationBulkMarkAsReadMutation, { data, loading, error }] = useNotification_BulkMarkAsReadMutation({
+ *   variables: {
+ *      objects: // value for 'objects'
+ *   },
+ * });
+ */
+export function useNotification_BulkMarkAsReadMutation(baseOptions?: Apollo.MutationHookOptions<Notification_BulkMarkAsReadMutation, Notification_BulkMarkAsReadMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Notification_BulkMarkAsReadMutation, Notification_BulkMarkAsReadMutationVariables>(Notification_BulkMarkAsReadDocument, options);
+      }
+export type Notification_BulkMarkAsReadMutationHookResult = ReturnType<typeof useNotification_BulkMarkAsReadMutation>;
+export type Notification_BulkMarkAsReadMutationResult = Apollo.MutationResult<Notification_BulkMarkAsReadMutation>;
+export type Notification_BulkMarkAsReadMutationOptions = Apollo.BaseMutationOptions<Notification_BulkMarkAsReadMutation, Notification_BulkMarkAsReadMutationVariables>;
+export const Notification_DeleteFcmTokenDocument = gql`
+    mutation Notification_DeleteFcmToken($fcm_token: String!) {
+  delete_active_fcm_tokens_by_pk(fcm_token: $fcm_token) {
+    fcm_token
+  }
+}
+    `;
+export type Notification_DeleteFcmTokenMutationFn = Apollo.MutationFunction<Notification_DeleteFcmTokenMutation, Notification_DeleteFcmTokenMutationVariables>;
+
+/**
+ * __useNotification_DeleteFcmTokenMutation__
+ *
+ * To run a mutation, you first call `useNotification_DeleteFcmTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useNotification_DeleteFcmTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [notificationDeleteFcmTokenMutation, { data, loading, error }] = useNotification_DeleteFcmTokenMutation({
+ *   variables: {
+ *      fcm_token: // value for 'fcm_token'
+ *   },
+ * });
+ */
+export function useNotification_DeleteFcmTokenMutation(baseOptions?: Apollo.MutationHookOptions<Notification_DeleteFcmTokenMutation, Notification_DeleteFcmTokenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Notification_DeleteFcmTokenMutation, Notification_DeleteFcmTokenMutationVariables>(Notification_DeleteFcmTokenDocument, options);
+      }
+export type Notification_DeleteFcmTokenMutationHookResult = ReturnType<typeof useNotification_DeleteFcmTokenMutation>;
+export type Notification_DeleteFcmTokenMutationResult = Apollo.MutationResult<Notification_DeleteFcmTokenMutation>;
+export type Notification_DeleteFcmTokenMutationOptions = Apollo.BaseMutationOptions<Notification_DeleteFcmTokenMutation, Notification_DeleteFcmTokenMutationVariables>;
+export const Notification_DeleteReadNotificationsDocument = gql`
+    mutation Notification_DeleteReadNotifications($_in: [bigint!]!) {
+  delete_notification(where: {id: {_in: $_in}}) {
+    affected_rows
+  }
+}
+    `;
+export type Notification_DeleteReadNotificationsMutationFn = Apollo.MutationFunction<Notification_DeleteReadNotificationsMutation, Notification_DeleteReadNotificationsMutationVariables>;
+
+/**
+ * __useNotification_DeleteReadNotificationsMutation__
+ *
+ * To run a mutation, you first call `useNotification_DeleteReadNotificationsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useNotification_DeleteReadNotificationsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [notificationDeleteReadNotificationsMutation, { data, loading, error }] = useNotification_DeleteReadNotificationsMutation({
+ *   variables: {
+ *      _in: // value for '_in'
+ *   },
+ * });
+ */
+export function useNotification_DeleteReadNotificationsMutation(baseOptions?: Apollo.MutationHookOptions<Notification_DeleteReadNotificationsMutation, Notification_DeleteReadNotificationsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Notification_DeleteReadNotificationsMutation, Notification_DeleteReadNotificationsMutationVariables>(Notification_DeleteReadNotificationsDocument, options);
+      }
+export type Notification_DeleteReadNotificationsMutationHookResult = ReturnType<typeof useNotification_DeleteReadNotificationsMutation>;
+export type Notification_DeleteReadNotificationsMutationResult = Apollo.MutationResult<Notification_DeleteReadNotificationsMutation>;
+export type Notification_DeleteReadNotificationsMutationOptions = Apollo.BaseMutationOptions<Notification_DeleteReadNotificationsMutation, Notification_DeleteReadNotificationsMutationVariables>;
+export const Notification_InsertFcmTokenDocument = gql`
+    mutation Notification_InsertFcmToken($object: active_fcm_tokens_insert_input!) {
+  insert_active_fcm_tokens_one(
+    object: $object
+    on_conflict: {constraint: active_fcm_tokens_pkey, update_columns: fcm_token}
+  ) {
+    fcm_token
+  }
+}
+    `;
+export type Notification_InsertFcmTokenMutationFn = Apollo.MutationFunction<Notification_InsertFcmTokenMutation, Notification_InsertFcmTokenMutationVariables>;
+
+/**
+ * __useNotification_InsertFcmTokenMutation__
+ *
+ * To run a mutation, you first call `useNotification_InsertFcmTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useNotification_InsertFcmTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [notificationInsertFcmTokenMutation, { data, loading, error }] = useNotification_InsertFcmTokenMutation({
+ *   variables: {
+ *      object: // value for 'object'
+ *   },
+ * });
+ */
+export function useNotification_InsertFcmTokenMutation(baseOptions?: Apollo.MutationHookOptions<Notification_InsertFcmTokenMutation, Notification_InsertFcmTokenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Notification_InsertFcmTokenMutation, Notification_InsertFcmTokenMutationVariables>(Notification_InsertFcmTokenDocument, options);
+      }
+export type Notification_InsertFcmTokenMutationHookResult = ReturnType<typeof useNotification_InsertFcmTokenMutation>;
+export type Notification_InsertFcmTokenMutationResult = Apollo.MutationResult<Notification_InsertFcmTokenMutation>;
+export type Notification_InsertFcmTokenMutationOptions = Apollo.BaseMutationOptions<Notification_InsertFcmTokenMutation, Notification_InsertFcmTokenMutationVariables>;
+export const Notification_GetNotificationsWithReadStatusByUserIdDocument = gql`
+    subscription Notification_GetNotificationsWithReadStatusByUserId($user_id: uuid!) {
+  notification(order_by: {created_at: desc_nulls_last}) {
+    id
+    notification_body
+    notification_title
+    notification_read_users(where: {user_id: {_eq: $user_id}}) {
+      user_id
+    }
+    created_at
+  }
+}
+    `;
+
+/**
+ * __useNotification_GetNotificationsWithReadStatusByUserIdSubscription__
+ *
+ * To run a query within a React component, call `useNotification_GetNotificationsWithReadStatusByUserIdSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useNotification_GetNotificationsWithReadStatusByUserIdSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNotification_GetNotificationsWithReadStatusByUserIdSubscription({
+ *   variables: {
+ *      user_id: // value for 'user_id'
+ *   },
+ * });
+ */
+export function useNotification_GetNotificationsWithReadStatusByUserIdSubscription(baseOptions: Apollo.SubscriptionHookOptions<Notification_GetNotificationsWithReadStatusByUserIdSubscription, Notification_GetNotificationsWithReadStatusByUserIdSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<Notification_GetNotificationsWithReadStatusByUserIdSubscription, Notification_GetNotificationsWithReadStatusByUserIdSubscriptionVariables>(Notification_GetNotificationsWithReadStatusByUserIdDocument, options);
+      }
+export type Notification_GetNotificationsWithReadStatusByUserIdSubscriptionHookResult = ReturnType<typeof useNotification_GetNotificationsWithReadStatusByUserIdSubscription>;
+export type Notification_GetNotificationsWithReadStatusByUserIdSubscriptionResult = Apollo.SubscriptionResult<Notification_GetNotificationsWithReadStatusByUserIdSubscription>;
 export const Produk_CreateKategoriProdukDocument = gql`
     mutation Produk_CreateKategoriProduk($category: product_categories_insert_input = {}) {
   insert_product_categories_one(object: $category) {
