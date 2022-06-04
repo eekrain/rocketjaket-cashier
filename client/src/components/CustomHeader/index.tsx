@@ -10,23 +10,25 @@ import {
   Text,
   VStack,
   Icon,
-  IconButton,
   Badge,
   useContrastText,
 } from 'native-base';
 import {
   useMyUser,
-  // getXHasuraContextHeader,
   getStorageFileUrlWImageTransform,
+  getXHasuraContextHeader,
 } from '../../shared/utils';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {useState} from 'react';
 import {allAppRoutes, AppNavigationParamList} from '../../screens/app';
 import {MyAvatar} from '../../shared/components';
-// import {useUser_DeleteFcmTokenByUserIdMutation} from '../../graphql/gql-generated';
 import {useSignOut, useAuthenticationStatus} from '@nhost/react';
 import {useNavigation} from '@react-navigation/native';
 import {DrawerScreenProps} from '@react-navigation/drawer';
+import {useMyNotification} from '../../state';
+import {useNotification_DeleteFcmTokenMutation} from '../../graphql/gql-generated';
+import messaging from '@react-native-firebase/messaging';
+import to from 'await-to-js';
 
 export const customHeaderHeight: number = 70;
 
@@ -57,32 +59,19 @@ const CustomHeader = ({}: ICustomHeaderProps) => {
   const [isNotifPressed, setNotifPressed] = useState(false);
   const [isAvatarPressed, setAvatarPressed] = useState(false);
 
-  // const [deleteFcmToken] = useUser_DeleteFcmTokenByUserIdMutation({
-  //   ...getXHasuraContextHeader({role: 'me', withUserId: true}),
-  // });
+  const myNotif = useMyNotification();
 
-  const handleLogout = () => {
-    signOut();
-    // nhostAuth.setLoading(true);
-    // nhostAuth
-    //   .signOut(async () => {
-    //     const resDelete = await deleteFcmToken({
-    //       variables: {
-    //         user_id: nhostAuth.user.userId,
-    //         fcm_token: nhostAuth.fcmToken,
-    //       },
-    //     }).catch(error => {
-    //       console.error(
-    //         '🚀 ~ file: index.tsx ~ line 65 ~ .signOut ~ error',
-    //         error,
-    //       );
-    //     });
-    //     console.log(
-    //       '🚀 ~ file: index.tsx ~ line 65 ~ .signOut ~ resDelete',
-    //       resDelete,
-    //     );
-    //   })
-    //   .finally(() => nhostAuth.setLoading(false));
+  const [deleteFcmToken] = useNotification_DeleteFcmTokenMutation({
+    ...getXHasuraContextHeader({role: 'me'}),
+  });
+
+  const handleLogout = async () => {
+    const fcm_token = await messaging().getToken();
+    const [err, res] = await to(deleteFcmToken({variables: {fcm_token}}));
+    if (err || !res) {
+      console.log('🚀 ~ file: index.tsx ~ line 72 ~ handleLogout ~ err', err);
+    }
+    await signOut();
   };
 
   return (
@@ -100,34 +89,32 @@ const CustomHeader = ({}: ICustomHeaderProps) => {
           {getRouteNiceName(route.name)}
         </Heading>
       </HStack>
-      <HStack space="4" alignItems="center">
-        <VStack>
-          <Badge
-            bgColor={isNotifPressed ? 'orange.300' : 'orange.500'}
-            rounded="full"
-            mb={-6}
-            mr={0}
-            zIndex={1}
-            variant="solid"
-            alignSelf="flex-end"
-            _text={{
-              fontSize: 12,
-            }}>
-            2
-          </Badge>
-          <IconButton
-            variant="ghost"
-            mx={{
-              base: 'auto',
-              md: 0,
-            }}
-            rounded="full"
-            p="2"
-            _icon={{as: FeatherIcon, name: 'bell', color: 'white'}}
-            onPressIn={() => setNotifPressed(true)}
-            onPressOut={() => setNotifPressed(false)}
-          />
-        </VStack>
+      <HStack space="6" alignItems="center">
+        <Pressable
+          onPressIn={() => setNotifPressed(true)}
+          onPressOut={() => {
+            setNotifPressed(false);
+            navigation.navigate('Notification');
+          }}>
+          <VStack>
+            {myNotif.total_unread > 0 && (
+              <Badge
+                bgColor={isNotifPressed ? 'orange.300' : 'orange.500'}
+                rounded="full"
+                mb="-10px"
+                mr={-2}
+                zIndex={1}
+                variant="solid"
+                alignSelf="flex-end"
+                _text={{
+                  fontSize: 10,
+                }}>
+                {myNotif.total_unread}
+              </Badge>
+            )}
+            <Icon as={FeatherIcon} name="bell" size="lg" color="white" />
+          </VStack>
+        </Pressable>
         <Popover
           trigger={triggerProps => (
             <Pressable

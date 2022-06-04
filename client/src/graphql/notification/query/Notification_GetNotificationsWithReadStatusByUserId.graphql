@@ -1,0 +1,13 @@
+subscription Notification_GetNotificationsWithReadStatusByUserId(
+  $user_id: uuid!
+) {
+  notification(order_by: {created_at: desc_nulls_last}) {
+    id
+    notification_body
+    notification_title
+    notification_read_users(where: {user_id: {_eq: $user_id}}) {
+      user_id
+    }
+    created_at
+  }
+}
