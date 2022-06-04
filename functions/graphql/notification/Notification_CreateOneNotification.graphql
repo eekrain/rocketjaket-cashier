@@ -1,0 +1,7 @@
+mutation Notification_CreateOneNotification(
+  $notification: notification_insert_input = {}
+) {
+  insert_notification_one(object: $notification) {
+    id
+  }
+}

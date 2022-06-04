@@ -1,0 +1,5 @@
+query Notification_GetActiveFcmTokens {
+  active_fcm_tokens(distinct_on: fcm_token) {
+    fcm_token
+  }
+}
