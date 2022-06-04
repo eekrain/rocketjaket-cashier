@@ -1,0 +1,5 @@
+mutation Notification_DeleteReadNotifications($_in: [bigint!]!) {
+  delete_notification(where: {id: {_in: $_in}}) {
+    affected_rows
+  }
+}

@@ -18,9 +18,13 @@ import TransactionScreen, {
   TransactionRootStackParamList,
 } from './TransactionScreen';
 import {NavigatorScreenParams} from '@react-navigation/native';
+import NotificationScreen from './NotificationScreen';
+import {useMyNotifee} from '../../shared/utils';
+import {useMyNotificationBackgroundTask} from '../../state';
 
 export type AppNavigationParamList = {
   Dashboard: undefined;
+  Notification: undefined;
   TransactionRoot: NavigatorScreenParams<TransactionRootStackParamList>;
   Profile: undefined;
   ProdukRoot: undefined;
@@ -88,6 +92,12 @@ export const rootAppRoutes: IAppRoutes[] = [
     routeNiceName: 'Settings',
     role: ['administrator'],
   },
+  {
+    name: 'Notification',
+    component: NotificationScreen,
+    routeNiceName: 'Notification',
+    role: ['administrator', 'karyawan'],
+  },
 ];
 
 export const allAppRoutes = [
@@ -112,6 +122,9 @@ const AppDrawer = createDrawerNavigator<AppNavigationParamList>();
 interface Props {}
 
 const AppNavigation = ({}: Props) => {
+  useMyNotifee();
+  useMyNotificationBackgroundTask();
+
   return (
     <AppDrawer.Navigator
       drawerContent={drawerProps => <CustomDrawerContent {...drawerProps} />}
@@ -132,6 +145,7 @@ export default AppNavigation;
 export const getAppIcon = (screenName: keyof AppNavigationParamList) => {
   if (screenName === 'CashierRoot') return 'monitor';
   if (screenName === 'Dashboard') return 'bar-chart';
+  if (screenName === 'Notification') return 'bell';
   if (screenName === 'TransactionRoot') return 'list';
   if (screenName === 'Profile') return 'user';
   if (screenName === 'ProdukRoot') return 'shopping-bag';

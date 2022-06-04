@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
-import { getAdminSdk } from "../utils";
+import { getAdminSdk, myFirebaseAdminApp } from "../utils";
 import to from "await-to-js";
-import { Transaction_Items_Insert_Input } from "../graphql/gql-generated";
+import {
+  Inventory_GetInventoryProductByIdQuery,
+  Transaction_Items_Insert_Input,
+} from "../graphql/gql-generated";
+import { getMessaging } from "firebase-admin/messaging";
 
 interface UpdateAvailableQtyOnInsertTransactionItem_EventData {
   old?: null;
@@ -41,7 +45,7 @@ export default async (req: Request, res: Response) => {
     );
     return res.status(500).send("Internal server error");
   }
-  if (!resInv || !inv_pdk) {
+  if (!inv_pdk) {
     // If inventory product is actually not found, might be the inventory already deleted,
     //then skip the available_qty synchronizing process
     return res.status(200).send("Inventory isnt found, no need syncing");
@@ -80,7 +84,93 @@ export default async (req: Request, res: Response) => {
     return res.status(500).send("Internal server error");
   }
 
-  // Kurang notifikasi jika kurang dari min_available_qty
+  await sendNotificationOnMinAvailableQty(
+    eventData,
+    newAvailableQtyAfterBought,
+    inv_pdk.min_available_qty
+  );
 
   return res.status(200).send("OK");
+};
+
+const sendNotificationOnMinAvailableQty = async (
+  eventData: UpdateAvailableQtyOnInsertTransactionItem_EventData,
+  newAvailableQtyAfterBought: number,
+  min_available_qty: number
+) => {
+  const sdk = getAdminSdk();
+
+  if (newAvailableQtyAfterBought <= min_available_qty) {
+    const [errFcm, resFcm] = await to(sdk.Notification_GetActiveFcmTokens());
+    const fcmRaw = resFcm?.data.active_fcm_tokens;
+    if (errFcm || !fcmRaw) {
+      console.log(
+        "🚀 ~ file: UpdateAvailableQtyOnInsertTransactionItem.ts ~ line 87 ~ errFcm",
+        errFcm
+      );
+    } else {
+      const tokens = fcmRaw.map((x) => x.fcm_token);
+      const firebaseAdmin = myFirebaseAdminApp();
+      const notification = {
+        title: "Stok Produk Menipis",
+        body: `Produk ${eventData.new.product_name} hanya tersisa ${newAvailableQtyAfterBought}!`,
+      };
+
+      const [errNotif, resNotif] = await to(
+        sdk.Notification_CreateOneNotification({
+          notification: {
+            notification_body: notification.body,
+            notification_title: notification.title,
+          },
+        })
+      );
+      if (errNotif || !resNotif) {
+        console.log(
+          "🚀 ~ file: UpdateAvailableQtyOnInsertTransactionItem.ts ~ line 161 ~ errNotif",
+          errNotif
+        );
+      }
+      const notification_id = resNotif?.data.insert_notification_one?.id;
+
+      const [errMulticast, resMulticast] = await to(
+        firebaseAdmin.messaging.sendMulticast({
+          tokens,
+          data: {
+            notifee: JSON.stringify({
+              title: notification.title,
+              body: notification.body,
+              data: {
+                link: "myapp://inventory",
+                notification_id: notification_id
+                  ? notification_id.toString()
+                  : undefined,
+              },
+              android: {
+                channelId: "default",
+                pressAction: {
+                  id: "default",
+                },
+                actions: notification_id
+                  ? [
+                      {
+                        title: "Mark as Read",
+                        pressAction: {
+                          id: "mark-as-read",
+                        },
+                      },
+                    ]
+                  : undefined,
+              },
+            }),
+          },
+        })
+      );
+      if (errMulticast || !resMulticast) {
+        console.log(
+          "🚀 ~ file: UpdateAvailableQtyOnInsertTransactionItem.ts ~ line 143 ~ errMulticast",
+          errMulticast
+        );
+      }
+    }
+  }
 };

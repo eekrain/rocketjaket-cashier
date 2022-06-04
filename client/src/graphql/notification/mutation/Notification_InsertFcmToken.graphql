@@ -1,0 +1,8 @@
+mutation Notification_InsertFcmToken($object: active_fcm_tokens_insert_input!) {
+  insert_active_fcm_tokens_one(
+    object: $object
+    on_conflict: {constraint: active_fcm_tokens_pkey, update_columns: fcm_token}
+  ) {
+    fcm_token
+  }
+}
