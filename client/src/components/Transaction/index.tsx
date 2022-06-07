@@ -18,7 +18,7 @@ import {
   useStore_GetStoreByPkQuery,
   useTransaction_GetAllTransactionByStoreIdQuery,
 } from '../../graphql/gql-generated';
-import CustomTable from '../CustomTable';
+import CustomTable, {CustomTableColumn} from '../CustomTable';
 import {useMemo} from 'react';
 import {ButtonEdit} from '../Buttons';
 import {myNumberFormat, useMyUser} from '../../shared/utils';
@@ -113,12 +113,7 @@ const Produk = ({navigation}: Props) => {
       ...transaction,
       handled_by: transaction.karyawan_name,
       total_transaction: myNumberFormat.rp(transaction.total_transaction),
-      profit: myNumberFormat.rp(
-        transaction.transaction_items.reduce(
-          (prevVal: number, currentVal) => prevVal + currentVal.profit,
-          0,
-        ),
-      ),
+      profit: myNumberFormat.rp(transaction.total_profit),
       created_at: dayjs(transaction?.created_at).format('D/M/YYYY H:mm'),
       transaction_status: (
         <Badge
@@ -254,6 +249,7 @@ const Produk = ({navigation}: Props) => {
               Header: 'Profit',
               accessor: 'profit',
               widthRatio: 1,
+              isSkip: !myUser.roles.includes(UserRolesEnum.administrator),
             },
             {Header: 'Diproses Oleh', accessor: 'handled_by', widthRatio: 1},
             {Header: 'Status', accessor: 'transaction_status', widthRatio: 1},

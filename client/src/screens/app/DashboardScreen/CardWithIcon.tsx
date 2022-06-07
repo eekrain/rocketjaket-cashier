@@ -16,10 +16,10 @@ interface CardWithIconProps {
 const cardDefault: InterfaceHStackProps = {
   alignItems: 'center',
   borderRadius: 'lg',
-  pl: 2,
+  pl: 4,
   bgColor: 'teal.600',
-  w: '48',
-  h: '16',
+  w: '64',
+  h: '20',
   py: 2,
   space: '4',
 };

@@ -1,0 +1,6 @@
+query Transaction_GetAllPaymentTypeEnum {
+  transaction_payment_type_enum {
+    payment_type
+    title
+  }
+}

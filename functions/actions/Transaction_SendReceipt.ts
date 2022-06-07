@@ -3,6 +3,7 @@ import axios from "axios";
 import to from "await-to-js";
 import {
   Customers_Bool_Exp,
+  Customer_CreateCustomerMutation,
   InputMaybe,
   Transaction_GetTransactionByPkQuery,
   Transaction_Receipt_Type_Enum_Enum,
@@ -10,15 +11,6 @@ import {
 } from "../graphql/gql-generated";
 import { getAdminSdk } from "../utils";
 import { myNumberFormat } from "../utils/myFormat";
-
-interface Customer {
-  id: string;
-  name?: string | null;
-  email?: string | null;
-  phone_number?: string | null;
-  isError: boolean;
-  errorMessage?: string | null;
-}
 
 export default async (req: Request, res: Response) => {
   const params: Transaction_SendReceiptArgs = req.body.input;
@@ -39,12 +31,21 @@ export default async (req: Request, res: Response) => {
 
   const sdk = getAdminSdk();
 
-  const customer = await getCustomer(params);
+  const [errNewCustomer, resNewCustomer] = await to(
+    sdk.Customer_CreateCustomer({
+      customer: {
+        name: params.customer.name,
+        email: params.customer.email,
+        phone_number: params.customer.phone_number,
+      },
+    })
+  );
+  const customer = resNewCustomer?.data.insert_customers_one;
 
-  if (customer.isError) {
+  if (errNewCustomer || !customer) {
     const out: Transaction_SendReceiptOutput = {
       ...defaultOutput,
-      errorMessage: customer.errorMessage,
+      errorMessage: errNewCustomer?.message,
     };
     return res.send(out);
   }
@@ -75,14 +76,6 @@ export default async (req: Request, res: Response) => {
     customer,
     foundInv.data
   );
-
-  if (sendReceipt.isError) {
-    const out: Transaction_SendReceiptOutput = {
-      ...defaultOutput,
-      errorMessage: sendReceipt.errorMessage,
-    };
-    return res.send(out);
-  }
 
   const [errReceipt, resReceipt] = await to(
     sdk.Transaction_CreateTransactionReceipt({
@@ -115,80 +108,11 @@ export default async (req: Request, res: Response) => {
     name: customer.name,
     email: customer.email,
     phone_number: customer.phone_number,
-    isError: false,
-    errorMessage: "",
+    isError: sendReceipt.isError,
+    errorMessage: sendReceipt.errorMessage,
   };
 
   return res.send(out);
-};
-
-const getCustomer = async (
-  params: Transaction_SendReceiptArgs
-): Promise<Customer> => {
-  const sdk = getAdminSdk();
-
-  const customerSearch:
-    | InputMaybe<Customers_Bool_Exp | Customers_Bool_Exp[]>
-    | undefined = [];
-  if (params.customer?.email) {
-    customerSearch.push({
-      email: {
-        _eq: params.customer.email,
-      },
-    });
-  }
-  if (params.customer?.phone_number) {
-    params.customer.phone_number =
-      params.customer.phone_number.charAt(0) === "0"
-        ? `62${params.customer.phone_number.slice(1)}`
-        : `62${params.customer.phone_number}`;
-    customerSearch.push({
-      phone_number: { _eq: params.customer.phone_number },
-    });
-  }
-  if (params.customer?.id) {
-    customerSearch.push({
-      id: {
-        _eq: params.customer?.id,
-      },
-    });
-  }
-
-  const [errGet, resGet] = await to(
-    sdk.Customer_GetCustomerByEmailOrPhone({
-      _or: customerSearch,
-    })
-  );
-  if (errGet || !resGet)
-    return { isError: true, errorMessage: errGet.message, id: "asd" };
-
-  const customerFound = resGet.data.customers?.[0];
-
-  const [errNewCustomer, resNewCustomer] = await to(
-    sdk.Customer_CreateCustomer({
-      customer: {
-        id: customerFound?.id,
-        name: params.customer.name,
-        email: params.customer.email,
-        phone_number: params.customer.phone_number,
-      },
-    })
-  );
-  const newCustomer = resNewCustomer?.data?.insert_customers_one;
-  if (errNewCustomer || !resNewCustomer || !newCustomer?.id) {
-    return {
-      isError: true,
-      errorMessage: errNewCustomer?.message,
-      id: "asd",
-    };
-  }
-  return {
-    id: newCustomer.id,
-    name: newCustomer.name,
-    email: newCustomer.email,
-    phone_number: newCustomer.phone_number,
-    isError: false,
-  };
 };
 
 interface MyWASendMessageResponse {
@@ -198,7 +122,7 @@ interface MyWASendMessageResponse {
 
 const sendWhatsappMessage = async (
   params: Transaction_SendReceiptArgs,
-  customer: Customer,
+  customer: Customer_CreateCustomerMutation["insert_customers_one"],
   invoice: Transaction_GetTransactionByPkQuery
 ): Promise<MyWASendMessageResponse> => {
   let isError = true;

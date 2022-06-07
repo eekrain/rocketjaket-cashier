@@ -7,6 +7,12 @@ actions:
   permissions:
   - role: karyawan
   - role: administrator
+- name: Dashboard_GetDashboardData
+  definition:
+    kind: ""
+    handler: '{{NHOST_BACKEND_URL}}/v1/functions/actions/Dashboard_GetDashboardData'
+  permissions:
+  - role: administrator
 - name: Transaction_ReturnTransaction
   definition:
     kind: synchronous
@@ -104,6 +110,17 @@ custom_types:
     - description: minus
       is_deprecated: null
       value: minus
+  - name: TimeMode
+    values:
+    - description: daily
+      is_deprecated: null
+      value: daily
+    - description: weekly
+      is_deprecated: null
+      value: weekly
+    - description: monthly
+      is_deprecated: null
+      value: monthly
   input_objects:
   - name: InventoryVariantMetadataInsertInput
   - name: InventoryVariantMetadataNeedUpdateInput
@@ -121,4 +138,9 @@ custom_types:
   - name: Transaction_SendReceiptOutput
   - name: Transaction_RefundTransactionOutput
   - name: Transaction_ReturnTransactionOutput
+  - name: Dashboard_GetDashboardDataOutput
+  - name: PaymentTypePercentage
+  - name: NumberChartData
+  - name: ChartPerStore
+  - name: NumberChartDatasets
   scalars: []

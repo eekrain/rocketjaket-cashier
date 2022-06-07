@@ -54,6 +54,27 @@ export type CustomerInput = {
   phone_number?: InputMaybe<Scalars['String']>;
 };
 
+export type Dashboard_GetDashboardDataOutput = {
+  __typename?: 'Dashboard_GetDashboardDataOutput';
+  firstTransactionDate: Scalars['String'];
+  isCanBackwards: Scalars['Boolean'];
+  isCanForwards: Scalars['Boolean'];
+  itemSoldChart: NumberChartData;
+  omsetChart: NumberChartData;
+  operasionalChart: NumberChartData;
+  paymentTypePercentage: Array<PaymentTypePercentage>;
+  profitChart: NumberChartData;
+  stores: Array<Scalars['Int']>;
+  totalCustomer: Scalars['Int'];
+  totalItemReturned: Scalars['Int'];
+  totalItemSold: Scalars['Int'];
+  totalOmset: Scalars['Int'];
+  totalOperasional: Scalars['Int'];
+  totalProfit: Scalars['Int'];
+  totalReturnedTransaction: Scalars['Int'];
+  totalSuccessTransaction: Scalars['Int'];
+};
+
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['Int']>;
@@ -65,6 +86,24 @@ export type Int_Comparison_Exp = {
   _lte?: InputMaybe<Scalars['Int']>;
   _neq?: InputMaybe<Scalars['Int']>;
   _nin?: InputMaybe<Array<Scalars['Int']>>;
+};
+
+export type NumberChartData = {
+  __typename?: 'NumberChartData';
+  datasets?: Maybe<Array<NumberChartDatasets>>;
+  labels: Array<Scalars['String']>;
+};
+
+export type NumberChartDatasets = {
+  __typename?: 'NumberChartDatasets';
+  data: Array<Scalars['Int']>;
+  store_id: Scalars['Int'];
+};
+
+export type PaymentTypePercentage = {
+  __typename?: 'PaymentTypePercentage';
+  payment_type: Scalars['String'];
+  value: Scalars['Float'];
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
@@ -99,6 +138,15 @@ export type String_Comparison_Exp = {
   /** does the column match the given SQL regular expression */
   _similar?: InputMaybe<Scalars['String']>;
 };
+
+export enum TimeMode {
+  /** mothly */
+  Mothly = 'mothly',
+  /** weekly */
+  Weekly = 'weekly',
+  /** yearly */
+  Yearly = 'yearly'
+}
 
 export enum TotalTransactionCompare {
   /** minus */
@@ -1738,7 +1786,7 @@ export type Customers_Bool_Exp = {
 /** unique or primary key constraints on table "customers" */
 export enum Customers_Constraint {
   /** unique or primary key constraint */
-  CustomersPhoneNumberEmailKey = 'customers_phone_number_email_key',
+  CustomersPhoneNumberKey = 'customers_phone_number_key',
   /** unique or primary key constraint */
   CustomersPkey = 'customers_pkey'
 }
@@ -3303,6 +3351,10 @@ export type Mutation_Root = {
   delete_notification_read_user?: Maybe<Notification_Read_User_Mutation_Response>;
   /** delete single row from the table: "notification_read_user" */
   delete_notification_read_user_by_pk?: Maybe<Notification_Read_User>;
+  /** delete data from the table: "operational_costs" */
+  delete_operational_costs?: Maybe<Operational_Costs_Mutation_Response>;
+  /** delete single row from the table: "operational_costs" */
+  delete_operational_costs_by_pk?: Maybe<Operational_Costs>;
   /** delete data from the table: "product_categories" */
   delete_product_categories?: Maybe<Product_Categories_Mutation_Response>;
   /** delete single row from the table: "product_categories" */
@@ -3407,6 +3459,10 @@ export type Mutation_Root = {
   insert_notification_read_user?: Maybe<Notification_Read_User_Mutation_Response>;
   /** insert a single row into the table: "notification_read_user" */
   insert_notification_read_user_one?: Maybe<Notification_Read_User>;
+  /** insert data into the table: "operational_costs" */
+  insert_operational_costs?: Maybe<Operational_Costs_Mutation_Response>;
+  /** insert a single row into the table: "operational_costs" */
+  insert_operational_costs_one?: Maybe<Operational_Costs>;
   /** insert data into the table: "product_categories" */
   insert_product_categories?: Maybe<Product_Categories_Mutation_Response>;
   /** insert a single row into the table: "product_categories" */
@@ -3511,6 +3567,10 @@ export type Mutation_Root = {
   update_notification_read_user?: Maybe<Notification_Read_User_Mutation_Response>;
   /** update single row of the table: "notification_read_user" */
   update_notification_read_user_by_pk?: Maybe<Notification_Read_User>;
+  /** update data of the table: "operational_costs" */
+  update_operational_costs?: Maybe<Operational_Costs_Mutation_Response>;
+  /** update single row of the table: "operational_costs" */
+  update_operational_costs_by_pk?: Maybe<Operational_Costs>;
   /** update data of the table: "product_categories" */
   update_product_categories?: Maybe<Product_Categories_Mutation_Response>;
   /** update single row of the table: "product_categories" */
@@ -3785,6 +3845,18 @@ export type Mutation_RootDelete_Notification_Read_UserArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Notification_Read_User_By_PkArgs = {
   id: Scalars['bigint'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Operational_CostsArgs = {
+  where: Operational_Costs_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Operational_Costs_By_PkArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -4129,6 +4201,20 @@ export type Mutation_RootInsert_Notification_Read_UserArgs = {
 export type Mutation_RootInsert_Notification_Read_User_OneArgs = {
   object: Notification_Read_User_Insert_Input;
   on_conflict?: InputMaybe<Notification_Read_User_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Operational_CostsArgs = {
+  objects: Array<Operational_Costs_Insert_Input>;
+  on_conflict?: InputMaybe<Operational_Costs_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Operational_Costs_OneArgs = {
+  object: Operational_Costs_Insert_Input;
+  on_conflict?: InputMaybe<Operational_Costs_On_Conflict>;
 };
 
 
@@ -4527,6 +4613,22 @@ export type Mutation_RootUpdate_Notification_Read_User_By_PkArgs = {
   _inc?: InputMaybe<Notification_Read_User_Inc_Input>;
   _set?: InputMaybe<Notification_Read_User_Set_Input>;
   pk_columns: Notification_Read_User_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Operational_CostsArgs = {
+  _inc?: InputMaybe<Operational_Costs_Inc_Input>;
+  _set?: InputMaybe<Operational_Costs_Set_Input>;
+  where: Operational_Costs_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Operational_Costs_By_PkArgs = {
+  _inc?: InputMaybe<Operational_Costs_Inc_Input>;
+  _set?: InputMaybe<Operational_Costs_Set_Input>;
+  pk_columns: Operational_Costs_Pk_Columns_Input;
 };
 
 
@@ -5188,6 +5290,345 @@ export type Notification_Variance_Fields = {
   id?: Maybe<Scalars['Float']>;
 };
 
+/** columns and relationships of "operational_costs" */
+export type Operational_Costs = {
+  __typename?: 'operational_costs';
+  cost: Scalars['Int'];
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id: Scalars['Int'];
+  karyawan_name?: Maybe<Scalars['String']>;
+  reason: Scalars['String'];
+  /** An object relationship */
+  store: Stores;
+  store_id: Scalars['Int'];
+};
+
+/** aggregated selection of "operational_costs" */
+export type Operational_Costs_Aggregate = {
+  __typename?: 'operational_costs_aggregate';
+  aggregate?: Maybe<Operational_Costs_Aggregate_Fields>;
+  nodes: Array<Operational_Costs>;
+};
+
+/** aggregate fields of "operational_costs" */
+export type Operational_Costs_Aggregate_Fields = {
+  __typename?: 'operational_costs_aggregate_fields';
+  avg?: Maybe<Operational_Costs_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Operational_Costs_Max_Fields>;
+  min?: Maybe<Operational_Costs_Min_Fields>;
+  stddev?: Maybe<Operational_Costs_Stddev_Fields>;
+  stddev_pop?: Maybe<Operational_Costs_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Operational_Costs_Stddev_Samp_Fields>;
+  sum?: Maybe<Operational_Costs_Sum_Fields>;
+  var_pop?: Maybe<Operational_Costs_Var_Pop_Fields>;
+  var_samp?: Maybe<Operational_Costs_Var_Samp_Fields>;
+  variance?: Maybe<Operational_Costs_Variance_Fields>;
+};
+
+
+/** aggregate fields of "operational_costs" */
+export type Operational_Costs_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Operational_Costs_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "operational_costs" */
+export type Operational_Costs_Aggregate_Order_By = {
+  avg?: InputMaybe<Operational_Costs_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Operational_Costs_Max_Order_By>;
+  min?: InputMaybe<Operational_Costs_Min_Order_By>;
+  stddev?: InputMaybe<Operational_Costs_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Operational_Costs_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Operational_Costs_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Operational_Costs_Sum_Order_By>;
+  var_pop?: InputMaybe<Operational_Costs_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Operational_Costs_Var_Samp_Order_By>;
+  variance?: InputMaybe<Operational_Costs_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "operational_costs" */
+export type Operational_Costs_Arr_Rel_Insert_Input = {
+  data: Array<Operational_Costs_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Operational_Costs_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Operational_Costs_Avg_Fields = {
+  __typename?: 'operational_costs_avg_fields';
+  cost?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "operational_costs" */
+export type Operational_Costs_Avg_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "operational_costs". All fields are combined with a logical 'AND'. */
+export type Operational_Costs_Bool_Exp = {
+  _and?: InputMaybe<Array<Operational_Costs_Bool_Exp>>;
+  _not?: InputMaybe<Operational_Costs_Bool_Exp>;
+  _or?: InputMaybe<Array<Operational_Costs_Bool_Exp>>;
+  cost?: InputMaybe<Int_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Int_Comparison_Exp>;
+  karyawan_name?: InputMaybe<String_Comparison_Exp>;
+  reason?: InputMaybe<String_Comparison_Exp>;
+  store?: InputMaybe<Stores_Bool_Exp>;
+  store_id?: InputMaybe<Int_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "operational_costs" */
+export enum Operational_Costs_Constraint {
+  /** unique or primary key constraint */
+  OperationalCostsPkey = 'operational_costs_pkey'
+}
+
+/** input type for incrementing numeric columns in table "operational_costs" */
+export type Operational_Costs_Inc_Input = {
+  cost?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']>;
+  store_id?: InputMaybe<Scalars['Int']>;
+};
+
+/** input type for inserting data into table "operational_costs" */
+export type Operational_Costs_Insert_Input = {
+  cost?: InputMaybe<Scalars['Int']>;
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['Int']>;
+  karyawan_name?: InputMaybe<Scalars['String']>;
+  reason?: InputMaybe<Scalars['String']>;
+  store?: InputMaybe<Stores_Obj_Rel_Insert_Input>;
+  store_id?: InputMaybe<Scalars['Int']>;
+};
+
+/** aggregate max on columns */
+export type Operational_Costs_Max_Fields = {
+  __typename?: 'operational_costs_max_fields';
+  cost?: Maybe<Scalars['Int']>;
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['Int']>;
+  karyawan_name?: Maybe<Scalars['String']>;
+  reason?: Maybe<Scalars['String']>;
+  store_id?: Maybe<Scalars['Int']>;
+};
+
+/** order by max() on columns of table "operational_costs" */
+export type Operational_Costs_Max_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  karyawan_name?: InputMaybe<Order_By>;
+  reason?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Operational_Costs_Min_Fields = {
+  __typename?: 'operational_costs_min_fields';
+  cost?: Maybe<Scalars['Int']>;
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['Int']>;
+  karyawan_name?: Maybe<Scalars['String']>;
+  reason?: Maybe<Scalars['String']>;
+  store_id?: Maybe<Scalars['Int']>;
+};
+
+/** order by min() on columns of table "operational_costs" */
+export type Operational_Costs_Min_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  karyawan_name?: InputMaybe<Order_By>;
+  reason?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "operational_costs" */
+export type Operational_Costs_Mutation_Response = {
+  __typename?: 'operational_costs_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Operational_Costs>;
+};
+
+/** on_conflict condition type for table "operational_costs" */
+export type Operational_Costs_On_Conflict = {
+  constraint: Operational_Costs_Constraint;
+  update_columns?: Array<Operational_Costs_Update_Column>;
+  where?: InputMaybe<Operational_Costs_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "operational_costs". */
+export type Operational_Costs_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  karyawan_name?: InputMaybe<Order_By>;
+  reason?: InputMaybe<Order_By>;
+  store?: InputMaybe<Stores_Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: operational_costs */
+export type Operational_Costs_Pk_Columns_Input = {
+  id: Scalars['Int'];
+};
+
+/** select columns of table "operational_costs" */
+export enum Operational_Costs_Select_Column {
+  /** column name */
+  Cost = 'cost',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  KaryawanName = 'karyawan_name',
+  /** column name */
+  Reason = 'reason',
+  /** column name */
+  StoreId = 'store_id'
+}
+
+/** input type for updating data in table "operational_costs" */
+export type Operational_Costs_Set_Input = {
+  cost?: InputMaybe<Scalars['Int']>;
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['Int']>;
+  karyawan_name?: InputMaybe<Scalars['String']>;
+  reason?: InputMaybe<Scalars['String']>;
+  store_id?: InputMaybe<Scalars['Int']>;
+};
+
+/** aggregate stddev on columns */
+export type Operational_Costs_Stddev_Fields = {
+  __typename?: 'operational_costs_stddev_fields';
+  cost?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev() on columns of table "operational_costs" */
+export type Operational_Costs_Stddev_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Operational_Costs_Stddev_Pop_Fields = {
+  __typename?: 'operational_costs_stddev_pop_fields';
+  cost?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "operational_costs" */
+export type Operational_Costs_Stddev_Pop_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Operational_Costs_Stddev_Samp_Fields = {
+  __typename?: 'operational_costs_stddev_samp_fields';
+  cost?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_samp() on columns of table "operational_costs" */
+export type Operational_Costs_Stddev_Samp_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate sum on columns */
+export type Operational_Costs_Sum_Fields = {
+  __typename?: 'operational_costs_sum_fields';
+  cost?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['Int']>;
+  store_id?: Maybe<Scalars['Int']>;
+};
+
+/** order by sum() on columns of table "operational_costs" */
+export type Operational_Costs_Sum_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "operational_costs" */
+export enum Operational_Costs_Update_Column {
+  /** column name */
+  Cost = 'cost',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  KaryawanName = 'karyawan_name',
+  /** column name */
+  Reason = 'reason',
+  /** column name */
+  StoreId = 'store_id'
+}
+
+/** aggregate var_pop on columns */
+export type Operational_Costs_Var_Pop_Fields = {
+  __typename?: 'operational_costs_var_pop_fields';
+  cost?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_pop() on columns of table "operational_costs" */
+export type Operational_Costs_Var_Pop_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Operational_Costs_Var_Samp_Fields = {
+  __typename?: 'operational_costs_var_samp_fields';
+  cost?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_samp() on columns of table "operational_costs" */
+export type Operational_Costs_Var_Samp_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Operational_Costs_Variance_Fields = {
+  __typename?: 'operational_costs_variance_fields';
+  cost?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "operational_costs" */
+export type Operational_Costs_Variance_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
 /** column ordering options */
 export enum Order_By {
   /** in ascending order, nulls last */
@@ -5827,6 +6268,7 @@ export type Products_Variance_Order_By = {
 
 export type Query_Root = {
   __typename?: 'query_root';
+  Dashboard_GetDashboardData?: Maybe<Dashboard_GetDashboardDataOutput>;
   Whatsapp_GetAuthStatus?: Maybe<Whatsapp_GetAuthStatusOutput>;
   /** fetch data from the table: "active_fcm_tokens" */
   active_fcm_tokens: Array<Active_Fcm_Tokens>;
@@ -5918,6 +6360,12 @@ export type Query_Root = {
   notification_read_user_aggregate: Notification_Read_User_Aggregate;
   /** fetch data from the table: "notification_read_user" using primary key columns */
   notification_read_user_by_pk?: Maybe<Notification_Read_User>;
+  /** An array relationship */
+  operational_costs: Array<Operational_Costs>;
+  /** An aggregate relationship */
+  operational_costs_aggregate: Operational_Costs_Aggregate;
+  /** fetch data from the table: "operational_costs" using primary key columns */
+  operational_costs_by_pk?: Maybe<Operational_Costs>;
   /** fetch data from the table: "product_categories" */
   product_categories: Array<Product_Categories>;
   /** fetch aggregated fields from the table: "product_categories" */
@@ -5984,6 +6432,14 @@ export type Query_Root = {
   users_metadata_aggregate: Users_Metadata_Aggregate;
   /** fetch data from the table: "users_metadata" using primary key columns */
   users_metadata_by_pk?: Maybe<Users_Metadata>;
+};
+
+
+export type Query_RootDashboard_GetDashboardDataArgs = {
+  mode: TimeMode;
+  startDate: Scalars['String'];
+  stores: Array<Scalars['Int']>;
+  untilDate: Scalars['String'];
 };
 
 
@@ -6332,6 +6788,29 @@ export type Query_RootNotification_Read_User_By_PkArgs = {
 };
 
 
+export type Query_RootOperational_CostsArgs = {
+  distinct_on?: InputMaybe<Array<Operational_Costs_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Operational_Costs_Order_By>>;
+  where?: InputMaybe<Operational_Costs_Bool_Exp>;
+};
+
+
+export type Query_RootOperational_Costs_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Operational_Costs_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Operational_Costs_Order_By>>;
+  where?: InputMaybe<Operational_Costs_Bool_Exp>;
+};
+
+
+export type Query_RootOperational_Costs_By_PkArgs = {
+  id: Scalars['Int'];
+};
+
+
 export type Query_RootProduct_CategoriesArgs = {
   distinct_on?: InputMaybe<Array<Product_Categories_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -6597,6 +7076,14 @@ export type Stores = {
   latitude: Scalars['String'];
   longitude: Scalars['String'];
   name: Scalars['String'];
+  /** An array relationship */
+  operational_costs: Array<Operational_Costs>;
+  /** An aggregate relationship */
+  operational_costs_aggregate: Operational_Costs_Aggregate;
+  /** An array relationship */
+  transactions: Array<Transaction>;
+  /** An aggregate relationship */
+  transactions_aggregate: Transaction_Aggregate;
   updated_at: Scalars['timestamptz'];
   /** An array relationship */
   users_metadata: Array<Users_Metadata>;
@@ -6622,6 +7109,46 @@ export type StoresInventory_Products_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Inventory_Products_Order_By>>;
   where?: InputMaybe<Inventory_Products_Bool_Exp>;
+};
+
+
+/** columns and relationships of "stores" */
+export type StoresOperational_CostsArgs = {
+  distinct_on?: InputMaybe<Array<Operational_Costs_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Operational_Costs_Order_By>>;
+  where?: InputMaybe<Operational_Costs_Bool_Exp>;
+};
+
+
+/** columns and relationships of "stores" */
+export type StoresOperational_Costs_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Operational_Costs_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Operational_Costs_Order_By>>;
+  where?: InputMaybe<Operational_Costs_Bool_Exp>;
+};
+
+
+/** columns and relationships of "stores" */
+export type StoresTransactionsArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_Order_By>>;
+  where?: InputMaybe<Transaction_Bool_Exp>;
+};
+
+
+/** columns and relationships of "stores" */
+export type StoresTransactions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_Order_By>>;
+  where?: InputMaybe<Transaction_Bool_Exp>;
 };
 
 
@@ -6692,6 +7219,8 @@ export type Stores_Bool_Exp = {
   latitude?: InputMaybe<String_Comparison_Exp>;
   longitude?: InputMaybe<String_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
+  operational_costs?: InputMaybe<Operational_Costs_Bool_Exp>;
+  transactions?: InputMaybe<Transaction_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   users_metadata?: InputMaybe<Users_Metadata_Bool_Exp>;
 };
@@ -6718,6 +7247,8 @@ export type Stores_Insert_Input = {
   latitude?: InputMaybe<Scalars['String']>;
   longitude?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  operational_costs?: InputMaybe<Operational_Costs_Arr_Rel_Insert_Input>;
+  transactions?: InputMaybe<Transaction_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
   users_metadata?: InputMaybe<Users_Metadata_Arr_Rel_Insert_Input>;
 };
@@ -6778,6 +7309,8 @@ export type Stores_Order_By = {
   latitude?: InputMaybe<Order_By>;
   longitude?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
+  operational_costs_aggregate?: InputMaybe<Operational_Costs_Aggregate_Order_By>;
+  transactions_aggregate?: InputMaybe<Transaction_Aggregate_Order_By>;
   updated_at?: InputMaybe<Order_By>;
   users_metadata_aggregate?: InputMaybe<Users_Metadata_Aggregate_Order_By>;
 };
@@ -6968,6 +7501,12 @@ export type Subscription_Root = {
   notification_read_user_aggregate: Notification_Read_User_Aggregate;
   /** fetch data from the table: "notification_read_user" using primary key columns */
   notification_read_user_by_pk?: Maybe<Notification_Read_User>;
+  /** An array relationship */
+  operational_costs: Array<Operational_Costs>;
+  /** An aggregate relationship */
+  operational_costs_aggregate: Operational_Costs_Aggregate;
+  /** fetch data from the table: "operational_costs" using primary key columns */
+  operational_costs_by_pk?: Maybe<Operational_Costs>;
   /** fetch data from the table: "product_categories" */
   product_categories: Array<Product_Categories>;
   /** fetch aggregated fields from the table: "product_categories" */
@@ -7382,6 +7921,29 @@ export type Subscription_RootNotification_Read_User_By_PkArgs = {
 };
 
 
+export type Subscription_RootOperational_CostsArgs = {
+  distinct_on?: InputMaybe<Array<Operational_Costs_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Operational_Costs_Order_By>>;
+  where?: InputMaybe<Operational_Costs_Bool_Exp>;
+};
+
+
+export type Subscription_RootOperational_Costs_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Operational_Costs_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Operational_Costs_Order_By>>;
+  where?: InputMaybe<Operational_Costs_Bool_Exp>;
+};
+
+
+export type Subscription_RootOperational_Costs_By_PkArgs = {
+  id: Scalars['Int'];
+};
+
+
 export type Subscription_RootProduct_CategoriesArgs = {
   distinct_on?: InputMaybe<Array<Product_Categories_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -7650,7 +8212,8 @@ export type Timestamptz_Comparison_Exp = {
 /** columns and relationships of "transaction" */
 export type Transaction = {
   __typename?: 'transaction';
-  cash_change: Scalars['Int'];
+  /** A computed field, executes function "transaction_cash_change" */
+  cash_change?: Maybe<Scalars['bigint']>;
   cash_in_amount: Scalars['Int'];
   created_at: Scalars['timestamptz'];
   invoice_number: Scalars['String'];
@@ -7660,7 +8223,12 @@ export type Transaction = {
   /** An object relationship */
   store: Stores;
   store_id: Scalars['Int'];
-  total_transaction: Scalars['Int'];
+  /** A computed field, executes function "transaction_total_profit" */
+  total_profit?: Maybe<Scalars['bigint']>;
+  /** A computed field, executes function "transaction_total_purchased_product" */
+  total_purchased_product?: Maybe<Scalars['bigint']>;
+  /** A computed field, executes function "transaction_total_transaction" */
+  total_transaction?: Maybe<Scalars['bigint']>;
   /** fetch data from the table: "transaction_items" */
   transaction_items: Array<Transaction_Items>;
   /** An aggregate relationship */
@@ -7747,13 +8315,39 @@ export type Transaction_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
+/** order by aggregate values of table "transaction" */
+export type Transaction_Aggregate_Order_By = {
+  avg?: InputMaybe<Transaction_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Transaction_Max_Order_By>;
+  min?: InputMaybe<Transaction_Min_Order_By>;
+  stddev?: InputMaybe<Transaction_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Transaction_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Transaction_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Transaction_Sum_Order_By>;
+  var_pop?: InputMaybe<Transaction_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Transaction_Var_Samp_Order_By>;
+  variance?: InputMaybe<Transaction_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "transaction" */
+export type Transaction_Arr_Rel_Insert_Input = {
+  data: Array<Transaction_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Transaction_On_Conflict>;
+};
+
 /** aggregate avg on columns */
 export type Transaction_Avg_Fields = {
   __typename?: 'transaction_avg_fields';
-  cash_change?: Maybe<Scalars['Float']>;
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-  total_transaction?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "transaction" */
+export type Transaction_Avg_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "transaction". All fields are combined with a logical 'AND'. */
@@ -7761,7 +8355,7 @@ export type Transaction_Bool_Exp = {
   _and?: InputMaybe<Array<Transaction_Bool_Exp>>;
   _not?: InputMaybe<Transaction_Bool_Exp>;
   _or?: InputMaybe<Array<Transaction_Bool_Exp>>;
-  cash_change?: InputMaybe<Int_Comparison_Exp>;
+  cash_change?: InputMaybe<Bigint_Comparison_Exp>;
   cash_in_amount?: InputMaybe<Int_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   invoice_number?: InputMaybe<String_Comparison_Exp>;
@@ -7770,7 +8364,9 @@ export type Transaction_Bool_Exp = {
   return_reason?: InputMaybe<String_Comparison_Exp>;
   store?: InputMaybe<Stores_Bool_Exp>;
   store_id?: InputMaybe<Int_Comparison_Exp>;
-  total_transaction?: InputMaybe<Int_Comparison_Exp>;
+  total_profit?: InputMaybe<Bigint_Comparison_Exp>;
+  total_purchased_product?: InputMaybe<Bigint_Comparison_Exp>;
+  total_transaction?: InputMaybe<Bigint_Comparison_Exp>;
   transaction_items?: InputMaybe<Transaction_Items_Bool_Exp>;
   transaction_payment_type_enum?: InputMaybe<Transaction_Payment_Type_Enum_Bool_Exp>;
   transaction_receipts?: InputMaybe<Transaction_Receipts_Bool_Exp>;
@@ -7787,15 +8383,12 @@ export enum Transaction_Constraint {
 
 /** input type for incrementing numeric columns in table "transaction" */
 export type Transaction_Inc_Input = {
-  cash_change?: InputMaybe<Scalars['Int']>;
   cash_in_amount?: InputMaybe<Scalars['Int']>;
   store_id?: InputMaybe<Scalars['Int']>;
-  total_transaction?: InputMaybe<Scalars['Int']>;
 };
 
 /** input type for inserting data into table "transaction" */
 export type Transaction_Insert_Input = {
-  cash_change?: InputMaybe<Scalars['Int']>;
   cash_in_amount?: InputMaybe<Scalars['Int']>;
   created_at?: InputMaybe<Scalars['timestamptz']>;
   invoice_number?: InputMaybe<Scalars['String']>;
@@ -7804,7 +8397,6 @@ export type Transaction_Insert_Input = {
   return_reason?: InputMaybe<Scalars['String']>;
   store?: InputMaybe<Stores_Obj_Rel_Insert_Input>;
   store_id?: InputMaybe<Scalars['Int']>;
-  total_transaction?: InputMaybe<Scalars['Int']>;
   transaction_items?: InputMaybe<Transaction_Items_Arr_Rel_Insert_Input>;
   transaction_payment_type_enum?: InputMaybe<Transaction_Payment_Type_Enum_Obj_Rel_Insert_Input>;
   transaction_receipts?: InputMaybe<Transaction_Receipts_Arr_Rel_Insert_Input>;
@@ -7824,10 +8416,14 @@ export type Transaction_Items = {
   inventory_product?: Maybe<Inventory_Products>;
   inventory_product_id?: Maybe<Scalars['uuid']>;
   product_name: Scalars['String'];
-  profit: Scalars['Int'];
+  /** A computed field, executes function "transaction_items_profit" */
+  profit?: Maybe<Scalars['Int']>;
   purchase_qty: Scalars['Int'];
+  /** A computed field, executes function "transaction_items_real_capital_price" */
+  real_capital_price?: Maybe<Scalars['Int']>;
   selling_price: Scalars['Int'];
-  subtotal: Scalars['Int'];
+  /** A computed field, executes function "transaction_items_subtotal" */
+  subtotal?: Maybe<Scalars['Int']>;
   /** An object relationship */
   transaction: Transaction;
   transaction_invoice_number: Scalars['String'];
@@ -7894,20 +8490,16 @@ export type Transaction_Items_Avg_Fields = {
   __typename?: 'transaction_items_avg_fields';
   capital_price?: Maybe<Scalars['Float']>;
   discount?: Maybe<Scalars['Float']>;
-  profit?: Maybe<Scalars['Float']>;
   purchase_qty?: Maybe<Scalars['Float']>;
   selling_price?: Maybe<Scalars['Float']>;
-  subtotal?: Maybe<Scalars['Float']>;
 };
 
 /** order by avg() on columns of table "transaction_items" */
 export type Transaction_Items_Avg_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "transaction_items". All fields are combined with a logical 'AND'. */
@@ -7924,6 +8516,7 @@ export type Transaction_Items_Bool_Exp = {
   product_name?: InputMaybe<String_Comparison_Exp>;
   profit?: InputMaybe<Int_Comparison_Exp>;
   purchase_qty?: InputMaybe<Int_Comparison_Exp>;
+  real_capital_price?: InputMaybe<Int_Comparison_Exp>;
   selling_price?: InputMaybe<Int_Comparison_Exp>;
   subtotal?: InputMaybe<Int_Comparison_Exp>;
   transaction?: InputMaybe<Transaction_Bool_Exp>;
@@ -7943,10 +8536,8 @@ export enum Transaction_Items_Constraint {
 export type Transaction_Items_Inc_Input = {
   capital_price?: InputMaybe<Scalars['Int']>;
   discount?: InputMaybe<Scalars['Int']>;
-  profit?: InputMaybe<Scalars['Int']>;
   purchase_qty?: InputMaybe<Scalars['Int']>;
   selling_price?: InputMaybe<Scalars['Int']>;
-  subtotal?: InputMaybe<Scalars['Int']>;
 };
 
 export type Transaction_Items_Input = {
@@ -7969,10 +8560,8 @@ export type Transaction_Items_Insert_Input = {
   inventory_product?: InputMaybe<Inventory_Products_Obj_Rel_Insert_Input>;
   inventory_product_id?: InputMaybe<Scalars['uuid']>;
   product_name?: InputMaybe<Scalars['String']>;
-  profit?: InputMaybe<Scalars['Int']>;
   purchase_qty?: InputMaybe<Scalars['Int']>;
   selling_price?: InputMaybe<Scalars['Int']>;
-  subtotal?: InputMaybe<Scalars['Int']>;
   transaction?: InputMaybe<Transaction_Obj_Rel_Insert_Input>;
   transaction_invoice_number?: InputMaybe<Scalars['String']>;
   transaction_status?: InputMaybe<Transaction_Status_Enum_Enum>;
@@ -7989,10 +8578,8 @@ export type Transaction_Items_Max_Fields = {
   id?: Maybe<Scalars['uuid']>;
   inventory_product_id?: Maybe<Scalars['uuid']>;
   product_name?: Maybe<Scalars['String']>;
-  profit?: Maybe<Scalars['Int']>;
   purchase_qty?: Maybe<Scalars['Int']>;
   selling_price?: Maybe<Scalars['Int']>;
-  subtotal?: Maybe<Scalars['Int']>;
   transaction_invoice_number?: Maybe<Scalars['String']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
 };
@@ -8005,10 +8592,8 @@ export type Transaction_Items_Max_Order_By = {
   id?: InputMaybe<Order_By>;
   inventory_product_id?: InputMaybe<Order_By>;
   product_name?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
   transaction_invoice_number?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
@@ -8022,10 +8607,8 @@ export type Transaction_Items_Min_Fields = {
   id?: Maybe<Scalars['uuid']>;
   inventory_product_id?: Maybe<Scalars['uuid']>;
   product_name?: Maybe<Scalars['String']>;
-  profit?: Maybe<Scalars['Int']>;
   purchase_qty?: Maybe<Scalars['Int']>;
   selling_price?: Maybe<Scalars['Int']>;
-  subtotal?: Maybe<Scalars['Int']>;
   transaction_invoice_number?: Maybe<Scalars['String']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
 };
@@ -8038,10 +8621,8 @@ export type Transaction_Items_Min_Order_By = {
   id?: InputMaybe<Order_By>;
   inventory_product_id?: InputMaybe<Order_By>;
   product_name?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
   transaction_invoice_number?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
@@ -8073,6 +8654,7 @@ export type Transaction_Items_Order_By = {
   product_name?: InputMaybe<Order_By>;
   profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
+  real_capital_price?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
   subtotal?: InputMaybe<Order_By>;
   transaction?: InputMaybe<Transaction_Order_By>;
@@ -8102,13 +8684,9 @@ export enum Transaction_Items_Select_Column {
   /** column name */
   ProductName = 'product_name',
   /** column name */
-  Profit = 'profit',
-  /** column name */
   PurchaseQty = 'purchase_qty',
   /** column name */
   SellingPrice = 'selling_price',
-  /** column name */
-  Subtotal = 'subtotal',
   /** column name */
   TransactionInvoiceNumber = 'transaction_invoice_number',
   /** column name */
@@ -8125,10 +8703,8 @@ export type Transaction_Items_Set_Input = {
   id?: InputMaybe<Scalars['uuid']>;
   inventory_product_id?: InputMaybe<Scalars['uuid']>;
   product_name?: InputMaybe<Scalars['String']>;
-  profit?: InputMaybe<Scalars['Int']>;
   purchase_qty?: InputMaybe<Scalars['Int']>;
   selling_price?: InputMaybe<Scalars['Int']>;
-  subtotal?: InputMaybe<Scalars['Int']>;
   transaction_invoice_number?: InputMaybe<Scalars['String']>;
   transaction_status?: InputMaybe<Transaction_Status_Enum_Enum>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
@@ -8139,20 +8715,16 @@ export type Transaction_Items_Stddev_Fields = {
   __typename?: 'transaction_items_stddev_fields';
   capital_price?: Maybe<Scalars['Float']>;
   discount?: Maybe<Scalars['Float']>;
-  profit?: Maybe<Scalars['Float']>;
   purchase_qty?: Maybe<Scalars['Float']>;
   selling_price?: Maybe<Scalars['Float']>;
-  subtotal?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev() on columns of table "transaction_items" */
 export type Transaction_Items_Stddev_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_pop on columns */
@@ -8160,20 +8732,16 @@ export type Transaction_Items_Stddev_Pop_Fields = {
   __typename?: 'transaction_items_stddev_pop_fields';
   capital_price?: Maybe<Scalars['Float']>;
   discount?: Maybe<Scalars['Float']>;
-  profit?: Maybe<Scalars['Float']>;
   purchase_qty?: Maybe<Scalars['Float']>;
   selling_price?: Maybe<Scalars['Float']>;
-  subtotal?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev_pop() on columns of table "transaction_items" */
 export type Transaction_Items_Stddev_Pop_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_samp on columns */
@@ -8181,20 +8749,16 @@ export type Transaction_Items_Stddev_Samp_Fields = {
   __typename?: 'transaction_items_stddev_samp_fields';
   capital_price?: Maybe<Scalars['Float']>;
   discount?: Maybe<Scalars['Float']>;
-  profit?: Maybe<Scalars['Float']>;
   purchase_qty?: Maybe<Scalars['Float']>;
   selling_price?: Maybe<Scalars['Float']>;
-  subtotal?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev_samp() on columns of table "transaction_items" */
 export type Transaction_Items_Stddev_Samp_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** aggregate sum on columns */
@@ -8202,20 +8766,16 @@ export type Transaction_Items_Sum_Fields = {
   __typename?: 'transaction_items_sum_fields';
   capital_price?: Maybe<Scalars['Int']>;
   discount?: Maybe<Scalars['Int']>;
-  profit?: Maybe<Scalars['Int']>;
   purchase_qty?: Maybe<Scalars['Int']>;
   selling_price?: Maybe<Scalars['Int']>;
-  subtotal?: Maybe<Scalars['Int']>;
 };
 
 /** order by sum() on columns of table "transaction_items" */
 export type Transaction_Items_Sum_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "transaction_items" */
@@ -8233,13 +8793,9 @@ export enum Transaction_Items_Update_Column {
   /** column name */
   ProductName = 'product_name',
   /** column name */
-  Profit = 'profit',
-  /** column name */
   PurchaseQty = 'purchase_qty',
   /** column name */
   SellingPrice = 'selling_price',
-  /** column name */
-  Subtotal = 'subtotal',
   /** column name */
   TransactionInvoiceNumber = 'transaction_invoice_number',
   /** column name */
@@ -8253,20 +8809,16 @@ export type Transaction_Items_Var_Pop_Fields = {
   __typename?: 'transaction_items_var_pop_fields';
   capital_price?: Maybe<Scalars['Float']>;
   discount?: Maybe<Scalars['Float']>;
-  profit?: Maybe<Scalars['Float']>;
   purchase_qty?: Maybe<Scalars['Float']>;
   selling_price?: Maybe<Scalars['Float']>;
-  subtotal?: Maybe<Scalars['Float']>;
 };
 
 /** order by var_pop() on columns of table "transaction_items" */
 export type Transaction_Items_Var_Pop_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** aggregate var_samp on columns */
@@ -8274,20 +8826,16 @@ export type Transaction_Items_Var_Samp_Fields = {
   __typename?: 'transaction_items_var_samp_fields';
   capital_price?: Maybe<Scalars['Float']>;
   discount?: Maybe<Scalars['Float']>;
-  profit?: Maybe<Scalars['Float']>;
   purchase_qty?: Maybe<Scalars['Float']>;
   selling_price?: Maybe<Scalars['Float']>;
-  subtotal?: Maybe<Scalars['Float']>;
 };
 
 /** order by var_samp() on columns of table "transaction_items" */
 export type Transaction_Items_Var_Samp_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** aggregate variance on columns */
@@ -8295,48 +8843,62 @@ export type Transaction_Items_Variance_Fields = {
   __typename?: 'transaction_items_variance_fields';
   capital_price?: Maybe<Scalars['Float']>;
   discount?: Maybe<Scalars['Float']>;
-  profit?: Maybe<Scalars['Float']>;
   purchase_qty?: Maybe<Scalars['Float']>;
   selling_price?: Maybe<Scalars['Float']>;
-  subtotal?: Maybe<Scalars['Float']>;
 };
 
 /** order by variance() on columns of table "transaction_items" */
 export type Transaction_Items_Variance_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** aggregate max on columns */
 export type Transaction_Max_Fields = {
   __typename?: 'transaction_max_fields';
-  cash_change?: Maybe<Scalars['Int']>;
   cash_in_amount?: Maybe<Scalars['Int']>;
   created_at?: Maybe<Scalars['timestamptz']>;
   invoice_number?: Maybe<Scalars['String']>;
   karyawan_name?: Maybe<Scalars['String']>;
   return_reason?: Maybe<Scalars['String']>;
   store_id?: Maybe<Scalars['Int']>;
-  total_transaction?: Maybe<Scalars['Int']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by max() on columns of table "transaction" */
+export type Transaction_Max_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  invoice_number?: InputMaybe<Order_By>;
+  karyawan_name?: InputMaybe<Order_By>;
+  return_reason?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
 export type Transaction_Min_Fields = {
   __typename?: 'transaction_min_fields';
-  cash_change?: Maybe<Scalars['Int']>;
   cash_in_amount?: Maybe<Scalars['Int']>;
   created_at?: Maybe<Scalars['timestamptz']>;
   invoice_number?: Maybe<Scalars['String']>;
   karyawan_name?: Maybe<Scalars['String']>;
   return_reason?: Maybe<Scalars['String']>;
   store_id?: Maybe<Scalars['Int']>;
-  total_transaction?: Maybe<Scalars['Int']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by min() on columns of table "transaction" */
+export type Transaction_Min_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  invoice_number?: InputMaybe<Order_By>;
+  karyawan_name?: InputMaybe<Order_By>;
+  return_reason?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "transaction" */
@@ -8373,6 +8935,8 @@ export type Transaction_Order_By = {
   return_reason?: InputMaybe<Order_By>;
   store?: InputMaybe<Stores_Order_By>;
   store_id?: InputMaybe<Order_By>;
+  total_profit?: InputMaybe<Order_By>;
+  total_purchased_product?: InputMaybe<Order_By>;
   total_transaction?: InputMaybe<Order_By>;
   transaction_items_aggregate?: InputMaybe<Transaction_Items_Aggregate_Order_By>;
   transaction_payment_type_enum?: InputMaybe<Transaction_Payment_Type_Enum_Order_By>;
@@ -8870,8 +9434,6 @@ export enum Transaction_Receipts_Update_Column {
 /** select columns of table "transaction" */
 export enum Transaction_Select_Column {
   /** column name */
-  CashChange = 'cash_change',
-  /** column name */
   CashInAmount = 'cash_in_amount',
   /** column name */
   CreatedAt = 'created_at',
@@ -8886,8 +9448,6 @@ export enum Transaction_Select_Column {
   /** column name */
   StoreId = 'store_id',
   /** column name */
-  TotalTransaction = 'total_transaction',
-  /** column name */
   TransactionStatus = 'transaction_status',
   /** column name */
   UpdatedAt = 'updated_at'
@@ -8895,7 +9455,6 @@ export enum Transaction_Select_Column {
 
 /** input type for updating data in table "transaction" */
 export type Transaction_Set_Input = {
-  cash_change?: InputMaybe<Scalars['Int']>;
   cash_in_amount?: InputMaybe<Scalars['Int']>;
   created_at?: InputMaybe<Scalars['timestamptz']>;
   invoice_number?: InputMaybe<Scalars['String']>;
@@ -8903,7 +9462,6 @@ export type Transaction_Set_Input = {
   payment_type?: InputMaybe<Transaction_Payment_Type_Enum_Enum>;
   return_reason?: InputMaybe<Scalars['String']>;
   store_id?: InputMaybe<Scalars['Int']>;
-  total_transaction?: InputMaybe<Scalars['Int']>;
   transaction_status?: InputMaybe<Transaction_Status_Enum_Enum>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -9051,43 +9609,57 @@ export enum Transaction_Status_Enum_Update_Column {
 /** aggregate stddev on columns */
 export type Transaction_Stddev_Fields = {
   __typename?: 'transaction_stddev_fields';
-  cash_change?: Maybe<Scalars['Float']>;
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-  total_transaction?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev() on columns of table "transaction" */
+export type Transaction_Stddev_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_pop on columns */
 export type Transaction_Stddev_Pop_Fields = {
   __typename?: 'transaction_stddev_pop_fields';
-  cash_change?: Maybe<Scalars['Float']>;
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-  total_transaction?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "transaction" */
+export type Transaction_Stddev_Pop_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_samp on columns */
 export type Transaction_Stddev_Samp_Fields = {
   __typename?: 'transaction_stddev_samp_fields';
-  cash_change?: Maybe<Scalars['Float']>;
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-  total_transaction?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_samp() on columns of table "transaction" */
+export type Transaction_Stddev_Samp_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate sum on columns */
 export type Transaction_Sum_Fields = {
   __typename?: 'transaction_sum_fields';
-  cash_change?: Maybe<Scalars['Int']>;
   cash_in_amount?: Maybe<Scalars['Int']>;
   store_id?: Maybe<Scalars['Int']>;
-  total_transaction?: Maybe<Scalars['Int']>;
+};
+
+/** order by sum() on columns of table "transaction" */
+export type Transaction_Sum_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "transaction" */
 export enum Transaction_Update_Column {
-  /** column name */
-  CashChange = 'cash_change',
   /** column name */
   CashInAmount = 'cash_in_amount',
   /** column name */
@@ -9103,8 +9675,6 @@ export enum Transaction_Update_Column {
   /** column name */
   StoreId = 'store_id',
   /** column name */
-  TotalTransaction = 'total_transaction',
-  /** column name */
   TransactionStatus = 'transaction_status',
   /** column name */
   UpdatedAt = 'updated_at'
@@ -9113,28 +9683,40 @@ export enum Transaction_Update_Column {
 /** aggregate var_pop on columns */
 export type Transaction_Var_Pop_Fields = {
   __typename?: 'transaction_var_pop_fields';
-  cash_change?: Maybe<Scalars['Float']>;
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-  total_transaction?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_pop() on columns of table "transaction" */
+export type Transaction_Var_Pop_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate var_samp on columns */
 export type Transaction_Var_Samp_Fields = {
   __typename?: 'transaction_var_samp_fields';
-  cash_change?: Maybe<Scalars['Float']>;
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-  total_transaction?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_samp() on columns of table "transaction" */
+export type Transaction_Var_Samp_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate variance on columns */
 export type Transaction_Variance_Fields = {
   __typename?: 'transaction_variance_fields';
-  cash_change?: Maybe<Scalars['Float']>;
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-  total_transaction?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "transaction" */
+export type Transaction_Variance_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "auth.users" */
@@ -9995,6 +10577,24 @@ export type Customer_GetCustomerByEmailOrPhoneQueryVariables = Exact<{
 
 export type Customer_GetCustomerByEmailOrPhoneQuery = { __typename?: 'query_root', customers: Array<{ __typename?: 'customers', id: any, name?: string | null, phone_number: string, email?: string | null }> };
 
+export type Dashboard_GetBasicDashboardDataQueryVariables = Exact<{
+  startDate: Scalars['timestamptz'];
+  untilDate: Scalars['timestamptz'];
+  storeIds: Array<Scalars['Int']> | Scalars['Int'];
+}>;
+
+
+export type Dashboard_GetBasicDashboardDataQuery = { __typename?: 'query_root', totalCustomer: { __typename?: 'customers_aggregate', aggregate?: { __typename?: 'customers_aggregate_fields', count: number } | null }, firstTransactionDate: { __typename?: 'transaction_aggregate', aggregate?: { __typename?: 'transaction_aggregate_fields', min?: { __typename?: 'transaction_min_fields', created_at?: any | null } | null } | null }, totalSuccessTransaction: { __typename?: 'transaction_aggregate', aggregate?: { __typename?: 'transaction_aggregate_fields', count: number } | null }, totalReturnedTransaction: { __typename?: 'transaction_aggregate', aggregate?: { __typename?: 'transaction_aggregate_fields', count: number } | null }, totalItemSold: { __typename?: 'transaction_items_aggregate', aggregate?: { __typename?: 'transaction_items_aggregate_fields', sum?: { __typename?: 'transaction_items_sum_fields', purchase_qty?: number | null } | null } | null }, totalItemReturned: { __typename?: 'transaction_items_aggregate', aggregate?: { __typename?: 'transaction_items_aggregate_fields', sum?: { __typename?: 'transaction_items_sum_fields', purchase_qty?: number | null } | null } | null } };
+
+export type Dashboard_GetPeriodicChartDataQueryVariables = Exact<{
+  startDate: Scalars['timestamptz'];
+  untilDate: Scalars['timestamptz'];
+  storeIds: Array<Scalars['Int']> | Scalars['Int'];
+}>;
+
+
+export type Dashboard_GetPeriodicChartDataQuery = { __typename?: 'query_root', transaction: Array<{ __typename?: 'transaction', total_profit?: any | null, total_transaction?: any | null, total_purchased_product?: any | null, store_id: number, transaction_payment_type_enum: { __typename?: 'transaction_payment_type_enum', title: string, payment_type: string } }>, operational_costs_aggregate: { __typename?: 'operational_costs_aggregate', aggregate?: { __typename?: 'operational_costs_aggregate_fields', sum?: { __typename?: 'operational_costs_sum_fields', cost?: number | null } | null } | null } };
+
 export type Inventory_UpdateInventoryProductByIdMutationVariables = Exact<{
   id: Scalars['uuid'];
   updateInventory?: InputMaybe<Inventory_Products_Set_Input>;
@@ -10015,7 +10615,7 @@ export type Inventory_GetInventoryProductByIdQueryVariables = Exact<{
 }>;
 
 
-export type Inventory_GetInventoryProductByIdQuery = { __typename?: 'query_root', inventory_products_by_pk?: { __typename?: 'inventory_products', available_qty: number, min_available_qty: number, product: { __typename?: 'products', name: string } } | null };
+export type Inventory_GetInventoryProductByIdQuery = { __typename?: 'query_root', inventory_products_by_pk?: { __typename?: 'inventory_products', available_qty: number, min_available_qty: number, product: { __typename?: 'products', name: string }, store: { __typename?: 'stores', name: string } } | null };
 
 export type Notification_CreateOneNotificationMutationVariables = Exact<{
   notification?: InputMaybe<Notification_Insert_Input>;
@@ -10063,7 +10663,7 @@ export type Transaction_UpdateMainTransactionMutationVariables = Exact<{
 }>;
 
 
-export type Transaction_UpdateMainTransactionMutation = { __typename?: 'mutation_root', update_transaction_by_pk?: { __typename?: 'transaction', invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, return_reason?: string | null, total_transaction: number } | null };
+export type Transaction_UpdateMainTransactionMutation = { __typename?: 'mutation_root', update_transaction_by_pk?: { __typename?: 'transaction', invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, return_reason?: string | null, total_transaction?: any | null } | null };
 
 export type Transaction_UpdateTransactionForRefundAllMutationVariables = Exact<{
   invoice_number: Scalars['String'];
@@ -10074,7 +10674,7 @@ export type Transaction_UpdateTransactionForRefundAllMutationVariables = Exact<{
 }>;
 
 
-export type Transaction_UpdateTransactionForRefundAllMutation = { __typename?: 'mutation_root', update_transaction_by_pk?: { __typename?: 'transaction', invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, return_reason?: string | null, total_transaction: number } | null, update_transaction_items?: { __typename?: 'transaction_items_mutation_response', affected_rows: number, returning: Array<{ __typename?: 'transaction_items', transaction_invoice_number: string, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string } }> } | null };
+export type Transaction_UpdateTransactionForRefundAllMutation = { __typename?: 'mutation_root', update_transaction_by_pk?: { __typename?: 'transaction', invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, return_reason?: string | null, total_transaction?: any | null } | null, update_transaction_items?: { __typename?: 'transaction_items_mutation_response', affected_rows: number, returning: Array<{ __typename?: 'transaction_items', transaction_invoice_number: string, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string } }> } | null };
 
 export type Transaction_UpdateTransactionItemByPkMutationVariables = Exact<{
   transaction_item_id: Scalars['uuid'];
@@ -10083,6 +10683,11 @@ export type Transaction_UpdateTransactionItemByPkMutationVariables = Exact<{
 
 
 export type Transaction_UpdateTransactionItemByPkMutation = { __typename?: 'mutation_root', update_transaction_items_by_pk?: { __typename?: 'transaction_items', id: any } | null };
+
+export type Transaction_GetAllPaymentTypeEnumQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type Transaction_GetAllPaymentTypeEnumQuery = { __typename?: 'query_root', transaction_payment_type_enum: Array<{ __typename?: 'transaction_payment_type_enum', payment_type: string, title: string }> };
 
 export type Transaction_GetLastTransactionNumberQueryVariables = Exact<{
   created_at_gte?: InputMaybe<Scalars['timestamptz']>;
@@ -10096,7 +10701,7 @@ export type Transaction_GetTransactionByPkQueryVariables = Exact<{
 }>;
 
 
-export type Transaction_GetTransactionByPkQuery = { __typename?: 'query_root', transaction_by_pk?: { __typename?: 'transaction', cash_change: number, cash_in_amount: number, created_at: any, invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, total_transaction: number, transaction_status: Transaction_Status_Enum_Enum, transaction_items: Array<{ __typename?: 'transaction_items', subtotal: number, product_name: string, purchase_qty: number, transaction_status: Transaction_Status_Enum_Enum, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string } }>, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string } } | null };
+export type Transaction_GetTransactionByPkQuery = { __typename?: 'query_root', transaction_by_pk?: { __typename?: 'transaction', cash_change?: any | null, cash_in_amount: number, created_at: any, invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, total_transaction?: any | null, transaction_status: Transaction_Status_Enum_Enum, transaction_items: Array<{ __typename?: 'transaction_items', subtotal?: number | null, product_name: string, purchase_qty: number, transaction_status: Transaction_Status_Enum_Enum, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string } }>, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string } } | null };
 
 export type User_DeleteUserMutationVariables = Exact<{
   email?: InputMaybe<Scalars['citext']>;
@@ -10127,7 +10732,7 @@ export const Customer_CreateCustomerDocument = gql`
     mutation Customer_CreateCustomer($customer: customers_insert_input!) {
   insert_customers_one(
     object: $customer
-    on_conflict: {constraint: customers_pkey, update_columns: [name, email, phone_number]}
+    on_conflict: {update_columns: [name, phone_number, updated_at], constraint: customers_phone_number_key}
   ) {
     id
     name
@@ -10147,6 +10752,81 @@ export const Customer_GetCustomerByEmailOrPhoneDocument = gql`
     name
     phone_number
     email
+  }
+}
+    `;
+export const Dashboard_GetBasicDashboardDataDocument = gql`
+    query Dashboard_GetBasicDashboardData($startDate: timestamptz!, $untilDate: timestamptz!, $storeIds: [Int!]!) {
+  totalCustomer: customers_aggregate(
+    where: {_or: [{created_at: {_gte: $startDate, _lte: $untilDate}}, {updated_at: {_gte: $startDate, _lte: $untilDate}}], transaction_receipts: {transaction: {store_id: {_in: $storeIds}}}}
+  ) {
+    aggregate {
+      count
+    }
+  }
+  firstTransactionDate: transaction_aggregate(where: {store_id: {_in: $storeIds}}) {
+    aggregate {
+      min {
+        created_at
+      }
+    }
+  }
+  totalSuccessTransaction: transaction_aggregate(
+    where: {store_id: {_in: $storeIds}, created_at: {_gte: $startDate, _lte: $untilDate}, transaction_status: {_in: [success]}}
+  ) {
+    aggregate {
+      count
+    }
+  }
+  totalReturnedTransaction: transaction_aggregate(
+    where: {store_id: {_in: $storeIds}, created_at: {_gte: $startDate, _lte: $untilDate}, transaction_status: {_in: [return_part, return_all]}}
+  ) {
+    aggregate {
+      count
+    }
+  }
+  totalItemSold: transaction_items_aggregate(
+    where: {transaction_status: {_in: success}, transaction: {store_id: {_in: $storeIds}, created_at: {_gte: $startDate, _lte: $untilDate}}}
+  ) {
+    aggregate {
+      sum {
+        purchase_qty
+      }
+    }
+  }
+  totalItemReturned: transaction_items_aggregate(
+    where: {transaction_status: {_in: [return_all, return_part]}, transaction: {store_id: {_in: $storeIds}, created_at: {_gte: $startDate, _lte: $untilDate}}}
+  ) {
+    aggregate {
+      sum {
+        purchase_qty
+      }
+    }
+  }
+}
+    `;
+export const Dashboard_GetPeriodicChartDataDocument = gql`
+    query Dashboard_GetPeriodicChartData($startDate: timestamptz!, $untilDate: timestamptz!, $storeIds: [Int!]!) {
+  transaction(
+    where: {created_at: {_gt: $startDate, _lte: $untilDate}, store_id: {_in: $storeIds}}
+  ) {
+    total_profit
+    total_transaction
+    total_purchased_product
+    store_id
+    transaction_payment_type_enum {
+      title
+      payment_type
+    }
+  }
+  operational_costs_aggregate(
+    where: {created_at: {_gt: $startDate, _lte: $untilDate}, store_id: {_in: $storeIds}}
+  ) {
+    aggregate {
+      sum {
+        cost
+      }
+    }
   }
 }
     `;
@@ -10179,6 +10859,9 @@ export const Inventory_GetInventoryProductByIdDocument = gql`
     available_qty
     min_available_qty
     product {
+      name
+    }
+    store {
       name
     }
   }
@@ -10247,7 +10930,7 @@ export const Transaction_UpdateTransactionForRefundAllDocument = gql`
     mutation Transaction_UpdateTransactionForRefundAll($invoice_number: String!, $main_transaction_status: transaction_status_enum_enum!, $items_transaction_status: transaction_status_enum_enum!, $return_reason: String!, $karyawan_name: String!) {
   update_transaction_by_pk(
     pk_columns: {invoice_number: $invoice_number}
-    _set: {transaction_status: $main_transaction_status, return_reason: $return_reason, cash_change: 0, cash_in_amount: 0, payment_type: CASH, karyawan_name: $karyawan_name, total_transaction: 0}
+    _set: {transaction_status: $main_transaction_status, return_reason: $return_reason, cash_in_amount: 0, payment_type: CASH, karyawan_name: $karyawan_name}
   ) {
     invoice_number
     payment_type
@@ -10276,6 +10959,14 @@ export const Transaction_UpdateTransactionItemByPkDocument = gql`
     _set: $transaction_item
   ) {
     id
+  }
+}
+    `;
+export const Transaction_GetAllPaymentTypeEnumDocument = gql`
+    query Transaction_GetAllPaymentTypeEnum {
+  transaction_payment_type_enum {
+    payment_type
+    title
   }
 }
     `;
@@ -10358,6 +11049,8 @@ export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, str
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const Customer_CreateCustomerDocumentString = print(Customer_CreateCustomerDocument);
 const Customer_GetCustomerByEmailOrPhoneDocumentString = print(Customer_GetCustomerByEmailOrPhoneDocument);
+const Dashboard_GetBasicDashboardDataDocumentString = print(Dashboard_GetBasicDashboardDataDocument);
+const Dashboard_GetPeriodicChartDataDocumentString = print(Dashboard_GetPeriodicChartDataDocument);
 const Inventory_UpdateInventoryProductByIdDocumentString = print(Inventory_UpdateInventoryProductByIdDocument);
 const Inventory_GetInventoryProductAvailableQtytByIdsDocumentString = print(Inventory_GetInventoryProductAvailableQtytByIdsDocument);
 const Inventory_GetInventoryProductByIdDocumentString = print(Inventory_GetInventoryProductByIdDocument);
@@ -10370,6 +11063,7 @@ const Transaction_InsertTransactionItemsDocumentString = print(Transaction_Inser
 const Transaction_UpdateMainTransactionDocumentString = print(Transaction_UpdateMainTransactionDocument);
 const Transaction_UpdateTransactionForRefundAllDocumentString = print(Transaction_UpdateTransactionForRefundAllDocument);
 const Transaction_UpdateTransactionItemByPkDocumentString = print(Transaction_UpdateTransactionItemByPkDocument);
+const Transaction_GetAllPaymentTypeEnumDocumentString = print(Transaction_GetAllPaymentTypeEnumDocument);
 const Transaction_GetLastTransactionNumberDocumentString = print(Transaction_GetLastTransactionNumberDocument);
 const Transaction_GetTransactionByPkDocumentString = print(Transaction_GetTransactionByPkDocument);
 const User_DeleteUserDocumentString = print(User_DeleteUserDocument);
@@ -10382,6 +11076,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     Customer_GetCustomerByEmailOrPhone(variables?: Customer_GetCustomerByEmailOrPhoneQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Customer_GetCustomerByEmailOrPhoneQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Customer_GetCustomerByEmailOrPhoneQuery>(Customer_GetCustomerByEmailOrPhoneDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Customer_GetCustomerByEmailOrPhone', 'query');
+    },
+    Dashboard_GetBasicDashboardData(variables: Dashboard_GetBasicDashboardDataQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Dashboard_GetBasicDashboardDataQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Dashboard_GetBasicDashboardDataQuery>(Dashboard_GetBasicDashboardDataDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Dashboard_GetBasicDashboardData', 'query');
+    },
+    Dashboard_GetPeriodicChartData(variables: Dashboard_GetPeriodicChartDataQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Dashboard_GetPeriodicChartDataQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Dashboard_GetPeriodicChartDataQuery>(Dashboard_GetPeriodicChartDataDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Dashboard_GetPeriodicChartData', 'query');
     },
     Inventory_UpdateInventoryProductById(variables: Inventory_UpdateInventoryProductByIdMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Inventory_UpdateInventoryProductByIdMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Inventory_UpdateInventoryProductByIdMutation>(Inventory_UpdateInventoryProductByIdDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Inventory_UpdateInventoryProductById', 'mutation');
@@ -10418,6 +11118,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     Transaction_UpdateTransactionItemByPK(variables: Transaction_UpdateTransactionItemByPkMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_UpdateTransactionItemByPkMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_UpdateTransactionItemByPkMutation>(Transaction_UpdateTransactionItemByPkDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_UpdateTransactionItemByPK', 'mutation');
+    },
+    Transaction_GetAllPaymentTypeEnum(variables?: Transaction_GetAllPaymentTypeEnumQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_GetAllPaymentTypeEnumQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_GetAllPaymentTypeEnumQuery>(Transaction_GetAllPaymentTypeEnumDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_GetAllPaymentTypeEnum', 'query');
     },
     Transaction_GetLastTransactionNumber(variables?: Transaction_GetLastTransactionNumberQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Transaction_GetLastTransactionNumberQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Transaction_GetLastTransactionNumberQuery>(Transaction_GetLastTransactionNumberDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Transaction_GetLastTransactionNumber', 'query');
