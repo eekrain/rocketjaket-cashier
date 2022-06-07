@@ -1,0 +1,9 @@
+query Transaction_GetFirstTransactionByStore($store_id: Int!) {
+  transaction(
+    order_by: {created_at: desc_nulls_last}
+    limit: 1
+    where: {store_id: {_eq: $store_id}}
+  ) {
+    created_at
+  }
+}

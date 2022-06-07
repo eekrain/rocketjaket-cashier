@@ -1,0 +1,46 @@
+query Dashboard_GetDashboardData(
+  $startDate: String!
+  $untilDate: String!
+  $stores: [Int!] = 10
+) {
+  Dashboard_GetDashboardData(
+    mode: weekly
+    startDate: $startDate
+    stores: $stores
+    untilDate: $untilDate
+  ) {
+    stores
+    isCanForwards
+    isCanBackwards
+    firstTransactionDate
+    totalCustomer
+    totalOmset
+    totalProfit
+    totalItemReturned
+    totalItemSold
+    totalOperasional
+    totalReturnedTransaction
+    totalSuccessTransaction
+    omsetChart {
+      datasets {
+        data
+        store_id
+      }
+      labels
+    }
+    profitChart {
+      datasets {
+        data
+        store_id
+      }
+      labels
+    }
+    itemSoldChart {
+      datasets {
+        data
+        store_id
+      }
+      labels
+    }
+  }
+}
