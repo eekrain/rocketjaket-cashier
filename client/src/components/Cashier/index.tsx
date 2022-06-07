@@ -8,16 +8,11 @@ import {
   useStore_GetAllStoreQuery,
   useStore_GetStoreByPkQuery,
 } from '../../graphql/gql-generated';
-import {
-  getStorageFileUrlWImageTransform,
-  useFlexSearch,
-  useMyUser,
-} from '../../shared/utils';
+import {useFlexSearch, useMyUser} from '../../shared/utils';
 import {UserRolesEnum} from '../../types/user';
 import {useForm} from 'react-hook-form';
 import {RHSelect} from '../../shared/components';
 import {Alert} from 'react-native';
-import CashierCart from './CashierCart';
 import {CashierHomeNavProps} from '../../screens/app/CashierScreen';
 import {ICart, useMyAppState} from '../../state';
 import Cart from './Cart';
