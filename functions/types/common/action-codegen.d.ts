@@ -36,6 +36,12 @@ enum TotalTransactionCompare {
   minus = "minus",
 }
 
+enum TimeMode {
+  daily = "daily",
+  weekly = "weekly",
+  monthly = "monthly",
+}
+
 type InventoryVariantMetadataInsertInput = {
   variant_title?: Maybe<string>;
   variant_value?: Maybe<string>;
@@ -160,7 +166,48 @@ type Transaction_ReturnTransactionOutput = {
   total_transaction_compare?: Maybe<TotalTransactionCompare>;
 };
 
+type Dashboard_GetDashboardDataOutput = {
+  isCanBackwards: boolean;
+  isCanForwards: boolean;
+  firstTransactionDate: string;
+  totalCustomer: number;
+  paymentTypePercentage: Array<PaymentTypePercentage>;
+  totalOmset: number;
+  totalProfit: number;
+  totalOperasional: number;
+  totalSuccessTransaction: number;
+  totalReturnedTransaction: number;
+  totalItemSold: number;
+  totalItemReturned: number;
+  omsetChart: NumberChartData;
+  profitChart: NumberChartData;
+  operasionalChart: NumberChartData;
+  itemSoldChart: NumberChartData;
+  stores: Array<number>;
+};
+
+type PaymentTypePercentage = {
+  name: string;
+  total_transaksi: number;
+};
+
+type NumberChartData = {
+  labels: Array<string>;
+  datasets: Array<NumberChartDatasets>;
+};
+
+type ChartPerStore = {
+  store_name: string;
+  data: NumberChartData;
+};
+
+type NumberChartDatasets = {
+  store_id: number;
+  data: Array<number>;
+};
+
 type Query = {
+  Dashboard_GetDashboardData?: Maybe<Dashboard_GetDashboardDataOutput>;
   Whatsapp_GetAuthStatus?: Maybe<Whatsapp_GetAuthStatusOutput>;
 };
 
@@ -170,6 +217,13 @@ type Mutation = {
   Transaction_SendReceipt?: Maybe<Transaction_SendReceiptOutput>;
   User_SignUp?: Maybe<User_SignUpOutput>;
   Whatsapp_SignOut?: Maybe<Whatsapp_SignOutOutput>;
+};
+
+type Dashboard_GetDashboardDataArgs = {
+  startDate: string;
+  untilDate: string;
+  mode: TimeMode;
+  stores: Array<number>;
 };
 
 type Whatsapp_GetAuthStatusArgs = {};

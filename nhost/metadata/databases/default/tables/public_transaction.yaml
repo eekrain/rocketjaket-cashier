@@ -26,100 +26,121 @@ array_relationships:
       table:
         name: transaction_receipts
         schema: public
+computed_fields:
+- definition:
+    function:
+      name: transaction_cash_change
+      schema: public
+  name: cash_change
+- definition:
+    function:
+      name: transaction_total_profit
+      schema: public
+  name: total_profit
+- definition:
+    function:
+      name: transaction_total_purchased_product
+      schema: public
+  name: total_purchased_product
+- definition:
+    function:
+      name: transaction_total_transaction
+      schema: public
+  name: total_transaction
 insert_permissions:
 - permission:
     backend_only: false
     check: {}
     columns:
+    - cash_in_amount
+    - created_at
     - invoice_number
     - karyawan_name
-    - total_transaction
-    - cash_in_amount
-    - cash_change
-    - transaction_status
     - payment_type
     - return_reason
     - store_id
-    - created_at
+    - transaction_status
     - updated_at
   role: administrator
 - permission:
     backend_only: false
     check: {}
     columns:
-    - cash_change
     - cash_in_amount
-    - store_id
-    - total_transaction
+    - created_at
     - invoice_number
     - karyawan_name
     - payment_type
     - return_reason
+    - store_id
     - transaction_status
-    - created_at
     - updated_at
   role: karyawan
 select_permissions:
 - permission:
+    allow_aggregations: true
     columns:
-    - cash_change
     - cash_in_amount
-    - store_id
-    - total_transaction
+    - created_at
     - invoice_number
     - karyawan_name
     - payment_type
     - return_reason
+    - store_id
     - transaction_status
-    - created_at
     - updated_at
+    computed_fields:
+    - cash_change
+    - total_profit
+    - total_purchased_product
+    - total_transaction
     filter: {}
   role: administrator
 - permission:
+    allow_aggregations: true
     columns:
-    - cash_change
     - cash_in_amount
-    - store_id
-    - total_transaction
+    - created_at
     - invoice_number
     - karyawan_name
     - payment_type
     - return_reason
+    - store_id
     - transaction_status
-    - created_at
     - updated_at
+    computed_fields:
+    - cash_change
+    - total_profit
+    - total_purchased_product
+    - total_transaction
     filter: {}
   role: karyawan
 update_permissions:
 - permission:
     check: {}
     columns:
-    - cash_change
     - cash_in_amount
-    - store_id
-    - total_transaction
+    - created_at
     - invoice_number
     - karyawan_name
     - payment_type
     - return_reason
+    - store_id
     - transaction_status
-    - created_at
     - updated_at
     filter: {}
   role: administrator
 - permission:
     check: {}
     columns:
-    - cash_change
     - cash_in_amount
-    - store_id
-    - total_transaction
+    - created_at
     - invoice_number
     - karyawan_name
     - payment_type
     - return_reason
+    - store_id
     - transaction_status
-    - created_at
     - updated_at
     filter: {}
   role: karyawan

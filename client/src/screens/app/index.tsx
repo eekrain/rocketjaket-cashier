@@ -11,6 +11,9 @@ import ProdukScreen, {rootProdukRoutes} from './ProdukScreen';
 import SettingsScreen, {rootSettingsRoutes} from './SettingsScreen';
 import InventoryScreen, {rootInventoryRoutes} from './InventoryScreen';
 import UserScreen, {rootUserRoutes} from './UserScreen';
+import OperationalCostScreen, {
+  rootOperationalCostRoutes,
+} from './OperationalCostScreen';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {TUserRoleOptions} from '../../types/user';
 import TransactionScreen, {
@@ -32,6 +35,7 @@ export type AppNavigationParamList = {
   InventoryRoot: undefined;
   UserRoot: undefined;
   CashierRoot: NavigatorScreenParams<CashierRootStackParamList>;
+  OperationalCostRoot: undefined;
 };
 
 export type IAppRoutes = {
@@ -81,6 +85,12 @@ export const rootAppRoutes: IAppRoutes[] = [
     role: ['administrator', 'karyawan'],
   },
   {
+    name: 'OperationalCostRoot',
+    component: OperationalCostScreen,
+    routeNiceName: 'Biaya Operasional',
+    role: ['administrator', 'karyawan'],
+  },
+  {
     name: 'UserRoot',
     component: UserScreen,
     routeNiceName: 'Pengguna',
@@ -108,6 +118,7 @@ export const allAppRoutes = [
   ...rootInventoryRoutes,
   ...rootCashierRoutes,
   ...rootTransactionRoutes,
+  ...rootOperationalCostRoutes,
 ];
 
 export type AppScreenProps = {
@@ -152,5 +163,6 @@ export const getAppIcon = (screenName: keyof AppNavigationParamList) => {
   if (screenName === 'SettingsRoot') return 'settings';
   if (screenName === 'InventoryRoot') return 'archive';
   if (screenName === 'UserRoot') return 'user';
+  if (screenName === 'OperationalCostRoot') return 'activity';
   return '';
 };

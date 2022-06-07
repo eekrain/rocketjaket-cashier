@@ -10,11 +10,9 @@ mutation Transaction_UpdateTransactionForRefundAll(
     _set: {
       transaction_status: $main_transaction_status
       return_reason: $return_reason
-      cash_change: 0
       cash_in_amount: 0
       payment_type: CASH
       karyawan_name: $karyawan_name
-      total_transaction: 0
     }
   ) {
     invoice_number
