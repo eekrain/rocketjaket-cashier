@@ -24,12 +24,13 @@ import {useNavigation} from '@react-navigation/native';
 
 interface IActionProps {
   id: string;
-  navigation: UserScreenProps['ListUser']['navigation'];
   // handleDeleteKategori: () => Promise<void>;
 }
 
-const Action = ({id, navigation}: IActionProps) => {
+const Action = ({id}: IActionProps) => {
+  console.log('🚀 ~ file: index.tsx ~ line 31 ~ Action ~ id', id);
   const myAppState = useMyAppState();
+  const navigation = useNavigation<UserScreenProps['ListUser']['navigation']>();
 
   return (
     <HStack space="3">
@@ -48,7 +49,6 @@ const Action = ({id, navigation}: IActionProps) => {
 interface IUserHomeProps {}
 
 const UserHome = ({}: IUserHomeProps) => {
-  const getAllUser = useUser_GetAllUserQuery();
   const toast = useToast();
   const navigation = useNavigation<UserScreenProps['ListUser']['navigation']>();
 
@@ -59,6 +59,8 @@ const UserHome = ({}: IUserHomeProps) => {
   //     namedOperations.Query.User_GetUserById,
   //   ],
   // });
+
+  const getAllUser = useUser_GetAllUserQuery();
 
   const data = useMemo(() => {
     // const handleDeleteUser = async (
@@ -114,6 +116,7 @@ const UserHome = ({}: IUserHomeProps) => {
     //   );
     // };
     const temp = getAllUser.data?.users || [];
+    console.log('🚀 ~ file: index.tsx ~ line 118 ~ data ~ temp', temp);
 
     const withAction = temp.map(val => ({
       ...val,
@@ -137,7 +140,6 @@ const UserHome = ({}: IUserHomeProps) => {
       component: (
         <Action
           id={val.id}
-          navigation={navigation}
           // handleDeleteKategori={async () => {
           //   handleDeleteUser(
           //     val.account?.id,
@@ -151,7 +153,7 @@ const UserHome = ({}: IUserHomeProps) => {
     }));
 
     return withAction;
-  }, [getAllUser.data?.users, navigation, toast]); // deleteUser
+  }, [getAllUser.data?.users, toast]); // deleteUser
 
   return (
     <ScrollView

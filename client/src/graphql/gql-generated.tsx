@@ -53,6 +53,27 @@ export type CustomerInput = {
   phone_number?: InputMaybe<Scalars['String']>;
 };
 
+export type Dashboard_GetDashboardDataOutput = {
+  __typename?: 'Dashboard_GetDashboardDataOutput';
+  firstTransactionDate: Scalars['String'];
+  isCanBackwards: Scalars['Boolean'];
+  isCanForwards: Scalars['Boolean'];
+  itemSoldChart: NumberChartData;
+  omsetChart: NumberChartData;
+  operasionalChart?: Maybe<Array<NumberChartData>>;
+  paymentTypePercentage: Array<PaymentTypePercentage>;
+  profitChart: NumberChartData;
+  stores: Array<Scalars['Int']>;
+  totalCustomer: Scalars['Int'];
+  totalItemReturned: Scalars['Int'];
+  totalItemSold: Scalars['Int'];
+  totalOmset: Scalars['Int'];
+  totalOperasional: Scalars['Int'];
+  totalProfit: Scalars['Int'];
+  totalReturnedTransaction: Scalars['Int'];
+  totalSuccessTransaction: Scalars['Int'];
+};
+
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['Int']>;
@@ -64,6 +85,24 @@ export type Int_Comparison_Exp = {
   _lte?: InputMaybe<Scalars['Int']>;
   _neq?: InputMaybe<Scalars['Int']>;
   _nin?: InputMaybe<Array<Scalars['Int']>>;
+};
+
+export type NumberChartData = {
+  __typename?: 'NumberChartData';
+  datasets?: Maybe<Array<NumberChartDatasets>>;
+  labels: Array<Scalars['String']>;
+};
+
+export type NumberChartDatasets = {
+  __typename?: 'NumberChartDatasets';
+  data: Array<Scalars['Int']>;
+  store_id: Scalars['Int'];
+};
+
+export type PaymentTypePercentage = {
+  __typename?: 'PaymentTypePercentage';
+  payment_type: Scalars['String'];
+  value: Scalars['Float'];
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
@@ -98,6 +137,15 @@ export type String_Comparison_Exp = {
   /** does the column match the given SQL regular expression */
   _similar?: InputMaybe<Scalars['String']>;
 };
+
+export enum TimeMode {
+  /** mothly */
+  Mothly = 'mothly',
+  /** weekly */
+  Weekly = 'weekly',
+  /** yearly */
+  Yearly = 'yearly'
+}
 
 export enum TotalTransactionCompare {
   /** minus */
@@ -1737,7 +1785,7 @@ export type Customers_Bool_Exp = {
 /** unique or primary key constraints on table "customers" */
 export enum Customers_Constraint {
   /** unique or primary key constraint */
-  CustomersPhoneNumberEmailKey = 'customers_phone_number_email_key',
+  CustomersPhoneNumberKey = 'customers_phone_number_key',
   /** unique or primary key constraint */
   CustomersPkey = 'customers_pkey'
 }
@@ -5826,6 +5874,7 @@ export type Products_Variance_Order_By = {
 
 export type Query_Root = {
   __typename?: 'query_root';
+  Dashboard_GetDashboardData?: Maybe<Dashboard_GetDashboardDataOutput>;
   Whatsapp_GetAuthStatus?: Maybe<Whatsapp_GetAuthStatusOutput>;
   /** fetch data from the table: "active_fcm_tokens" */
   active_fcm_tokens: Array<Active_Fcm_Tokens>;
@@ -5983,6 +6032,14 @@ export type Query_Root = {
   users_metadata_aggregate: Users_Metadata_Aggregate;
   /** fetch data from the table: "users_metadata" using primary key columns */
   users_metadata_by_pk?: Maybe<Users_Metadata>;
+};
+
+
+export type Query_RootDashboard_GetDashboardDataArgs = {
+  mode: TimeMode;
+  startDate: Scalars['String'];
+  stores: Array<Scalars['Int']>;
+  untilDate: Scalars['String'];
 };
 
 
@@ -7649,7 +7706,8 @@ export type Timestamptz_Comparison_Exp = {
 /** columns and relationships of "transaction" */
 export type Transaction = {
   __typename?: 'transaction';
-  cash_change: Scalars['Int'];
+  /** A computed field, executes function "transaction_cash_change" */
+  cash_change?: Maybe<Scalars['bigint']>;
   cash_in_amount: Scalars['Int'];
   created_at: Scalars['timestamptz'];
   invoice_number: Scalars['String'];
@@ -7659,7 +7717,12 @@ export type Transaction = {
   /** An object relationship */
   store: Stores;
   store_id: Scalars['Int'];
-  total_transaction: Scalars['Int'];
+  /** A computed field, executes function "transaction_total_profit" */
+  total_profit?: Maybe<Scalars['bigint']>;
+  /** A computed field, executes function "transaction_total_purchased_product" */
+  total_purchased_product?: Maybe<Scalars['bigint']>;
+  /** A computed field, executes function "transaction_total_transaction" */
+  total_transaction?: Maybe<Scalars['bigint']>;
   /** fetch data from the table: "transaction_items" */
   transaction_items: Array<Transaction_Items>;
   /** An aggregate relationship */
@@ -7749,10 +7812,8 @@ export type Transaction_Aggregate_FieldsCountArgs = {
 /** aggregate avg on columns */
 export type Transaction_Avg_Fields = {
   __typename?: 'transaction_avg_fields';
-  cash_change?: Maybe<Scalars['Float']>;
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-  total_transaction?: Maybe<Scalars['Float']>;
 };
 
 /** Boolean expression to filter rows from the table "transaction". All fields are combined with a logical 'AND'. */
@@ -7760,7 +7821,7 @@ export type Transaction_Bool_Exp = {
   _and?: InputMaybe<Array<Transaction_Bool_Exp>>;
   _not?: InputMaybe<Transaction_Bool_Exp>;
   _or?: InputMaybe<Array<Transaction_Bool_Exp>>;
-  cash_change?: InputMaybe<Int_Comparison_Exp>;
+  cash_change?: InputMaybe<Bigint_Comparison_Exp>;
   cash_in_amount?: InputMaybe<Int_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   invoice_number?: InputMaybe<String_Comparison_Exp>;
@@ -7769,7 +7830,9 @@ export type Transaction_Bool_Exp = {
   return_reason?: InputMaybe<String_Comparison_Exp>;
   store?: InputMaybe<Stores_Bool_Exp>;
   store_id?: InputMaybe<Int_Comparison_Exp>;
-  total_transaction?: InputMaybe<Int_Comparison_Exp>;
+  total_profit?: InputMaybe<Bigint_Comparison_Exp>;
+  total_purchased_product?: InputMaybe<Bigint_Comparison_Exp>;
+  total_transaction?: InputMaybe<Bigint_Comparison_Exp>;
   transaction_items?: InputMaybe<Transaction_Items_Bool_Exp>;
   transaction_payment_type_enum?: InputMaybe<Transaction_Payment_Type_Enum_Bool_Exp>;
   transaction_receipts?: InputMaybe<Transaction_Receipts_Bool_Exp>;
@@ -7786,15 +7849,12 @@ export enum Transaction_Constraint {
 
 /** input type for incrementing numeric columns in table "transaction" */
 export type Transaction_Inc_Input = {
-  cash_change?: InputMaybe<Scalars['Int']>;
   cash_in_amount?: InputMaybe<Scalars['Int']>;
   store_id?: InputMaybe<Scalars['Int']>;
-  total_transaction?: InputMaybe<Scalars['Int']>;
 };
 
 /** input type for inserting data into table "transaction" */
 export type Transaction_Insert_Input = {
-  cash_change?: InputMaybe<Scalars['Int']>;
   cash_in_amount?: InputMaybe<Scalars['Int']>;
   created_at?: InputMaybe<Scalars['timestamptz']>;
   invoice_number?: InputMaybe<Scalars['String']>;
@@ -7803,7 +7863,6 @@ export type Transaction_Insert_Input = {
   return_reason?: InputMaybe<Scalars['String']>;
   store?: InputMaybe<Stores_Obj_Rel_Insert_Input>;
   store_id?: InputMaybe<Scalars['Int']>;
-  total_transaction?: InputMaybe<Scalars['Int']>;
   transaction_items?: InputMaybe<Transaction_Items_Arr_Rel_Insert_Input>;
   transaction_payment_type_enum?: InputMaybe<Transaction_Payment_Type_Enum_Obj_Rel_Insert_Input>;
   transaction_receipts?: InputMaybe<Transaction_Receipts_Arr_Rel_Insert_Input>;
@@ -7823,10 +7882,14 @@ export type Transaction_Items = {
   inventory_product?: Maybe<Inventory_Products>;
   inventory_product_id?: Maybe<Scalars['uuid']>;
   product_name: Scalars['String'];
-  profit: Scalars['Int'];
+  /** A computed field, executes function "transaction_items_profit" */
+  profit?: Maybe<Scalars['Int']>;
   purchase_qty: Scalars['Int'];
+  /** A computed field, executes function "transaction_items_real_capital_price" */
+  real_capital_price?: Maybe<Scalars['Int']>;
   selling_price: Scalars['Int'];
-  subtotal: Scalars['Int'];
+  /** A computed field, executes function "transaction_items_subtotal" */
+  subtotal?: Maybe<Scalars['Int']>;
   /** An object relationship */
   transaction: Transaction;
   transaction_invoice_number: Scalars['String'];
@@ -7893,20 +7956,16 @@ export type Transaction_Items_Avg_Fields = {
   __typename?: 'transaction_items_avg_fields';
   capital_price?: Maybe<Scalars['Float']>;
   discount?: Maybe<Scalars['Float']>;
-  profit?: Maybe<Scalars['Float']>;
   purchase_qty?: Maybe<Scalars['Float']>;
   selling_price?: Maybe<Scalars['Float']>;
-  subtotal?: Maybe<Scalars['Float']>;
 };
 
 /** order by avg() on columns of table "transaction_items" */
 export type Transaction_Items_Avg_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "transaction_items". All fields are combined with a logical 'AND'. */
@@ -7923,6 +7982,7 @@ export type Transaction_Items_Bool_Exp = {
   product_name?: InputMaybe<String_Comparison_Exp>;
   profit?: InputMaybe<Int_Comparison_Exp>;
   purchase_qty?: InputMaybe<Int_Comparison_Exp>;
+  real_capital_price?: InputMaybe<Int_Comparison_Exp>;
   selling_price?: InputMaybe<Int_Comparison_Exp>;
   subtotal?: InputMaybe<Int_Comparison_Exp>;
   transaction?: InputMaybe<Transaction_Bool_Exp>;
@@ -7942,10 +8002,8 @@ export enum Transaction_Items_Constraint {
 export type Transaction_Items_Inc_Input = {
   capital_price?: InputMaybe<Scalars['Int']>;
   discount?: InputMaybe<Scalars['Int']>;
-  profit?: InputMaybe<Scalars['Int']>;
   purchase_qty?: InputMaybe<Scalars['Int']>;
   selling_price?: InputMaybe<Scalars['Int']>;
-  subtotal?: InputMaybe<Scalars['Int']>;
 };
 
 export type Transaction_Items_Input = {
@@ -7968,10 +8026,8 @@ export type Transaction_Items_Insert_Input = {
   inventory_product?: InputMaybe<Inventory_Products_Obj_Rel_Insert_Input>;
   inventory_product_id?: InputMaybe<Scalars['uuid']>;
   product_name?: InputMaybe<Scalars['String']>;
-  profit?: InputMaybe<Scalars['Int']>;
   purchase_qty?: InputMaybe<Scalars['Int']>;
   selling_price?: InputMaybe<Scalars['Int']>;
-  subtotal?: InputMaybe<Scalars['Int']>;
   transaction?: InputMaybe<Transaction_Obj_Rel_Insert_Input>;
   transaction_invoice_number?: InputMaybe<Scalars['String']>;
   transaction_status?: InputMaybe<Transaction_Status_Enum_Enum>;
@@ -7988,10 +8044,8 @@ export type Transaction_Items_Max_Fields = {
   id?: Maybe<Scalars['uuid']>;
   inventory_product_id?: Maybe<Scalars['uuid']>;
   product_name?: Maybe<Scalars['String']>;
-  profit?: Maybe<Scalars['Int']>;
   purchase_qty?: Maybe<Scalars['Int']>;
   selling_price?: Maybe<Scalars['Int']>;
-  subtotal?: Maybe<Scalars['Int']>;
   transaction_invoice_number?: Maybe<Scalars['String']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
 };
@@ -8004,10 +8058,8 @@ export type Transaction_Items_Max_Order_By = {
   id?: InputMaybe<Order_By>;
   inventory_product_id?: InputMaybe<Order_By>;
   product_name?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
   transaction_invoice_number?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
@@ -8021,10 +8073,8 @@ export type Transaction_Items_Min_Fields = {
   id?: Maybe<Scalars['uuid']>;
   inventory_product_id?: Maybe<Scalars['uuid']>;
   product_name?: Maybe<Scalars['String']>;
-  profit?: Maybe<Scalars['Int']>;
   purchase_qty?: Maybe<Scalars['Int']>;
   selling_price?: Maybe<Scalars['Int']>;
-  subtotal?: Maybe<Scalars['Int']>;
   transaction_invoice_number?: Maybe<Scalars['String']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
 };
@@ -8037,10 +8087,8 @@ export type Transaction_Items_Min_Order_By = {
   id?: InputMaybe<Order_By>;
   inventory_product_id?: InputMaybe<Order_By>;
   product_name?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
   transaction_invoice_number?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
@@ -8072,6 +8120,7 @@ export type Transaction_Items_Order_By = {
   product_name?: InputMaybe<Order_By>;
   profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
+  real_capital_price?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
   subtotal?: InputMaybe<Order_By>;
   transaction?: InputMaybe<Transaction_Order_By>;
@@ -8101,13 +8150,9 @@ export enum Transaction_Items_Select_Column {
   /** column name */
   ProductName = 'product_name',
   /** column name */
-  Profit = 'profit',
-  /** column name */
   PurchaseQty = 'purchase_qty',
   /** column name */
   SellingPrice = 'selling_price',
-  /** column name */
-  Subtotal = 'subtotal',
   /** column name */
   TransactionInvoiceNumber = 'transaction_invoice_number',
   /** column name */
@@ -8124,10 +8169,8 @@ export type Transaction_Items_Set_Input = {
   id?: InputMaybe<Scalars['uuid']>;
   inventory_product_id?: InputMaybe<Scalars['uuid']>;
   product_name?: InputMaybe<Scalars['String']>;
-  profit?: InputMaybe<Scalars['Int']>;
   purchase_qty?: InputMaybe<Scalars['Int']>;
   selling_price?: InputMaybe<Scalars['Int']>;
-  subtotal?: InputMaybe<Scalars['Int']>;
   transaction_invoice_number?: InputMaybe<Scalars['String']>;
   transaction_status?: InputMaybe<Transaction_Status_Enum_Enum>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
@@ -8138,20 +8181,16 @@ export type Transaction_Items_Stddev_Fields = {
   __typename?: 'transaction_items_stddev_fields';
   capital_price?: Maybe<Scalars['Float']>;
   discount?: Maybe<Scalars['Float']>;
-  profit?: Maybe<Scalars['Float']>;
   purchase_qty?: Maybe<Scalars['Float']>;
   selling_price?: Maybe<Scalars['Float']>;
-  subtotal?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev() on columns of table "transaction_items" */
 export type Transaction_Items_Stddev_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_pop on columns */
@@ -8159,20 +8198,16 @@ export type Transaction_Items_Stddev_Pop_Fields = {
   __typename?: 'transaction_items_stddev_pop_fields';
   capital_price?: Maybe<Scalars['Float']>;
   discount?: Maybe<Scalars['Float']>;
-  profit?: Maybe<Scalars['Float']>;
   purchase_qty?: Maybe<Scalars['Float']>;
   selling_price?: Maybe<Scalars['Float']>;
-  subtotal?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev_pop() on columns of table "transaction_items" */
 export type Transaction_Items_Stddev_Pop_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_samp on columns */
@@ -8180,20 +8215,16 @@ export type Transaction_Items_Stddev_Samp_Fields = {
   __typename?: 'transaction_items_stddev_samp_fields';
   capital_price?: Maybe<Scalars['Float']>;
   discount?: Maybe<Scalars['Float']>;
-  profit?: Maybe<Scalars['Float']>;
   purchase_qty?: Maybe<Scalars['Float']>;
   selling_price?: Maybe<Scalars['Float']>;
-  subtotal?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev_samp() on columns of table "transaction_items" */
 export type Transaction_Items_Stddev_Samp_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** aggregate sum on columns */
@@ -8201,20 +8232,16 @@ export type Transaction_Items_Sum_Fields = {
   __typename?: 'transaction_items_sum_fields';
   capital_price?: Maybe<Scalars['Int']>;
   discount?: Maybe<Scalars['Int']>;
-  profit?: Maybe<Scalars['Int']>;
   purchase_qty?: Maybe<Scalars['Int']>;
   selling_price?: Maybe<Scalars['Int']>;
-  subtotal?: Maybe<Scalars['Int']>;
 };
 
 /** order by sum() on columns of table "transaction_items" */
 export type Transaction_Items_Sum_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "transaction_items" */
@@ -8232,13 +8259,9 @@ export enum Transaction_Items_Update_Column {
   /** column name */
   ProductName = 'product_name',
   /** column name */
-  Profit = 'profit',
-  /** column name */
   PurchaseQty = 'purchase_qty',
   /** column name */
   SellingPrice = 'selling_price',
-  /** column name */
-  Subtotal = 'subtotal',
   /** column name */
   TransactionInvoiceNumber = 'transaction_invoice_number',
   /** column name */
@@ -8252,20 +8275,16 @@ export type Transaction_Items_Var_Pop_Fields = {
   __typename?: 'transaction_items_var_pop_fields';
   capital_price?: Maybe<Scalars['Float']>;
   discount?: Maybe<Scalars['Float']>;
-  profit?: Maybe<Scalars['Float']>;
   purchase_qty?: Maybe<Scalars['Float']>;
   selling_price?: Maybe<Scalars['Float']>;
-  subtotal?: Maybe<Scalars['Float']>;
 };
 
 /** order by var_pop() on columns of table "transaction_items" */
 export type Transaction_Items_Var_Pop_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** aggregate var_samp on columns */
@@ -8273,20 +8292,16 @@ export type Transaction_Items_Var_Samp_Fields = {
   __typename?: 'transaction_items_var_samp_fields';
   capital_price?: Maybe<Scalars['Float']>;
   discount?: Maybe<Scalars['Float']>;
-  profit?: Maybe<Scalars['Float']>;
   purchase_qty?: Maybe<Scalars['Float']>;
   selling_price?: Maybe<Scalars['Float']>;
-  subtotal?: Maybe<Scalars['Float']>;
 };
 
 /** order by var_samp() on columns of table "transaction_items" */
 export type Transaction_Items_Var_Samp_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** aggregate variance on columns */
@@ -8294,47 +8309,39 @@ export type Transaction_Items_Variance_Fields = {
   __typename?: 'transaction_items_variance_fields';
   capital_price?: Maybe<Scalars['Float']>;
   discount?: Maybe<Scalars['Float']>;
-  profit?: Maybe<Scalars['Float']>;
   purchase_qty?: Maybe<Scalars['Float']>;
   selling_price?: Maybe<Scalars['Float']>;
-  subtotal?: Maybe<Scalars['Float']>;
 };
 
 /** order by variance() on columns of table "transaction_items" */
 export type Transaction_Items_Variance_Order_By = {
   capital_price?: InputMaybe<Order_By>;
   discount?: InputMaybe<Order_By>;
-  profit?: InputMaybe<Order_By>;
   purchase_qty?: InputMaybe<Order_By>;
   selling_price?: InputMaybe<Order_By>;
-  subtotal?: InputMaybe<Order_By>;
 };
 
 /** aggregate max on columns */
 export type Transaction_Max_Fields = {
   __typename?: 'transaction_max_fields';
-  cash_change?: Maybe<Scalars['Int']>;
   cash_in_amount?: Maybe<Scalars['Int']>;
   created_at?: Maybe<Scalars['timestamptz']>;
   invoice_number?: Maybe<Scalars['String']>;
   karyawan_name?: Maybe<Scalars['String']>;
   return_reason?: Maybe<Scalars['String']>;
   store_id?: Maybe<Scalars['Int']>;
-  total_transaction?: Maybe<Scalars['Int']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
 };
 
 /** aggregate min on columns */
 export type Transaction_Min_Fields = {
   __typename?: 'transaction_min_fields';
-  cash_change?: Maybe<Scalars['Int']>;
   cash_in_amount?: Maybe<Scalars['Int']>;
   created_at?: Maybe<Scalars['timestamptz']>;
   invoice_number?: Maybe<Scalars['String']>;
   karyawan_name?: Maybe<Scalars['String']>;
   return_reason?: Maybe<Scalars['String']>;
   store_id?: Maybe<Scalars['Int']>;
-  total_transaction?: Maybe<Scalars['Int']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
 };
 
@@ -8372,6 +8379,8 @@ export type Transaction_Order_By = {
   return_reason?: InputMaybe<Order_By>;
   store?: InputMaybe<Stores_Order_By>;
   store_id?: InputMaybe<Order_By>;
+  total_profit?: InputMaybe<Order_By>;
+  total_purchased_product?: InputMaybe<Order_By>;
   total_transaction?: InputMaybe<Order_By>;
   transaction_items_aggregate?: InputMaybe<Transaction_Items_Aggregate_Order_By>;
   transaction_payment_type_enum?: InputMaybe<Transaction_Payment_Type_Enum_Order_By>;
@@ -8869,8 +8878,6 @@ export enum Transaction_Receipts_Update_Column {
 /** select columns of table "transaction" */
 export enum Transaction_Select_Column {
   /** column name */
-  CashChange = 'cash_change',
-  /** column name */
   CashInAmount = 'cash_in_amount',
   /** column name */
   CreatedAt = 'created_at',
@@ -8885,8 +8892,6 @@ export enum Transaction_Select_Column {
   /** column name */
   StoreId = 'store_id',
   /** column name */
-  TotalTransaction = 'total_transaction',
-  /** column name */
   TransactionStatus = 'transaction_status',
   /** column name */
   UpdatedAt = 'updated_at'
@@ -8894,7 +8899,6 @@ export enum Transaction_Select_Column {
 
 /** input type for updating data in table "transaction" */
 export type Transaction_Set_Input = {
-  cash_change?: InputMaybe<Scalars['Int']>;
   cash_in_amount?: InputMaybe<Scalars['Int']>;
   created_at?: InputMaybe<Scalars['timestamptz']>;
   invoice_number?: InputMaybe<Scalars['String']>;
@@ -8902,7 +8906,6 @@ export type Transaction_Set_Input = {
   payment_type?: InputMaybe<Transaction_Payment_Type_Enum_Enum>;
   return_reason?: InputMaybe<Scalars['String']>;
   store_id?: InputMaybe<Scalars['Int']>;
-  total_transaction?: InputMaybe<Scalars['Int']>;
   transaction_status?: InputMaybe<Transaction_Status_Enum_Enum>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -9050,43 +9053,33 @@ export enum Transaction_Status_Enum_Update_Column {
 /** aggregate stddev on columns */
 export type Transaction_Stddev_Fields = {
   __typename?: 'transaction_stddev_fields';
-  cash_change?: Maybe<Scalars['Float']>;
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-  total_transaction?: Maybe<Scalars['Float']>;
 };
 
 /** aggregate stddev_pop on columns */
 export type Transaction_Stddev_Pop_Fields = {
   __typename?: 'transaction_stddev_pop_fields';
-  cash_change?: Maybe<Scalars['Float']>;
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-  total_transaction?: Maybe<Scalars['Float']>;
 };
 
 /** aggregate stddev_samp on columns */
 export type Transaction_Stddev_Samp_Fields = {
   __typename?: 'transaction_stddev_samp_fields';
-  cash_change?: Maybe<Scalars['Float']>;
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-  total_transaction?: Maybe<Scalars['Float']>;
 };
 
 /** aggregate sum on columns */
 export type Transaction_Sum_Fields = {
   __typename?: 'transaction_sum_fields';
-  cash_change?: Maybe<Scalars['Int']>;
   cash_in_amount?: Maybe<Scalars['Int']>;
   store_id?: Maybe<Scalars['Int']>;
-  total_transaction?: Maybe<Scalars['Int']>;
 };
 
 /** update columns of table "transaction" */
 export enum Transaction_Update_Column {
-  /** column name */
-  CashChange = 'cash_change',
   /** column name */
   CashInAmount = 'cash_in_amount',
   /** column name */
@@ -9102,8 +9095,6 @@ export enum Transaction_Update_Column {
   /** column name */
   StoreId = 'store_id',
   /** column name */
-  TotalTransaction = 'total_transaction',
-  /** column name */
   TransactionStatus = 'transaction_status',
   /** column name */
   UpdatedAt = 'updated_at'
@@ -9112,28 +9103,22 @@ export enum Transaction_Update_Column {
 /** aggregate var_pop on columns */
 export type Transaction_Var_Pop_Fields = {
   __typename?: 'transaction_var_pop_fields';
-  cash_change?: Maybe<Scalars['Float']>;
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-  total_transaction?: Maybe<Scalars['Float']>;
 };
 
 /** aggregate var_samp on columns */
 export type Transaction_Var_Samp_Fields = {
   __typename?: 'transaction_var_samp_fields';
-  cash_change?: Maybe<Scalars['Float']>;
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-  total_transaction?: Maybe<Scalars['Float']>;
 };
 
 /** aggregate variance on columns */
 export type Transaction_Variance_Fields = {
   __typename?: 'transaction_variance_fields';
-  cash_change?: Maybe<Scalars['Float']>;
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-  total_transaction?: Maybe<Scalars['Float']>;
 };
 
 /** columns and relationships of "auth.users" */
@@ -9992,6 +9977,15 @@ export type Cashier_CreateTransactionMutationVariables = Exact<{
 
 export type Cashier_CreateTransactionMutation = { __typename?: 'mutation_root', Cashier_CreateTransaction?: { __typename?: 'Cashier_CreateTransactionOutput', invoice_number?: string | null, cash_change?: number | null, payment_type?: string | null, total_transaction?: number | null, cash_in_amount?: number | null, transaction_status: TransactionStatusEnum, store_id?: number | null, isError: boolean, errorMessage?: string | null } | null };
 
+export type Dashboard_GetDashboardDataQueryVariables = Exact<{
+  startDate: Scalars['String'];
+  untilDate: Scalars['String'];
+  stores?: InputMaybe<Array<Scalars['Int']> | Scalars['Int']>;
+}>;
+
+
+export type Dashboard_GetDashboardDataQuery = { __typename?: 'query_root', Dashboard_GetDashboardData?: { __typename?: 'Dashboard_GetDashboardDataOutput', stores: Array<number>, isCanForwards: boolean, isCanBackwards: boolean, firstTransactionDate: string, totalCustomer: number, totalOmset: number, totalProfit: number, totalItemReturned: number, totalItemSold: number, totalOperasional: number, totalReturnedTransaction: number, totalSuccessTransaction: number, omsetChart: { __typename?: 'NumberChartData', labels: Array<string>, datasets?: Array<{ __typename?: 'NumberChartDatasets', data: Array<number>, store_id: number }> | null }, profitChart: { __typename?: 'NumberChartData', labels: Array<string>, datasets?: Array<{ __typename?: 'NumberChartDatasets', data: Array<number>, store_id: number }> | null }, itemSoldChart: { __typename?: 'NumberChartData', labels: Array<string>, datasets?: Array<{ __typename?: 'NumberChartDatasets', data: Array<number>, store_id: number }> | null } } | null };
+
 export type Inventory_CreateInventoryProductMutationVariables = Exact<{
   inventory_product: Inventory_Products_Insert_Input;
 }>;
@@ -10245,14 +10239,21 @@ export type Transaction_GetAllTransactionByStoreIdQueryVariables = Exact<{
 }>;
 
 
-export type Transaction_GetAllTransactionByStoreIdQuery = { __typename?: 'query_root', transaction: Array<{ __typename?: 'transaction', cash_change: number, cash_in_amount: number, created_at: any, invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, store_id: number, total_transaction: number, updated_at: any, karyawan_name: string, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', id: any, inventory_product_id?: any | null, product_name: string, profit: number }> }> };
+export type Transaction_GetAllTransactionByStoreIdQuery = { __typename?: 'query_root', transaction: Array<{ __typename?: 'transaction', cash_change?: any | null, cash_in_amount: number, created_at: any, invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, store_id: number, total_transaction?: any | null, updated_at: any, karyawan_name: string, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', id: any, inventory_product_id?: any | null, product_name: string, profit?: number | null }> }> };
+
+export type Transaction_GetFirstTransactionByStoreQueryVariables = Exact<{
+  store_id: Scalars['Int'];
+}>;
+
+
+export type Transaction_GetFirstTransactionByStoreQuery = { __typename?: 'query_root', transaction: Array<{ __typename?: 'transaction', created_at: any }> };
 
 export type Transaction_GetTransactionByPkQueryVariables = Exact<{
   invoice_number: Scalars['String'];
 }>;
 
 
-export type Transaction_GetTransactionByPkQuery = { __typename?: 'query_root', transaction_by_pk?: { __typename?: 'transaction', cash_change: number, cash_in_amount: number, created_at: any, invoice_number: string, total_transaction: number, updated_at: any, karyawan_name: string, transaction_status: Transaction_Status_Enum_Enum, store: { __typename?: 'stores', name: string, address: string }, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', created_at: any, capital_price: number, discount: number, id: any, inventory_product_id?: any | null, product_name: string, profit: number, purchase_qty: number, selling_price: number, subtotal: number, updated_at: any, transaction_status: Transaction_Status_Enum_Enum, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string }, inventory_product?: { __typename?: 'inventory_products', override_capital_price?: number | null, override_selling_price?: number | null, override_discount?: number | null, available_qty: number, updated_at: any, product: { __typename?: 'products', photo_id?: string | null, name: string, capital_price: number, selling_price: number, discount: number, updated_at: any }, inventory_product_variants: Array<{ __typename?: 'inventory_product_variants', inventory_variant_metadata_id: number }> } | null }>, transaction_receipts: Array<{ __typename?: 'transaction_receipts', created_at: any, is_sent: boolean, transaction_receipt_type_enum: { __typename?: 'transaction_receipt_type_enum', receipt_type: string, title: string }, customer: { __typename?: 'customers', id: any, email?: string | null, name?: string | null, phone_number: string } }> } | null };
+export type Transaction_GetTransactionByPkQuery = { __typename?: 'query_root', transaction_by_pk?: { __typename?: 'transaction', cash_change?: any | null, cash_in_amount: number, created_at: any, invoice_number: string, total_transaction?: any | null, updated_at: any, karyawan_name: string, transaction_status: Transaction_Status_Enum_Enum, store: { __typename?: 'stores', name: string, address: string }, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', created_at: any, capital_price: number, discount: number, id: any, inventory_product_id?: any | null, product_name: string, profit?: number | null, purchase_qty: number, selling_price: number, subtotal?: number | null, updated_at: any, transaction_status: Transaction_Status_Enum_Enum, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string }, inventory_product?: { __typename?: 'inventory_products', override_capital_price?: number | null, override_selling_price?: number | null, override_discount?: number | null, available_qty: number, updated_at: any, product: { __typename?: 'products', photo_id?: string | null, name: string, capital_price: number, selling_price: number, discount: number, updated_at: any }, inventory_product_variants: Array<{ __typename?: 'inventory_product_variants', inventory_variant_metadata_id: number }> } | null }>, transaction_receipts: Array<{ __typename?: 'transaction_receipts', created_at: any, is_sent: boolean, transaction_receipt_type_enum: { __typename?: 'transaction_receipt_type_enum', receipt_type: string, title: string }, customer: { __typename?: 'customers', id: any, email?: string | null, name?: string | null, phone_number: string } }> } | null };
 
 export type User_SignUpMutationVariables = Exact<{
   defaultRole?: InputMaybe<Scalars['String']>;
@@ -10298,6 +10299,7 @@ export type User_GetUserByIdQuery = { __typename?: 'query_root', user?: { __type
 
 export const namedOperations = {
   Query: {
+    Dashboard_GetDashboardData: 'Dashboard_GetDashboardData',
     Inventory_GetAllInventoryProductByStoreId: 'Inventory_GetAllInventoryProductByStoreId',
     Inventory_GetAllVariantMetadata: 'Inventory_GetAllVariantMetadata',
     Inventory_GetInventoryProductById: 'Inventory_GetInventoryProductById',
@@ -10310,6 +10312,7 @@ export const namedOperations = {
     Store_GetStoreByPK: 'Store_GetStoreByPK',
     Whatsapp_GetAuthStatus: 'Whatsapp_GetAuthStatus',
     Transaction_GetAllTransactionByStoreId: 'Transaction_GetAllTransactionByStoreId',
+    Transaction_GetFirstTransactionByStore: 'Transaction_GetFirstTransactionByStore',
     Transaction_GetTransactionByPK: 'Transaction_GetTransactionByPK',
     User_GetAllUser: 'User_GetAllUser',
     User_GetUserById: 'User_GetUserById'
@@ -10401,6 +10404,80 @@ export function useCashier_CreateTransactionMutation(baseOptions?: Apollo.Mutati
 export type Cashier_CreateTransactionMutationHookResult = ReturnType<typeof useCashier_CreateTransactionMutation>;
 export type Cashier_CreateTransactionMutationResult = Apollo.MutationResult<Cashier_CreateTransactionMutation>;
 export type Cashier_CreateTransactionMutationOptions = Apollo.BaseMutationOptions<Cashier_CreateTransactionMutation, Cashier_CreateTransactionMutationVariables>;
+export const Dashboard_GetDashboardDataDocument = gql`
+    query Dashboard_GetDashboardData($startDate: String!, $untilDate: String!, $stores: [Int!] = 10) {
+  Dashboard_GetDashboardData(
+    mode: weekly
+    startDate: $startDate
+    stores: $stores
+    untilDate: $untilDate
+  ) {
+    stores
+    isCanForwards
+    isCanBackwards
+    firstTransactionDate
+    totalCustomer
+    totalOmset
+    totalProfit
+    totalItemReturned
+    totalItemSold
+    totalOperasional
+    totalReturnedTransaction
+    totalSuccessTransaction
+    omsetChart {
+      datasets {
+        data
+        store_id
+      }
+      labels
+    }
+    profitChart {
+      datasets {
+        data
+        store_id
+      }
+      labels
+    }
+    itemSoldChart {
+      datasets {
+        data
+        store_id
+      }
+      labels
+    }
+  }
+}
+    `;
+
+/**
+ * __useDashboard_GetDashboardDataQuery__
+ *
+ * To run a query within a React component, call `useDashboard_GetDashboardDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDashboard_GetDashboardDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDashboard_GetDashboardDataQuery({
+ *   variables: {
+ *      startDate: // value for 'startDate'
+ *      untilDate: // value for 'untilDate'
+ *      stores: // value for 'stores'
+ *   },
+ * });
+ */
+export function useDashboard_GetDashboardDataQuery(baseOptions: Apollo.QueryHookOptions<Dashboard_GetDashboardDataQuery, Dashboard_GetDashboardDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Dashboard_GetDashboardDataQuery, Dashboard_GetDashboardDataQueryVariables>(Dashboard_GetDashboardDataDocument, options);
+      }
+export function useDashboard_GetDashboardDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Dashboard_GetDashboardDataQuery, Dashboard_GetDashboardDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Dashboard_GetDashboardDataQuery, Dashboard_GetDashboardDataQueryVariables>(Dashboard_GetDashboardDataDocument, options);
+        }
+export type Dashboard_GetDashboardDataQueryHookResult = ReturnType<typeof useDashboard_GetDashboardDataQuery>;
+export type Dashboard_GetDashboardDataLazyQueryHookResult = ReturnType<typeof useDashboard_GetDashboardDataLazyQuery>;
+export type Dashboard_GetDashboardDataQueryResult = Apollo.QueryResult<Dashboard_GetDashboardDataQuery, Dashboard_GetDashboardDataQueryVariables>;
 export const Inventory_CreateInventoryProductDocument = gql`
     mutation Inventory_CreateInventoryProduct($inventory_product: inventory_products_insert_input!) {
   insert_inventory_products_one(object: $inventory_product) {
@@ -11832,6 +11909,45 @@ export function useTransaction_GetAllTransactionByStoreIdLazyQuery(baseOptions?:
 export type Transaction_GetAllTransactionByStoreIdQueryHookResult = ReturnType<typeof useTransaction_GetAllTransactionByStoreIdQuery>;
 export type Transaction_GetAllTransactionByStoreIdLazyQueryHookResult = ReturnType<typeof useTransaction_GetAllTransactionByStoreIdLazyQuery>;
 export type Transaction_GetAllTransactionByStoreIdQueryResult = Apollo.QueryResult<Transaction_GetAllTransactionByStoreIdQuery, Transaction_GetAllTransactionByStoreIdQueryVariables>;
+export const Transaction_GetFirstTransactionByStoreDocument = gql`
+    query Transaction_GetFirstTransactionByStore($store_id: Int!) {
+  transaction(
+    order_by: {created_at: desc_nulls_last}
+    limit: 1
+    where: {store_id: {_eq: $store_id}}
+  ) {
+    created_at
+  }
+}
+    `;
+
+/**
+ * __useTransaction_GetFirstTransactionByStoreQuery__
+ *
+ * To run a query within a React component, call `useTransaction_GetFirstTransactionByStoreQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransaction_GetFirstTransactionByStoreQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransaction_GetFirstTransactionByStoreQuery({
+ *   variables: {
+ *      store_id: // value for 'store_id'
+ *   },
+ * });
+ */
+export function useTransaction_GetFirstTransactionByStoreQuery(baseOptions: Apollo.QueryHookOptions<Transaction_GetFirstTransactionByStoreQuery, Transaction_GetFirstTransactionByStoreQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Transaction_GetFirstTransactionByStoreQuery, Transaction_GetFirstTransactionByStoreQueryVariables>(Transaction_GetFirstTransactionByStoreDocument, options);
+      }
+export function useTransaction_GetFirstTransactionByStoreLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Transaction_GetFirstTransactionByStoreQuery, Transaction_GetFirstTransactionByStoreQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Transaction_GetFirstTransactionByStoreQuery, Transaction_GetFirstTransactionByStoreQueryVariables>(Transaction_GetFirstTransactionByStoreDocument, options);
+        }
+export type Transaction_GetFirstTransactionByStoreQueryHookResult = ReturnType<typeof useTransaction_GetFirstTransactionByStoreQuery>;
+export type Transaction_GetFirstTransactionByStoreLazyQueryHookResult = ReturnType<typeof useTransaction_GetFirstTransactionByStoreLazyQuery>;
+export type Transaction_GetFirstTransactionByStoreQueryResult = Apollo.QueryResult<Transaction_GetFirstTransactionByStoreQuery, Transaction_GetFirstTransactionByStoreQueryVariables>;
 export const Transaction_GetTransactionByPkDocument = gql`
     query Transaction_GetTransactionByPK($invoice_number: String!) {
   transaction_by_pk(invoice_number: $invoice_number) {
