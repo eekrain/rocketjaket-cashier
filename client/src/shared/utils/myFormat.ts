@@ -18,18 +18,18 @@ export const myNumberFormat = {
     if (!num && options === 'nullAsEmpty') {
       return '';
     } else if (!num) num = 0;
-    return numbro(num).format({
+    return numbro(num).formatCurrency({
       thousandSeparated: true,
-      prefix: 'Rp ',
+      currencySymbol: 'Rp ',
     });
   },
   rpDiscount(num?: number | null, options?: 'nullAsEmpty') {
     if (!num && options === 'nullAsEmpty') {
       return '';
     } else if (!num) num = 0;
-    return numbro(num).format({
+    return numbro(num).formatCurrency({
       thousandSeparated: true,
-      prefix: '- Rp ',
+      currencySymbol: '- Rp ',
     });
   },
   percentageDiscount(num?: number | null, options?: 'nullAsEmpty') {

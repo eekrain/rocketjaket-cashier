@@ -1,27 +1,19 @@
-import {Maybe} from 'graphql/jsutils/Maybe';
 import {useMemo} from 'react';
 import {
-  NumberChartData,
   Scalars,
+  TimeMode,
   useDashboard_GetDashboardDataQuery,
   useStore_GetAllStoreQuery,
 } from '../../../graphql/gql-generated';
 import {getColorByIndex} from '../../../shared/utils';
-
-export interface IChartCustomData {
-  labels: string[];
-  datasets: {
-    data: number[];
-    color: (opacity?: number) => string;
-  }[];
-  legend: string[];
-}
+import {IMyLineChart} from './MyLineChart';
+import {IMyPieChart} from './MyPieChart';
 
 interface useDashboardData {
   firstTransactionDate: Scalars['String'];
   isCanBackwards: Scalars['Boolean'];
   isCanForwards: Scalars['Boolean'];
-  // paymentTypePercentage: Array<PaymentTypePercentage>;
+  paymentTypePercentage: Array<IMyPieChart>;
   stores: Array<Scalars['Int']>;
   totalCustomer: Scalars['Int'];
   totalItemReturned: Scalars['Int'];
@@ -31,10 +23,10 @@ interface useDashboardData {
   totalProfit: Scalars['Int'];
   totalReturnedTransaction: Scalars['Int'];
   totalSuccessTransaction: Scalars['Int'];
-  operasionalChart?: Maybe<Array<NumberChartData>>;
-  // itemSoldChart: IChartCustomData;
-  omsetChart: IChartCustomData;
-  profitChart: IChartCustomData;
+  operasionalChart?: IMyLineChart;
+  itemSoldChart: IMyLineChart;
+  omsetChart: IMyLineChart;
+  profitChart: IMyLineChart;
   storeSelectOptions: {
     label: string;
     value: string;
@@ -45,12 +37,14 @@ interface useDashboardDataProps {
   startDate: string;
   untilDate: string;
   stores: string;
+  mode: 'weekly' | 'monthly' | 'daily';
 }
 
 export const useDashboardData = ({
   startDate,
   untilDate,
   stores,
+  mode,
 }: useDashboardDataProps): useDashboardData | null => {
   const getAllStore = useStore_GetAllStoreQuery();
   const storeSelectOptions = useMemo(() => {
@@ -80,10 +74,19 @@ export const useDashboardData = ({
       startDate,
       untilDate,
       stores: activeStores,
+      mode: mode as TimeMode,
     },
   });
 
   const dashboardData = getDashboardData.data?.Dashboard_GetDashboardData;
+  console.log(
+    '🚀 ~ file: useDashboardData.ts ~ line 78 ~ dashboardData',
+    dashboardData,
+  );
+  console.log(
+    '🚀 ~ file: useDashboardData.ts ~ line 78 ~ getDashboardData',
+    getDashboardData.error,
+  );
 
   const dashboardChartData = useMemo(() => {
     const legend =
@@ -98,32 +101,65 @@ export const useDashboardData = ({
         };
       }) || [];
 
-    const omsetChart: IChartCustomData = {
+    const omsetChart: IMyLineChart = {
       labels: dashboardData?.omsetChart.labels || [],
       datasets:
         dashboardData?.omsetChart?.datasets?.map((val, index) => {
           return {
-            data: val.data.map(x => x / 1000),
+            data: val.data,
             color: legend?.[index].color,
           };
         }) || [],
       legend: legend.map(x => x.store_name),
     };
 
-    const profitChart: IChartCustomData = {
+    const profitChart: IMyLineChart = {
       labels: dashboardData?.profitChart.labels || [],
       datasets:
         dashboardData?.profitChart?.datasets?.map((val, index) => {
           return {
-            data: val.data.map(x => x / 1000),
+            data: val.data,
             color: legend?.[index].color,
           };
         }) || [],
       legend: legend.map(x => x.store_name),
     };
 
-    return {omsetChart, profitChart};
+    const itemSoldChart: IMyLineChart = {
+      labels: dashboardData?.itemSoldChart.labels || [],
+      datasets:
+        dashboardData?.itemSoldChart?.datasets?.map((val, index) => {
+          return {
+            data: val.data,
+            color: legend?.[index].color,
+          };
+        }) || [],
+      legend: legend.map(x => x.store_name),
+    };
+
+    const operasionalChart: IMyLineChart = {
+      labels: dashboardData?.operasionalChart.labels || [],
+      datasets:
+        dashboardData?.operasionalChart?.datasets?.map((val, index) => {
+          return {
+            data: val.data,
+            color: legend?.[index].color,
+          };
+        }) || [],
+      legend: legend.map(x => x.store_name),
+    };
+
+    return {omsetChart, profitChart, itemSoldChart, operasionalChart};
   }, [dashboardData, getAllStore.data?.stores]);
+
+  const paymentTypePercentage = useMemo(() => {
+    return (
+      dashboardData?.paymentTypePercentage.map((x, i) => ({
+        ...x,
+        color: getColorByIndex(i)(1),
+      })) || []
+    );
+  }, [dashboardData]);
 
   if (!dashboardData) return null;
 
@@ -131,6 +167,9 @@ export const useDashboardData = ({
     ...dashboardData,
     omsetChart: dashboardChartData.omsetChart,
     profitChart: dashboardChartData.profitChart,
+    itemSoldChart: dashboardChartData.itemSoldChart,
+    operasionalChart: dashboardChartData.operasionalChart,
+    paymentTypePercentage: paymentTypePercentage,
     storeSelectOptions,
   };
 };

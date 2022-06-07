@@ -1,0 +1,10 @@
+query OperationalCost_GetById($id: Int = 10) {
+  operational_costs_by_pk(id: $id) {
+    id
+    created_at
+    cost
+    karyawan_name
+    reason
+    store_id
+  }
+}

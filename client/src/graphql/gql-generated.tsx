@@ -60,7 +60,7 @@ export type Dashboard_GetDashboardDataOutput = {
   isCanForwards: Scalars['Boolean'];
   itemSoldChart: NumberChartData;
   omsetChart: NumberChartData;
-  operasionalChart?: Maybe<Array<NumberChartData>>;
+  operasionalChart: NumberChartData;
   paymentTypePercentage: Array<PaymentTypePercentage>;
   profitChart: NumberChartData;
   stores: Array<Scalars['Int']>;
@@ -101,8 +101,8 @@ export type NumberChartDatasets = {
 
 export type PaymentTypePercentage = {
   __typename?: 'PaymentTypePercentage';
-  payment_type: Scalars['String'];
-  value: Scalars['Float'];
+  name: Scalars['String'];
+  total_transaksi: Scalars['Int'];
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
@@ -139,12 +139,12 @@ export type String_Comparison_Exp = {
 };
 
 export enum TimeMode {
+  /** daily */
+  Daily = 'daily',
   /** mothly */
   Mothly = 'mothly',
   /** weekly */
-  Weekly = 'weekly',
-  /** yearly */
-  Yearly = 'yearly'
+  Weekly = 'weekly'
 }
 
 export enum TotalTransactionCompare {
@@ -3350,6 +3350,10 @@ export type Mutation_Root = {
   delete_notification_read_user?: Maybe<Notification_Read_User_Mutation_Response>;
   /** delete single row from the table: "notification_read_user" */
   delete_notification_read_user_by_pk?: Maybe<Notification_Read_User>;
+  /** delete data from the table: "operational_costs" */
+  delete_operational_costs?: Maybe<Operational_Costs_Mutation_Response>;
+  /** delete single row from the table: "operational_costs" */
+  delete_operational_costs_by_pk?: Maybe<Operational_Costs>;
   /** delete data from the table: "product_categories" */
   delete_product_categories?: Maybe<Product_Categories_Mutation_Response>;
   /** delete single row from the table: "product_categories" */
@@ -3454,6 +3458,10 @@ export type Mutation_Root = {
   insert_notification_read_user?: Maybe<Notification_Read_User_Mutation_Response>;
   /** insert a single row into the table: "notification_read_user" */
   insert_notification_read_user_one?: Maybe<Notification_Read_User>;
+  /** insert data into the table: "operational_costs" */
+  insert_operational_costs?: Maybe<Operational_Costs_Mutation_Response>;
+  /** insert a single row into the table: "operational_costs" */
+  insert_operational_costs_one?: Maybe<Operational_Costs>;
   /** insert data into the table: "product_categories" */
   insert_product_categories?: Maybe<Product_Categories_Mutation_Response>;
   /** insert a single row into the table: "product_categories" */
@@ -3558,6 +3566,10 @@ export type Mutation_Root = {
   update_notification_read_user?: Maybe<Notification_Read_User_Mutation_Response>;
   /** update single row of the table: "notification_read_user" */
   update_notification_read_user_by_pk?: Maybe<Notification_Read_User>;
+  /** update data of the table: "operational_costs" */
+  update_operational_costs?: Maybe<Operational_Costs_Mutation_Response>;
+  /** update single row of the table: "operational_costs" */
+  update_operational_costs_by_pk?: Maybe<Operational_Costs>;
   /** update data of the table: "product_categories" */
   update_product_categories?: Maybe<Product_Categories_Mutation_Response>;
   /** update single row of the table: "product_categories" */
@@ -3832,6 +3844,18 @@ export type Mutation_RootDelete_Notification_Read_UserArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Notification_Read_User_By_PkArgs = {
   id: Scalars['bigint'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Operational_CostsArgs = {
+  where: Operational_Costs_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Operational_Costs_By_PkArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -4176,6 +4200,20 @@ export type Mutation_RootInsert_Notification_Read_UserArgs = {
 export type Mutation_RootInsert_Notification_Read_User_OneArgs = {
   object: Notification_Read_User_Insert_Input;
   on_conflict?: InputMaybe<Notification_Read_User_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Operational_CostsArgs = {
+  objects: Array<Operational_Costs_Insert_Input>;
+  on_conflict?: InputMaybe<Operational_Costs_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Operational_Costs_OneArgs = {
+  object: Operational_Costs_Insert_Input;
+  on_conflict?: InputMaybe<Operational_Costs_On_Conflict>;
 };
 
 
@@ -4574,6 +4612,22 @@ export type Mutation_RootUpdate_Notification_Read_User_By_PkArgs = {
   _inc?: InputMaybe<Notification_Read_User_Inc_Input>;
   _set?: InputMaybe<Notification_Read_User_Set_Input>;
   pk_columns: Notification_Read_User_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Operational_CostsArgs = {
+  _inc?: InputMaybe<Operational_Costs_Inc_Input>;
+  _set?: InputMaybe<Operational_Costs_Set_Input>;
+  where: Operational_Costs_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Operational_Costs_By_PkArgs = {
+  _inc?: InputMaybe<Operational_Costs_Inc_Input>;
+  _set?: InputMaybe<Operational_Costs_Set_Input>;
+  pk_columns: Operational_Costs_Pk_Columns_Input;
 };
 
 
@@ -5233,6 +5287,345 @@ export type Notification_Var_Samp_Fields = {
 export type Notification_Variance_Fields = {
   __typename?: 'notification_variance_fields';
   id?: Maybe<Scalars['Float']>;
+};
+
+/** columns and relationships of "operational_costs" */
+export type Operational_Costs = {
+  __typename?: 'operational_costs';
+  cost: Scalars['Int'];
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id: Scalars['Int'];
+  karyawan_name?: Maybe<Scalars['String']>;
+  reason: Scalars['String'];
+  /** An object relationship */
+  store: Stores;
+  store_id: Scalars['Int'];
+};
+
+/** aggregated selection of "operational_costs" */
+export type Operational_Costs_Aggregate = {
+  __typename?: 'operational_costs_aggregate';
+  aggregate?: Maybe<Operational_Costs_Aggregate_Fields>;
+  nodes: Array<Operational_Costs>;
+};
+
+/** aggregate fields of "operational_costs" */
+export type Operational_Costs_Aggregate_Fields = {
+  __typename?: 'operational_costs_aggregate_fields';
+  avg?: Maybe<Operational_Costs_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Operational_Costs_Max_Fields>;
+  min?: Maybe<Operational_Costs_Min_Fields>;
+  stddev?: Maybe<Operational_Costs_Stddev_Fields>;
+  stddev_pop?: Maybe<Operational_Costs_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Operational_Costs_Stddev_Samp_Fields>;
+  sum?: Maybe<Operational_Costs_Sum_Fields>;
+  var_pop?: Maybe<Operational_Costs_Var_Pop_Fields>;
+  var_samp?: Maybe<Operational_Costs_Var_Samp_Fields>;
+  variance?: Maybe<Operational_Costs_Variance_Fields>;
+};
+
+
+/** aggregate fields of "operational_costs" */
+export type Operational_Costs_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Operational_Costs_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "operational_costs" */
+export type Operational_Costs_Aggregate_Order_By = {
+  avg?: InputMaybe<Operational_Costs_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Operational_Costs_Max_Order_By>;
+  min?: InputMaybe<Operational_Costs_Min_Order_By>;
+  stddev?: InputMaybe<Operational_Costs_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Operational_Costs_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Operational_Costs_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Operational_Costs_Sum_Order_By>;
+  var_pop?: InputMaybe<Operational_Costs_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Operational_Costs_Var_Samp_Order_By>;
+  variance?: InputMaybe<Operational_Costs_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "operational_costs" */
+export type Operational_Costs_Arr_Rel_Insert_Input = {
+  data: Array<Operational_Costs_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Operational_Costs_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Operational_Costs_Avg_Fields = {
+  __typename?: 'operational_costs_avg_fields';
+  cost?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "operational_costs" */
+export type Operational_Costs_Avg_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "operational_costs". All fields are combined with a logical 'AND'. */
+export type Operational_Costs_Bool_Exp = {
+  _and?: InputMaybe<Array<Operational_Costs_Bool_Exp>>;
+  _not?: InputMaybe<Operational_Costs_Bool_Exp>;
+  _or?: InputMaybe<Array<Operational_Costs_Bool_Exp>>;
+  cost?: InputMaybe<Int_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Int_Comparison_Exp>;
+  karyawan_name?: InputMaybe<String_Comparison_Exp>;
+  reason?: InputMaybe<String_Comparison_Exp>;
+  store?: InputMaybe<Stores_Bool_Exp>;
+  store_id?: InputMaybe<Int_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "operational_costs" */
+export enum Operational_Costs_Constraint {
+  /** unique or primary key constraint */
+  OperationalCostsPkey = 'operational_costs_pkey'
+}
+
+/** input type for incrementing numeric columns in table "operational_costs" */
+export type Operational_Costs_Inc_Input = {
+  cost?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']>;
+  store_id?: InputMaybe<Scalars['Int']>;
+};
+
+/** input type for inserting data into table "operational_costs" */
+export type Operational_Costs_Insert_Input = {
+  cost?: InputMaybe<Scalars['Int']>;
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['Int']>;
+  karyawan_name?: InputMaybe<Scalars['String']>;
+  reason?: InputMaybe<Scalars['String']>;
+  store?: InputMaybe<Stores_Obj_Rel_Insert_Input>;
+  store_id?: InputMaybe<Scalars['Int']>;
+};
+
+/** aggregate max on columns */
+export type Operational_Costs_Max_Fields = {
+  __typename?: 'operational_costs_max_fields';
+  cost?: Maybe<Scalars['Int']>;
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['Int']>;
+  karyawan_name?: Maybe<Scalars['String']>;
+  reason?: Maybe<Scalars['String']>;
+  store_id?: Maybe<Scalars['Int']>;
+};
+
+/** order by max() on columns of table "operational_costs" */
+export type Operational_Costs_Max_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  karyawan_name?: InputMaybe<Order_By>;
+  reason?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Operational_Costs_Min_Fields = {
+  __typename?: 'operational_costs_min_fields';
+  cost?: Maybe<Scalars['Int']>;
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['Int']>;
+  karyawan_name?: Maybe<Scalars['String']>;
+  reason?: Maybe<Scalars['String']>;
+  store_id?: Maybe<Scalars['Int']>;
+};
+
+/** order by min() on columns of table "operational_costs" */
+export type Operational_Costs_Min_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  karyawan_name?: InputMaybe<Order_By>;
+  reason?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "operational_costs" */
+export type Operational_Costs_Mutation_Response = {
+  __typename?: 'operational_costs_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Operational_Costs>;
+};
+
+/** on_conflict condition type for table "operational_costs" */
+export type Operational_Costs_On_Conflict = {
+  constraint: Operational_Costs_Constraint;
+  update_columns?: Array<Operational_Costs_Update_Column>;
+  where?: InputMaybe<Operational_Costs_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "operational_costs". */
+export type Operational_Costs_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  karyawan_name?: InputMaybe<Order_By>;
+  reason?: InputMaybe<Order_By>;
+  store?: InputMaybe<Stores_Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: operational_costs */
+export type Operational_Costs_Pk_Columns_Input = {
+  id: Scalars['Int'];
+};
+
+/** select columns of table "operational_costs" */
+export enum Operational_Costs_Select_Column {
+  /** column name */
+  Cost = 'cost',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  KaryawanName = 'karyawan_name',
+  /** column name */
+  Reason = 'reason',
+  /** column name */
+  StoreId = 'store_id'
+}
+
+/** input type for updating data in table "operational_costs" */
+export type Operational_Costs_Set_Input = {
+  cost?: InputMaybe<Scalars['Int']>;
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['Int']>;
+  karyawan_name?: InputMaybe<Scalars['String']>;
+  reason?: InputMaybe<Scalars['String']>;
+  store_id?: InputMaybe<Scalars['Int']>;
+};
+
+/** aggregate stddev on columns */
+export type Operational_Costs_Stddev_Fields = {
+  __typename?: 'operational_costs_stddev_fields';
+  cost?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev() on columns of table "operational_costs" */
+export type Operational_Costs_Stddev_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Operational_Costs_Stddev_Pop_Fields = {
+  __typename?: 'operational_costs_stddev_pop_fields';
+  cost?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "operational_costs" */
+export type Operational_Costs_Stddev_Pop_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Operational_Costs_Stddev_Samp_Fields = {
+  __typename?: 'operational_costs_stddev_samp_fields';
+  cost?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_samp() on columns of table "operational_costs" */
+export type Operational_Costs_Stddev_Samp_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate sum on columns */
+export type Operational_Costs_Sum_Fields = {
+  __typename?: 'operational_costs_sum_fields';
+  cost?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['Int']>;
+  store_id?: Maybe<Scalars['Int']>;
+};
+
+/** order by sum() on columns of table "operational_costs" */
+export type Operational_Costs_Sum_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "operational_costs" */
+export enum Operational_Costs_Update_Column {
+  /** column name */
+  Cost = 'cost',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  KaryawanName = 'karyawan_name',
+  /** column name */
+  Reason = 'reason',
+  /** column name */
+  StoreId = 'store_id'
+}
+
+/** aggregate var_pop on columns */
+export type Operational_Costs_Var_Pop_Fields = {
+  __typename?: 'operational_costs_var_pop_fields';
+  cost?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_pop() on columns of table "operational_costs" */
+export type Operational_Costs_Var_Pop_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Operational_Costs_Var_Samp_Fields = {
+  __typename?: 'operational_costs_var_samp_fields';
+  cost?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_samp() on columns of table "operational_costs" */
+export type Operational_Costs_Var_Samp_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Operational_Costs_Variance_Fields = {
+  __typename?: 'operational_costs_variance_fields';
+  cost?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+  store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "operational_costs" */
+export type Operational_Costs_Variance_Order_By = {
+  cost?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
 };
 
 /** column ordering options */
@@ -5966,6 +6359,12 @@ export type Query_Root = {
   notification_read_user_aggregate: Notification_Read_User_Aggregate;
   /** fetch data from the table: "notification_read_user" using primary key columns */
   notification_read_user_by_pk?: Maybe<Notification_Read_User>;
+  /** An array relationship */
+  operational_costs: Array<Operational_Costs>;
+  /** An aggregate relationship */
+  operational_costs_aggregate: Operational_Costs_Aggregate;
+  /** fetch data from the table: "operational_costs" using primary key columns */
+  operational_costs_by_pk?: Maybe<Operational_Costs>;
   /** fetch data from the table: "product_categories" */
   product_categories: Array<Product_Categories>;
   /** fetch aggregated fields from the table: "product_categories" */
@@ -6388,6 +6787,29 @@ export type Query_RootNotification_Read_User_By_PkArgs = {
 };
 
 
+export type Query_RootOperational_CostsArgs = {
+  distinct_on?: InputMaybe<Array<Operational_Costs_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Operational_Costs_Order_By>>;
+  where?: InputMaybe<Operational_Costs_Bool_Exp>;
+};
+
+
+export type Query_RootOperational_Costs_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Operational_Costs_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Operational_Costs_Order_By>>;
+  where?: InputMaybe<Operational_Costs_Bool_Exp>;
+};
+
+
+export type Query_RootOperational_Costs_By_PkArgs = {
+  id: Scalars['Int'];
+};
+
+
 export type Query_RootProduct_CategoriesArgs = {
   distinct_on?: InputMaybe<Array<Product_Categories_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -6653,6 +7075,14 @@ export type Stores = {
   latitude: Scalars['String'];
   longitude: Scalars['String'];
   name: Scalars['String'];
+  /** An array relationship */
+  operational_costs: Array<Operational_Costs>;
+  /** An aggregate relationship */
+  operational_costs_aggregate: Operational_Costs_Aggregate;
+  /** An array relationship */
+  transactions: Array<Transaction>;
+  /** An aggregate relationship */
+  transactions_aggregate: Transaction_Aggregate;
   updated_at: Scalars['timestamptz'];
   /** An array relationship */
   users_metadata: Array<Users_Metadata>;
@@ -6678,6 +7108,46 @@ export type StoresInventory_Products_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Inventory_Products_Order_By>>;
   where?: InputMaybe<Inventory_Products_Bool_Exp>;
+};
+
+
+/** columns and relationships of "stores" */
+export type StoresOperational_CostsArgs = {
+  distinct_on?: InputMaybe<Array<Operational_Costs_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Operational_Costs_Order_By>>;
+  where?: InputMaybe<Operational_Costs_Bool_Exp>;
+};
+
+
+/** columns and relationships of "stores" */
+export type StoresOperational_Costs_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Operational_Costs_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Operational_Costs_Order_By>>;
+  where?: InputMaybe<Operational_Costs_Bool_Exp>;
+};
+
+
+/** columns and relationships of "stores" */
+export type StoresTransactionsArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_Order_By>>;
+  where?: InputMaybe<Transaction_Bool_Exp>;
+};
+
+
+/** columns and relationships of "stores" */
+export type StoresTransactions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_Order_By>>;
+  where?: InputMaybe<Transaction_Bool_Exp>;
 };
 
 
@@ -6748,6 +7218,8 @@ export type Stores_Bool_Exp = {
   latitude?: InputMaybe<String_Comparison_Exp>;
   longitude?: InputMaybe<String_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
+  operational_costs?: InputMaybe<Operational_Costs_Bool_Exp>;
+  transactions?: InputMaybe<Transaction_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   users_metadata?: InputMaybe<Users_Metadata_Bool_Exp>;
 };
@@ -6774,6 +7246,8 @@ export type Stores_Insert_Input = {
   latitude?: InputMaybe<Scalars['String']>;
   longitude?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  operational_costs?: InputMaybe<Operational_Costs_Arr_Rel_Insert_Input>;
+  transactions?: InputMaybe<Transaction_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
   users_metadata?: InputMaybe<Users_Metadata_Arr_Rel_Insert_Input>;
 };
@@ -6834,6 +7308,8 @@ export type Stores_Order_By = {
   latitude?: InputMaybe<Order_By>;
   longitude?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
+  operational_costs_aggregate?: InputMaybe<Operational_Costs_Aggregate_Order_By>;
+  transactions_aggregate?: InputMaybe<Transaction_Aggregate_Order_By>;
   updated_at?: InputMaybe<Order_By>;
   users_metadata_aggregate?: InputMaybe<Users_Metadata_Aggregate_Order_By>;
 };
@@ -7024,6 +7500,12 @@ export type Subscription_Root = {
   notification_read_user_aggregate: Notification_Read_User_Aggregate;
   /** fetch data from the table: "notification_read_user" using primary key columns */
   notification_read_user_by_pk?: Maybe<Notification_Read_User>;
+  /** An array relationship */
+  operational_costs: Array<Operational_Costs>;
+  /** An aggregate relationship */
+  operational_costs_aggregate: Operational_Costs_Aggregate;
+  /** fetch data from the table: "operational_costs" using primary key columns */
+  operational_costs_by_pk?: Maybe<Operational_Costs>;
   /** fetch data from the table: "product_categories" */
   product_categories: Array<Product_Categories>;
   /** fetch aggregated fields from the table: "product_categories" */
@@ -7438,6 +7920,29 @@ export type Subscription_RootNotification_Read_User_By_PkArgs = {
 };
 
 
+export type Subscription_RootOperational_CostsArgs = {
+  distinct_on?: InputMaybe<Array<Operational_Costs_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Operational_Costs_Order_By>>;
+  where?: InputMaybe<Operational_Costs_Bool_Exp>;
+};
+
+
+export type Subscription_RootOperational_Costs_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Operational_Costs_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Operational_Costs_Order_By>>;
+  where?: InputMaybe<Operational_Costs_Bool_Exp>;
+};
+
+
+export type Subscription_RootOperational_Costs_By_PkArgs = {
+  id: Scalars['Int'];
+};
+
+
 export type Subscription_RootProduct_CategoriesArgs = {
   distinct_on?: InputMaybe<Array<Product_Categories_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -7809,11 +8314,39 @@ export type Transaction_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
+/** order by aggregate values of table "transaction" */
+export type Transaction_Aggregate_Order_By = {
+  avg?: InputMaybe<Transaction_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Transaction_Max_Order_By>;
+  min?: InputMaybe<Transaction_Min_Order_By>;
+  stddev?: InputMaybe<Transaction_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Transaction_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Transaction_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Transaction_Sum_Order_By>;
+  var_pop?: InputMaybe<Transaction_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Transaction_Var_Samp_Order_By>;
+  variance?: InputMaybe<Transaction_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "transaction" */
+export type Transaction_Arr_Rel_Insert_Input = {
+  data: Array<Transaction_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Transaction_On_Conflict>;
+};
+
 /** aggregate avg on columns */
 export type Transaction_Avg_Fields = {
   __typename?: 'transaction_avg_fields';
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "transaction" */
+export type Transaction_Avg_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "transaction". All fields are combined with a logical 'AND'. */
@@ -8333,6 +8866,17 @@ export type Transaction_Max_Fields = {
   updated_at?: Maybe<Scalars['timestamptz']>;
 };
 
+/** order by max() on columns of table "transaction" */
+export type Transaction_Max_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  invoice_number?: InputMaybe<Order_By>;
+  karyawan_name?: InputMaybe<Order_By>;
+  return_reason?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Transaction_Min_Fields = {
   __typename?: 'transaction_min_fields';
@@ -8343,6 +8887,17 @@ export type Transaction_Min_Fields = {
   return_reason?: Maybe<Scalars['String']>;
   store_id?: Maybe<Scalars['Int']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by min() on columns of table "transaction" */
+export type Transaction_Min_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  invoice_number?: InputMaybe<Order_By>;
+  karyawan_name?: InputMaybe<Order_By>;
+  return_reason?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "transaction" */
@@ -9057,11 +9612,23 @@ export type Transaction_Stddev_Fields = {
   store_id?: Maybe<Scalars['Float']>;
 };
 
+/** order by stddev() on columns of table "transaction" */
+export type Transaction_Stddev_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_pop on columns */
 export type Transaction_Stddev_Pop_Fields = {
   __typename?: 'transaction_stddev_pop_fields';
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "transaction" */
+export type Transaction_Stddev_Pop_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_samp on columns */
@@ -9071,11 +9638,23 @@ export type Transaction_Stddev_Samp_Fields = {
   store_id?: Maybe<Scalars['Float']>;
 };
 
+/** order by stddev_samp() on columns of table "transaction" */
+export type Transaction_Stddev_Samp_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
 /** aggregate sum on columns */
 export type Transaction_Sum_Fields = {
   __typename?: 'transaction_sum_fields';
   cash_in_amount?: Maybe<Scalars['Int']>;
   store_id?: Maybe<Scalars['Int']>;
+};
+
+/** order by sum() on columns of table "transaction" */
+export type Transaction_Sum_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "transaction" */
@@ -9107,6 +9686,12 @@ export type Transaction_Var_Pop_Fields = {
   store_id?: Maybe<Scalars['Float']>;
 };
 
+/** order by var_pop() on columns of table "transaction" */
+export type Transaction_Var_Pop_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
 /** aggregate var_samp on columns */
 export type Transaction_Var_Samp_Fields = {
   __typename?: 'transaction_var_samp_fields';
@@ -9114,11 +9699,23 @@ export type Transaction_Var_Samp_Fields = {
   store_id?: Maybe<Scalars['Float']>;
 };
 
+/** order by var_samp() on columns of table "transaction" */
+export type Transaction_Var_Samp_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
+};
+
 /** aggregate variance on columns */
 export type Transaction_Variance_Fields = {
   __typename?: 'transaction_variance_fields';
   cash_in_amount?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "transaction" */
+export type Transaction_Variance_Order_By = {
+  cash_in_amount?: InputMaybe<Order_By>;
+  store_id?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "auth.users" */
@@ -9981,10 +10578,11 @@ export type Dashboard_GetDashboardDataQueryVariables = Exact<{
   startDate: Scalars['String'];
   untilDate: Scalars['String'];
   stores?: InputMaybe<Array<Scalars['Int']> | Scalars['Int']>;
+  mode?: InputMaybe<TimeMode>;
 }>;
 
 
-export type Dashboard_GetDashboardDataQuery = { __typename?: 'query_root', Dashboard_GetDashboardData?: { __typename?: 'Dashboard_GetDashboardDataOutput', stores: Array<number>, isCanForwards: boolean, isCanBackwards: boolean, firstTransactionDate: string, totalCustomer: number, totalOmset: number, totalProfit: number, totalItemReturned: number, totalItemSold: number, totalOperasional: number, totalReturnedTransaction: number, totalSuccessTransaction: number, omsetChart: { __typename?: 'NumberChartData', labels: Array<string>, datasets?: Array<{ __typename?: 'NumberChartDatasets', data: Array<number>, store_id: number }> | null }, profitChart: { __typename?: 'NumberChartData', labels: Array<string>, datasets?: Array<{ __typename?: 'NumberChartDatasets', data: Array<number>, store_id: number }> | null }, itemSoldChart: { __typename?: 'NumberChartData', labels: Array<string>, datasets?: Array<{ __typename?: 'NumberChartDatasets', data: Array<number>, store_id: number }> | null } } | null };
+export type Dashboard_GetDashboardDataQuery = { __typename?: 'query_root', Dashboard_GetDashboardData?: { __typename?: 'Dashboard_GetDashboardDataOutput', stores: Array<number>, isCanForwards: boolean, isCanBackwards: boolean, firstTransactionDate: string, totalCustomer: number, totalOmset: number, totalProfit: number, totalItemReturned: number, totalItemSold: number, totalOperasional: number, totalReturnedTransaction: number, totalSuccessTransaction: number, omsetChart: { __typename?: 'NumberChartData', labels: Array<string>, datasets?: Array<{ __typename?: 'NumberChartDatasets', data: Array<number>, store_id: number }> | null }, profitChart: { __typename?: 'NumberChartData', labels: Array<string>, datasets?: Array<{ __typename?: 'NumberChartDatasets', data: Array<number>, store_id: number }> | null }, itemSoldChart: { __typename?: 'NumberChartData', labels: Array<string>, datasets?: Array<{ __typename?: 'NumberChartDatasets', data: Array<number>, store_id: number }> | null }, operasionalChart: { __typename?: 'NumberChartData', labels: Array<string>, datasets?: Array<{ __typename?: 'NumberChartDatasets', data: Array<number>, store_id: number }> | null }, paymentTypePercentage: Array<{ __typename?: 'PaymentTypePercentage', name: string, total_transaksi: number }> } | null };
 
 export type Inventory_CreateInventoryProductMutationVariables = Exact<{
   inventory_product: Inventory_Products_Insert_Input;
@@ -10098,6 +10696,35 @@ export type Notification_GetNotificationsWithReadStatusByUserIdSubscriptionVaria
 
 
 export type Notification_GetNotificationsWithReadStatusByUserIdSubscription = { __typename?: 'subscription_root', notification: Array<{ __typename?: 'notification', id: any, notification_body?: string | null, notification_title?: string | null, created_at?: any | null, notification_read_users: Array<{ __typename?: 'notification_read_user', user_id: any }> }> };
+
+export type OperationalCost_CreateOneMutationVariables = Exact<{
+  object?: InputMaybe<Operational_Costs_Insert_Input>;
+}>;
+
+
+export type OperationalCost_CreateOneMutation = { __typename?: 'mutation_root', insert_operational_costs_one?: { __typename?: 'operational_costs', id: number, reason: string } | null };
+
+export type OperationalCost_UpdateByIdMutationVariables = Exact<{
+  id: Scalars['Int'];
+  _set: Operational_Costs_Set_Input;
+}>;
+
+
+export type OperationalCost_UpdateByIdMutation = { __typename?: 'mutation_root', update_operational_costs_by_pk?: { __typename?: 'operational_costs', id: number, reason: string } | null };
+
+export type OperationalCost_GetAllCostByStoreQueryVariables = Exact<{
+  store_id?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type OperationalCost_GetAllCostByStoreQuery = { __typename?: 'query_root', operational_costs: Array<{ __typename?: 'operational_costs', id: number, cost: number, reason: string, created_at?: any | null, store_id: number, karyawan_name?: string | null }> };
+
+export type OperationalCost_GetByIdQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type OperationalCost_GetByIdQuery = { __typename?: 'query_root', operational_costs_by_pk?: { __typename?: 'operational_costs', id: number, created_at?: any | null, cost: number, karyawan_name?: string | null, reason: string, store_id: number } | null };
 
 export type Produk_CreateKategoriProdukMutationVariables = Exact<{
   category?: InputMaybe<Product_Categories_Insert_Input>;
@@ -10239,7 +10866,7 @@ export type Transaction_GetAllTransactionByStoreIdQueryVariables = Exact<{
 }>;
 
 
-export type Transaction_GetAllTransactionByStoreIdQuery = { __typename?: 'query_root', transaction: Array<{ __typename?: 'transaction', cash_change?: any | null, cash_in_amount: number, created_at: any, invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, store_id: number, total_transaction?: any | null, updated_at: any, karyawan_name: string, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', id: any, inventory_product_id?: any | null, product_name: string, profit?: number | null }> }> };
+export type Transaction_GetAllTransactionByStoreIdQuery = { __typename?: 'query_root', transaction: Array<{ __typename?: 'transaction', cash_change?: any | null, cash_in_amount: number, created_at: any, invoice_number: string, payment_type: Transaction_Payment_Type_Enum_Enum, store_id: number, total_transaction?: any | null, total_profit?: any | null, updated_at: any, karyawan_name: string, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', id: any, inventory_product_id?: any | null, product_name: string, profit?: number | null }> }> };
 
 export type Transaction_GetFirstTransactionByStoreQueryVariables = Exact<{
   store_id: Scalars['Int'];
@@ -10304,6 +10931,8 @@ export const namedOperations = {
     Inventory_GetAllVariantMetadata: 'Inventory_GetAllVariantMetadata',
     Inventory_GetInventoryProductById: 'Inventory_GetInventoryProductById',
     Inventory_GetVariantMetadataByTitle: 'Inventory_GetVariantMetadataByTitle',
+    OperationalCost_GetAllCostByStore: 'OperationalCost_GetAllCostByStore',
+    OperationalCost_GetById: 'OperationalCost_GetById',
     Produk_GetAllKategoriProduk: 'Produk_GetAllKategoriProduk',
     Produk_GetAllProduk: 'Produk_GetAllProduk',
     Produk_GetKategoriProdukByPK: 'Produk_GetKategoriProdukByPK',
@@ -10329,6 +10958,8 @@ export const namedOperations = {
     Notification_DeleteFcmToken: 'Notification_DeleteFcmToken',
     Notification_DeleteReadNotifications: 'Notification_DeleteReadNotifications',
     Notification_InsertFcmToken: 'Notification_InsertFcmToken',
+    OperationalCost_CreateOne: 'OperationalCost_CreateOne',
+    OperationalCost_UpdateById: 'OperationalCost_UpdateById',
     Produk_CreateKategoriProduk: 'Produk_CreateKategoriProduk',
     Produk_CreateProduk: 'Produk_CreateProduk',
     Produk_DeleteKategoriProdukId: 'Produk_DeleteKategoriProdukId',
@@ -10405,9 +11036,9 @@ export type Cashier_CreateTransactionMutationHookResult = ReturnType<typeof useC
 export type Cashier_CreateTransactionMutationResult = Apollo.MutationResult<Cashier_CreateTransactionMutation>;
 export type Cashier_CreateTransactionMutationOptions = Apollo.BaseMutationOptions<Cashier_CreateTransactionMutation, Cashier_CreateTransactionMutationVariables>;
 export const Dashboard_GetDashboardDataDocument = gql`
-    query Dashboard_GetDashboardData($startDate: String!, $untilDate: String!, $stores: [Int!] = 10) {
+    query Dashboard_GetDashboardData($startDate: String!, $untilDate: String!, $stores: [Int!] = 10, $mode: TimeMode = daily) {
   Dashboard_GetDashboardData(
-    mode: weekly
+    mode: $mode
     startDate: $startDate
     stores: $stores
     untilDate: $untilDate
@@ -10445,6 +11076,17 @@ export const Dashboard_GetDashboardDataDocument = gql`
       }
       labels
     }
+    operasionalChart {
+      datasets {
+        data
+        store_id
+      }
+      labels
+    }
+    paymentTypePercentage {
+      name
+      total_transaksi
+    }
   }
 }
     `;
@@ -10464,6 +11106,7 @@ export const Dashboard_GetDashboardDataDocument = gql`
  *      startDate: // value for 'startDate'
  *      untilDate: // value for 'untilDate'
  *      stores: // value for 'stores'
+ *      mode: // value for 'mode'
  *   },
  * });
  */
@@ -11130,6 +11773,155 @@ export function useNotification_GetNotificationsWithReadStatusByUserIdSubscripti
       }
 export type Notification_GetNotificationsWithReadStatusByUserIdSubscriptionHookResult = ReturnType<typeof useNotification_GetNotificationsWithReadStatusByUserIdSubscription>;
 export type Notification_GetNotificationsWithReadStatusByUserIdSubscriptionResult = Apollo.SubscriptionResult<Notification_GetNotificationsWithReadStatusByUserIdSubscription>;
+export const OperationalCost_CreateOneDocument = gql`
+    mutation OperationalCost_CreateOne($object: operational_costs_insert_input = {}) {
+  insert_operational_costs_one(object: $object) {
+    id
+    reason
+  }
+}
+    `;
+export type OperationalCost_CreateOneMutationFn = Apollo.MutationFunction<OperationalCost_CreateOneMutation, OperationalCost_CreateOneMutationVariables>;
+
+/**
+ * __useOperationalCost_CreateOneMutation__
+ *
+ * To run a mutation, you first call `useOperationalCost_CreateOneMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOperationalCost_CreateOneMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [operationalCostCreateOneMutation, { data, loading, error }] = useOperationalCost_CreateOneMutation({
+ *   variables: {
+ *      object: // value for 'object'
+ *   },
+ * });
+ */
+export function useOperationalCost_CreateOneMutation(baseOptions?: Apollo.MutationHookOptions<OperationalCost_CreateOneMutation, OperationalCost_CreateOneMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<OperationalCost_CreateOneMutation, OperationalCost_CreateOneMutationVariables>(OperationalCost_CreateOneDocument, options);
+      }
+export type OperationalCost_CreateOneMutationHookResult = ReturnType<typeof useOperationalCost_CreateOneMutation>;
+export type OperationalCost_CreateOneMutationResult = Apollo.MutationResult<OperationalCost_CreateOneMutation>;
+export type OperationalCost_CreateOneMutationOptions = Apollo.BaseMutationOptions<OperationalCost_CreateOneMutation, OperationalCost_CreateOneMutationVariables>;
+export const OperationalCost_UpdateByIdDocument = gql`
+    mutation OperationalCost_UpdateById($id: Int!, $_set: operational_costs_set_input!) {
+  update_operational_costs_by_pk(pk_columns: {id: $id}, _set: $_set) {
+    id
+    reason
+  }
+}
+    `;
+export type OperationalCost_UpdateByIdMutationFn = Apollo.MutationFunction<OperationalCost_UpdateByIdMutation, OperationalCost_UpdateByIdMutationVariables>;
+
+/**
+ * __useOperationalCost_UpdateByIdMutation__
+ *
+ * To run a mutation, you first call `useOperationalCost_UpdateByIdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOperationalCost_UpdateByIdMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [operationalCostUpdateByIdMutation, { data, loading, error }] = useOperationalCost_UpdateByIdMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      _set: // value for '_set'
+ *   },
+ * });
+ */
+export function useOperationalCost_UpdateByIdMutation(baseOptions?: Apollo.MutationHookOptions<OperationalCost_UpdateByIdMutation, OperationalCost_UpdateByIdMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<OperationalCost_UpdateByIdMutation, OperationalCost_UpdateByIdMutationVariables>(OperationalCost_UpdateByIdDocument, options);
+      }
+export type OperationalCost_UpdateByIdMutationHookResult = ReturnType<typeof useOperationalCost_UpdateByIdMutation>;
+export type OperationalCost_UpdateByIdMutationResult = Apollo.MutationResult<OperationalCost_UpdateByIdMutation>;
+export type OperationalCost_UpdateByIdMutationOptions = Apollo.BaseMutationOptions<OperationalCost_UpdateByIdMutation, OperationalCost_UpdateByIdMutationVariables>;
+export const OperationalCost_GetAllCostByStoreDocument = gql`
+    query OperationalCost_GetAllCostByStore($store_id: Int) {
+  operational_costs(where: {store_id: {_eq: $store_id}}) {
+    id
+    cost
+    reason
+    created_at
+    store_id
+    karyawan_name
+  }
+}
+    `;
+
+/**
+ * __useOperationalCost_GetAllCostByStoreQuery__
+ *
+ * To run a query within a React component, call `useOperationalCost_GetAllCostByStoreQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOperationalCost_GetAllCostByStoreQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOperationalCost_GetAllCostByStoreQuery({
+ *   variables: {
+ *      store_id: // value for 'store_id'
+ *   },
+ * });
+ */
+export function useOperationalCost_GetAllCostByStoreQuery(baseOptions?: Apollo.QueryHookOptions<OperationalCost_GetAllCostByStoreQuery, OperationalCost_GetAllCostByStoreQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OperationalCost_GetAllCostByStoreQuery, OperationalCost_GetAllCostByStoreQueryVariables>(OperationalCost_GetAllCostByStoreDocument, options);
+      }
+export function useOperationalCost_GetAllCostByStoreLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OperationalCost_GetAllCostByStoreQuery, OperationalCost_GetAllCostByStoreQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OperationalCost_GetAllCostByStoreQuery, OperationalCost_GetAllCostByStoreQueryVariables>(OperationalCost_GetAllCostByStoreDocument, options);
+        }
+export type OperationalCost_GetAllCostByStoreQueryHookResult = ReturnType<typeof useOperationalCost_GetAllCostByStoreQuery>;
+export type OperationalCost_GetAllCostByStoreLazyQueryHookResult = ReturnType<typeof useOperationalCost_GetAllCostByStoreLazyQuery>;
+export type OperationalCost_GetAllCostByStoreQueryResult = Apollo.QueryResult<OperationalCost_GetAllCostByStoreQuery, OperationalCost_GetAllCostByStoreQueryVariables>;
+export const OperationalCost_GetByIdDocument = gql`
+    query OperationalCost_GetById($id: Int = 10) {
+  operational_costs_by_pk(id: $id) {
+    id
+    created_at
+    cost
+    karyawan_name
+    reason
+    store_id
+  }
+}
+    `;
+
+/**
+ * __useOperationalCost_GetByIdQuery__
+ *
+ * To run a query within a React component, call `useOperationalCost_GetByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOperationalCost_GetByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOperationalCost_GetByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useOperationalCost_GetByIdQuery(baseOptions?: Apollo.QueryHookOptions<OperationalCost_GetByIdQuery, OperationalCost_GetByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OperationalCost_GetByIdQuery, OperationalCost_GetByIdQueryVariables>(OperationalCost_GetByIdDocument, options);
+      }
+export function useOperationalCost_GetByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OperationalCost_GetByIdQuery, OperationalCost_GetByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OperationalCost_GetByIdQuery, OperationalCost_GetByIdQueryVariables>(OperationalCost_GetByIdDocument, options);
+        }
+export type OperationalCost_GetByIdQueryHookResult = ReturnType<typeof useOperationalCost_GetByIdQuery>;
+export type OperationalCost_GetByIdLazyQueryHookResult = ReturnType<typeof useOperationalCost_GetByIdLazyQuery>;
+export type OperationalCost_GetByIdQueryResult = Apollo.QueryResult<OperationalCost_GetByIdQuery, OperationalCost_GetByIdQueryVariables>;
 export const Produk_CreateKategoriProdukDocument = gql`
     mutation Produk_CreateKategoriProduk($category: product_categories_insert_input = {}) {
   insert_product_categories_one(object: $category) {
@@ -11866,6 +12658,7 @@ export const Transaction_GetAllTransactionByStoreIdDocument = gql`
     payment_type
     store_id
     total_transaction
+    total_profit
     updated_at
     karyawan_name
     transaction_status_enum {

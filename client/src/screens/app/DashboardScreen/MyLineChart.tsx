@@ -1,12 +1,20 @@
 import {Box, Heading} from 'native-base';
+import numbro from 'numbro';
 import React from 'react';
 import {LineChart} from 'react-native-chart-kit';
-import {myNumberFormat} from '../../../shared/utils';
-import {IChartCustomData} from './useDashboardData';
 
-interface MyChartProps {
+export interface IMyLineChart {
+  labels: string[];
+  datasets: {
+    data: number[];
+    color: (opacity?: number) => string;
+  }[];
+  legend: string[];
+}
+
+interface MyLineChartProps {
   chartTitle: string;
-  chartData?: IChartCustomData;
+  chartData?: IMyLineChart;
   total: string;
   chartWidth: number;
   chartHheight?: number;
@@ -14,14 +22,13 @@ interface MyChartProps {
   bgColor?: string;
   bgGradientFromLeft?: string;
   bgGradientToRight?: string;
-  yAxisLabel?: string;
-  yAxisSuffix?: string;
   yAxisInterval?: number;
+  formatYLabel?: (yValue: string) => string;
   colorGlobal?: (opacity: number, index?: number | undefined) => string;
   labelColor?: (opacity: number, index?: number | undefined) => string;
 }
 
-export const MyChart = ({
+export const MyLineChart = ({
   chartTitle,
   chartData,
   total,
@@ -31,12 +38,11 @@ export const MyChart = ({
   bgColor = '#6ee7b7',
   bgGradientFromLeft = '#d1fae5',
   bgGradientToRight = '#a7f3d0',
-  yAxisLabel = 'Rp',
-  yAxisSuffix = 'k',
   yAxisInterval = 1,
+  formatYLabel = yValue => yValue,
   colorGlobal = (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
   labelColor = (opacity = 1) => `rgba(6, 78, 59, ${opacity})`,
-}: MyChartProps) => {
+}: MyLineChartProps) => {
   return (
     <>
       {chartData &&
@@ -57,8 +63,7 @@ export const MyChart = ({
               }}
               width={chartWidth} // from react-native
               height={chartHheight}
-              yAxisLabel={yAxisLabel}
-              yAxisSuffix={yAxisSuffix}
+              formatYLabel={formatYLabel}
               yAxisInterval={yAxisInterval} // optional, defaults to 1
               yLabelsOffset={10}
               chartConfig={{

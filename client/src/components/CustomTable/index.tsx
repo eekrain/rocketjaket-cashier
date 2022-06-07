@@ -20,6 +20,7 @@ export type CustomTableColumn<T extends object = {}> = {
   isAvatar?: boolean;
   isAction?: boolean;
   isDisableSort?: boolean;
+  isSkip?: boolean;
 };
 
 export type CustomTableFooter<T extends object = {}> = {
@@ -206,46 +207,48 @@ const CustomTable = <T extends Record<string, unknown>>({
   const table = useCallback(
     () => (
       <Grid style={{minWidth: '100%'}}>
-        {columns.map(col => (
-          <Col
-            key={col.Header}
-            style={{
-              width: col.widthFixed ? col.widthFixed : undefined,
-            }}
-            size={col.widthRatio ? col.widthRatio : undefined}>
-            <Row style={styles.header}>
-              {headerCell(
-                col.Header,
-                col.accessor,
-                col?.isDisableSort ? col.isDisableSort : false,
-              )}
-            </Row>
-            {processedData.map((rowdata, i) => (
-              <Row
-                key={`${col.Header}${col.accessor}${i}`}
-                style={[
-                  i % 2 ? styles.rowOdd : styles.row,
-                  col?.isAvatar
-                    ? {
-                        paddingTop: 25,
-                      }
-                    : undefined,
-                  col?.isAction
-                    ? {
-                        paddingTop: 10,
-                      }
-                    : undefined,
-                ]}>
-                {typeof rowdata[col.accessor] === 'function' ? (
-                  (rowdata[col.accessor] as React.ReactElement)
-                ) : (
-                  <Text>{rowdata[col.accessor] as string}</Text>
+        {columns
+          .filter(col => (col?.isSkip ? !col.isSkip : true))
+          .map(col => (
+            <Col
+              key={col.Header}
+              style={{
+                width: col.widthFixed ? col.widthFixed : undefined,
+              }}
+              size={col.widthRatio ? col.widthRatio : undefined}>
+              <Row style={styles.header}>
+                {headerCell(
+                  col.Header,
+                  col.accessor,
+                  col?.isDisableSort ? col.isDisableSort : false,
                 )}
               </Row>
-            ))}
-            {footer && footerCell(col.accessor)}
-          </Col>
-        ))}
+              {processedData.map((rowdata, i) => (
+                <Row
+                  key={`${col.Header}${col.accessor}${i}`}
+                  style={[
+                    i % 2 ? styles.rowOdd : styles.row,
+                    col?.isAvatar
+                      ? {
+                          paddingTop: 25,
+                        }
+                      : undefined,
+                    col?.isAction
+                      ? {
+                          paddingTop: 10,
+                        }
+                      : undefined,
+                  ]}>
+                  {typeof rowdata[col.accessor] === 'function' ? (
+                    (rowdata[col.accessor] as React.ReactElement)
+                  ) : (
+                    <Text>{rowdata[col.accessor] as string}</Text>
+                  )}
+                </Row>
+              ))}
+              {footer && footerCell(col.accessor)}
+            </Col>
+          ))}
       </Grid>
     ),
     [

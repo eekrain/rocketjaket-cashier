@@ -1,0 +1,8 @@
+mutation OperationalCost_CreateOne(
+  $object: operational_costs_insert_input = {}
+) {
+  insert_operational_costs_one(object: $object) {
+    id
+    reason
+  }
+}

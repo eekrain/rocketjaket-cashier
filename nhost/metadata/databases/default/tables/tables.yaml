@@ -12,6 +12,7 @@
 - "!include public_inventory_variants_metadata.yaml"
 - "!include public_notification.yaml"
 - "!include public_notification_read_user.yaml"
+- "!include public_operational_costs.yaml"
 - "!include public_product_categories.yaml"
 - "!include public_products.yaml"
 - "!include public_stores.yaml"

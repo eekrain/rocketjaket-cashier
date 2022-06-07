@@ -86,6 +86,7 @@ export default async (req: Request, res: Response) => {
 
   await sendNotificationOnMinAvailableQty(
     eventData,
+    inv_pdk,
     newAvailableQtyAfterBought,
     inv_pdk.min_available_qty
   );
@@ -95,6 +96,7 @@ export default async (req: Request, res: Response) => {
 
 const sendNotificationOnMinAvailableQty = async (
   eventData: UpdateAvailableQtyOnInsertTransactionItem_EventData,
+  inv_pdk: Inventory_GetInventoryProductByIdQuery["inventory_products_by_pk"],
   newAvailableQtyAfterBought: number,
   min_available_qty: number
 ) => {
@@ -113,7 +115,7 @@ const sendNotificationOnMinAvailableQty = async (
       const firebaseAdmin = myFirebaseAdminApp();
       const notification = {
         title: "Stok Produk Menipis",
-        body: `Produk ${eventData.new.product_name} hanya tersisa ${newAvailableQtyAfterBought}!`,
+        body: `Produk ${eventData.new.product_name} hanya tersisa ${newAvailableQtyAfterBought} di Toko ${inv_pdk?.store.name}!`,
       };
 
       const [errNotif, resNotif] = await to(

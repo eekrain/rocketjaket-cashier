@@ -1,0 +1,10 @@
+query OperationalCost_GetAllCostByStore($store_id: Int) {
+  operational_costs(where: {store_id: {_eq: $store_id}}) {
+    id
+    cost
+    reason
+    created_at
+    store_id
+    karyawan_name
+  }
+}

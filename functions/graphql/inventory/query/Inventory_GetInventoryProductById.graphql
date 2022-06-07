@@ -5,5 +5,8 @@ query Inventory_GetInventoryProductById($id: uuid!) {
     product {
       name
     }
+    store {
+      name
+    }
   }
 }
