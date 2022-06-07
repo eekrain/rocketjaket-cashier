@@ -1,0 +1,82 @@
+table:
+  name: operational_costs
+  schema: public
+object_relationships:
+- name: store
+  using:
+    foreign_key_constraint_on: store_id
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - reason
+    - cost
+    - store_id
+    - created_at
+    - karyawan_name
+  role: administrator
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - cost
+    - id
+    - store_id
+    - karyawan_name
+    - reason
+    - created_at
+  role: karyawan
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - cost
+    - id
+    - store_id
+    - karyawan_name
+    - reason
+    - created_at
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - cost
+    - id
+    - store_id
+    - karyawan_name
+    - reason
+    - created_at
+    filter: {}
+  role: karyawan
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - cost
+    - id
+    - store_id
+    - karyawan_name
+    - reason
+    - created_at
+    filter: {}
+  role: administrator
+- permission:
+    check: {}
+    columns:
+    - cost
+    - id
+    - store_id
+    - karyawan_name
+    - reason
+    - created_at
+    filter: {}
+  role: karyawan
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator
+- permission:
+    filter: {}
+  role: karyawan
