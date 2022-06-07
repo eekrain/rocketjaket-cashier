@@ -29,7 +29,6 @@ import {
 } from '../../types/user';
 import {ButtonBack, ButtonSave} from '../Buttons';
 import to from 'await-to-js';
-import {useNavigation} from '@react-navigation/native';
 
 interface IDefaultValues {
   display_name: string;
@@ -70,17 +69,19 @@ const defaultValues: IDefaultValues = {
   store_id: '',
 };
 
-interface IUpdateUserProps {}
+type X = UserScreenProps['UpdateUser'];
+interface IUpdateUserProps extends X {}
 
-const UpdateUser = ({}: IUpdateUserProps) => {
+const UpdateUser = ({navigation, route}: IUpdateUserProps) => {
+  console.log(
+    '🚀 ~ file: UpdateUser.tsx ~ line 77 ~ UpdateUser ~ route',
+    route.params,
+  );
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const myAppState = useMyAppState();
   const [isErrorOnce, setErrorOnce] = useState(false);
   const [isDataReady, setDataReady] = useState(false);
-
-  const navigation = useNavigation<UserScreenProps['ListUser']['navigation']>();
-  const route = useNavigation<UserScreenProps['ListUser']['route']>();
 
   const {
     watch,
@@ -129,6 +130,10 @@ const UpdateUser = ({}: IUpdateUserProps) => {
   const userData = useMemo(() => {
     return getUserById.data?.user;
   }, [getUserById.data?.user]);
+  console.log(
+    '🚀 ~ file: UpdateUser.tsx ~ line 132 ~ userData ~ userData',
+    userData,
+  );
 
   useEffect(() => {
     if (userData === null && !isErrorOnce) {
@@ -221,7 +226,7 @@ const UpdateUser = ({}: IUpdateUserProps) => {
       <DismissKeyboardWrapper>
         <Box pb="200">
           <Heading fontSize="xl" mb="10">
-            Buat User Baru
+            Update User
           </Heading>
           <Box bgColor="white" p="8">
             <VStack space="4">

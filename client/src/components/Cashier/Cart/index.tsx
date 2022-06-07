@@ -1,10 +1,7 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Box, Text, ScrollView, Heading, Button, useToast} from 'native-base';
 import {useForm} from 'react-hook-form';
-import {
-  TransactionPaymentTypeEnum,
-  TransactionStatusEnum,
-} from '../../../graphql/gql-generated';
+import {TransactionPaymentTypeEnum} from '../../../graphql/gql-generated';
 import {TRHNumberValueType} from '../../../shared/components';
 import {useCartModal} from './useCartModal';
 import {usePayment} from './usePayment';

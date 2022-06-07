@@ -12,7 +12,7 @@ interface ISelectOptions {
 interface IRHSelectProps extends ISelectProps {
   selectOptions: ISelectOptions[];
   name: string;
-  label: string;
+  label?: string;
   control: Control<any>;
   errors: {
     [x: string]: any;

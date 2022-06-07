@@ -7,3 +7,4 @@ export * from './useFlexSearch';
 export * from './checkErrorMessage';
 export * from './myNotifee';
 export * from './appPermission';
+export * from './getColorByIndex';
