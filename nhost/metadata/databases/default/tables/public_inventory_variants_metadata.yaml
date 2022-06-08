@@ -18,6 +18,14 @@ insert_permissions:
     - variant_title
     - variant_value
   role: administrator
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - variant_title
+    - variant_value
+  role: karyawan
 select_permissions:
 - permission:
     columns:
@@ -26,6 +34,13 @@ select_permissions:
     - variant_value
     filter: {}
   role: administrator
+- permission:
+    columns:
+    - id
+    - variant_title
+    - variant_value
+    filter: {}
+  role: karyawan
 update_permissions:
 - permission:
     check: {}
@@ -35,7 +50,18 @@ update_permissions:
     - variant_value
     filter: {}
   role: administrator
+- permission:
+    check: {}
+    columns:
+    - id
+    - variant_title
+    - variant_value
+    filter: {}
+  role: karyawan
 delete_permissions:
 - permission:
     filter: {}
   role: administrator
+- permission:
+    filter: {}
+  role: karyawan

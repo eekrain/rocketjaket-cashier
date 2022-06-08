@@ -11,6 +11,23 @@ object_relationships:
 - name: transaction_status_enum
   using:
     foreign_key_constraint_on: transaction_status
+computed_fields:
+- definition:
+    function:
+      name: transaction_items_profit
+      schema: public
+  name: profit
+- definition:
+    function:
+      name: transaction_items_real_capital_price
+      schema: public
+  name: real_capital_price
+- comment: ""
+  definition:
+    function:
+      name: transaction_items_subtotal
+      schema: public
+  name: subtotal
 insert_permissions:
 - permission:
     backend_only: false
@@ -43,6 +60,45 @@ insert_permissions:
     - transaction_invoice_number
     - transaction_status
     - updated_at
+  role: karyawan
+select_permissions:
+- permission:
+    columns:
+    - id
+    - transaction_invoice_number
+    - product_name
+    - capital_price
+    - selling_price
+    - discount
+    - purchase_qty
+    - transaction_status
+    - inventory_product_id
+    - created_at
+    - updated_at
+    computed_fields:
+    - profit
+    - real_capital_price
+    - subtotal
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - capital_price
+    - discount
+    - purchase_qty
+    - selling_price
+    - product_name
+    - transaction_invoice_number
+    - transaction_status
+    - created_at
+    - updated_at
+    - id
+    - inventory_product_id
+    computed_fields:
+    - profit
+    - real_capital_price
+    - subtotal
+    filter: {}
   role: karyawan
 update_permissions:
 - permission:

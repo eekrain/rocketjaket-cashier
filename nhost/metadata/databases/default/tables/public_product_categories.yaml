@@ -18,6 +18,14 @@ insert_permissions:
     - description
     - name
   role: administrator
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - description
+    - name
+  role: karyawan
 select_permissions:
 - permission:
     columns:
@@ -26,6 +34,13 @@ select_permissions:
     - name
     filter: {}
   role: administrator
+- permission:
+    columns:
+    - id
+    - description
+    - name
+    filter: {}
+  role: karyawan
 update_permissions:
 - permission:
     check: {}
@@ -35,7 +50,18 @@ update_permissions:
     - name
     filter: {}
   role: administrator
+- permission:
+    check: {}
+    columns:
+    - id
+    - description
+    - name
+    filter: {}
+  role: karyawan
 delete_permissions:
 - permission:
     filter: {}
   role: administrator
+- permission:
+    filter: {}
+  role: karyawan
