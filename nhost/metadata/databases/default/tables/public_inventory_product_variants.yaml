@@ -17,6 +17,14 @@ insert_permissions:
     - id
     - inventory_product_id
   role: administrator
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - inventory_variant_metadata_id
+    - id
+    - inventory_product_id
+  role: karyawan
 select_permissions:
 - permission:
     columns:
@@ -25,6 +33,13 @@ select_permissions:
     - inventory_product_id
     filter: {}
   role: administrator
+- permission:
+    columns:
+    - inventory_variant_metadata_id
+    - id
+    - inventory_product_id
+    filter: {}
+  role: karyawan
 update_permissions:
 - permission:
     check: {}
@@ -34,7 +49,18 @@ update_permissions:
     - inventory_product_id
     filter: {}
   role: administrator
+- permission:
+    check: {}
+    columns:
+    - inventory_variant_metadata_id
+    - id
+    - inventory_product_id
+    filter: {}
+  role: karyawan
 delete_permissions:
 - permission:
     filter: {}
   role: administrator
+- permission:
+    filter: {}
+  role: karyawan

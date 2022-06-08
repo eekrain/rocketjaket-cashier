@@ -20,6 +20,20 @@ insert_permissions:
     - name
     - photo_id
   role: administrator
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - capital_price
+    - discount
+    - product_category_id
+    - selling_price
+    - name
+    - photo_id
+    - created_at
+    - updated_at
+    - id
+  role: karyawan
 select_permissions:
 - permission:
     columns:
@@ -34,6 +48,19 @@ select_permissions:
     - id
     filter: {}
   role: administrator
+- permission:
+    columns:
+    - capital_price
+    - discount
+    - product_category_id
+    - selling_price
+    - name
+    - photo_id
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: karyawan
 update_permissions:
 - permission:
     check: {}
@@ -49,7 +76,24 @@ update_permissions:
     - id
     filter: {}
   role: administrator
+- permission:
+    check: {}
+    columns:
+    - capital_price
+    - discount
+    - product_category_id
+    - selling_price
+    - name
+    - photo_id
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: karyawan
 delete_permissions:
 - permission:
     filter: {}
   role: administrator
+- permission:
+    filter: {}
+  role: karyawan
