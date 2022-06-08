@@ -106,9 +106,7 @@ const CreateProductVariants = ({
     const variantMetadata =
       getVariantMetadata.data?.inventory_variants_metadata;
     if (variantMetadata && variantMetadata.length <= 0 && !isDataReady) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'),
-      });
+      toast.show(TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'));
       navigation.goBack();
       setDataReady(true);
     } else if (variantMetadata && variantMetadata.length > 0 && !isDataReady) {
@@ -178,22 +176,22 @@ const CreateProductVariants = ({
         '🚀 ~ file: UpdateProductVariants.tsx ~ line 180 ~ handleSubmission ~ err',
         err,
       );
-      toast.show({
-        ...TOAST_TEMPLATE.error(
+      toast.show(
+        TOAST_TEMPLATE.error(
           `Gagal melakukan update variasi produk dengan judul ${data.variant_title}.`,
         ),
-      });
+      );
     } else {
       console.log(
         '🚀 ~ file: UpdateProductVariants.tsx ~ line 179 ~ handleSubmission ~ res',
         res,
       );
       reset(defaultValues);
-      toast.show({
-        ...TOAST_TEMPLATE.success(
+      toast.show(
+        TOAST_TEMPLATE.success(
           `Berhasil update variasi produk dengan judul ${data.variant_title}.`,
         ),
-      });
+      );
       navigation.goBack();
     }
   };

@@ -126,9 +126,7 @@ const UpdateProductInventory = ({
     const inventoryProductData =
       getInventoryProductData.data?.inventory_products_by_pk;
     if (inventoryProductData === null && !isErrorOnce) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'),
-      });
+      toast.show(TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'));
       navigation.goBack();
       setErrorOnce(true);
     } else {
@@ -271,22 +269,22 @@ const UpdateProductInventory = ({
         '🚀 ~ file: UpdateProductInventory.tsx ~ line 304 ~ handleSubmission ~ err',
         err,
       );
-      toast.show({
-        ...TOAST_TEMPLATE.error(
+      toast.show(
+        TOAST_TEMPLATE.error(
           `Gagal melakukan update variasi produk dengan nama ${selectedProductData?.product_category.name} / ${selectedProductData?.name}.`,
         ),
-      });
+      );
     } else {
       console.log(
         '🚀 ~ file: UpdateProductInventory.tsx ~ line 304 ~ handleSubmission ~ res',
         res,
       );
       reset(defaultValues);
-      toast.show({
-        ...TOAST_TEMPLATE.success(
+      toast.show(
+        TOAST_TEMPLATE.success(
           `Berhasil update manajemen stok untuk produk ${selectedProductData?.product_category.name} / ${selectedProductData?.name}.`,
         ),
-      });
+      );
       navigation.goBack();
     }
   };

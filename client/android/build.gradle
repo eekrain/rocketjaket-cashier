@@ -56,5 +56,20 @@ allprojects {
         }
         google()
         maven { url 'https://www.jitpack.io' }
+        maven { 
+          url "https://api.mapbox.com/downloads/v2/releases/maven"
+          authentication{
+            basic(BasicAuthentication)
+          }
+          credentials {
+
+            // Fixed username
+            username = "mapbox"
+
+            // Get from gradle.properties
+            password = project.properties['MAPBOX_DOWNLOADS_TOKEN'] ?: ""
+
+          }
+        }
     }
 }

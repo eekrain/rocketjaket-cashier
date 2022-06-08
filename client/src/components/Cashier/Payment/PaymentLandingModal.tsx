@@ -144,17 +144,17 @@ const PaymentLandingForm = ({
           '🚀 ~ file: ModalSendReceipt.tsx ~ line 76 ~ handleSubmission ~ err',
           err,
         );
-        toast.show({
-          ...TOAST_TEMPLATE.error(
+        toast.show(
+          TOAST_TEMPLATE.error(
             `Gagal melakukan pengiriman nota untuk customer ${data.customer_name}.\n${res?.data?.Transaction_SendReceipt?.errorMessage}`,
           ),
-        });
+        );
       } else {
-        toast.show({
-          ...TOAST_TEMPLATE.success(
+        toast.show(
+          TOAST_TEMPLATE.success(
             `Berhasil melakukan pengiriman nota untuk customer ${data.customer_name}.`,
           ),
-        });
+        );
       }
     }
     onPressBack();

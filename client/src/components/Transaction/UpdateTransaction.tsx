@@ -149,9 +149,7 @@ const UpdateTransaction = ({route}: Props) => {
 
   useEffect(() => {
     if (getDataTransaction.data?.transaction_by_pk === null && !isErrorOnce) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Data transaksi tidak ditemukan!'),
-      });
+      toast.show(TOAST_TEMPLATE.error('Data transaksi tidak ditemukan!'));
       navigation.goBack();
       setErrorOnce(true);
     }
@@ -172,11 +170,11 @@ const UpdateTransaction = ({route}: Props) => {
       isAllowed,
     );
     if (!isAllowed) {
-      toast.show({
-        ...TOAST_TEMPLATE.error(
+      toast.show(
+        TOAST_TEMPLATE.error(
           `Invoice ${route.params.transaction_invoice_number} tidak valid untuk klaim garansi. Tanggal invoice dibuat lebih dari 7 hari!`,
         ),
-      });
+      );
     }
     return isAllowed;
   }, [
@@ -378,11 +376,10 @@ const UpdateTransaction = ({route}: Props) => {
                               item.transaction_status ===
                               Transaction_Status_Enum_Enum.Success,
                           )
-                          .reduce(
-                            (prevVal: number, currentVal) =>
-                              prevVal + currentVal.subtotal,
-                            0,
-                          ),
+                          .reduce((prevVal: number, currentVal) => {
+                            const subtotal = currentVal.subtotal || 0;
+                            return prevVal + subtotal;
+                          }, 0),
                       ),
                     },
                     {

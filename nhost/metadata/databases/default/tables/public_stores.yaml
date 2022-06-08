@@ -28,33 +28,21 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
-    - id
-    - address
     - latitude
     - longitude
+    - id
+    - address
     - name
     - created_at
     - updated_at
   role: administrator
-- permission:
-    backend_only: false
-    check: {}
-    columns:
-    - id
-    - address
-    - latitude
-    - longitude
-    - name
-    - created_at
-    - updated_at
-  role: karyawan
 select_permissions:
 - permission:
     columns:
-    - id
-    - address
     - latitude
     - longitude
+    - id
+    - address
     - name
     - created_at
     - updated_at
@@ -62,10 +50,10 @@ select_permissions:
   role: administrator
 - permission:
     columns:
-    - id
-    - address
     - latitude
     - longitude
+    - id
+    - address
     - name
     - created_at
     - updated_at
@@ -73,10 +61,10 @@ select_permissions:
   role: karyawan
 - permission:
     columns:
-    - id
-    - address
     - latitude
     - longitude
+    - id
+    - address
     - name
     - created_at
     - updated_at
@@ -89,27 +77,15 @@ update_permissions:
 - permission:
     check: {}
     columns:
-    - id
-    - address
     - latitude
     - longitude
+    - id
+    - address
     - name
     - created_at
     - updated_at
     filter: {}
   role: administrator
-- permission:
-    check: {}
-    columns:
-    - id
-    - address
-    - latitude
-    - longitude
-    - name
-    - created_at
-    - updated_at
-    filter: {}
-  role: karyawan
 delete_permissions:
 - permission:
     filter: {}

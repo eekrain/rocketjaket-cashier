@@ -83,18 +83,18 @@ const CreateProductVariants = ({navigation}: ICreateProductVariantsProps) => {
       },
     });
     if (res.errors) {
-      toast.show({
-        ...TOAST_TEMPLATE.error(
+      toast.show(
+        TOAST_TEMPLATE.error(
           `Gagal melakukan penambahan variasi produk dengan nama ${data.variation_title}.`,
         ),
-      });
+      );
     } else {
       reset();
-      toast.show({
-        ...TOAST_TEMPLATE.success(
+      toast.show(
+        TOAST_TEMPLATE.success(
           `Berhasil menambahkan variasi produk dengan nama ${data.variation_title}.`,
         ),
-      });
+      );
       navigation.goBack();
     }
   };

@@ -11,6 +11,9 @@ export const appPermission = async () => {
     PERMISSIONS.ANDROID.CAMERA,
     PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
     PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+    PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+    PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+    PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
   ]).then(checkStatuses => {
     if (checkStatuses[PERMISSIONS.ANDROID.CAMERA] === RESULTS.BLOCKED) {
       Alert.alert(
@@ -31,10 +34,24 @@ export const appPermission = async () => {
       );
     }
 
+    if (
+      checkStatuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION] ===
+        RESULTS.BLOCKED ||
+      checkStatuses[PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION] ===
+        RESULTS.BLOCKED
+    ) {
+      Alert.alert(
+        'Izin Lokasi Terblokir',
+        'Izin lokasi untuk aplikasi ini telah diblokir. Aktifkan izin lokasi untuk menggunakan aplikasi ini!',
+      );
+    }
+
     requestMultiple([
       PERMISSIONS.ANDROID.CAMERA,
       PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
       PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+      PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+      PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
     ]).then(_reqStatuses => {
       // console.log('Kamera', _reqStatuses[PERMISSIONS.ANDROID.CAMERA]);
       // console.log(
