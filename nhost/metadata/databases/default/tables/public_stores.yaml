@@ -9,13 +9,6 @@ array_relationships:
       table:
         name: inventory_products
         schema: public
-- name: operational_costs
-  using:
-    foreign_key_constraint_on:
-      column: store_id
-      table:
-        name: operational_costs
-        schema: public
 - name: transactions
   using:
     foreign_key_constraint_on:

@@ -26,27 +26,6 @@ array_relationships:
       table:
         name: transaction_receipts
         schema: public
-computed_fields:
-- definition:
-    function:
-      name: transaction_cash_change
-      schema: public
-  name: cash_change
-- definition:
-    function:
-      name: transaction_total_profit
-      schema: public
-  name: total_profit
-- definition:
-    function:
-      name: transaction_total_purchased_product
-      schema: public
-  name: total_purchased_product
-- definition:
-    function:
-      name: transaction_total_transaction
-      schema: public
-  name: total_transaction
 insert_permissions:
 - permission:
     backend_only: false
@@ -75,45 +54,6 @@ insert_permissions:
     - store_id
     - transaction_status
     - updated_at
-  role: karyawan
-select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - cash_in_amount
-    - created_at
-    - invoice_number
-    - karyawan_name
-    - payment_type
-    - return_reason
-    - store_id
-    - transaction_status
-    - updated_at
-    computed_fields:
-    - cash_change
-    - total_profit
-    - total_purchased_product
-    - total_transaction
-    filter: {}
-  role: administrator
-- permission:
-    allow_aggregations: true
-    columns:
-    - cash_in_amount
-    - created_at
-    - invoice_number
-    - karyawan_name
-    - payment_type
-    - return_reason
-    - store_id
-    - transaction_status
-    - updated_at
-    computed_fields:
-    - cash_change
-    - total_profit
-    - total_purchased_product
-    - total_transaction
-    filter: {}
   role: karyawan
 update_permissions:
 - permission:
