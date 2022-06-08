@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import to from "await-to-js";
-import { getRandomAlphabet, getUserSdk } from "../utils";
+import { getRandomAlphabet, getUserSdk } from "../../utils";
 import dayjs from "dayjs";
 import {
   Transaction_Payment_Type_Enum_Enum,
   Transaction_Status_Enum_Enum,
-} from "../graphql/gql-generated";
-import { Transaction_Items_Arr_Rel_Insert_Input } from "../graphql/gql-generated";
+} from "../../graphql/gql-generated";
+import { Transaction_Items_Arr_Rel_Insert_Input } from "../../graphql/gql-generated";
 
 enum InventoryErrorEnum {
   "success",
@@ -134,9 +134,7 @@ export default async (req: Request, res: Response) => {
     sdk.Transaction_CreateOneTransaction({
       object: {
         invoice_number: newInvoiceNumber,
-        total_transaction: params.total_transaction,
         cash_in_amount: params.cash_in_amount,
-        cash_change: params.cash_in_amount - params.total_transaction,
         payment_type:
           params.payment_type as unknown as Transaction_Payment_Type_Enum_Enum,
         karyawan_name: params.karyawan_name,

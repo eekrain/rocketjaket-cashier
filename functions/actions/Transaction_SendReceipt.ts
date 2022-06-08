@@ -2,15 +2,13 @@ import { Request, Response } from "express";
 import axios from "axios";
 import to from "await-to-js";
 import {
-  Customers_Bool_Exp,
   Customer_CreateCustomerMutation,
-  InputMaybe,
   Transaction_GetTransactionByPkQuery,
   Transaction_Receipt_Type_Enum_Enum,
   Transaction_Status_Enum_Enum,
-} from "../graphql/gql-generated";
-import { getAdminSdk } from "../utils";
-import { myNumberFormat } from "../utils/myFormat";
+} from "../../graphql/gql-generated";
+import { getAdminSdk } from "../../utils";
+import { myNumberFormat } from "../../utils/myFormat";
 
 export default async (req: Request, res: Response) => {
   const params: Transaction_SendReceiptArgs = req.body.input;

@@ -4,8 +4,8 @@ import {
   Transaction_Items_Insert_Input,
   Transaction_Payment_Type_Enum_Enum,
   Transaction_Status_Enum_Enum,
-} from "../graphql/gql-generated";
-import { getAdminSdk } from "../utils";
+} from "../../graphql/gql-generated";
+import { getAdminSdk } from "../../utils";
 import to from "await-to-js";
 
 export default async (req: Request, res: Response) => {
@@ -93,17 +93,11 @@ export default async (req: Request, res: Response) => {
   ) {
     const updateItemsToReturned = await Promise.all(
       params.returned_items.map(async (item) => {
-        const subtotal =
-          item?.selling_price * item.returned_qty -
-          (item.selling_price * item.returned_qty * item.discount) / 100;
-        const profit = subtotal - item.capital_price * item.returned_qty;
         return sdk.Transaction_UpdateTransactionItemByPK({
           transaction_item_id: item.transaction_item_id,
           transaction_item: {
             transaction_status: Transaction_Status_Enum_Enum.ReturnAll,
             purchase_qty: item.returned_qty,
-            subtotal,
-            profit,
           },
         });
       })
@@ -153,12 +147,7 @@ export default async (req: Request, res: Response) => {
         main_transaction: {
           transaction_status: Transaction_Status_Enum_Enum.ReturnPart,
           return_reason: params.return_reason,
-          total_transaction: params.total_transaction,
           cash_in_amount: params.total_transaction,
-          cash_change:
-            params.total_transaction > foundTransact.total_transaction
-              ? params.cash_in_amount - params.total_transaction
-              : 0,
           payment_type: Transaction_Payment_Type_Enum_Enum.Cash,
           karyawan_name: params.karyawan_name,
         },
