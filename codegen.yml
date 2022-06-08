@@ -5,7 +5,7 @@ schema:
         x-hasura-admin-secret: "nhost-admin-secret"
 documents: "./graphql/**/*.graphql"
 generates:
-  ./functions/graphql/gql-generated.ts:
+  ./graphql/gql-generated.ts:
     plugins:
       - typescript
       - typescript-operations

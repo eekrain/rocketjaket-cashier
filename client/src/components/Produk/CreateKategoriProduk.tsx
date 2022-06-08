@@ -64,16 +64,12 @@ const CreateKategoriProduk = ({}: Props) => {
       }),
     );
     if (err || !res) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Gagal melakukan penambahan kategori.'),
-      });
+      toast.show(TOAST_TEMPLATE.error('Gagal melakukan penambahan kategori.'));
     } else {
       reset();
-      toast.show({
-        ...TOAST_TEMPLATE.success(
-          `Berhasil menambahkan kategori ${data.name}.`,
-        ),
-      });
+      toast.show(
+        TOAST_TEMPLATE.success(`Berhasil menambahkan kategori ${data.name}.`),
+      );
       navigation.goBack();
     }
   };

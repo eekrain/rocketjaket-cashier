@@ -58,6 +58,10 @@ const schema = yup
           ),
         otherwise: yup.string().nullable(),
       }),
+    email: yup
+      .string()
+      .email('Format email salah')
+      .required('Email harus diisi'),
   })
   .required();
 
@@ -88,7 +92,7 @@ const UpdateUser = ({navigation, route}: IUpdateUserProps) => {
     handleSubmit,
     control,
     setValue,
-    formState: {errors, isSubmitSuccessful},
+    formState: {errors, isSubmitSuccessful, isDirty},
     reset,
   } = useForm({
     defaultValues,
@@ -137,9 +141,7 @@ const UpdateUser = ({navigation, route}: IUpdateUserProps) => {
 
   useEffect(() => {
     if (userData === null && !isErrorOnce) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('User tidak ditemukan.'),
-      });
+      toast.show(TOAST_TEMPLATE.error('User tidak ditemukan.'));
       navigation.goBack();
       setErrorOnce(true);
     } else if (userData && !isDataReady && !isErrorOnce) {
@@ -174,6 +176,10 @@ const UpdateUser = ({navigation, route}: IUpdateUserProps) => {
 
   const handleSubmission = async (data: IDefaultValues) => {
     if (!route.params?.userId) return;
+    if (!isDirty) {
+      navigation.goBack();
+      toast.show(TOAST_TEMPLATE.cancelled(`Tidak ada data yg berubah.`));
+    }
     setLoading(true);
     console.log(
       '🚀 ~ file: CreateUser.tsx ~ line 84 ~ handleSubmission ~ data',
@@ -193,6 +199,7 @@ const UpdateUser = ({navigation, route}: IUpdateUserProps) => {
             displayName: data.display_name,
             defaultRole: data.default_role,
             disabled: data.is_active?.[0] === 'active' ? false : true,
+            email: data.email,
           },
           store_id:
             data.default_role === UserRolesEnum.administrator ? null : storeId,
@@ -200,19 +207,22 @@ const UpdateUser = ({navigation, route}: IUpdateUserProps) => {
       }),
     );
 
-    if (err) {
+    if (err || !res) {
       console.log(
         '🚀 ~ file: UpdateUser.tsx ~ line 199 ~ handleSubmission ~ err',
         err,
       );
-      toast.show({
-        ...TOAST_TEMPLATE.error(`Gagal edit user ${data.display_name}.`),
-      });
+      toast.show(TOAST_TEMPLATE.error(`Gagal edit user ${data.display_name}.`));
     } else {
+      console.log(
+        '🚀 ~ file: UpdateUser.tsx ~ line 211 ~ handleSubmission ~ res',
+        res,
+      );
+
       reset();
-      toast.show({
-        ...TOAST_TEMPLATE.success(`Berhasil edit user ${data.display_name}.`),
-      });
+      toast.show(
+        TOAST_TEMPLATE.success(`Berhasil edit user ${data.display_name}.`),
+      );
       navigation.goBack();
     }
 
@@ -241,7 +251,6 @@ const UpdateUser = ({navigation, route}: IUpdateUserProps) => {
                 control={control}
                 errors={errors}
                 label="Email"
-                isDisabled={true}
               />
               <RHSelect
                 name="default_role"

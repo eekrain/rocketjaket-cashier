@@ -15,6 +15,7 @@ export type Scalars = {
   Float: number;
   bigint: any;
   citext: any;
+  float8: any;
   jsonb: any;
   timestamptz: any;
   uuid: any;
@@ -2255,6 +2256,19 @@ export type Files_Variance_Fields = {
 /** order by variance() on columns of table "storage.files" */
 export type Files_Variance_Order_By = {
   size?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to compare columns of type "float8". All fields are combined with logical 'AND'. */
+export type Float8_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars['float8']>;
+  _gt?: InputMaybe<Scalars['float8']>;
+  _gte?: InputMaybe<Scalars['float8']>;
+  _in?: InputMaybe<Array<Scalars['float8']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']>;
+  _lt?: InputMaybe<Scalars['float8']>;
+  _lte?: InputMaybe<Scalars['float8']>;
+  _neq?: InputMaybe<Scalars['float8']>;
+  _nin?: InputMaybe<Array<Scalars['float8']>>;
 };
 
 /** columns and relationships of "inventory_product_variants" */
@@ -6969,8 +6983,8 @@ export type Stores = {
   inventory_products: Array<Inventory_Products>;
   /** An aggregate relationship */
   inventory_products_aggregate: Inventory_Products_Aggregate;
-  latitude: Scalars['String'];
-  longitude: Scalars['String'];
+  latitude?: Maybe<Scalars['float8']>;
+  longitude?: Maybe<Scalars['float8']>;
   name: Scalars['String'];
   /** An array relationship */
   transactions: Array<Transaction>;
@@ -7077,6 +7091,8 @@ export type Stores_Aggregate_FieldsCountArgs = {
 export type Stores_Avg_Fields = {
   __typename?: 'stores_avg_fields';
   id?: Maybe<Scalars['Float']>;
+  latitude?: Maybe<Scalars['Float']>;
+  longitude?: Maybe<Scalars['Float']>;
 };
 
 /** Boolean expression to filter rows from the table "stores". All fields are combined with a logical 'AND'. */
@@ -7088,8 +7104,8 @@ export type Stores_Bool_Exp = {
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Int_Comparison_Exp>;
   inventory_products?: InputMaybe<Inventory_Products_Bool_Exp>;
-  latitude?: InputMaybe<String_Comparison_Exp>;
-  longitude?: InputMaybe<String_Comparison_Exp>;
+  latitude?: InputMaybe<Float8_Comparison_Exp>;
+  longitude?: InputMaybe<Float8_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   transactions?: InputMaybe<Transaction_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -7107,6 +7123,8 @@ export enum Stores_Constraint {
 /** input type for incrementing numeric columns in table "stores" */
 export type Stores_Inc_Input = {
   id?: InputMaybe<Scalars['Int']>;
+  latitude?: InputMaybe<Scalars['float8']>;
+  longitude?: InputMaybe<Scalars['float8']>;
 };
 
 /** input type for inserting data into table "stores" */
@@ -7115,8 +7133,8 @@ export type Stores_Insert_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['Int']>;
   inventory_products?: InputMaybe<Inventory_Products_Arr_Rel_Insert_Input>;
-  latitude?: InputMaybe<Scalars['String']>;
-  longitude?: InputMaybe<Scalars['String']>;
+  latitude?: InputMaybe<Scalars['float8']>;
+  longitude?: InputMaybe<Scalars['float8']>;
   name?: InputMaybe<Scalars['String']>;
   transactions?: InputMaybe<Transaction_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
@@ -7129,8 +7147,8 @@ export type Stores_Max_Fields = {
   address?: Maybe<Scalars['String']>;
   created_at?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['Int']>;
-  latitude?: Maybe<Scalars['String']>;
-  longitude?: Maybe<Scalars['String']>;
+  latitude?: Maybe<Scalars['float8']>;
+  longitude?: Maybe<Scalars['float8']>;
   name?: Maybe<Scalars['String']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
 };
@@ -7141,8 +7159,8 @@ export type Stores_Min_Fields = {
   address?: Maybe<Scalars['String']>;
   created_at?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['Int']>;
-  latitude?: Maybe<Scalars['String']>;
-  longitude?: Maybe<Scalars['String']>;
+  latitude?: Maybe<Scalars['float8']>;
+  longitude?: Maybe<Scalars['float8']>;
   name?: Maybe<Scalars['String']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
 };
@@ -7212,8 +7230,8 @@ export type Stores_Set_Input = {
   address?: InputMaybe<Scalars['String']>;
   created_at?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['Int']>;
-  latitude?: InputMaybe<Scalars['String']>;
-  longitude?: InputMaybe<Scalars['String']>;
+  latitude?: InputMaybe<Scalars['float8']>;
+  longitude?: InputMaybe<Scalars['float8']>;
   name?: InputMaybe<Scalars['String']>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -7222,24 +7240,32 @@ export type Stores_Set_Input = {
 export type Stores_Stddev_Fields = {
   __typename?: 'stores_stddev_fields';
   id?: Maybe<Scalars['Float']>;
+  latitude?: Maybe<Scalars['Float']>;
+  longitude?: Maybe<Scalars['Float']>;
 };
 
 /** aggregate stddev_pop on columns */
 export type Stores_Stddev_Pop_Fields = {
   __typename?: 'stores_stddev_pop_fields';
   id?: Maybe<Scalars['Float']>;
+  latitude?: Maybe<Scalars['Float']>;
+  longitude?: Maybe<Scalars['Float']>;
 };
 
 /** aggregate stddev_samp on columns */
 export type Stores_Stddev_Samp_Fields = {
   __typename?: 'stores_stddev_samp_fields';
   id?: Maybe<Scalars['Float']>;
+  latitude?: Maybe<Scalars['Float']>;
+  longitude?: Maybe<Scalars['Float']>;
 };
 
 /** aggregate sum on columns */
 export type Stores_Sum_Fields = {
   __typename?: 'stores_sum_fields';
   id?: Maybe<Scalars['Int']>;
+  latitude?: Maybe<Scalars['float8']>;
+  longitude?: Maybe<Scalars['float8']>;
 };
 
 /** update columns of table "stores" */
@@ -7264,18 +7290,24 @@ export enum Stores_Update_Column {
 export type Stores_Var_Pop_Fields = {
   __typename?: 'stores_var_pop_fields';
   id?: Maybe<Scalars['Float']>;
+  latitude?: Maybe<Scalars['Float']>;
+  longitude?: Maybe<Scalars['Float']>;
 };
 
 /** aggregate var_samp on columns */
 export type Stores_Var_Samp_Fields = {
   __typename?: 'stores_var_samp_fields';
   id?: Maybe<Scalars['Float']>;
+  latitude?: Maybe<Scalars['Float']>;
+  longitude?: Maybe<Scalars['Float']>;
 };
 
 /** aggregate variance on columns */
 export type Stores_Variance_Fields = {
   __typename?: 'stores_variance_fields';
   id?: Maybe<Scalars['Float']>;
+  latitude?: Maybe<Scalars['Float']>;
+  longitude?: Maybe<Scalars['Float']>;
 };
 
 export type Subscription_Root = {
@@ -10694,14 +10726,14 @@ export type Whatsapp_SignOutMutation = { __typename?: 'mutation_root', Whatsapp_
 export type Store_GetAllStoreQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Store_GetAllStoreQuery = { __typename?: 'query_root', stores: Array<{ __typename?: 'stores', id: number, name: string, address: string, latitude: string, longitude: string }> };
+export type Store_GetAllStoreQuery = { __typename?: 'query_root', stores: Array<{ __typename?: 'stores', id: number, name: string, address: string, latitude?: any | null, longitude?: any | null }> };
 
 export type Store_GetStoreByPkQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type Store_GetStoreByPkQuery = { __typename?: 'query_root', stores_by_pk?: { __typename?: 'stores', id: number, name: string, latitude: string, longitude: string, address: string, created_at: any, updated_at: any } | null };
+export type Store_GetStoreByPkQuery = { __typename?: 'query_root', stores_by_pk?: { __typename?: 'stores', id: number, name: string, latitude?: any | null, longitude?: any | null, address: string, created_at: any, updated_at: any } | null };
 
 export type Whatsapp_GetAuthStatusQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -10751,6 +10783,13 @@ export type Transaction_GetTransactionByPkQueryVariables = Exact<{
 
 
 export type Transaction_GetTransactionByPkQuery = { __typename?: 'query_root', transaction_by_pk?: { __typename?: 'transaction', cash_change?: any | null, cash_in_amount: number, created_at: any, invoice_number: string, total_transaction?: any | null, updated_at: any, karyawan_name: string, transaction_status: Transaction_Status_Enum_Enum, store: { __typename?: 'stores', name: string, address: string }, transaction_status_enum: { __typename?: 'transaction_status_enum', transaction_status: string, title: string }, transaction_items: Array<{ __typename?: 'transaction_items', created_at: any, capital_price: number, discount: number, id: any, inventory_product_id?: any | null, product_name: string, profit?: number | null, purchase_qty: number, selling_price: number, subtotal?: number | null, updated_at: any, transaction_status: Transaction_Status_Enum_Enum, transaction_status_enum: { __typename?: 'transaction_status_enum', title: string, transaction_status: string }, inventory_product?: { __typename?: 'inventory_products', override_capital_price?: number | null, override_selling_price?: number | null, override_discount?: number | null, available_qty: number, updated_at: any, product: { __typename?: 'products', photo_id?: string | null, name: string, capital_price: number, selling_price: number, discount: number, updated_at: any }, inventory_product_variants: Array<{ __typename?: 'inventory_product_variants', inventory_variant_metadata_id: number }> } | null }>, transaction_receipts: Array<{ __typename?: 'transaction_receipts', created_at: any, is_sent: boolean, transaction_receipt_type_enum: { __typename?: 'transaction_receipt_type_enum', receipt_type: string, title: string }, customer: { __typename?: 'customers', id: any, email?: string | null, name?: string | null, phone_number: string } }> } | null };
+
+export type User_DeleteUserMutationVariables = Exact<{
+  id: Scalars['uuid'];
+}>;
+
+
+export type User_DeleteUserMutation = { __typename?: 'mutation_root', deleteUser?: { __typename?: 'users', id: any, displayName: string } | null };
 
 export type User_SignUpMutationVariables = Exact<{
   defaultRole?: InputMaybe<Scalars['String']>;
@@ -10842,6 +10881,7 @@ export const namedOperations = {
     Whatsapp_SignOut: 'Whatsapp_SignOut',
     Transaction_ReturnTransaction: 'Transaction_ReturnTransaction',
     Transaction_SendReceiptToCustomer: 'Transaction_SendReceiptToCustomer',
+    User_DeleteUser: 'User_DeleteUser',
     User_SignUp: 'User_SignUp',
     User_UpdateUserByUserId: 'User_UpdateUserByUserId',
     User_UpdateUserForAdmin: 'User_UpdateUserForAdmin'
@@ -12711,6 +12751,40 @@ export function useTransaction_GetTransactionByPkLazyQuery(baseOptions?: Apollo.
 export type Transaction_GetTransactionByPkQueryHookResult = ReturnType<typeof useTransaction_GetTransactionByPkQuery>;
 export type Transaction_GetTransactionByPkLazyQueryHookResult = ReturnType<typeof useTransaction_GetTransactionByPkLazyQuery>;
 export type Transaction_GetTransactionByPkQueryResult = Apollo.QueryResult<Transaction_GetTransactionByPkQuery, Transaction_GetTransactionByPkQueryVariables>;
+export const User_DeleteUserDocument = gql`
+    mutation User_DeleteUser($id: uuid!) {
+  deleteUser(id: $id) {
+    id
+    displayName
+  }
+}
+    `;
+export type User_DeleteUserMutationFn = Apollo.MutationFunction<User_DeleteUserMutation, User_DeleteUserMutationVariables>;
+
+/**
+ * __useUser_DeleteUserMutation__
+ *
+ * To run a mutation, you first call `useUser_DeleteUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUser_DeleteUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [userDeleteUserMutation, { data, loading, error }] = useUser_DeleteUserMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUser_DeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<User_DeleteUserMutation, User_DeleteUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<User_DeleteUserMutation, User_DeleteUserMutationVariables>(User_DeleteUserDocument, options);
+      }
+export type User_DeleteUserMutationHookResult = ReturnType<typeof useUser_DeleteUserMutation>;
+export type User_DeleteUserMutationResult = Apollo.MutationResult<User_DeleteUserMutation>;
+export type User_DeleteUserMutationOptions = Apollo.BaseMutationOptions<User_DeleteUserMutation, User_DeleteUserMutationVariables>;
 export const User_SignUpDocument = gql`
     mutation User_SignUp($defaultRole: String = "karyawan", $defaultStore: Int = null, $displayName: String!, $email: String!, $password: String!) {
   User_SignUp(

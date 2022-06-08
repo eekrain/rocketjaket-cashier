@@ -22,7 +22,6 @@ import * as yup from 'yup';
 import {
   useMyUser,
   getXHasuraContextHeader,
-  // getStorageFileUrlWImageTransform,
   renameFilenameWithAddedNanoid,
   nhost,
   getStorageFileUrlWImageTransform,
@@ -119,9 +118,7 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
 
   useEffect(() => {
     if (userDataFetched === null && !isErrorOnce) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'),
-      });
+      toast.show(TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'));
       navigation.goBack();
       setErrorOnce(true);
     } else if (userDataFetched !== null && !isDataReady && !isErrorOnce) {
@@ -208,9 +205,7 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
     }
 
     if (!isDirty) {
-      toast.show({
-        ...TOAST_TEMPLATE.cancelled('Data user tidak ada yang diubah.'),
-      });
+      toast.show(TOAST_TEMPLATE.cancelled('Data user tidak ada yang diubah.'));
       return;
     }
 
@@ -226,14 +221,14 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
       }),
     );
     if (errUpdate) {
-      toast.show({
-        ...TOAST_TEMPLATE.error(`Gagal update user ${data.display_name}.`),
-      });
+      toast.show(
+        TOAST_TEMPLATE.error(`Gagal update user ${data.display_name}.`),
+      );
     } else {
       await nhost.auth.refreshSession();
-      toast.show({
-        ...TOAST_TEMPLATE.success(`Berhasil update user ${data.display_name}.`),
-      });
+      toast.show(
+        TOAST_TEMPLATE.success(`Berhasil update user ${data.display_name}.`),
+      );
     }
   };
 

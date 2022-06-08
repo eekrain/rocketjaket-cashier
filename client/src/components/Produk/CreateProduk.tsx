@@ -159,11 +159,11 @@ const CreateProduk = ({}: Props) => {
           '🚀 ~ file: CreateProduk.tsx ~ line 145 ~ handleSubmission ~ errUpload',
           errUpload,
         );
-        toast.show({
-          ...TOAST_TEMPLATE.error(
+        toast.show(
+          TOAST_TEMPLATE.error(
             `Gagal melakukan upload foto produk ${data.name}.`,
           ),
-        });
+        );
       }
 
       photo_id = resUpload?.fileMetadata?.id || '';
@@ -184,16 +184,14 @@ const CreateProduk = ({}: Props) => {
       }),
     );
     if (errCreateProduk || !resCreateProduk) {
-      toast.show({
-        ...TOAST_TEMPLATE.error(
-          `Gagal melakukan penambahan produk ${data.name}.`,
-        ),
-      });
+      toast.show(
+        TOAST_TEMPLATE.error(`Gagal melakukan penambahan produk ${data.name}.`),
+      );
     } else {
       reset();
-      toast.show({
-        ...TOAST_TEMPLATE.success(`Berhasil menambahkan produk ${data.name}.`),
-      });
+      toast.show(
+        TOAST_TEMPLATE.success(`Berhasil menambahkan produk ${data.name}.`),
+      );
       navigation.goBack();
     }
   };

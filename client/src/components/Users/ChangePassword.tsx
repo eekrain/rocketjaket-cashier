@@ -59,17 +59,13 @@ const ChangePassword = ({}: Props) => {
     try {
       await changePassword(data.newPasswordConfirm);
 
-      toast.show({
-        ...TOAST_TEMPLATE.success('Berhasil mengganti password.'),
-      });
+      toast.show(TOAST_TEMPLATE.success('Berhasil mengganti password.'));
     } catch (error) {
       console.log(
         '🚀 ~ file: ChangePassword.tsx ~ line 65 ~ handleChangePassword ~ error',
         error,
       );
-      toast.show({
-        ...TOAST_TEMPLATE.error('Gagal mengganti password.'),
-      });
+      toast.show(TOAST_TEMPLATE.error('Gagal mengganti password.'));
     }
   };
 

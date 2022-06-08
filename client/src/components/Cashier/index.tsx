@@ -4,11 +4,10 @@ import ProductsContent from './ProductsContent';
 import withAppLayout from '../Layout/AppLayout';
 import {
   useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription,
-  useProduk_GetAllKategoriProdukQuery,
   useStore_GetAllStoreQuery,
   useStore_GetStoreByPkQuery,
 } from '../../graphql/gql-generated';
-import {useFlexSearch, useMyUser} from '../../shared/utils';
+import {getUniqArrayObject, useFlexSearch, useMyUser} from '../../shared/utils';
 import {UserRolesEnum} from '../../types/user';
 import {useForm} from 'react-hook-form';
 import {RHSelect} from '../../shared/components';
@@ -18,6 +17,7 @@ import {ICart, useMyAppState} from '../../state';
 import Cart from './Cart';
 import {UpdateTransactionNavProps} from '../../screens/app/TransactionScreen';
 import {CommonActions} from '@react-navigation/native';
+import {sort} from 'fast-sort';
 
 export interface IDefaultValues {
   search_term: string;
@@ -66,17 +66,6 @@ const CashierHome = ({route}: Props) => {
   const selectedStoreId = watch('store_id');
   const activeCategory = watch('active_category');
   const searchTerm = watch('search_term');
-
-  const getAllCategory = useProduk_GetAllKategoriProdukQuery();
-  const kategoriProdukTab = useMemo(() => {
-    const data = getAllCategory.data?.product_categories || [];
-
-    const tabs: {value: number | null; label: string}[] = [
-      {value: null, label: 'Semua Kategori'},
-      ...data.map(cat => ({value: cat.id, label: cat.name})),
-    ];
-    return tabs;
-  }, [getAllCategory.data?.product_categories]);
 
   const getAllStore = useStore_GetAllStoreQuery();
   const storeSelectOptions = useMemo(() => {
@@ -137,6 +126,27 @@ const CashierHome = ({route}: Props) => {
 
     return {raw: processed, filteredByCategory};
   }, [activeCategory, getAllInventoryProduct.data?.inventory_products]);
+
+  const kategoriProdukTab = useMemo(() => {
+    const data = getAllInventoryProduct.data?.inventory_products || [];
+    const uniq: {
+      __typename?: 'product_categories' | undefined;
+      id: number;
+      name: string;
+    }[] = getUniqArrayObject(
+      data.map(x => x.product.product_category),
+      'id',
+    );
+
+    const sorted = sort(uniq).asc('name');
+
+    const tabs: {value: number | null; label: string}[] = [
+      {value: null, label: 'Semua Kategori'},
+      ...sorted.map(x => ({value: x.id, label: x.name})),
+    ];
+    return tabs;
+  }, [getAllInventoryProduct.data?.inventory_products]);
+
   const flexSearch = useFlexSearch<IInventoryProductData>(
     searchTerm,
     inventoryProductData.raw,
@@ -237,13 +247,11 @@ const CashierHome = ({route}: Props) => {
 
   useEffect(() => {
     myAppState.setLoadingWholePage(
-      getAllCategory.loading ||
-        getAllStore.loading ||
+      getAllStore.loading ||
         getStoreActive.loading ||
         getAllInventoryProduct.loading,
     );
   }, [
-    getAllCategory.loading,
     getAllStore.loading,
     getStoreActive.loading,
     getAllInventoryProduct.loading,

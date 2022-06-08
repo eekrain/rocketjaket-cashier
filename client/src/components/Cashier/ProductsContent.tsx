@@ -90,9 +90,9 @@ const ProductsContent = ({
               customText="Cancel Retur"
               variant={'solid'}
               onPress={() => {
-                toast.show({
-                  ...TOAST_TEMPLATE.cancelled('Refund transaksi tidak jadi.'),
-                });
+                toast.show(
+                  TOAST_TEMPLATE.cancelled('Refund transaksi tidak jadi.'),
+                );
                 clearReturn(
                   navigation,
                   myCart,

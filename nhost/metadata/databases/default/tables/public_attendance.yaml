@@ -1,0 +1,44 @@
+table:
+  name: attendance
+  schema: public
+object_relationships:
+- name: attendance_type_enum
+  using:
+    foreign_key_constraint_on: attendance_type
+- name: user
+  using:
+    foreign_key_constraint_on: user_id
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - attendance_type
+    - created_at
+    - photo_file_id
+    - user_id
+  role: karyawan
+select_permissions:
+- permission:
+    columns:
+    - id
+    - attendance_type
+    - created_at
+    - photo_file_id
+    - user_id
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - id
+    - attendance_type
+    - created_at
+    - photo_file_id
+    - user_id
+    filter: {}
+  role: karyawan
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator

@@ -77,14 +77,14 @@ export const useMyNotification = () => {
           err,
         );
       } else {
-        toast.show({
-          ...TOAST_TEMPLATE.success(
+        toast.show(
+          TOAST_TEMPLATE.success(
             is_mark_all
               ? `Berhasil menandai semua notifikasi menjadi terbaca`
               : `Berhasil menandai notifikasi sebagai terbaca`,
+            1000,
           ),
-          duration: 1500,
-        });
+        );
       }
     };
     mutation();
@@ -112,12 +112,12 @@ export const useMyNotification = () => {
           err,
         );
       } else {
-        toast.show({
-          ...TOAST_TEMPLATE.success(
+        toast.show(
+          TOAST_TEMPLATE.success(
             `Berhasil menghapus notifikasi yang sudah terbaca!`,
+            1000,
           ),
-          duration: 1500,
-        });
+        );
       }
     };
     request();

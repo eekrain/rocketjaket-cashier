@@ -81,17 +81,17 @@ const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
           const fkError = checkErrorMessage.fkError(err.message)
             ? `\nMasih ada inventory dengan variasi ${variant_title}.`
             : '';
-          toast.show({
-            ...TOAST_TEMPLATE.error(
+          toast.show(
+            TOAST_TEMPLATE.error(
               `Hapus data variasi ${variant_title} gagal.${fkError}`,
             ),
-          });
+          );
         } else {
-          toast.show({
-            ...TOAST_TEMPLATE.success(
+          toast.show(
+            TOAST_TEMPLATE.success(
               `Hapus data variasi ${variant_title} berhasil.`,
             ),
-          });
+          );
         }
       };
       Alert.alert(

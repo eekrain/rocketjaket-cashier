@@ -72,9 +72,7 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
           '🚀 ~ file: WhatsappHome.tsx ~ line 71 ~ res ~ error',
           error,
         );
-        toast.show({
-          ...TOAST_TEMPLATE.error('Gagal melakukan sign out whatsapp!'),
-        });
+        toast.show(TOAST_TEMPLATE.error('Gagal melakukan sign out whatsapp!'));
       });
     };
     Alert.alert(

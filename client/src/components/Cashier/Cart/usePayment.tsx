@@ -11,7 +11,7 @@ import {
 } from '../../../graphql/gql-generated';
 import {myNumberFormat, useMyUser} from '../../../shared/utils';
 import {useMyCart} from '../../../state';
-import {ICashierCartDefaultValues} from '../CashierCart';
+import {ICashierCartDefaultValues} from '.';
 
 interface usePaymentProps {
   setPaymentLandingModalOpen: React.Dispatch<React.SetStateAction<boolean>>;

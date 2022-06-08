@@ -236,11 +236,11 @@ const Cart = () => {
             ) {
               setReturnTypeModalOpen(true);
             } else {
-              toast.show({
-                ...TOAST_TEMPLATE.cancelled(
+              toast.show(
+                TOAST_TEMPLATE.cancelled(
                   'Return transaksi tidak jadi. Tidak ada perubahan data sebelum dan sesudah return.',
                 ),
-              });
+              );
               clearReturn(
                 navigation,
                 myCart,

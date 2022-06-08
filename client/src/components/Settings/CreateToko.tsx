@@ -14,28 +14,35 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {DismissKeyboardWrapper, RHTextInput} from '../../shared/components';
 import ButtonSave from '../Buttons/ButtonSave';
 import {SettingsScreenProps} from '../../screens/app/SettingsScreen';
+import {
+  IMapViewWithMarkerProps,
+  MapViewWithMarker,
+} from '../MapViews/MapViewWithMarker';
+import {MapViewProps} from '@react-native-mapbox-gl/maps';
+import to from 'await-to-js';
+import {ButtonBack} from '../Buttons';
 
 interface IDefaultValues {
   name: string;
   address: string;
-  latitude: string;
-  longitude: string;
+  latitude: number | null;
+  longitude: number | null;
 }
 
 const schema = yup
   .object({
     name: yup.string().required('Nama toko harus diisi'),
     address: yup.string().optional(),
-    latitude: yup.string().optional(),
-    longitude: yup.string().optional(),
+    latitude: yup.number().nullable(),
+    longitude: yup.number().nullable(),
   })
   .required();
 
 const defaultValues: IDefaultValues = {
   name: '',
   address: '',
-  latitude: '',
-  longitude: '',
+  latitude: null,
+  longitude: null,
 };
 
 interface ICreateTokoProps {}
@@ -50,6 +57,7 @@ const CreateToko = ({}: ICreateTokoProps) => {
     control,
     formState: {errors},
     reset,
+    setValue,
   } = useForm({
     defaultValues,
     resolver: yupResolver(schema),
@@ -62,37 +70,58 @@ const CreateToko = ({}: ICreateTokoProps) => {
     });
 
   const handleSubmission = async (data: IDefaultValues) => {
-    const res = await createStoreMutation({
-      variables: {
-        store: {
-          name: data.name,
-          address: data.address,
-          latitude: data.latitude,
-          longitude: data.longitude,
+    const [err, res] = await to(
+      createStoreMutation({
+        variables: {
+          store: {
+            name: data.name,
+            address: data.address,
+            latitude: data.latitude,
+            longitude: data.longitude,
+          },
         },
-      },
-    });
-    if (res.errors) {
-      toast.show({
-        ...TOAST_TEMPLATE.error(
-          `Gagal melakukan penambahan toko ${res.data?.insert_stores_one?.name}.`,
+      }),
+    );
+    if (err || !res) {
+      console.log(
+        '🚀 ~ file: CreateToko.tsx ~ line 86 ~ handleSubmission ~ err',
+        err,
+      );
+      err.message = err.message.includes('stores_name_key')
+        ? 'Nama toko terduplikasi, coba ganti nama lain!'
+        : '';
+      toast.show(
+        TOAST_TEMPLATE.error(
+          `Gagal melakukan penambahan toko ${data.name}.${err.message}`,
         ),
-      });
+      );
     } else {
       reset();
-      toast.show({
-        ...TOAST_TEMPLATE.success(
-          `Berhasil menambahkan toko ${res.data?.insert_stores_one?.name}.`,
-        ),
-      });
+      toast.show(
+        TOAST_TEMPLATE.success(`Berhasil menambahkan toko ${data.name}.`),
+      );
       navigation.goBack();
     }
+  };
+
+  // const mapRef = useRef<MapboxGL.MapView | null>(null);
+
+  const onUpdateLocation: IMapViewWithMarkerProps['onUpdateLocation'] = (
+    latitude,
+    longitude,
+  ) => {
+    setValue('longitude', longitude);
+    setValue('latitude', latitude);
+  };
+
+  const onPressMapWithUpdateLocation: MapViewProps['onPress'] = e => {
+    console.log('🚀 ~ file: CreateToko.tsx ~ line 114 ~ CreateToko ~ e', e);
   };
 
   return (
     <ScrollView>
       <DismissKeyboardWrapper>
-        <Box>
+        <Box pb="20">
           <Heading fontSize="xl" mb="10">
             Daftarkan Toko Baru
           </Heading>
@@ -111,23 +140,18 @@ const CreateToko = ({}: ICreateTokoProps) => {
                 errors={errors}
                 label="Alamat"
               />
-              <RHTextInput
-                name="latitude"
-                control={control}
-                errors={errors}
-                label="Koordinat Latitude Maps"
+              <MapViewWithMarker
+                onUpdateLocation={onUpdateLocation}
+                // mapRef={mapRef}
+                onPressMapWithUpdateLocation={onPressMapWithUpdateLocation}
               />
-              <RHTextInput
-                name="longitude"
-                control={control}
-                errors={errors}
-                label="Koordinat Longitude Maps"
-              />
-              <HStack justifyContent="flex-end" mt="5">
+
+              <HStack justifyContent="flex-end" mt="8" space="4">
                 <ButtonSave
                   isLoading={_createStoreMutationResult.loading}
                   onPress={handleSubmit(handleSubmission)}
                 />
+                <ButtonBack onPress={() => navigation.goBack()} />
               </HStack>
             </VStack>
           </Box>
