@@ -37,6 +37,7 @@ const CustomTablePagination = ({
       <Box mr="4">
         <IconButton
           disabled={currentPage <= 0}
+          isDisabled={currentPage <= 0}
           onPress={() => {
             console.log(
               '🚀 ~ file: CustomTablePagination.tsx ~ line 44 ~ onPress',
@@ -52,6 +53,7 @@ const CustomTablePagination = ({
       <Box mr="8">
         <IconButton
           disabled={currentPage >= Math.ceil(dataLength / rowsPerPage) - 1}
+          isDisabled={currentPage >= Math.ceil(dataLength / rowsPerPage) - 1}
           onPress={() => {
             console.log(
               '🚀 ~ file: CustomTablePagination.tsx ~ line 44 ~ onPress',

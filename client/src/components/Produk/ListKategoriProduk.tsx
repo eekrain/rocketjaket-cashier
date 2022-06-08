@@ -69,17 +69,15 @@ const KategoriProduk = ({}: Props) => {
           const errFk = checkErrorMessage.fkError(err.message)
             ? `\nMasih ada produk yang berada dalam kategori ${name}.`
             : '';
-          toast.show({
-            ...TOAST_TEMPLATE.error(
+          toast.show(
+            TOAST_TEMPLATE.error(
               `Delete kategori produk ${name} gagal.${errFk}`,
             ),
-          });
+          );
         } else {
-          toast.show({
-            ...TOAST_TEMPLATE.success(
-              `Delete kategori produk ${name} berhasil.`,
-            ),
-          });
+          toast.show(
+            TOAST_TEMPLATE.success(`Delete kategori produk ${name} berhasil.`),
+          );
         }
       };
       Alert.alert(

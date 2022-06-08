@@ -9,26 +9,33 @@ import {
   useToast,
   ScrollView,
 } from 'native-base';
-import {RefreshControl} from 'react-native';
+import {Alert, RefreshControl} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import {useUser_GetAllUserQuery} from '../../graphql/gql-generated';
+import {
+  namedOperations,
+  useUser_DeleteUserMutation,
+  useUser_GetAllUserQuery,
+} from '../../graphql/gql-generated';
 import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
-import {ButtonEdit} from '../Buttons';
+import {ButtonEdit, IconButtonDelete} from '../Buttons';
 import {useMyAppState} from '../../state';
 import withAppLayout from '../Layout/AppLayout';
 import {MyAvatar} from '../../shared/components';
 import {PossibleDefaultRoleUser, UserRolesEnum} from '../../types/user';
 import {UserScreenProps} from '../../screens/app/UserScreen';
 import {useNavigation} from '@react-navigation/native';
+import {getXHasuraContextHeader, nhost} from '../../shared/utils';
+import to from 'await-to-js';
+import {TOAST_TEMPLATE} from '../../shared/constants';
 
 interface IActionProps {
   id: string;
-  // handleDeleteKategori: () => Promise<void>;
+  handleDeleteUser: () => Promise<void>;
 }
 
-const Action = ({id}: IActionProps) => {
-  console.log('🚀 ~ file: index.tsx ~ line 31 ~ Action ~ id', id);
+const Action = ({id, handleDeleteUser}: IActionProps) => {
+  // console.log('🚀 ~ file: index.tsx ~ line 31 ~ Action ~ id', id);
   const myAppState = useMyAppState();
   const navigation = useNavigation<UserScreenProps['ListUser']['navigation']>();
 
@@ -41,7 +48,7 @@ const Action = ({id}: IActionProps) => {
           navigation.navigate('UpdateUser', {userId: id});
         }}
       />
-      {/* <IconButtonDelete size="sm" onPress={() => handleDeleteKategori()} /> */}
+      <IconButtonDelete size="sm" onPress={() => handleDeleteUser()} />
     </HStack>
   );
 };
@@ -52,71 +59,68 @@ const UserHome = ({}: IUserHomeProps) => {
   const toast = useToast();
   const navigation = useNavigation<UserScreenProps['ListUser']['navigation']>();
 
-  // const [deleteUser, _deleteUserResult] = useUser_BulkDeleteOneUserMutation({
-  //   ...getXHasuraContextHeader({role: 'administrator'}),
-  //   refetchQueries: [
-  //     namedOperations.Query.User_GetAllUser,
-  //     namedOperations.Query.User_GetUserById,
-  //   ],
-  // });
+  const [deleteUser, _deleteUserResult] = useUser_DeleteUserMutation({
+    ...getXHasuraContextHeader({role: 'administrator'}),
+    refetchQueries: [
+      namedOperations.Query.User_GetAllUser,
+      namedOperations.Query.User_GetUserById,
+    ],
+  });
 
   const getAllUser = useUser_GetAllUserQuery();
 
   const data = useMemo(() => {
-    // const handleDeleteUser = async (
-    //   account_id: string,
-    //   user_id: string,
-    //   name: string,
-    //   avatar_url: string,
-    // ) => {
-    //   const mutation = async () => {
-    //     if (avatar_url && avatar_url !== '') {
-    //       await storage.delete(`/${avatar_url}`).catch(error => {
-    //         console.log(
-    //           '🚀 ~ file: index.tsx ~ line 108 ~ mutation - storage.delete ~ error',
-    //           error,
-    //         );
-    //       });
-    //     }
-    //     const res = await deleteUser({variables: {account_id, user_id}}).catch(
-    //       error => {
-    //         console.log(
-    //           '🚀 ~ file: index.tsx ~ line 88 ~ mutation ~ error',
-    //           error,
-    //         );
-    //       },
-    //     );
-    //     if (res && res.errors) {
-    //       toast.show({
-    //         ...TOAST_TEMPLATE.error(`Hapus pengguna ${name} gagal.`),
-    //       });
-    //     } else {
-    //       toast.show({
-    //         ...TOAST_TEMPLATE.success(`Hapus pengguna ${name} berhasil.`),
-    //       });
-    //     }
-    //   };
-    //   Alert.alert(
-    //     'Hapus Pengguna',
-    //     `Pengguna dengan nama ${name} akan dihapus. Lanjutkan?`,
-    //     [
-    //       {
-    //         text: 'Cancel',
-    //         style: 'cancel',
-    //       },
-    //       {
-    //         onPress: () => mutation(),
-    //         text: 'Hapus',
-    //         style: 'destructive',
-    //       },
-    //     ],
-    //     {
-    //       cancelable: true,
-    //     },
-    //   );
-    // };
+    const handleDeleteUser = async (
+      user_id: string,
+      name: string,
+      avatarFileId: string,
+    ) => {
+      const mutation = async () => {
+        if (avatarFileId && avatarFileId !== '') {
+          await nhost.storage.delete({fileId: avatarFileId}).catch(error => {
+            console.log(
+              '🚀 ~ file: index.tsx ~ line 108 ~ mutation - storage.delete ~ error',
+              error,
+            );
+          });
+        }
+        const [err, res] = await to(
+          deleteUser({variables: {id: user_id}}).catch(error => {
+            console.log(
+              '🚀 ~ file: index.tsx ~ line 88 ~ mutation ~ error',
+              error,
+            );
+          }),
+        );
+        if (err && !res) {
+          toast.show(TOAST_TEMPLATE.error(`Hapus pengguna ${name} gagal.`));
+        } else {
+          toast.show(
+            TOAST_TEMPLATE.success(`Hapus pengguna ${name} berhasil.`),
+          );
+        }
+      };
+      Alert.alert(
+        'Hapus Pengguna',
+        `Pengguna dengan nama ${name} akan dihapus. Lanjutkan?`,
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            onPress: () => mutation(),
+            text: 'Hapus',
+            style: 'destructive',
+          },
+        ],
+        {
+          cancelable: true,
+        },
+      );
+    };
     const temp = getAllUser.data?.users || [];
-    console.log('🚀 ~ file: index.tsx ~ line 118 ~ data ~ temp', temp);
+    // console.log('🚀 ~ file: index.tsx ~ line 118 ~ data ~ temp', temp);
 
     const withAction = temp.map(val => ({
       ...val,
@@ -140,14 +144,9 @@ const UserHome = ({}: IUserHomeProps) => {
       component: (
         <Action
           id={val.id}
-          // handleDeleteKategori={async () => {
-          //   handleDeleteUser(
-          //     val.account?.id,
-          //     val.id,
-          //     val.display_name || '',
-          //     val.avatar_url || '',
-          //   )
-          // }}
+          handleDeleteUser={() =>
+            handleDeleteUser(val.id, val.displayName, val.avatarUrl)
+          }
         />
       ),
     }));

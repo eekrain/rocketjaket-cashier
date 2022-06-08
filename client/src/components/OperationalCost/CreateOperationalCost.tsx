@@ -84,18 +84,18 @@ const CreateOperationalCost = ({
       }),
     );
     if (err || !res) {
-      toast.show({
-        ...TOAST_TEMPLATE.error(
+      toast.show(
+        TOAST_TEMPLATE.error(
           `Gagal melakukan penambahan biaya operasional untuk ${data.reason}.`,
         ),
-      });
+      );
     } else {
       reset();
-      toast.show({
-        ...TOAST_TEMPLATE.success(
+      toast.show(
+        TOAST_TEMPLATE.success(
           `Berhasil melakukan penambahan biaya operasional untuk ${data.reason}.`,
         ),
-      });
+      );
       navigation.goBack();
     }
   };

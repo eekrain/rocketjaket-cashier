@@ -198,22 +198,22 @@ const CreateProductInventory = ({
         '🚀 ~ file: CreateProductInventory.tsx ~ line 192 ~ handleSubmission ~ err',
         err,
       );
-      toast.show({
-        ...TOAST_TEMPLATE.error(
+      toast.show(
+        TOAST_TEMPLATE.error(
           `Gagal melakukan penambahan variasi produk dengan nama ${selectedProductData?.product_category.name} / ${selectedProductData?.name}.`,
         ),
-      });
+      );
     } else {
       console.log(
         '🚀 ~ file: CreateProductInventory.tsx ~ line 197 ~ handleSubmission ~ res',
         res,
       );
       reset();
-      toast.show({
-        ...TOAST_TEMPLATE.success(
+      toast.show(
+        TOAST_TEMPLATE.success(
           `Berhasil menambahkan manajemen stok untuk produk ${selectedProductData?.product_category.name} / ${selectedProductData?.name}.`,
         ),
-      });
+      );
       navigation.goBack();
     }
   };

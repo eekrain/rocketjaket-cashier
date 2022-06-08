@@ -58,17 +58,13 @@ const ChangeEmail = ({current_email}: Props) => {
     try {
       await changeEmail(data.email);
 
-      toast.show({
-        ...TOAST_TEMPLATE.success('Berhasil mengganti email.'),
-      });
+      toast.show(TOAST_TEMPLATE.success('Berhasil mengganti email.'));
     } catch (error) {
       console.log(
         '🚀 ~ file: ChangeEmail.tsx ~ line 65 ~ handleChangeEmail ~ error',
         error,
       );
-      toast.show({
-        ...TOAST_TEMPLATE.error('Gagal mengganti email.'),
-      });
+      toast.show(TOAST_TEMPLATE.error('Gagal mengganti email.'));
     }
   };
 

@@ -111,19 +111,12 @@ export default async (req: Request, res: Response) => {
     if (params.added_items.length > 0) {
       const transaction_items: Transaction_Items_Insert_Input[] =
         params.added_items.map((item) => {
-          const subtotal =
-            item?.selling_price * item.purchace_qty -
-            (item.selling_price * item.purchace_qty * item.discount) / 100;
-          const profit = subtotal - item.capital_price * item.purchace_qty;
-
           return {
             product_name: item.product_name_concise,
             capital_price: item.capital_price,
             selling_price: item.selling_price,
             discount: item.discount,
             purchase_qty: item.purchace_qty,
-            subtotal,
-            profit,
             inventory_product_id: item.product_inventory_id,
             transaction_status: Transaction_Status_Enum_Enum.Success,
           };

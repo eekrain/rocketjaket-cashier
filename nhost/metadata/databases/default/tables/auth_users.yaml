@@ -132,6 +132,7 @@ update_permissions:
     - default_role
     - disabled
     - display_name
+    - email
     filter: {}
   role: administrator
 - permission:
@@ -143,3 +144,7 @@ update_permissions:
       id:
         _eq: X-Hasura-User-Id
   role: me
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator

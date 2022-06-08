@@ -50,14 +50,10 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
     const res = await signInEmailPassword(data.username, data.password);
 
     if (res.needsEmailVerification) {
-      toast.show({
-        ...TOAST_TEMPLATE.error(`Email anda belum terverifikasi!`),
-      });
+      toast.show(TOAST_TEMPLATE.error(`Email anda belum terverifikasi!`));
     }
     if (res.isError) {
-      toast.show({
-        ...TOAST_TEMPLATE.error(res.error?.message || 'Error'),
-      });
+      toast.show(TOAST_TEMPLATE.error(res.error?.message || 'Error'));
     }
   };
 
@@ -94,7 +90,7 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
             label="Password"
           />
 
-          <Link
+          {/* <Link
             onTouchEnd={() => navigation.navigate('ForgotPassword')}
             _text={{
               fontSize: 'xs',
@@ -104,7 +100,7 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
             alignSelf="flex-end"
             mt="1">
             Forget Password?
-          </Link>
+          </Link> */}
           <Button
             mt="2"
             _text={{color: 'white'}}

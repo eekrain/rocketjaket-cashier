@@ -156,9 +156,7 @@ const UpdateProduk = ({navigation, route}: Props) => {
   useEffect(() => {
     const produkData = getProdukData.data?.products_by_pk;
     if (produkData === null && !isErrorOnce) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Produk tidak ditemukan.'),
-      });
+      toast.show(TOAST_TEMPLATE.error('Produk tidak ditemukan.'));
       navigation.goBack();
       setErrorOnce(true);
     } else {
@@ -233,11 +231,11 @@ const UpdateProduk = ({navigation, route}: Props) => {
           '🚀 ~ file: CreateProduk.tsx ~ line 145 ~ handleSubmission ~ err',
           err,
         );
-        toast.show({
-          ...TOAST_TEMPLATE.error(
+        toast.show(
+          TOAST_TEMPLATE.error(
             `Gagal melakukan upload foto produk ${data.name}.`,
           ),
-        });
+        );
       }
       if (
         res?.fileMetadata?.id &&
@@ -265,13 +263,13 @@ const UpdateProduk = ({navigation, route}: Props) => {
       }),
     );
     if (err || !res) {
-      toast.show({
-        ...TOAST_TEMPLATE.error(`Gagal melakukan update produk ${data.name}.`),
-      });
+      toast.show(
+        TOAST_TEMPLATE.error(`Gagal melakukan update produk ${data.name}.`),
+      );
     } else {
-      toast.show({
-        ...TOAST_TEMPLATE.success(`Berhasil update produk ${data.name}.`),
-      });
+      toast.show(
+        TOAST_TEMPLATE.success(`Berhasil update produk ${data.name}.`),
+      );
       navigation.goBack();
     }
   };
