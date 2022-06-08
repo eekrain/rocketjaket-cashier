@@ -71,7 +71,7 @@ export default async (req: Request, res: Response) => {
   const [errUpdate, resUpdate] = await to(
     sdk.User_UpdateUser({
       id: userId,
-      updateUser: { defaultRole: params.defaultRole },
+      updateUser: { defaultRole: params.defaultRole, emailVerified: true },
       insertUserRole: { userId, role: params.defaultRole },
       insertMetadata: {
         user_id: userId,

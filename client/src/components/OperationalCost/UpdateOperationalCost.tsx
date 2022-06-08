@@ -75,9 +75,7 @@ const UpdateOperationalCost = ({
 
   useEffect(() => {
     if (dataOperationalCost === null && !isErrorOnce) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'),
-      });
+      toast.show(TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'));
       navigation.goBack();
       setErrorOnce(true);
     } else {
@@ -102,9 +100,9 @@ const UpdateOperationalCost = ({
   const handleSubmission = async (data: IDefaultValues) => {
     if (!isDirty) {
       if (!isDirty)
-        toast.show({
-          ...TOAST_TEMPLATE.cancelled('Kategori produk tidak ada yang diubah.'),
-        });
+        toast.show(
+          TOAST_TEMPLATE.cancelled('Kategori produk tidak ada yang diubah.'),
+        );
       navigation.goBack();
       reset(defaultValues);
       return;
@@ -120,18 +118,18 @@ const UpdateOperationalCost = ({
       },
     });
     if (res.errors) {
-      toast.show({
-        ...TOAST_TEMPLATE.error(
+      toast.show(
+        TOAST_TEMPLATE.error(
           `Gagal melakukan update biaya operasional untuk ${data.reason}.`,
         ),
-      });
+      );
     } else {
       reset(defaultValues);
-      toast.show({
-        ...TOAST_TEMPLATE.success(
+      toast.show(
+        TOAST_TEMPLATE.success(
           `Berhasil melakukan update biaya operasional untuk ${data.reason}.`,
         ),
-      });
+      );
       navigation.goBack();
     }
   };

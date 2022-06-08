@@ -8,7 +8,7 @@ import {
 } from '../../graphql/gql-generated';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {myNumberFormat, myTextFormat} from '../../shared/utils';
-import {ISendReceiptFormDefaultValues} from '../Cashier/PaymentLanding';
+import {ISendReceiptFormDefaultValues} from '../Cashier/Payment/PaymentLandingModal';
 import SendReceiptForm from '../Cashier/SendReceiptForm';
 import to from 'await-to-js';
 import Config from 'react-native-config';
@@ -86,17 +86,17 @@ const ModalSendReceipt = ({
         '🚀 ~ file: ModalSendReceipt.tsx ~ line 76 ~ handleSubmission ~ err',
         err,
       );
-      toast.show({
-        ...TOAST_TEMPLATE.error(
+      toast.show(
+        TOAST_TEMPLATE.error(
           `Gagal melakukan pengiriman nota untuk customer ${data.customer_name}.\n${res?.data?.Transaction_SendReceipt?.errorMessage}`,
         ),
-      });
+      );
     } else {
-      toast.show({
-        ...TOAST_TEMPLATE.success(
+      toast.show(
+        TOAST_TEMPLATE.success(
           `Berhasil melakukan pengiriman nota untuk customer ${data.customer_name}.`,
         ),
-      });
+      );
     }
     setModalReceiptOpen(false);
   };

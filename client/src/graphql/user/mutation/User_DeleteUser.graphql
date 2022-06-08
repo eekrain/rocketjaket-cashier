@@ -1,0 +1,6 @@
+mutation User_DeleteUser($id: uuid!) {
+  deleteUser(id: $id) {
+    id
+    displayName
+  }
+}

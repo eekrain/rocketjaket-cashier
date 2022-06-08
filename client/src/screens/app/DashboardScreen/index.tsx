@@ -90,37 +90,49 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
     }
   }, [mode]);
 
+  const isCanBackwards = dashboardData?.isCanBackwards
+    ? dashboardData.isCanBackwards
+    : false;
   const handleBackwards = () => {
-    const ref = dayjs(startDate);
-    if (mode === 'daily') {
-      setValue('startDate', ref.endOf('d').subtract(7, 'd').toISOString());
-      setValue('untilDate', ref.endOf('d').toISOString());
-    } else if (mode === 'weekly') {
-      setValue('startDate', ref.startOf('M').subtract(1, 'M').toISOString());
-      setValue('untilDate', ref.endOf('M').toISOString());
-    } else if (mode === 'monthly') {
-      setValue('startDate', ref.startOf('y').subtract(1, 'y').toISOString());
-      setValue('untilDate', ref.endOf('y').toISOString());
+    if (isCanBackwards) {
+      console.log('mundur');
+      const ref = dayjs(startDate);
+      if (mode === 'daily') {
+        setValue('startDate', ref.endOf('d').subtract(7, 'd').toISOString());
+        setValue('untilDate', ref.endOf('d').toISOString());
+      } else if (mode === 'weekly') {
+        setValue('startDate', ref.startOf('M').subtract(1, 'M').toISOString());
+        setValue('untilDate', ref.endOf('M').toISOString());
+      } else if (mode === 'monthly') {
+        setValue('startDate', ref.startOf('y').subtract(1, 'y').toISOString());
+        setValue('untilDate', ref.endOf('y').toISOString());
+      }
     }
   };
 
+  const isCanForwards = dashboardData?.isCanForwards
+    ? dashboardData.isCanForwards
+    : false;
   const handleForwards = () => {
-    const ref = dayjs(untilDate);
-    if (mode === 'daily') {
-      setValue('startDate', ref.endOf('d').toISOString());
-      setValue('untilDate', ref.endOf('d').add(7, 'd').toISOString());
-    } else if (mode === 'weekly') {
-      setValue(
-        'startDate',
-        ref.add(1, 'd').startOf('M').subtract(1, 'M').toISOString(),
-      );
-      setValue('untilDate', ref.add(1, 'd').endOf('M').toISOString());
-    } else if (mode === 'monthly') {
-      setValue(
-        'startDate',
-        ref.add(1, 'd').startOf('y').subtract(1, 'y').toISOString(),
-      );
-      setValue('untilDate', ref.add(1, 'd').endOf('y').toISOString());
+    if (isCanForwards) {
+      console.log('maju');
+      const ref = dayjs(untilDate);
+      if (mode === 'daily') {
+        setValue('startDate', ref.endOf('d').toISOString());
+        setValue('untilDate', ref.endOf('d').add(7, 'd').toISOString());
+      } else if (mode === 'weekly') {
+        setValue(
+          'startDate',
+          ref.add(1, 'd').startOf('M').subtract(1, 'M').toISOString(),
+        );
+        setValue('untilDate', ref.add(1, 'd').endOf('M').toISOString());
+      } else if (mode === 'monthly') {
+        setValue(
+          'startDate',
+          ref.add(1, 'd').startOf('y').subtract(1, 'y').toISOString(),
+        );
+        setValue('untilDate', ref.add(1, 'd').endOf('y').toISOString());
+      }
     }
   };
 
@@ -130,7 +142,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
         <Heading fontSize="xl" mb="6">
           Dashboard
         </Heading>
-        <HStack space="8" mb="6">
+        <HStack space="8" mb="6" justifyContent={'center'}>
           <Box p="6" borderRadius="xl" backgroundColor="white">
             <Heading fontSize="lg" mb="4">
               Toko
@@ -144,7 +156,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
               w="56"
             />
           </Box>
-          <Box p="6" borderRadius="xl" backgroundColor="white" w="full">
+          <Box p="6" borderRadius="xl" backgroundColor="white">
             <Heading fontSize="lg" mb="4">
               Periode
             </Heading>
@@ -160,14 +172,14 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
                 />
               </Box>
               <HStack
+                w={420}
                 alignItems="center"
-                justifyContent={'space-between'}
-                w={'1/2'}>
+                justifyContent={'space-between'}>
                 <IconButton
                   variant="solid"
                   p="2"
                   icon={<Icon as={Feather} name="chevron-left" size="sm" />}
-                  // isDisabled={!dashboardData?.isCanBackwards}
+                  isDisabled={!isCanBackwards}
                   onPress={handleBackwards}
                 />
                 <Text>
@@ -183,7 +195,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
                   variant="solid"
                   p="2"
                   icon={<Icon as={Feather} name="chevron-right" size="sm" />}
-                  // isDisabled={!dashboardData?.isCanForwards}
+                  isDisabled={!isCanForwards}
                   onPress={handleForwards}
                 />
               </HStack>

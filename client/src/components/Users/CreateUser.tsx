@@ -134,21 +134,21 @@ const CreateUser = ({}: ICreateUserProps) => {
 
     setLoading(false);
     if (register.errors || register.data?.User_SignUp?.isError) {
-      toast.show({
-        ...TOAST_TEMPLATE.error(
+      toast.show(
+        TOAST_TEMPLATE.error(
           `Gagal menambahkan user ${data.display_name}.${
             register.data?.User_SignUp?.errorMessage
               ? `Error: ${register.data?.User_SignUp?.errorMessage}.`
               : ''
           }`,
         ),
-      });
+      );
     } else {
-      toast.show({
-        ...TOAST_TEMPLATE.success(
+      toast.show(
+        TOAST_TEMPLATE.success(
           `Berhasil menambahkan user ${data.display_name}.`,
         ),
-      });
+      );
       navigation.goBack();
     }
   };

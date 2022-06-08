@@ -116,9 +116,7 @@ export const RHNumberInput = ({
             <Input
               onChangeText={val =>
                 onChange({
-                  value: isNaN(numbro.unformat(val))
-                    ? val
-                    : numbro.unformat(val),
+                  value: numbro.unformat(val) || 0, // important! numbro.unformat() will return undefined if it isnt number
                   formattedValue: numberFormat(
                     val,
                     isDisableEmptyToZero,

@@ -79,14 +79,10 @@ export const useDashboardData = ({
   });
 
   const dashboardData = getDashboardData.data?.Dashboard_GetDashboardData;
-  console.log(
-    '🚀 ~ file: useDashboardData.ts ~ line 78 ~ dashboardData',
-    dashboardData,
-  );
-  console.log(
-    '🚀 ~ file: useDashboardData.ts ~ line 78 ~ getDashboardData',
-    getDashboardData.error,
-  );
+  // console.log(
+  //   '🚀 ~ file: useDashboardData.ts ~ line 78 ~ dashboardData',
+  //   dashboardData,
+  // );
 
   const dashboardChartData = useMemo(() => {
     const legend =

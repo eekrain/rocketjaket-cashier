@@ -123,15 +123,6 @@ const process = async (
     );
     const succeedQty = eventData.old.purchase_qty - eventData.new.purchase_qty;
 
-    const subtotal =
-      eventData.new.selling_price! * succeedQty -
-      (eventData.new.selling_price! * succeedQty * eventData.new.discount!) /
-        100;
-    const profit = subtotal - eventData.new.capital_price! * succeedQty;
-    console.log(
-      "🚀 ~ file: UpdateAvailableQtyOnUpdateTransactionItem.ts ~ line 125 ~ succeedQty",
-      succeedQty
-    );
     const [errInsertTransactItem, resInsertTransactItem] = await to(
       sdk.Transaction_CreateOneTransactionItem({
         object: {

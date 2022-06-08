@@ -67,9 +67,7 @@ const UpdateKategoriProduk = ({}: Props) => {
   useEffect(() => {
     const dataKategori = getDataKategori.data?.product_categories_by_pk;
     if (dataKategori === null && !isErrorOnce) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'),
-      });
+      toast.show(TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'));
       navigation.goBack();
       setErrorOnce(true);
     } else {
@@ -95,9 +93,9 @@ const UpdateKategoriProduk = ({}: Props) => {
 
   const handleSubmission = async (data: IDefaultValues) => {
     if (!isDirty) {
-      toast.show({
-        ...TOAST_TEMPLATE.cancelled('Kategori produk tidak ada yang diubah.'),
-      });
+      toast.show(
+        TOAST_TEMPLATE.cancelled('Kategori produk tidak ada yang diubah.'),
+      );
       navigation.goBack();
       return;
     }
@@ -113,16 +111,14 @@ const UpdateKategoriProduk = ({}: Props) => {
       }),
     );
     if (err || !res) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Gagal melakukan update kategori.'),
-      });
+      toast.show(TOAST_TEMPLATE.error('Gagal melakukan update kategori.'));
     } else {
       reset();
-      toast.show({
-        ...TOAST_TEMPLATE.success(
+      toast.show(
+        TOAST_TEMPLATE.success(
           `Berhasil merubah kategori ${res.data?.update_product_categories_by_pk?.name}.`,
         ),
-      });
+      );
       navigation.goBack();
     }
   };

@@ -102,8 +102,8 @@ export type NumberChartDatasets = {
 
 export type PaymentTypePercentage = {
   __typename?: 'PaymentTypePercentage';
-  payment_type: Scalars['String'];
-  value: Scalars['Float'];
+  name: Scalars['String'];
+  total_transaksi: Scalars['Int'];
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
@@ -140,12 +140,12 @@ export type String_Comparison_Exp = {
 };
 
 export enum TimeMode {
-  /** mothly */
-  Mothly = 'mothly',
+  /** daily */
+  Daily = 'daily',
+  /** monthly */
+  Monthly = 'monthly',
   /** weekly */
-  Weekly = 'weekly',
-  /** yearly */
-  Yearly = 'yearly'
+  Weekly = 'weekly'
 }
 
 export enum TotalTransactionCompare {
@@ -5294,12 +5294,10 @@ export type Notification_Variance_Fields = {
 export type Operational_Costs = {
   __typename?: 'operational_costs';
   cost: Scalars['Int'];
-  created_at?: Maybe<Scalars['timestamptz']>;
+  created_at: Scalars['timestamptz'];
   id: Scalars['Int'];
-  karyawan_name?: Maybe<Scalars['String']>;
+  karyawan_name: Scalars['String'];
   reason: Scalars['String'];
-  /** An object relationship */
-  store: Stores;
   store_id: Scalars['Int'];
 };
 
@@ -5333,41 +5331,12 @@ export type Operational_Costs_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** order by aggregate values of table "operational_costs" */
-export type Operational_Costs_Aggregate_Order_By = {
-  avg?: InputMaybe<Operational_Costs_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Operational_Costs_Max_Order_By>;
-  min?: InputMaybe<Operational_Costs_Min_Order_By>;
-  stddev?: InputMaybe<Operational_Costs_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Operational_Costs_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Operational_Costs_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Operational_Costs_Sum_Order_By>;
-  var_pop?: InputMaybe<Operational_Costs_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Operational_Costs_Var_Samp_Order_By>;
-  variance?: InputMaybe<Operational_Costs_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "operational_costs" */
-export type Operational_Costs_Arr_Rel_Insert_Input = {
-  data: Array<Operational_Costs_Insert_Input>;
-  /** upsert condition */
-  on_conflict?: InputMaybe<Operational_Costs_On_Conflict>;
-};
-
 /** aggregate avg on columns */
 export type Operational_Costs_Avg_Fields = {
   __typename?: 'operational_costs_avg_fields';
   cost?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "operational_costs" */
-export type Operational_Costs_Avg_Order_By = {
-  cost?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  store_id?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "operational_costs". All fields are combined with a logical 'AND'. */
@@ -5380,7 +5349,6 @@ export type Operational_Costs_Bool_Exp = {
   id?: InputMaybe<Int_Comparison_Exp>;
   karyawan_name?: InputMaybe<String_Comparison_Exp>;
   reason?: InputMaybe<String_Comparison_Exp>;
-  store?: InputMaybe<Stores_Bool_Exp>;
   store_id?: InputMaybe<Int_Comparison_Exp>;
 };
 
@@ -5404,7 +5372,6 @@ export type Operational_Costs_Insert_Input = {
   id?: InputMaybe<Scalars['Int']>;
   karyawan_name?: InputMaybe<Scalars['String']>;
   reason?: InputMaybe<Scalars['String']>;
-  store?: InputMaybe<Stores_Obj_Rel_Insert_Input>;
   store_id?: InputMaybe<Scalars['Int']>;
 };
 
@@ -5419,16 +5386,6 @@ export type Operational_Costs_Max_Fields = {
   store_id?: Maybe<Scalars['Int']>;
 };
 
-/** order by max() on columns of table "operational_costs" */
-export type Operational_Costs_Max_Order_By = {
-  cost?: InputMaybe<Order_By>;
-  created_at?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  karyawan_name?: InputMaybe<Order_By>;
-  reason?: InputMaybe<Order_By>;
-  store_id?: InputMaybe<Order_By>;
-};
-
 /** aggregate min on columns */
 export type Operational_Costs_Min_Fields = {
   __typename?: 'operational_costs_min_fields';
@@ -5438,16 +5395,6 @@ export type Operational_Costs_Min_Fields = {
   karyawan_name?: Maybe<Scalars['String']>;
   reason?: Maybe<Scalars['String']>;
   store_id?: Maybe<Scalars['Int']>;
-};
-
-/** order by min() on columns of table "operational_costs" */
-export type Operational_Costs_Min_Order_By = {
-  cost?: InputMaybe<Order_By>;
-  created_at?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  karyawan_name?: InputMaybe<Order_By>;
-  reason?: InputMaybe<Order_By>;
-  store_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "operational_costs" */
@@ -5473,7 +5420,6 @@ export type Operational_Costs_Order_By = {
   id?: InputMaybe<Order_By>;
   karyawan_name?: InputMaybe<Order_By>;
   reason?: InputMaybe<Order_By>;
-  store?: InputMaybe<Stores_Order_By>;
   store_id?: InputMaybe<Order_By>;
 };
 
@@ -5516,26 +5462,12 @@ export type Operational_Costs_Stddev_Fields = {
   store_id?: Maybe<Scalars['Float']>;
 };
 
-/** order by stddev() on columns of table "operational_costs" */
-export type Operational_Costs_Stddev_Order_By = {
-  cost?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  store_id?: InputMaybe<Order_By>;
-};
-
 /** aggregate stddev_pop on columns */
 export type Operational_Costs_Stddev_Pop_Fields = {
   __typename?: 'operational_costs_stddev_pop_fields';
   cost?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "operational_costs" */
-export type Operational_Costs_Stddev_Pop_Order_By = {
-  cost?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  store_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_samp on columns */
@@ -5546,26 +5478,12 @@ export type Operational_Costs_Stddev_Samp_Fields = {
   store_id?: Maybe<Scalars['Float']>;
 };
 
-/** order by stddev_samp() on columns of table "operational_costs" */
-export type Operational_Costs_Stddev_Samp_Order_By = {
-  cost?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  store_id?: InputMaybe<Order_By>;
-};
-
 /** aggregate sum on columns */
 export type Operational_Costs_Sum_Fields = {
   __typename?: 'operational_costs_sum_fields';
   cost?: Maybe<Scalars['Int']>;
   id?: Maybe<Scalars['Int']>;
   store_id?: Maybe<Scalars['Int']>;
-};
-
-/** order by sum() on columns of table "operational_costs" */
-export type Operational_Costs_Sum_Order_By = {
-  cost?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  store_id?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "operational_costs" */
@@ -5592,13 +5510,6 @@ export type Operational_Costs_Var_Pop_Fields = {
   store_id?: Maybe<Scalars['Float']>;
 };
 
-/** order by var_pop() on columns of table "operational_costs" */
-export type Operational_Costs_Var_Pop_Order_By = {
-  cost?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  store_id?: InputMaybe<Order_By>;
-};
-
 /** aggregate var_samp on columns */
 export type Operational_Costs_Var_Samp_Fields = {
   __typename?: 'operational_costs_var_samp_fields';
@@ -5607,26 +5518,12 @@ export type Operational_Costs_Var_Samp_Fields = {
   store_id?: Maybe<Scalars['Float']>;
 };
 
-/** order by var_samp() on columns of table "operational_costs" */
-export type Operational_Costs_Var_Samp_Order_By = {
-  cost?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  store_id?: InputMaybe<Order_By>;
-};
-
 /** aggregate variance on columns */
 export type Operational_Costs_Variance_Fields = {
   __typename?: 'operational_costs_variance_fields';
   cost?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
   store_id?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "operational_costs" */
-export type Operational_Costs_Variance_Order_By = {
-  cost?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  store_id?: InputMaybe<Order_By>;
 };
 
 /** column ordering options */
@@ -6360,9 +6257,9 @@ export type Query_Root = {
   notification_read_user_aggregate: Notification_Read_User_Aggregate;
   /** fetch data from the table: "notification_read_user" using primary key columns */
   notification_read_user_by_pk?: Maybe<Notification_Read_User>;
-  /** An array relationship */
+  /** fetch data from the table: "operational_costs" */
   operational_costs: Array<Operational_Costs>;
-  /** An aggregate relationship */
+  /** fetch aggregated fields from the table: "operational_costs" */
   operational_costs_aggregate: Operational_Costs_Aggregate;
   /** fetch data from the table: "operational_costs" using primary key columns */
   operational_costs_by_pk?: Maybe<Operational_Costs>;
@@ -7077,10 +6974,6 @@ export type Stores = {
   longitude: Scalars['String'];
   name: Scalars['String'];
   /** An array relationship */
-  operational_costs: Array<Operational_Costs>;
-  /** An aggregate relationship */
-  operational_costs_aggregate: Operational_Costs_Aggregate;
-  /** An array relationship */
   transactions: Array<Transaction>;
   /** An aggregate relationship */
   transactions_aggregate: Transaction_Aggregate;
@@ -7109,26 +7002,6 @@ export type StoresInventory_Products_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Inventory_Products_Order_By>>;
   where?: InputMaybe<Inventory_Products_Bool_Exp>;
-};
-
-
-/** columns and relationships of "stores" */
-export type StoresOperational_CostsArgs = {
-  distinct_on?: InputMaybe<Array<Operational_Costs_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Operational_Costs_Order_By>>;
-  where?: InputMaybe<Operational_Costs_Bool_Exp>;
-};
-
-
-/** columns and relationships of "stores" */
-export type StoresOperational_Costs_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Operational_Costs_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Operational_Costs_Order_By>>;
-  where?: InputMaybe<Operational_Costs_Bool_Exp>;
 };
 
 
@@ -7219,7 +7092,6 @@ export type Stores_Bool_Exp = {
   latitude?: InputMaybe<String_Comparison_Exp>;
   longitude?: InputMaybe<String_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
-  operational_costs?: InputMaybe<Operational_Costs_Bool_Exp>;
   transactions?: InputMaybe<Transaction_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   users_metadata?: InputMaybe<Users_Metadata_Bool_Exp>;
@@ -7247,7 +7119,6 @@ export type Stores_Insert_Input = {
   latitude?: InputMaybe<Scalars['String']>;
   longitude?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  operational_costs?: InputMaybe<Operational_Costs_Arr_Rel_Insert_Input>;
   transactions?: InputMaybe<Transaction_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
   users_metadata?: InputMaybe<Users_Metadata_Arr_Rel_Insert_Input>;
@@ -7309,7 +7180,6 @@ export type Stores_Order_By = {
   latitude?: InputMaybe<Order_By>;
   longitude?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
-  operational_costs_aggregate?: InputMaybe<Operational_Costs_Aggregate_Order_By>;
   transactions_aggregate?: InputMaybe<Transaction_Aggregate_Order_By>;
   updated_at?: InputMaybe<Order_By>;
   users_metadata_aggregate?: InputMaybe<Users_Metadata_Aggregate_Order_By>;
@@ -7501,9 +7371,9 @@ export type Subscription_Root = {
   notification_read_user_aggregate: Notification_Read_User_Aggregate;
   /** fetch data from the table: "notification_read_user" using primary key columns */
   notification_read_user_by_pk?: Maybe<Notification_Read_User>;
-  /** An array relationship */
+  /** fetch data from the table: "operational_costs" */
   operational_costs: Array<Operational_Costs>;
-  /** An aggregate relationship */
+  /** fetch aggregated fields from the table: "operational_costs" */
   operational_costs_aggregate: Operational_Costs_Aggregate;
   /** fetch data from the table: "operational_costs" using primary key columns */
   operational_costs_by_pk?: Maybe<Operational_Costs>;

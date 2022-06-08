@@ -8,3 +8,5 @@ export * from './checkErrorMessage';
 export * from './myNotifee';
 export * from './appPermission';
 export * from './getColorByIndex';
+export * from './getUniqArrayObject';
+export * from './useGetLocation';

@@ -69,13 +69,11 @@ const TokoHome = () => {
           const fkError = checkErrorMessage.fkError(err.message)
             ? `\nMasih ada inventory di dalam toko ${name}.`
             : '';
-          toast.show({
-            ...TOAST_TEMPLATE.error(`Hapus toko ${name} gagal.${fkError}`),
-          });
+          toast.show(
+            TOAST_TEMPLATE.error(`Hapus toko ${name} gagal.${fkError}`),
+          );
         } else {
-          toast.show({
-            ...TOAST_TEMPLATE.success(`Hapus toko ${name} berhasil.`),
-          });
+          toast.show(TOAST_TEMPLATE.success(`Hapus toko ${name} berhasil.`));
         }
       };
       Alert.alert(

@@ -185,17 +185,15 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
             '🚀 ~ file: ListInventory.tsx ~ line 184 ~ mutation ~ err',
             err,
           );
-          toast.show({
-            ...TOAST_TEMPLATE.error(
+          toast.show(
+            TOAST_TEMPLATE.error(
               `Hapus inventory produk ${name} gagal.${err.message}`,
             ),
-          });
+          );
         } else {
-          toast.show({
-            ...TOAST_TEMPLATE.success(
-              `Hapus inventory produk ${name} berhasil.`,
-            ),
-          });
+          toast.show(
+            TOAST_TEMPLATE.success(`Hapus inventory produk ${name} berhasil.`),
+          );
         }
       };
       Alert.alert(

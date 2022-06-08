@@ -88,13 +88,11 @@ const Produk = ({}: Props) => {
           const errFk = checkErrorMessage.fkError(err.message)
             ? `\nProduk ${name} masih ada di dalam inventory.`
             : '';
-          toast.show({
-            ...TOAST_TEMPLATE.error(`Delete produk ${name} gagal.${errFk}`),
-          });
+          toast.show(
+            TOAST_TEMPLATE.error(`Delete produk ${name} gagal.${errFk}`),
+          );
         } else {
-          toast.show({
-            ...TOAST_TEMPLATE.success(`Delete produk ${name} berhasil.`),
-          });
+          toast.show(TOAST_TEMPLATE.success(`Delete produk ${name} berhasil.`));
         }
       };
       Alert.alert(
