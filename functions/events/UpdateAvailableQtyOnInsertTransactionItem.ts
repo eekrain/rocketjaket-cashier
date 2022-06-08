@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { getAdminSdk, myFirebaseAdminApp } from "../utils";
+import { getAdminSdk, myFirebaseAdminApp } from "../../utils";
 import to from "await-to-js";
 import {
   Inventory_GetInventoryProductByIdQuery,
   Transaction_Items_Insert_Input,
-} from "../graphql/gql-generated";
+} from "../../graphql/gql-generated";
 import { getMessaging } from "firebase-admin/messaging";
 
 interface UpdateAvailableQtyOnInsertTransactionItem_EventData {
