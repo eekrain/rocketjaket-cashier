@@ -144,11 +144,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
               w="56"
             />
           </Box>
-          <Box
-            p="6"
-            borderRadius="xl"
-            backgroundColor="white"
-            alignSelf={'center'}>
+          <Box p="6" borderRadius="xl" backgroundColor="white" w="full">
             <Heading fontSize="lg" mb="4">
               Periode
             </Heading>
@@ -160,10 +156,13 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
                   control={control}
                   errors={errors}
                   name="timeMode"
-                  w="56"
+                  w="40"
                 />
               </Box>
-              <HStack alignItems="center" space="2">
+              <HStack
+                alignItems="center"
+                justifyContent={'space-between'}
+                w={'1/2'}>
                 <IconButton
                   variant="solid"
                   p="2"
@@ -172,10 +171,14 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
                   onPress={handleBackwards}
                 />
                 <Text>
-                  {dayjs(watch().startDate).format('ddd DD/MM/YYYY HH:mm:ss')} -
-                  {dayjs(watch().untilDate).format('ddd DD/MM/YYYY HH:mm:ss')}
+                  {dayjs(watch().startDate).format(
+                    `ddd DD/MM/YYYY ${mode === 'daily' ? 'HH:mm' : ''}`,
+                  )}{' '}
+                  -{' '}
+                  {dayjs(watch().untilDate).format(
+                    `ddd DD/MM/YYYY ${mode === 'daily' ? 'HH:mm' : ''}`,
+                  )}
                 </Text>
-
                 <IconButton
                   variant="solid"
                   p="2"

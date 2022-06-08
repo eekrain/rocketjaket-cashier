@@ -1,10 +1,6 @@
 table:
   name: operational_costs
   schema: public
-object_relationships:
-- name: store
-  using:
-    foreign_key_constraint_on: store_id
 insert_permissions:
 - permission:
     backend_only: false
@@ -14,8 +10,8 @@ insert_permissions:
     - reason
     - cost
     - store_id
-    - created_at
     - karyawan_name
+    - created_at
   role: administrator
 - permission:
     backend_only: false
