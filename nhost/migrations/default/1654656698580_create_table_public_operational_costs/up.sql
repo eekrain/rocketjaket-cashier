@@ -1,0 +1,1 @@
+CREATE TABLE "public"."operational_costs" ("id" serial NOT NULL, "reason" text NOT NULL, "cost" integer NOT NULL, "store_id" integer NOT NULL, "karyawan_name" text NOT NULL, "created_at" timestamptz NOT NULL DEFAULT now(), PRIMARY KEY ("id") , FOREIGN KEY ("id") REFERENCES "public"."stores"("id") ON UPDATE restrict ON DELETE restrict);
