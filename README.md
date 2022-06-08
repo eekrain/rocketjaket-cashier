@@ -1,3 +1,3 @@
 # rocketjaket-cashier
 
-coba deploy
+redeploy
