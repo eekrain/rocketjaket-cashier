@@ -18,12 +18,12 @@
 // Nanti waktu kita insert dengan jumlah 2, maka inventory product akan berkurang 2 buah.
 
 import { Request, Response } from "express";
-import { getAdminSdk } from "../utils";
+import { getAdminSdk } from "../../utils";
 import to from "await-to-js";
 import {
   Transaction_Items_Insert_Input,
   Transaction_Status_Enum_Enum,
-} from "../graphql/gql-generated";
+} from "../../graphql/gql-generated";
 
 interface UpdateAvailableQtyOnUpdateTransactionItem_EventData {
   old?: Transaction_Items_Insert_Input | null;
@@ -138,8 +138,6 @@ const process = async (
           ...eventData.old,
           id: undefined,
           purchase_qty: succeedQty,
-          subtotal,
-          profit,
         },
       })
     );

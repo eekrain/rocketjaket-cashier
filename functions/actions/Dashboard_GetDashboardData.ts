@@ -7,7 +7,7 @@ import {
   getPeriodicMonthInYear,
   getPeriodicWeekInMonth,
   IPeriodicTime,
-} from "../utils";
+} from "../../utils";
 
 export default async (req: Request, res: Response) => {
   const params: Dashboard_GetDashboardDataArgs = req.body.input;
