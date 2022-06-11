@@ -5,11 +5,14 @@ query User_GetUserById($user_id: uuid = "") {
     displayName
     email
     emailVerified
-    id
     newEmail
+    id
     users_metadata(limit: 1) {
       store_id
     }
     disabled
+    roles {
+      role
+    }
   }
 }

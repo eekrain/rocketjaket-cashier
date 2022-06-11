@@ -6,7 +6,8 @@ import {persist} from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createTrackedSelector} from 'react-tracked';
 import Config from 'react-native-config';
-import {useMemo} from 'react';
+import {useEffect, useMemo} from 'react';
+import {useUser_GetUserByIdQuery} from '../../graphql/gql-generated';
 
 export const nhost = new NhostClient({
   backendUrl: Config.NHOST_BACKEND_URL,
@@ -41,17 +42,29 @@ export const getXHasuraContextHeader = ({
   return {context: {headers: headers}};
 };
 
-interface INhostAuthStore {
+interface IMyUser extends User {
   store_id: number | null;
-  updateStoreId: (newStoreId: number | null) => void;
+  disabled: boolean;
+}
+
+interface INhostAuthStore {
+  user: IMyUser | null;
+  update: (user: IMyUser | null) => void;
+  updateStoreId: (store_id: IMyUser['store_id']) => void;
 }
 
 const useStore = create<INhostAuthStore>()(
   persist(
     set => ({
-      store_id: null as INhostAuthStore['store_id'],
-      updateStoreId: newStoreId => {
-        set(state => ({...state, store_id: newStoreId}));
+      user: null as INhostAuthStore['user'],
+      update: user => {
+        set(state => ({...state, user: user}));
+      },
+      updateStoreId: store_id => {
+        set(state => ({
+          ...state,
+          user: {...state.user, store_id} as INhostAuthStore['user'],
+        }));
       },
     }),
     {name: 'nhost-auth', getStorage: () => AsyncStorage},
@@ -60,7 +73,9 @@ const useStore = create<INhostAuthStore>()(
 
 export const useMyUserSelector = createTrackedSelector(useStore);
 
-const nullUser: User = {
+type CustomUserData = IMyUser & INhostAuthStore['user'];
+
+const nullUser: IMyUser = {
   id: '',
   createdAt: '',
   displayName: '',
@@ -75,32 +90,82 @@ const nullUser: User = {
   phoneNumber: null,
   phoneNumberVerified: false,
   activeMfaType: null,
+  disabled: false,
+  store_id: null,
 };
 
-type CustomUserData = User & INhostAuthStore;
-
-interface MyUser extends CustomUserData {
+interface useMyUser extends CustomUserData {
   isValid: boolean;
+  updateStoreId: (store_id: IMyUser['store_id']) => void;
 }
 
-export const useMyUser = (): MyUser => {
+export const useMyUser = (): useMyUser => {
   const user = useUserData();
   const myUserData = useMyUserSelector();
+  // console.log('🚀 ~ file: nhost.ts ~ line 109 ~ useMyUser ~ user.id', user?.id);
 
-  const newAvatarUrl = useMemo(() => {
-    if (!user?.avatarUrl) return '';
-    const url = nhost.storage.getPublicUrl({fileId: user?.avatarUrl});
-    return url;
-  }, [user?.avatarUrl]);
+  const getUserById = useUser_GetUserByIdQuery({
+    variables: {user_id: user?.id || ''},
+    ...getXHasuraContextHeader({role: 'me', withUserId: true}),
+  });
 
-  if (user)
+  const userFromRemote = useMemo(() => {
+    const remote = getUserById.data?.user;
+
+    const temp: Partial<IMyUser> = {
+      avatarUrl: remote?.avatarUrl
+        ? nhost.storage.getPublicUrl({fileId: remote?.avatarUrl})
+        : '',
+      defaultRole: remote?.defaultRole,
+      displayName: remote?.displayName,
+      email: remote?.newEmail ? remote?.newEmail : remote?.email,
+      emailVerified: remote?.emailVerified,
+      disabled: remote?.disabled || false,
+      store_id: remote?.users_metadata?.[0].store_id,
+      roles: remote?.roles.map(x => x.role),
+    };
+    return temp;
+  }, [getUserById.data?.user]);
+  console.log(
+    '🚀 ~ file: nhost.ts ~ line 134 ~ userFromRemote ~ myUserData.user?.store_id',
+    myUserData.user?.store_id,
+  );
+
+  useEffect(() => {
+    if (user) {
+      // console.log('effect user');
+      const update: IMyUser = {
+        ...user,
+        avatarUrl: userFromRemote?.avatarUrl || user.avatarUrl,
+        defaultRole: userFromRemote?.defaultRole || user.defaultRole,
+        displayName: userFromRemote?.displayName || user.displayName,
+        email: userFromRemote?.email,
+        emailVerified: userFromRemote?.emailVerified || user.emailVerified,
+        disabled: userFromRemote?.disabled || false,
+        store_id: userFromRemote.store_id || null,
+        roles: userFromRemote.roles || user.roles,
+      };
+      myUserData.update(update);
+    } else {
+      myUserData.update(null);
+    }
+  }, [userFromRemote, user]);
+
+  if (myUserData.user)
     return {
       ...user,
-      ...myUserData,
-      avatarUrl: newAvatarUrl,
+      ...myUserData.user,
+      defaultRole: myUserData.user?.defaultRole || 'karyawan',
       isValid: true,
+      updateStoreId: myUserData.updateStoreId,
     };
-  else return {...nullUser, ...myUserData, isValid: false};
+  else
+    return {
+      ...nullUser,
+      isValid: false,
+      defaultRole: 'karyawan',
+      updateStoreId: myUserData.updateStoreId,
+    };
 };
 
 interface MyNhostStorageParamas {

@@ -30,24 +30,13 @@ import {ButtonCancelDelete} from '../Buttons';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import {UpdateTransactionNavProps} from '../../screens/app/TransactionScreen';
 import {TOAST_TEMPLATE} from '../../shared/constants';
+import {Store_GetStoreByPkQuery} from '../../graphql/gql-generated';
 
 interface Props {
   route: CashierHomeNavProps['route'];
   searchTerm: string;
   setValue: UseFormSetValue<IDefaultValues>;
-  dataStoreActive:
-    | {
-        __typename?: 'stores' | undefined;
-        id: number;
-        name: string;
-        latitude: string;
-        longitude: string;
-        address: string;
-        created_at: any;
-        updated_at: any;
-      }
-    | null
-    | undefined;
+  dataStoreActive: Store_GetStoreByPkQuery['stores_by_pk'];
   control: Control<IDefaultValues, object>;
   errors: any;
   kategoriProdukTab: {

@@ -8,7 +8,7 @@ import {TOAST_TEMPLATE} from '../constants';
 
 export const defaultCoords = [110.369492, -7.79558];
 
-interface IUseGetLocation {
+export interface IUseGetLocation {
   onUpdateLocation: (latitude: number, longitude: number) => void;
   currentLocation?: {latitude: number; longitude: number} | null;
   isLazyFetch?: boolean;
@@ -39,10 +39,10 @@ export const useGetLocation = ({
       setLoading(true);
       Geolocation.getCurrentPosition(
         position => {
-          console.log(
-            '🚀 ~ file: CreateToko.tsx ~ line 96 ~ useEffect ~ position',
-            position,
-          );
+          // console.log(
+          //   '🚀 ~ file: CreateToko.tsx ~ line 96 ~ useEffect ~ position',
+          //   position,
+          // );
           setLocation([position.coords.longitude, position.coords.latitude]);
           setLoading(false);
           onUpdateLocation(position.coords.latitude, position.coords.longitude);

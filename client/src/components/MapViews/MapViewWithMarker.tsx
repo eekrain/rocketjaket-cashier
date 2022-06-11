@@ -15,6 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useGetLocation} from '../../shared/utils';
 import {StyleSheet} from 'react-native';
 import LoadingOverlay from '../Overlay/LoadingOverlay';
+import turf from '@turf/circle';
 
 MapboxGL.setAccessToken(
   'sk.eyJ1IjoiZWVrcmFpbiIsImEiOiJjbDQ1amNnYW8yMXJqM2JxeWVlbjV3dmlkIn0.d3OKo8Sem6SkohYsWyaU3w',
@@ -35,6 +36,7 @@ interface IDefaultProps {
   markerProps?: IIconProps;
   iconButtonProps?: IIconButtonProps;
   isLazyFetch?: boolean;
+  zoomLevel?: number;
 }
 
 const defaultProps: IDefaultProps = {
@@ -67,6 +69,7 @@ export const MapViewWithMarker = ({
   iconButtonProps,
   currentLocation,
   isLazyFetch,
+  zoomLevel = 12,
 }: IMapViewWithMarkerProps) => {
   const {location, setLocation, error, loading, refetch} = useGetLocation({
     onUpdateLocation,
@@ -98,7 +101,7 @@ export const MapViewWithMarker = ({
         style={styles.map}
         // ref={mapRef}
         onPress={finalOnPress}>
-        <MapboxGL.Camera zoomLevel={12} centerCoordinate={location} />
+        <MapboxGL.Camera zoomLevel={zoomLevel} centerCoordinate={location} />
         {currentLocation?.latitude && currentLocation.longitude && (
           <MapboxGL.MarkerView id="main" coordinate={location}>
             <Icon {...defaultProps.markerProps} {...markerProps} />

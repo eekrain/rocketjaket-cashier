@@ -70,14 +70,14 @@ const Cart = () => {
     returnProcessResult,
     setReturnProcessResult,
   } = useReturn({setReturnTypeModalOpen, setReturnLandingModalOpen});
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 74 ~ Cart ~ returnedProduct',
-    returnedProduct,
-  );
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 60 ~ Cart ~ isReturnDirty',
-    isReturnDirty,
-  );
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 74 ~ Cart ~ returnedProduct',
+  //   returnedProduct,
+  // );
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 60 ~ Cart ~ isReturnDirty',
+  //   isReturnDirty,
+  // );
 
   const {
     watch,

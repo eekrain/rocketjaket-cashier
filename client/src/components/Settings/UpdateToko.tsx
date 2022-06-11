@@ -1,5 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {Box, HStack, VStack, Heading, ScrollView, useToast} from 'native-base';
+import {
+  Box,
+  HStack,
+  VStack,
+  Heading,
+  ScrollView,
+  useToast,
+  Text,
+  FormControl,
+} from 'native-base';
 import withAppLayout from '../Layout/AppLayout';
 import {
   namedOperations,
@@ -11,7 +20,12 @@ import {getXHasuraContextHeader} from '../../shared/utils';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
-import {DismissKeyboardWrapper, RHTextInput} from '../../shared/components';
+import {
+  ClockPicker,
+  DismissKeyboardWrapper,
+  RHCheckbox,
+  RHTextInput,
+} from '../../shared/components';
 import {ButtonSave, ButtonBack} from '../Buttons';
 import {SettingsScreenProps} from '../../screens/app/SettingsScreen';
 import {useMyAppState} from '../../state';
@@ -21,12 +35,17 @@ import {
   MapViewWithMarker,
 } from '../MapViews/MapViewWithMarker';
 import {MapViewProps} from '@react-native-mapbox-gl/maps';
+import dayjs from 'dayjs';
+import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 
 interface IDefaultValues {
   name: string;
   address: string;
   latitude: number | null;
   longitude: number | null;
+  working_hour_start: string;
+  working_hour_end: string;
+  is_record_attendance: 'active'[];
 }
 
 const schema = yup
@@ -35,6 +54,8 @@ const schema = yup
     address: yup.string().optional(),
     latitude: yup.number().nullable(),
     longitude: yup.number().nullable(),
+    working_hour_start: yup.string().nullable(),
+    working_hour_end: yup.string().nullable(),
   })
   .required();
 
@@ -43,6 +64,9 @@ const defaultValues: IDefaultValues = {
   address: '',
   latitude: null,
   longitude: null,
+  working_hour_start: dayjs().hour(10).minute(0).second(0).toISOString(),
+  working_hour_end: dayjs().hour(22).minute(0).second(0).toISOString(),
+  is_record_attendance: [],
 };
 
 interface IUpdateTokoProps {}
@@ -66,6 +90,10 @@ const UpdateToko = ({}: IUpdateTokoProps) => {
     defaultValues,
     resolver: yupResolver(schema),
   });
+
+  const working_hour_start = watch().working_hour_start;
+  const working_hour_end = watch().working_hour_end;
+
   console.log(
     '🚀 ~ file: UpdateToko.tsx ~ line 69 ~ UpdateToko ~ isDirty',
     isDirty,
@@ -75,13 +103,32 @@ const UpdateToko = ({}: IUpdateTokoProps) => {
     latitude: watch().latitude,
     longitude: watch().longitude,
   };
-  // console.log(
-  //   '🚀 ~ file: UpdateToko.tsx ~ line 74 ~ UpdateToko ~ watchCoords',
-  //   watchCoords,
-  // );
 
   const getDataToko = useStore_GetStoreByPkQuery({
     variables: {id: route.params?.storeId || 0},
+    onError: error => {
+      navigation.goBack();
+      toast.show(
+        TOAST_TEMPLATE.error(`Error saat mengambil data toko.${error.message}`),
+      );
+    },
+    onCompleted: data => {
+      // console.log(
+      //   '🚀 ~ file: UpdateToko.tsx ~ line 116 ~ UpdateToko ~ data',
+      //   data,
+      // );
+      reset({
+        name: data.stores_by_pk?.name,
+        address: data.stores_by_pk?.address || '',
+        latitude: data.stores_by_pk?.latitude,
+        longitude: data.stores_by_pk?.longitude,
+        is_record_attendance: data.stores_by_pk?.is_record_attendance
+          ? ['active']
+          : [],
+        working_hour_start: data.stores_by_pk?.working_hour_start,
+        working_hour_end: data.stores_by_pk?.working_hour_end,
+      });
+    },
   });
   useEffect(() => {
     myAppState.setLoadingWholePage(getDataToko.loading);
@@ -95,38 +142,13 @@ const UpdateToko = ({}: IUpdateTokoProps) => {
     }
   }, [getDataToko.loading, isSubmitSuccessful, myAppState]);
 
-  const [isDataReady, setDataReady] = useState(false);
-  useEffect(() => {
-    const dataToko = getDataToko.data?.stores_by_pk;
-    if (dataToko === null && !isErrorOnce) {
-      toast.show(TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'));
-      navigation.goBack();
-      setErrorOnce(true);
-    } else if (dataToko && !isDataReady) {
-      setDataReady(true);
-      setValue('name', dataToko.name);
-      setValue('address', dataToko.address || '', {
-        shouldDirty: false,
-      });
-      setValue('latitude', dataToko.latitude, {
-        shouldDirty: false,
-      });
-      setValue('longitude', dataToko.longitude, {
-        shouldDirty: false,
-      });
-    }
-  }, [
-    getDataToko.data?.stores_by_pk,
-    isErrorOnce,
-    navigation,
-    setValue,
-    toast,
-  ]);
-
   const [updateStoreMutation, _updateStoreMutationResult] =
     useStore_UpdateStoreMutation({
       ...getXHasuraContextHeader({role: 'administrator'}),
-      refetchQueries: [namedOperations.Query.Store_GetAllStore],
+      refetchQueries: [
+        namedOperations.Query.Store_GetAllStore,
+        namedOperations.Query.Store_GetStoreByPK,
+      ],
     });
 
   const handleSubmission = async (data: IDefaultValues) => {
@@ -144,6 +166,13 @@ const UpdateToko = ({}: IUpdateTokoProps) => {
       reset(defaultValues);
       return;
     }
+
+    const is_record_attendance =
+      data.is_record_attendance?.[0] === 'active' ? true : false;
+    console.log(
+      '🚀 ~ file: UpdateToko.tsx ~ line 172 ~ handleSubmission ~ is_record_attendance',
+      is_record_attendance,
+    );
     const res = await updateStoreMutation({
       variables: {
         store_id: route.params?.storeId,
@@ -152,6 +181,9 @@ const UpdateToko = ({}: IUpdateTokoProps) => {
           address: data.address,
           latitude: data.latitude,
           longitude: data.longitude,
+          working_hour_start: data.working_hour_start,
+          working_hour_end: data.working_hour_end,
+          is_record_attendance: is_record_attendance,
         },
       },
     });
@@ -182,6 +214,37 @@ const UpdateToko = ({}: IUpdateTokoProps) => {
 
   const onPressMapWithUpdateLocation: MapViewProps['onPress'] = e => {
     console.log('🚀 ~ file: CreateToko.tsx ~ line 114 ~ CreateToko ~ e', e);
+  };
+
+  const workingHourStartPicker = () => {
+    DateTimePickerAndroid.open({
+      value: dayjs(working_hour_start).isValid()
+        ? dayjs(working_hour_start).toDate()
+        : dayjs().hour(10).minute(0).toDate(),
+      onChange: (e, selectedDate) => {
+        if (selectedDate)
+          setValue('working_hour_start', selectedDate.toISOString(), {
+            shouldDirty: true,
+          });
+      },
+      mode: 'time',
+      is24Hour: true,
+    });
+  };
+  const workingHourEndPicker = () => {
+    DateTimePickerAndroid.open({
+      value: dayjs(working_hour_end).isValid()
+        ? dayjs(working_hour_end).toDate()
+        : dayjs().hour(22).minute(0).toDate(),
+      onChange: (e, selectedDate) => {
+        if (selectedDate)
+          setValue('working_hour_end', selectedDate.toISOString(), {
+            shouldDirty: true,
+          });
+      },
+      mode: 'time',
+      is24Hour: true,
+    });
   };
 
   return (
@@ -215,6 +278,34 @@ const UpdateToko = ({}: IUpdateTokoProps) => {
                 // mapRef={mapRef}
                 onPressMapWithUpdateLocation={onPressMapWithUpdateLocation}
                 isLazyFetch={true}
+              />
+
+              <Box mt="4">
+                <FormControl.Label>Jam Kerja</FormControl.Label>
+                <HStack space={'6'} alignItems="center">
+                  <ClockPicker
+                    inputDate={working_hour_start}
+                    onPress={workingHourStartPicker}
+                  />
+                  <Text fontWeight={'bold'} fontSize="lg">
+                    -
+                  </Text>
+                  <ClockPicker
+                    inputDate={working_hour_end}
+                    onPress={workingHourEndPicker}
+                  />
+                </HStack>
+              </Box>
+
+              <RHCheckbox
+                control={control}
+                errors={errors}
+                label="Fitur Absensi"
+                name="is_record_attendance"
+                checkboxOptions={[{value: 'active', label: 'aktif'}]}
+                flexDirection="row"
+                flexWrap="wrap"
+                checkboxSpacing={5}
               />
 
               <HStack justifyContent="flex-end" mt="8" space="4">

@@ -222,20 +222,24 @@ const CashierHome = ({route}: Props) => {
   }, [myUser.roles, selectedStoreId]);
 
   useEffect(() => {
-    if (!isDataStoreReady) {
-      console.log(
-        '🚀 ~ file: index.tsx ~ line 227 ~ useEffect ~ myUser.store_id',
-        myUser.store_id,
-      );
+    if (!isDataStoreReady && myUser.store_id) {
+      // console.log(
+      //   '🚀 ~ file: index.tsx ~ line 227 ~ useEffect ~ myUser.store_id',
+      //   myUser.store_id,
+      // );
       if (myUser.store_id) {
         setValue('store_id', myUser.store_id.toString());
         setDataStoreReady(true);
-      } else if (!myUser.roles.includes(UserRolesEnum.administrator)) {
-        Alert.alert(
-          'Akun Anda Belum Terdaftar',
-          'Akun anda belum terdaftar di store manapun! Silahkan kontak owner / admin untuk mendaftarkan akun anda ke penempatan toko sesuai.',
-        );
       }
+    } else if (
+      isDataStoreReady &&
+      !myUser.roles.includes(UserRolesEnum.administrator) &&
+      !myUser.store_id
+    ) {
+      Alert.alert(
+        'Akun Anda Belum Terdaftar',
+        'Akun anda belum terdaftar di store manapun! Silahkan kontak owner / admin untuk mendaftarkan akun anda ke penempatan toko sesuai.',
+      );
     }
   }, [
     isDataStoreReady,

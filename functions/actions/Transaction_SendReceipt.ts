@@ -183,7 +183,7 @@ const sendWhatsappMessage = async (
     }
     const [errWa, resWa] = await to(
       axios.post<MyWASendMessageResponse>(
-        `${process.env.WHATSAPP_API_URL}/chat/sendmessage/${params.customer?.phone_number}`,
+        `${process.env.WHATSAPP_API_URL}/chat/sendmessage/62${params.customer?.phone_number}`,
         {
           message,
         },
