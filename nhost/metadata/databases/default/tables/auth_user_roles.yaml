@@ -30,6 +30,22 @@ select_permissions:
     - user_id
     filter: {}
   role: administrator
+- permission:
+    columns:
+    - role
+    - user_id
+    filter:
+      user_id:
+        _eq: X-Hasura-User-Id
+  role: karyawan
+- permission:
+    columns:
+    - role
+    - user_id
+    filter:
+      user_id:
+        _eq: X-Hasura-User-Id
+  role: me
 update_permissions:
 - permission:
     check: {}

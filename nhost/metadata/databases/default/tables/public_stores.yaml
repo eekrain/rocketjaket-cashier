@@ -28,17 +28,21 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
+    - address
+    - created_at
+    - id
+    - is_record_attendance
     - latitude
     - longitude
-    - id
-    - address
     - name
-    - created_at
     - updated_at
+    - working_hour_end
+    - working_hour_start
   role: administrator
 select_permissions:
 - permission:
     columns:
+    - is_record_attendance
     - latitude
     - longitude
     - id
@@ -46,10 +50,13 @@ select_permissions:
     - name
     - created_at
     - updated_at
+    - working_hour_end
+    - working_hour_start
     filter: {}
   role: administrator
 - permission:
     columns:
+    - is_record_attendance
     - latitude
     - longitude
     - id
@@ -57,10 +64,13 @@ select_permissions:
     - name
     - created_at
     - updated_at
+    - working_hour_end
+    - working_hour_start
     filter: {}
   role: karyawan
 - permission:
     columns:
+    - is_record_attendance
     - latitude
     - longitude
     - id
@@ -68,6 +78,8 @@ select_permissions:
     - name
     - created_at
     - updated_at
+    - working_hour_end
+    - working_hour_start
     filter:
       users_metadata:
         user_id:
@@ -77,6 +89,7 @@ update_permissions:
 - permission:
     check: {}
     columns:
+    - is_record_attendance
     - latitude
     - longitude
     - id
@@ -84,6 +97,8 @@ update_permissions:
     - name
     - created_at
     - updated_at
+    - working_hour_end
+    - working_hour_start
     filter: {}
   role: administrator
 delete_permissions:

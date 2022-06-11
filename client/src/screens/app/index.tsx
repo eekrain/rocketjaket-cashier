@@ -15,14 +15,14 @@ import OperationalCostScreen, {
   rootOperationalCostRoutes,
 } from './OperationalCostScreen';
 import {DrawerScreenProps} from '@react-navigation/drawer';
-import {TUserRoleOptions} from '../../types/user';
+import {TUserRoleOptions, UserRolesEnum} from '../../types/user';
 import TransactionScreen, {
   rootTransactionRoutes,
   TransactionRootStackParamList,
 } from './TransactionScreen';
 import {NavigatorScreenParams} from '@react-navigation/native';
 import NotificationScreen from './NotificationScreen';
-import {useMyNotifee} from '../../shared/utils';
+import {useMyNotifee, useMyUser} from '../../shared/utils';
 import {useMyNotificationBackgroundTask} from '../../state';
 
 export type AppNavigationParamList = {
@@ -135,18 +135,23 @@ interface Props {}
 const AppNavigation = ({}: Props) => {
   useMyNotifee();
   useMyNotificationBackgroundTask();
+  const myUser = useMyUser();
 
   return (
     <AppDrawer.Navigator
       drawerContent={drawerProps => <CustomDrawerContent {...drawerProps} />}
       screenOptions={{headerShown: false}}>
-      {rootAppRoutes.map(value => (
-        <AppDrawer.Screen
-          key={value.name}
-          name={value.name}
-          component={value.component}
-        />
-      ))}
+      {rootAppRoutes
+        .filter(value =>
+          value.role.includes(myUser.defaultRole as UserRolesEnum),
+        )
+        .map(value => (
+          <AppDrawer.Screen
+            key={value.name}
+            name={value.name}
+            component={value.component}
+          />
+        ))}
     </AppDrawer.Navigator>
   );
 };

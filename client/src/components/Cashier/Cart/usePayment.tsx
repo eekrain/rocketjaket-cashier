@@ -30,10 +30,10 @@ export const usePayment = ({
       null,
     );
 
-  console.log(
-    '🚀 ~ file: usePayment.tsx ~ line 29 ~ paymentProcessResult',
-    paymentProcessResult,
-  );
+  // console.log(
+  //   '🚀 ~ file: usePayment.tsx ~ line 29 ~ paymentProcessResult',
+  //   paymentProcessResult,
+  // );
   const [createTransactionMutation, _createTransactionMutationResult] =
     useCashier_CreateTransactionMutation({
       refetchQueries: [

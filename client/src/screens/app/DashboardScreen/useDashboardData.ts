@@ -1,4 +1,4 @@
-import {useMemo} from 'react';
+import {useEffect, useMemo} from 'react';
 import {
   Scalars,
   TimeMode,
@@ -6,6 +6,7 @@ import {
   useStore_GetAllStoreQuery,
 } from '../../../graphql/gql-generated';
 import {getColorByIndex} from '../../../shared/utils';
+import {useMyAppState} from '../../../state';
 import {IMyLineChart} from './MyLineChart';
 import {IMyPieChart} from './MyPieChart';
 
@@ -31,6 +32,8 @@ interface useDashboardData {
     label: string;
     value: string;
   }[];
+  refetch: () => void;
+  loading: boolean;
 }
 
 interface useDashboardDataProps {
@@ -46,6 +49,7 @@ export const useDashboardData = ({
   stores,
   mode,
 }: useDashboardDataProps): useDashboardData | null => {
+  const myAppState = useMyAppState();
   const getAllStore = useStore_GetAllStoreQuery();
   const storeSelectOptions = useMemo(() => {
     const data = getAllStore.data?.stores || [];
@@ -76,13 +80,12 @@ export const useDashboardData = ({
       stores: activeStores,
       mode: mode as TimeMode,
     },
+    onCompleted: () => {
+      console.log('useDashboard_GetDashboardDataQuery onCompleted');
+    },
   });
 
   const dashboardData = getDashboardData.data?.Dashboard_GetDashboardData;
-  // console.log(
-  //   '🚀 ~ file: useDashboardData.ts ~ line 78 ~ dashboardData',
-  //   dashboardData,
-  // );
 
   const dashboardChartData = useMemo(() => {
     const legend =
@@ -96,6 +99,7 @@ export const useDashboardData = ({
           color: getColorByIndex(index),
         };
       }) || [];
+    const dummyColorFn: (opacity?: number) => string = () => '';
 
     const omsetChart: IMyLineChart = {
       labels: dashboardData?.omsetChart.labels || [],
@@ -103,7 +107,7 @@ export const useDashboardData = ({
         dashboardData?.omsetChart?.datasets?.map((val, index) => {
           return {
             data: val.data,
-            color: legend?.[index].color,
+            color: legend?.[index].color || dummyColorFn,
           };
         }) || [],
       legend: legend.map(x => x.store_name),
@@ -157,6 +161,12 @@ export const useDashboardData = ({
     );
   }, [dashboardData]);
 
+  useEffect(() => {
+    myAppState.setLoadingWholePage(
+      getDashboardData.loading || getAllStore.loading,
+    );
+  }, [getDashboardData.loading, getAllStore.loading]);
+
   if (!dashboardData) return null;
 
   return {
@@ -167,5 +177,10 @@ export const useDashboardData = ({
     operasionalChart: dashboardChartData.operasionalChart,
     paymentTypePercentage: paymentTypePercentage,
     storeSelectOptions,
+    refetch: async () => {
+      await getAllStore.refetch();
+      await getDashboardData.refetch();
+    },
+    loading: getAllStore.loading || getDashboardData.loading,
   };
 };
