@@ -29,3 +29,22 @@ array_relationships:
       table:
         name: users
         schema: auth
+select_permissions:
+- permission:
+    columns:
+    - role
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - role
+    filter: {}
+  role: karyawan
+- permission:
+    columns:
+    - role
+    filter:
+      userRoles:
+        user_id:
+          _eq: X-Hasura-User-Id
+  role: me

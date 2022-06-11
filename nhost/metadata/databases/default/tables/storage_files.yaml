@@ -147,11 +147,29 @@ update_permissions:
     - id
     - uploaded_by_user_id
     filter: {}
+  role: karyawan
+- permission:
+    check: {}
+    columns:
+    - is_uploaded
+    - size
+    - bucket_id
+    - etag
+    - mime_type
+    - name
+    - created_at
+    - updated_at
+    - id
+    - uploaded_by_user_id
+    filter: {}
   role: me
 delete_permissions:
 - permission:
     filter: {}
   role: administrator
+- permission:
+    filter: {}
+  role: karyawan
 - permission:
     filter: {}
   role: me

@@ -16,6 +16,7 @@ import {useForm} from 'react-hook-form';
 import {useSignInEmailPassword} from '@nhost/react';
 import Config from 'react-native-config';
 import {TOAST_TEMPLATE} from '../../../shared/constants';
+import {useApolloClient} from '@apollo/client';
 
 interface ISignInScreenProps extends SigninNavProps {}
 
@@ -31,6 +32,8 @@ const defaultValues = {
 
 const SignInScreen = ({navigation}: ISignInScreenProps) => {
   const toast = useToast();
+
+  const client = useApolloClient();
 
   const {signInEmailPassword} = useSignInEmailPassword();
 
@@ -49,12 +52,13 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
 
     const res = await signInEmailPassword(data.username, data.password);
 
-    if (res.needsEmailVerification) {
+    if (res.needsEmailVerification)
       toast.show(TOAST_TEMPLATE.error(`Email anda belum terverifikasi!`));
-    }
-    if (res.isError) {
+
+    if (res.isError)
       toast.show(TOAST_TEMPLATE.error(res.error?.message || 'Error'));
-    }
+
+    if (res.isSuccess) await client.refetchQueries({include: 'active'});
   };
 
   return (

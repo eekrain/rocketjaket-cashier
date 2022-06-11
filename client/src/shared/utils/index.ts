@@ -10,3 +10,5 @@ export * from './appPermission';
 export * from './getColorByIndex';
 export * from './getUniqArrayObject';
 export * from './useGetLocation';
+export * from './calculateDistanceKilometer';
+export * from './useMemoCompare';

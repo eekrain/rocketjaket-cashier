@@ -18,6 +18,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import AppNavigation, {AppNavigationParamList} from './src/screens/app';
 import AuthNavigation from './src/screens/auth';
 import Config from 'react-native-config';
+import ModalAbsensi from './src/components/Absensi/ModalAbsensi';
+import {useAbsensi} from './src/components/Absensi/useAbsensi';
 
 const App = () => {
   const authStatus = useAuthenticationStatus();
@@ -25,16 +27,22 @@ const App = () => {
   const [accessTokenLatest, setAccessTokenLatest] = useState(
     nhost.auth.getAccessToken(),
   );
-  // console.log(
-  //   '🚀 ~ file: App.tsx ~ line 35 ~ App ~ accessTokenLatest',
-  //   accessTokenLatest,
-  // );
 
   const [loadingSplashScreen, setLoadingSplashScreen] = useState(true);
   const loading = useMemo(
     () => authStatus.isLoading || loadingSplashScreen,
     [authStatus, loadingSplashScreen],
   );
+
+  const {
+    isModalAbsensiOpen,
+    onModalAbsensiClose,
+    tokoCoords,
+    useGetLocationReturn,
+    radiusCircle,
+    distanceMeter,
+    maximumDistanceFromToko,
+  } = useAbsensi();
 
   useEffect(() => {
     nhost.storage.setAccessToken(accessTokenLatest);
@@ -63,7 +71,18 @@ const App = () => {
   return (
     <NavigationContainer<AppNavigationParamList>>
       {!loading && authStatus.isAuthenticated ? (
-        <AppNavigation />
+        <>
+          <ModalAbsensi
+            modalAbsensiOpen={isModalAbsensiOpen}
+            onPressClose={onModalAbsensiClose}
+            tokoCoords={tokoCoords}
+            useGetLocationReturn={useGetLocationReturn}
+            radiusCircle={radiusCircle}
+            distanceMeter={distanceMeter}
+            maximumDistanceFromToko={maximumDistanceFromToko}
+          />
+          <AppNavigation />
+        </>
       ) : (
         <AuthNavigation />
       )}

@@ -43,10 +43,25 @@ select_permissions:
     - updated_at
     filter: {}
   role: administrator
+- permission:
+    columns:
+    - presigned_urls_enabled
+    - download_expiration
+    - max_upload_file_size
+    - min_upload_file_size
+    - cache_control
+    - id
+    - created_at
+    - updated_at
+    filter: {}
+  role: karyawan
 delete_permissions:
 - permission:
     filter: {}
   role: administrator
+- permission:
+    filter: {}
+  role: karyawan
 - permission:
     filter: {}
   role: me

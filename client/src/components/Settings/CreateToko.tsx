@@ -1,5 +1,15 @@
 import React from 'react';
-import {Box, HStack, VStack, Heading, ScrollView, useToast} from 'native-base';
+import {
+  Box,
+  HStack,
+  VStack,
+  Heading,
+  ScrollView,
+  useToast,
+  FormControl,
+  Text,
+  Button,
+} from 'native-base';
 import withAppLayout from '../Layout/AppLayout';
 import {
   namedOperations,
@@ -11,7 +21,12 @@ import {getXHasuraContextHeader} from '../../shared/utils';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
-import {DismissKeyboardWrapper, RHTextInput} from '../../shared/components';
+import {
+  ClockPicker,
+  DismissKeyboardWrapper,
+  RHCheckbox,
+  RHTextInput,
+} from '../../shared/components';
 import ButtonSave from '../Buttons/ButtonSave';
 import {SettingsScreenProps} from '../../screens/app/SettingsScreen';
 import {
@@ -21,12 +36,16 @@ import {
 import {MapViewProps} from '@react-native-mapbox-gl/maps';
 import to from 'await-to-js';
 import {ButtonBack} from '../Buttons';
-
+import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
+import dayjs from 'dayjs';
 interface IDefaultValues {
   name: string;
   address: string;
   latitude: number | null;
   longitude: number | null;
+  working_hour_start: string;
+  working_hour_end: string;
+  is_record_attendance: 'active'[];
 }
 
 const schema = yup
@@ -35,6 +54,8 @@ const schema = yup
     address: yup.string().optional(),
     latitude: yup.number().nullable(),
     longitude: yup.number().nullable(),
+    working_hour_start: yup.string().nullable(),
+    working_hour_end: yup.string().nullable(),
   })
   .required();
 
@@ -43,6 +64,9 @@ const defaultValues: IDefaultValues = {
   address: '',
   latitude: null,
   longitude: null,
+  working_hour_start: dayjs().hour(10).minute(0).second(0).toISOString(),
+  working_hour_end: dayjs().hour(22).minute(0).second(0).toISOString(),
+  is_record_attendance: [],
 };
 
 interface ICreateTokoProps {}
@@ -58,10 +82,13 @@ const CreateToko = ({}: ICreateTokoProps) => {
     formState: {errors},
     reset,
     setValue,
+    watch,
   } = useForm({
     defaultValues,
     resolver: yupResolver(schema),
   });
+  const working_hour_start = watch().working_hour_start;
+  const working_hour_end = watch().working_hour_end;
 
   const [createStoreMutation, _createStoreMutationResult] =
     useStore_CreateStoreMutation({
@@ -78,6 +105,10 @@ const CreateToko = ({}: ICreateTokoProps) => {
             address: data.address,
             latitude: data.latitude,
             longitude: data.longitude,
+            working_hour_start: data.working_hour_start,
+            working_hour_end: data.working_hour_end,
+            is_record_attendance:
+              data.is_record_attendance?.[0] === 'active' ? true : false,
           },
         },
       }),
@@ -118,6 +149,29 @@ const CreateToko = ({}: ICreateTokoProps) => {
     console.log('🚀 ~ file: CreateToko.tsx ~ line 114 ~ CreateToko ~ e', e);
   };
 
+  const workingHourStartPicker = () => {
+    DateTimePickerAndroid.open({
+      value: dayjs(working_hour_start).toDate(),
+      onChange: (e, selectedDate) => {
+        if (selectedDate)
+          setValue('working_hour_start', selectedDate.toISOString());
+      },
+      mode: 'time',
+      is24Hour: true,
+    });
+  };
+  const workingHourEndPicker = () => {
+    DateTimePickerAndroid.open({
+      value: dayjs(working_hour_start).toDate(),
+      onChange: (e, selectedDate) => {
+        if (selectedDate)
+          setValue('working_hour_end', selectedDate.toISOString());
+      },
+      mode: 'time',
+      is24Hour: true,
+    });
+  };
+
   return (
     <ScrollView>
       <DismissKeyboardWrapper>
@@ -144,6 +198,34 @@ const CreateToko = ({}: ICreateTokoProps) => {
                 onUpdateLocation={onUpdateLocation}
                 // mapRef={mapRef}
                 onPressMapWithUpdateLocation={onPressMapWithUpdateLocation}
+              />
+
+              <Box mt="4">
+                <FormControl.Label>Jam Kerja</FormControl.Label>
+                <HStack space={'6'} alignItems="center">
+                  <ClockPicker
+                    inputDate={working_hour_start}
+                    onPress={workingHourStartPicker}
+                  />
+                  <Text fontWeight={'bold'} fontSize="lg">
+                    -
+                  </Text>
+                  <ClockPicker
+                    inputDate={working_hour_end}
+                    onPress={workingHourStartPicker}
+                  />
+                </HStack>
+              </Box>
+
+              <RHCheckbox
+                control={control}
+                errors={errors}
+                label="Fitur Absensi"
+                name="is_record_attendance"
+                checkboxOptions={[{value: 'active', label: 'aktif'}]}
+                flexDirection="row"
+                flexWrap="wrap"
+                checkboxSpacing={5}
               />
 
               <HStack justifyContent="flex-end" mt="8" space="4">

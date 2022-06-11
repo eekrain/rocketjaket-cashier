@@ -17,7 +17,7 @@ import 'dayjs/locale/id';
 import {RHSelect} from '../../../shared/components';
 import Feather from 'react-native-vector-icons/Feather';
 import {myNumberFormat} from '../../../shared/utils';
-import {Dimensions} from 'react-native';
+import {Dimensions, RefreshControl} from 'react-native';
 import {useDashboardData} from './useDashboardData';
 import {MyLineChart} from './MyLineChart';
 import {MyPieChart} from './MyPieChart';
@@ -135,9 +135,21 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
       }
     }
   };
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 352 ~ DashboardScreen ~ dashboardData?.loading',
+  //   dashboardData?.loading,
+  // );
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={dashboardData?.loading || false}
+          onRefresh={async () => {
+            if (dashboardData?.refetch()) await dashboardData.refetch();
+          }}
+        />
+      }>
       <Box pb="20">
         <Heading fontSize="xl" mb="6">
           Dashboard
@@ -203,132 +215,140 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
           </Box>
         </HStack>
 
-        <Box mb="6">
-          <MyLineChart
-            chartTitle="Omset"
-            chartData={dashboardData?.omsetChart}
-            chartWidth={Dimensions.get('window').width - 80}
-            total={myNumberFormat.rp(dashboardData?.totalOmset)}
-            bgColor="#818cf8"
-            bgGradientFromLeft="#c7d2fe"
-            bgGradientToRight="#a5b4fc"
-            textColor="#312e81"
-            labelColor={(opacity = 1) => `rgba(49, 46, 129, ${opacity})`}
-            formatYLabel={yValue =>
-              numbro(yValue).formatCurrency({
-                currencySymbol: 'Rp',
-                average: true,
-              })
-            }
-          />
-        </Box>
-
-        <Box mb="6">
-          <MyLineChart
-            chartTitle="Profit"
-            chartData={dashboardData?.profitChart}
-            chartWidth={Dimensions.get('window').width - 80}
-            total={myNumberFormat.rp(dashboardData?.totalProfit)}
-            formatYLabel={yValue =>
-              numbro(yValue).formatCurrency({
-                currencySymbol: 'Rp',
-                average: true,
-              })
-            }
-          />
-        </Box>
-
-        <Box mb="6">
-          <MyLineChart
-            chartTitle="Biaya Operasional"
-            chartData={dashboardData?.operasionalChart}
-            chartWidth={Dimensions.get('window').width - 80}
-            total={myNumberFormat.rp(dashboardData?.totalOperasional) || ''}
-            bgColor="#f87171"
-            bgGradientFromLeft="#fecaca"
-            bgGradientToRight="#fca5a5"
-            textColor="#7f1d1d"
-            labelColor={(opacity = 1) => `rgba(127, 29, 29, ${opacity})`}
-            formatYLabel={yValue =>
-              numbro(yValue).formatCurrency({
-                currencySymbol: 'Rp',
-                average: true,
-              })
-            }
-          />
-        </Box>
-
-        <Box mb="6">
-          <MyLineChart
-            chartTitle="Item Terjual"
-            chartData={dashboardData?.itemSoldChart}
-            chartWidth={Dimensions.get('window').width - 80}
-            total={dashboardData?.totalItemSold.toString() || ''}
-            bgColor="#e879f9"
-            bgGradientFromLeft="#f5d0fe"
-            bgGradientToRight="#f0abfc"
-            textColor="#701a75"
-            labelColor={(opacity = 1) => `rgba(112, 26, 117, ${opacity})`}
-          />
-        </Box>
-
-        <HStack alignItems={'center'} justifyContent="space-between">
-          <Box p="4" bgColor="white" borderRadius="xl">
-            <Heading color={'info.900'} fontSize="lg" mb="2">
-              Tipe Pembayaran
-            </Heading>
-            <MyPieChart
-              data={dashboardData?.paymentTypePercentage}
-              accessor="total_transaksi"
-            />
-          </Box>
-          <Box p="4" h="full" bgColor="white" borderRadius="xl">
-            <Heading color={'indigo.900'} fontSize="lg" mb="2">
-              Lainnya
-            </Heading>
-
-            <HStack h="20" space="4" mb="4">
-              <CardWithIcon
-                title="Transaksi Sukses"
-                value={dashboardData?.totalSuccessTransaction.toString() || ''}
-                _cardStyle={{bgColor: 'emerald.600'}}
-                __icon={{
-                  as: Feather,
-                  name: 'chevrons-up',
-                }}
+        {dashboardData && (
+          <>
+            <Box mb="6">
+              <MyLineChart
+                chartTitle="Omset"
+                chartData={dashboardData?.omsetChart}
+                chartWidth={Dimensions.get('window').width - 80}
+                total={myNumberFormat.rp(dashboardData?.totalOmset)}
+                bgColor="#818cf8"
+                bgGradientFromLeft="#c7d2fe"
+                bgGradientToRight="#a5b4fc"
+                textColor="#312e81"
+                labelColor={(opacity = 1) => `rgba(49, 46, 129, ${opacity})`}
+                formatYLabel={yValue =>
+                  numbro(yValue).formatCurrency({
+                    currencySymbol: 'Rp',
+                    average: true,
+                  })
+                }
               />
-              <CardWithIcon
-                title="Total Customer"
-                value={dashboardData?.totalCustomer.toString() || ''}
-                _cardStyle={{bgColor: 'indigo.600'}}
-                __icon={{
-                  as: Feather,
-                  name: 'user-check',
-                }}
+            </Box>
+
+            <Box mb="6">
+              <MyLineChart
+                chartTitle="Profit"
+                chartData={dashboardData?.profitChart}
+                chartWidth={Dimensions.get('window').width - 80}
+                total={myNumberFormat.rp(dashboardData?.totalProfit)}
+                formatYLabel={yValue =>
+                  numbro(yValue).formatCurrency({
+                    currencySymbol: 'Rp',
+                    average: true,
+                  })
+                }
               />
+            </Box>
+
+            <Box mb="6">
+              <MyLineChart
+                chartTitle="Biaya Operasional"
+                chartData={dashboardData?.operasionalChart}
+                chartWidth={Dimensions.get('window').width - 80}
+                total={myNumberFormat.rp(dashboardData?.totalOperasional) || ''}
+                bgColor="#f87171"
+                bgGradientFromLeft="#fecaca"
+                bgGradientToRight="#fca5a5"
+                textColor="#7f1d1d"
+                labelColor={(opacity = 1) => `rgba(127, 29, 29, ${opacity})`}
+                formatYLabel={yValue =>
+                  numbro(yValue).formatCurrency({
+                    currencySymbol: 'Rp',
+                    average: true,
+                  })
+                }
+              />
+            </Box>
+
+            <Box mb="6">
+              <MyLineChart
+                chartTitle="Item Terjual"
+                chartData={dashboardData?.itemSoldChart}
+                chartWidth={Dimensions.get('window').width - 80}
+                total={dashboardData?.totalItemSold.toString() || ''}
+                bgColor="#e879f9"
+                bgGradientFromLeft="#f5d0fe"
+                bgGradientToRight="#f0abfc"
+                textColor="#701a75"
+                labelColor={(opacity = 1) => `rgba(112, 26, 117, ${opacity})`}
+              />
+            </Box>
+
+            <HStack alignItems={'center'} justifyContent="space-between">
+              <Box p="4" bgColor="white" borderRadius="xl">
+                <Heading color={'info.900'} fontSize="lg" mb="2">
+                  Tipe Pembayaran
+                </Heading>
+                <MyPieChart
+                  data={dashboardData?.paymentTypePercentage}
+                  accessor="total_transaksi"
+                />
+              </Box>
+              <Box p="4" h="full" bgColor="white" borderRadius="xl">
+                <Heading color={'indigo.900'} fontSize="lg" mb="2">
+                  Lainnya
+                </Heading>
+
+                <HStack h="20" space="4" mb="4">
+                  <CardWithIcon
+                    title="Transaksi Sukses"
+                    value={
+                      dashboardData?.totalSuccessTransaction.toString() || ''
+                    }
+                    _cardStyle={{bgColor: 'emerald.600'}}
+                    __icon={{
+                      as: Feather,
+                      name: 'chevrons-up',
+                    }}
+                  />
+                  <CardWithIcon
+                    title="Total Customer"
+                    value={dashboardData?.totalCustomer.toString() || ''}
+                    _cardStyle={{bgColor: 'indigo.600'}}
+                    __icon={{
+                      as: Feather,
+                      name: 'user-check',
+                    }}
+                  />
+                </HStack>
+                <HStack h="20" space="4">
+                  <CardWithIcon
+                    title="Transaksi Diretur"
+                    value={
+                      dashboardData?.totalReturnedTransaction.toString() || ''
+                    }
+                    _cardStyle={{bgColor: 'amber.600'}}
+                    __icon={{
+                      as: Feather,
+                      name: 'chevrons-down',
+                    }}
+                  />
+                  <CardWithIcon
+                    title="Item Diretur"
+                    value={dashboardData?.totalItemReturned.toString() || ''}
+                    _cardStyle={{bgColor: 'rose.600'}}
+                    __icon={{
+                      as: Feather,
+                      name: 'corner-left-down',
+                    }}
+                  />
+                </HStack>
+              </Box>
             </HStack>
-            <HStack h="20" space="4">
-              <CardWithIcon
-                title="Transaksi Diretur"
-                value={dashboardData?.totalReturnedTransaction.toString() || ''}
-                _cardStyle={{bgColor: 'amber.600'}}
-                __icon={{
-                  as: Feather,
-                  name: 'chevrons-down',
-                }}
-              />
-              <CardWithIcon
-                title="Item Diretur"
-                value={dashboardData?.totalItemReturned.toString() || ''}
-                _cardStyle={{bgColor: 'rose.600'}}
-                __icon={{
-                  as: Feather,
-                  name: 'corner-left-down',
-                }}
-              />
-            </HStack>
-          </Box>
-        </HStack>
+          </>
+        )}
       </Box>
     </ScrollView>
   );
