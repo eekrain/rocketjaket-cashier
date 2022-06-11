@@ -16,6 +16,7 @@ import {
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {rootAppRoutes, getAppIcon, IAppRoutes} from '../../screens/app';
 import {useMyUser} from '../../shared/utils';
+import {UserRolesEnum} from '../../types/user';
 
 interface Props extends DrawerContentComponentProps {}
 
@@ -24,6 +25,14 @@ const CustomDrawerContent = (props: Props) => {
 
   const routeItem = useCallback(
     (route: IAppRoutes, index: number) => {
+      // console.log(
+      //   '🚀 ~ file: index.tsx ~ line 27 ~ CustomDrawerContent ~ index',
+      //   index,
+      // );
+      // console.log(
+      //   '🚀 ~ file: index.tsx ~ line 32 ~ CustomDrawerContent ~ props.state.index',
+      //   props.state.index,
+      // );
       return (
         <Pressable
           key={`${route.name}${route.routeNiceName}`}
@@ -62,7 +71,11 @@ const CustomDrawerContent = (props: Props) => {
 
   const routes = useMemo(() => {
     return rootAppRoutes
-      .filter(route => route.name !== 'Notification')
+      .filter(
+        route =>
+          route.name !== 'Notification' &&
+          route.role.includes(myUser.defaultRole as UserRolesEnum),
+      )
       .map((route, index) => {
         const temp1 = route.role.some(r => myUser.roles.includes(r))
           ? routeItem(route, index)

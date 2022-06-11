@@ -7,5 +7,8 @@ query Store_GetStoreByPK($id: Int!) {
     address
     created_at
     updated_at
+    working_hour_end
+    working_hour_start
+    is_record_attendance
   }
 }

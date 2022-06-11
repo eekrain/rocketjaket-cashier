@@ -357,6 +357,357 @@ export enum Active_Fcm_Tokens_Update_Column {
   FcmToken = 'fcm_token'
 }
 
+/** columns and relationships of "attendance" */
+export type Attendance = {
+  __typename?: 'attendance';
+  attendance_type: Attendance_Type_Enum_Enum;
+  /** An object relationship */
+  attendance_type_enum: Attendance_Type_Enum;
+  created_at: Scalars['timestamptz'];
+  id: Scalars['bigint'];
+  photo_file_id?: Maybe<Scalars['uuid']>;
+  /** An object relationship */
+  user: Users;
+  user_id: Scalars['uuid'];
+};
+
+/** aggregated selection of "attendance" */
+export type Attendance_Aggregate = {
+  __typename?: 'attendance_aggregate';
+  aggregate?: Maybe<Attendance_Aggregate_Fields>;
+  nodes: Array<Attendance>;
+};
+
+/** aggregate fields of "attendance" */
+export type Attendance_Aggregate_Fields = {
+  __typename?: 'attendance_aggregate_fields';
+  avg?: Maybe<Attendance_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Attendance_Max_Fields>;
+  min?: Maybe<Attendance_Min_Fields>;
+  stddev?: Maybe<Attendance_Stddev_Fields>;
+  stddev_pop?: Maybe<Attendance_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Attendance_Stddev_Samp_Fields>;
+  sum?: Maybe<Attendance_Sum_Fields>;
+  var_pop?: Maybe<Attendance_Var_Pop_Fields>;
+  var_samp?: Maybe<Attendance_Var_Samp_Fields>;
+  variance?: Maybe<Attendance_Variance_Fields>;
+};
+
+
+/** aggregate fields of "attendance" */
+export type Attendance_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Attendance_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** aggregate avg on columns */
+export type Attendance_Avg_Fields = {
+  __typename?: 'attendance_avg_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** Boolean expression to filter rows from the table "attendance". All fields are combined with a logical 'AND'. */
+export type Attendance_Bool_Exp = {
+  _and?: InputMaybe<Array<Attendance_Bool_Exp>>;
+  _not?: InputMaybe<Attendance_Bool_Exp>;
+  _or?: InputMaybe<Array<Attendance_Bool_Exp>>;
+  attendance_type?: InputMaybe<Attendance_Type_Enum_Enum_Comparison_Exp>;
+  attendance_type_enum?: InputMaybe<Attendance_Type_Enum_Bool_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Bigint_Comparison_Exp>;
+  photo_file_id?: InputMaybe<Uuid_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "attendance" */
+export enum Attendance_Constraint {
+  /** unique or primary key constraint */
+  AttendancePkey = 'attendance_pkey'
+}
+
+/** input type for incrementing numeric columns in table "attendance" */
+export type Attendance_Inc_Input = {
+  id?: InputMaybe<Scalars['bigint']>;
+};
+
+/** input type for inserting data into table "attendance" */
+export type Attendance_Insert_Input = {
+  attendance_type?: InputMaybe<Attendance_Type_Enum_Enum>;
+  attendance_type_enum?: InputMaybe<Attendance_Type_Enum_Obj_Rel_Insert_Input>;
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['bigint']>;
+  photo_file_id?: InputMaybe<Scalars['uuid']>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user_id?: InputMaybe<Scalars['uuid']>;
+};
+
+/** aggregate max on columns */
+export type Attendance_Max_Fields = {
+  __typename?: 'attendance_max_fields';
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['bigint']>;
+  photo_file_id?: Maybe<Scalars['uuid']>;
+  user_id?: Maybe<Scalars['uuid']>;
+};
+
+/** aggregate min on columns */
+export type Attendance_Min_Fields = {
+  __typename?: 'attendance_min_fields';
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['bigint']>;
+  photo_file_id?: Maybe<Scalars['uuid']>;
+  user_id?: Maybe<Scalars['uuid']>;
+};
+
+/** response of any mutation on the table "attendance" */
+export type Attendance_Mutation_Response = {
+  __typename?: 'attendance_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Attendance>;
+};
+
+/** on_conflict condition type for table "attendance" */
+export type Attendance_On_Conflict = {
+  constraint: Attendance_Constraint;
+  update_columns?: Array<Attendance_Update_Column>;
+  where?: InputMaybe<Attendance_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "attendance". */
+export type Attendance_Order_By = {
+  attendance_type?: InputMaybe<Order_By>;
+  attendance_type_enum?: InputMaybe<Attendance_Type_Enum_Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  photo_file_id?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: attendance */
+export type Attendance_Pk_Columns_Input = {
+  id: Scalars['bigint'];
+};
+
+/** select columns of table "attendance" */
+export enum Attendance_Select_Column {
+  /** column name */
+  AttendanceType = 'attendance_type',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  PhotoFileId = 'photo_file_id',
+  /** column name */
+  UserId = 'user_id'
+}
+
+/** input type for updating data in table "attendance" */
+export type Attendance_Set_Input = {
+  attendance_type?: InputMaybe<Attendance_Type_Enum_Enum>;
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['bigint']>;
+  photo_file_id?: InputMaybe<Scalars['uuid']>;
+  user_id?: InputMaybe<Scalars['uuid']>;
+};
+
+/** aggregate stddev on columns */
+export type Attendance_Stddev_Fields = {
+  __typename?: 'attendance_stddev_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Attendance_Stddev_Pop_Fields = {
+  __typename?: 'attendance_stddev_pop_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Attendance_Stddev_Samp_Fields = {
+  __typename?: 'attendance_stddev_samp_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate sum on columns */
+export type Attendance_Sum_Fields = {
+  __typename?: 'attendance_sum_fields';
+  id?: Maybe<Scalars['bigint']>;
+};
+
+/** columns and relationships of "attendance_type_enum" */
+export type Attendance_Type_Enum = {
+  __typename?: 'attendance_type_enum';
+  attendance_type: Scalars['String'];
+  title: Scalars['String'];
+};
+
+/** aggregated selection of "attendance_type_enum" */
+export type Attendance_Type_Enum_Aggregate = {
+  __typename?: 'attendance_type_enum_aggregate';
+  aggregate?: Maybe<Attendance_Type_Enum_Aggregate_Fields>;
+  nodes: Array<Attendance_Type_Enum>;
+};
+
+/** aggregate fields of "attendance_type_enum" */
+export type Attendance_Type_Enum_Aggregate_Fields = {
+  __typename?: 'attendance_type_enum_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<Attendance_Type_Enum_Max_Fields>;
+  min?: Maybe<Attendance_Type_Enum_Min_Fields>;
+};
+
+
+/** aggregate fields of "attendance_type_enum" */
+export type Attendance_Type_Enum_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Attendance_Type_Enum_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Boolean expression to filter rows from the table "attendance_type_enum". All fields are combined with a logical 'AND'. */
+export type Attendance_Type_Enum_Bool_Exp = {
+  _and?: InputMaybe<Array<Attendance_Type_Enum_Bool_Exp>>;
+  _not?: InputMaybe<Attendance_Type_Enum_Bool_Exp>;
+  _or?: InputMaybe<Array<Attendance_Type_Enum_Bool_Exp>>;
+  attendance_type?: InputMaybe<String_Comparison_Exp>;
+  title?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "attendance_type_enum" */
+export enum Attendance_Type_Enum_Constraint {
+  /** unique or primary key constraint */
+  AttendanceTypeEnumPkey = 'attendance_type_enum_pkey'
+}
+
+export enum Attendance_Type_Enum_Enum {
+  /** Masuk */
+  Enter = 'enter',
+  /** Pulang */
+  Leave = 'leave'
+}
+
+/** Boolean expression to compare columns of type "attendance_type_enum_enum". All fields are combined with logical 'AND'. */
+export type Attendance_Type_Enum_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Attendance_Type_Enum_Enum>;
+  _in?: InputMaybe<Array<Attendance_Type_Enum_Enum>>;
+  _is_null?: InputMaybe<Scalars['Boolean']>;
+  _neq?: InputMaybe<Attendance_Type_Enum_Enum>;
+  _nin?: InputMaybe<Array<Attendance_Type_Enum_Enum>>;
+};
+
+/** input type for inserting data into table "attendance_type_enum" */
+export type Attendance_Type_Enum_Insert_Input = {
+  attendance_type?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregate max on columns */
+export type Attendance_Type_Enum_Max_Fields = {
+  __typename?: 'attendance_type_enum_max_fields';
+  attendance_type?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+};
+
+/** aggregate min on columns */
+export type Attendance_Type_Enum_Min_Fields = {
+  __typename?: 'attendance_type_enum_min_fields';
+  attendance_type?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+};
+
+/** response of any mutation on the table "attendance_type_enum" */
+export type Attendance_Type_Enum_Mutation_Response = {
+  __typename?: 'attendance_type_enum_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Attendance_Type_Enum>;
+};
+
+/** input type for inserting object relation for remote table "attendance_type_enum" */
+export type Attendance_Type_Enum_Obj_Rel_Insert_Input = {
+  data: Attendance_Type_Enum_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Attendance_Type_Enum_On_Conflict>;
+};
+
+/** on_conflict condition type for table "attendance_type_enum" */
+export type Attendance_Type_Enum_On_Conflict = {
+  constraint: Attendance_Type_Enum_Constraint;
+  update_columns?: Array<Attendance_Type_Enum_Update_Column>;
+  where?: InputMaybe<Attendance_Type_Enum_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "attendance_type_enum". */
+export type Attendance_Type_Enum_Order_By = {
+  attendance_type?: InputMaybe<Order_By>;
+  title?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: attendance_type_enum */
+export type Attendance_Type_Enum_Pk_Columns_Input = {
+  attendance_type: Scalars['String'];
+};
+
+/** select columns of table "attendance_type_enum" */
+export enum Attendance_Type_Enum_Select_Column {
+  /** column name */
+  AttendanceType = 'attendance_type',
+  /** column name */
+  Title = 'title'
+}
+
+/** input type for updating data in table "attendance_type_enum" */
+export type Attendance_Type_Enum_Set_Input = {
+  attendance_type?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+/** update columns of table "attendance_type_enum" */
+export enum Attendance_Type_Enum_Update_Column {
+  /** column name */
+  AttendanceType = 'attendance_type',
+  /** column name */
+  Title = 'title'
+}
+
+/** update columns of table "attendance" */
+export enum Attendance_Update_Column {
+  /** column name */
+  AttendanceType = 'attendance_type',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  PhotoFileId = 'photo_file_id',
+  /** column name */
+  UserId = 'user_id'
+}
+
+/** aggregate var_pop on columns */
+export type Attendance_Var_Pop_Fields = {
+  __typename?: 'attendance_var_pop_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate var_samp on columns */
+export type Attendance_Var_Samp_Fields = {
+  __typename?: 'attendance_var_samp_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate variance on columns */
+export type Attendance_Variance_Fields = {
+  __typename?: 'attendance_variance_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
 /** columns and relationships of "auth.provider_requests" */
 export type AuthProviderRequests = {
   __typename?: 'authProviderRequests';
@@ -3340,6 +3691,14 @@ export type Mutation_Root = {
   delete_active_fcm_tokens?: Maybe<Active_Fcm_Tokens_Mutation_Response>;
   /** delete single row from the table: "active_fcm_tokens" */
   delete_active_fcm_tokens_by_pk?: Maybe<Active_Fcm_Tokens>;
+  /** delete data from the table: "attendance" */
+  delete_attendance?: Maybe<Attendance_Mutation_Response>;
+  /** delete single row from the table: "attendance" */
+  delete_attendance_by_pk?: Maybe<Attendance>;
+  /** delete data from the table: "attendance_type_enum" */
+  delete_attendance_type_enum?: Maybe<Attendance_Type_Enum_Mutation_Response>;
+  /** delete single row from the table: "attendance_type_enum" */
+  delete_attendance_type_enum_by_pk?: Maybe<Attendance_Type_Enum>;
   /** delete data from the table: "customers" */
   delete_customers?: Maybe<Customers_Mutation_Response>;
   /** delete single row from the table: "customers" */
@@ -3448,6 +3807,14 @@ export type Mutation_Root = {
   insert_active_fcm_tokens?: Maybe<Active_Fcm_Tokens_Mutation_Response>;
   /** insert a single row into the table: "active_fcm_tokens" */
   insert_active_fcm_tokens_one?: Maybe<Active_Fcm_Tokens>;
+  /** insert data into the table: "attendance" */
+  insert_attendance?: Maybe<Attendance_Mutation_Response>;
+  /** insert a single row into the table: "attendance" */
+  insert_attendance_one?: Maybe<Attendance>;
+  /** insert data into the table: "attendance_type_enum" */
+  insert_attendance_type_enum?: Maybe<Attendance_Type_Enum_Mutation_Response>;
+  /** insert a single row into the table: "attendance_type_enum" */
+  insert_attendance_type_enum_one?: Maybe<Attendance_Type_Enum>;
   /** insert data into the table: "customers" */
   insert_customers?: Maybe<Customers_Mutation_Response>;
   /** insert a single row into the table: "customers" */
@@ -3556,6 +3923,14 @@ export type Mutation_Root = {
   update_active_fcm_tokens?: Maybe<Active_Fcm_Tokens_Mutation_Response>;
   /** update single row of the table: "active_fcm_tokens" */
   update_active_fcm_tokens_by_pk?: Maybe<Active_Fcm_Tokens>;
+  /** update data of the table: "attendance" */
+  update_attendance?: Maybe<Attendance_Mutation_Response>;
+  /** update single row of the table: "attendance" */
+  update_attendance_by_pk?: Maybe<Attendance>;
+  /** update data of the table: "attendance_type_enum" */
+  update_attendance_type_enum?: Maybe<Attendance_Type_Enum_Mutation_Response>;
+  /** update single row of the table: "attendance_type_enum" */
+  update_attendance_type_enum_by_pk?: Maybe<Attendance_Type_Enum>;
   /** update data of the table: "customers" */
   update_customers?: Maybe<Customers_Mutation_Response>;
   /** update single row of the table: "customers" */
@@ -3786,6 +4161,30 @@ export type Mutation_RootDelete_Active_Fcm_TokensArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Active_Fcm_Tokens_By_PkArgs = {
   fcm_token: Scalars['String'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AttendanceArgs = {
+  where: Attendance_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Attendance_By_PkArgs = {
+  id: Scalars['bigint'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Attendance_Type_EnumArgs = {
+  where: Attendance_Type_Enum_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Attendance_Type_Enum_By_PkArgs = {
+  attendance_type: Scalars['String'];
 };
 
 
@@ -4130,6 +4529,34 @@ export type Mutation_RootInsert_Active_Fcm_TokensArgs = {
 export type Mutation_RootInsert_Active_Fcm_Tokens_OneArgs = {
   object: Active_Fcm_Tokens_Insert_Input;
   on_conflict?: InputMaybe<Active_Fcm_Tokens_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AttendanceArgs = {
+  objects: Array<Attendance_Insert_Input>;
+  on_conflict?: InputMaybe<Attendance_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Attendance_OneArgs = {
+  object: Attendance_Insert_Input;
+  on_conflict?: InputMaybe<Attendance_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Attendance_Type_EnumArgs = {
+  objects: Array<Attendance_Type_Enum_Insert_Input>;
+  on_conflict?: InputMaybe<Attendance_Type_Enum_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Attendance_Type_Enum_OneArgs = {
+  object: Attendance_Type_Enum_Insert_Input;
+  on_conflict?: InputMaybe<Attendance_Type_Enum_On_Conflict>;
 };
 
 
@@ -4532,6 +4959,36 @@ export type Mutation_RootUpdate_Active_Fcm_TokensArgs = {
 export type Mutation_RootUpdate_Active_Fcm_Tokens_By_PkArgs = {
   _set?: InputMaybe<Active_Fcm_Tokens_Set_Input>;
   pk_columns: Active_Fcm_Tokens_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AttendanceArgs = {
+  _inc?: InputMaybe<Attendance_Inc_Input>;
+  _set?: InputMaybe<Attendance_Set_Input>;
+  where: Attendance_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Attendance_By_PkArgs = {
+  _inc?: InputMaybe<Attendance_Inc_Input>;
+  _set?: InputMaybe<Attendance_Set_Input>;
+  pk_columns: Attendance_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Attendance_Type_EnumArgs = {
+  _set?: InputMaybe<Attendance_Type_Enum_Set_Input>;
+  where: Attendance_Type_Enum_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Attendance_Type_Enum_By_PkArgs = {
+  _set?: InputMaybe<Attendance_Type_Enum_Set_Input>;
+  pk_columns: Attendance_Type_Enum_Pk_Columns_Input;
 };
 
 
@@ -6186,6 +6643,18 @@ export type Query_Root = {
   active_fcm_tokens_aggregate: Active_Fcm_Tokens_Aggregate;
   /** fetch data from the table: "active_fcm_tokens" using primary key columns */
   active_fcm_tokens_by_pk?: Maybe<Active_Fcm_Tokens>;
+  /** fetch data from the table: "attendance" */
+  attendance: Array<Attendance>;
+  /** fetch aggregated fields from the table: "attendance" */
+  attendance_aggregate: Attendance_Aggregate;
+  /** fetch data from the table: "attendance" using primary key columns */
+  attendance_by_pk?: Maybe<Attendance>;
+  /** fetch data from the table: "attendance_type_enum" */
+  attendance_type_enum: Array<Attendance_Type_Enum>;
+  /** fetch aggregated fields from the table: "attendance_type_enum" */
+  attendance_type_enum_aggregate: Attendance_Type_Enum_Aggregate;
+  /** fetch data from the table: "attendance_type_enum" using primary key columns */
+  attendance_type_enum_by_pk?: Maybe<Attendance_Type_Enum>;
   /** fetch data from the table: "auth.providers" using primary key columns */
   authProvider?: Maybe<AuthProviders>;
   /** fetch data from the table: "auth.provider_requests" using primary key columns */
@@ -6373,6 +6842,52 @@ export type Query_RootActive_Fcm_Tokens_AggregateArgs = {
 
 export type Query_RootActive_Fcm_Tokens_By_PkArgs = {
   fcm_token: Scalars['String'];
+};
+
+
+export type Query_RootAttendanceArgs = {
+  distinct_on?: InputMaybe<Array<Attendance_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Attendance_Order_By>>;
+  where?: InputMaybe<Attendance_Bool_Exp>;
+};
+
+
+export type Query_RootAttendance_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Attendance_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Attendance_Order_By>>;
+  where?: InputMaybe<Attendance_Bool_Exp>;
+};
+
+
+export type Query_RootAttendance_By_PkArgs = {
+  id: Scalars['bigint'];
+};
+
+
+export type Query_RootAttendance_Type_EnumArgs = {
+  distinct_on?: InputMaybe<Array<Attendance_Type_Enum_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Attendance_Type_Enum_Order_By>>;
+  where?: InputMaybe<Attendance_Type_Enum_Bool_Exp>;
+};
+
+
+export type Query_RootAttendance_Type_Enum_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Attendance_Type_Enum_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Attendance_Type_Enum_Order_By>>;
+  where?: InputMaybe<Attendance_Type_Enum_Bool_Exp>;
+};
+
+
+export type Query_RootAttendance_Type_Enum_By_PkArgs = {
+  attendance_type: Scalars['String'];
 };
 
 
@@ -6983,6 +7498,7 @@ export type Stores = {
   inventory_products: Array<Inventory_Products>;
   /** An aggregate relationship */
   inventory_products_aggregate: Inventory_Products_Aggregate;
+  is_record_attendance: Scalars['Boolean'];
   latitude?: Maybe<Scalars['float8']>;
   longitude?: Maybe<Scalars['float8']>;
   name: Scalars['String'];
@@ -6995,6 +7511,8 @@ export type Stores = {
   users_metadata: Array<Users_Metadata>;
   /** An aggregate relationship */
   users_metadata_aggregate: Users_Metadata_Aggregate;
+  working_hour_end?: Maybe<Scalars['timestamptz']>;
+  working_hour_start?: Maybe<Scalars['timestamptz']>;
 };
 
 
@@ -7104,12 +7622,15 @@ export type Stores_Bool_Exp = {
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Int_Comparison_Exp>;
   inventory_products?: InputMaybe<Inventory_Products_Bool_Exp>;
+  is_record_attendance?: InputMaybe<Boolean_Comparison_Exp>;
   latitude?: InputMaybe<Float8_Comparison_Exp>;
   longitude?: InputMaybe<Float8_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   transactions?: InputMaybe<Transaction_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   users_metadata?: InputMaybe<Users_Metadata_Bool_Exp>;
+  working_hour_end?: InputMaybe<Timestamptz_Comparison_Exp>;
+  working_hour_start?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "stores" */
@@ -7133,12 +7654,15 @@ export type Stores_Insert_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['Int']>;
   inventory_products?: InputMaybe<Inventory_Products_Arr_Rel_Insert_Input>;
+  is_record_attendance?: InputMaybe<Scalars['Boolean']>;
   latitude?: InputMaybe<Scalars['float8']>;
   longitude?: InputMaybe<Scalars['float8']>;
   name?: InputMaybe<Scalars['String']>;
   transactions?: InputMaybe<Transaction_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
   users_metadata?: InputMaybe<Users_Metadata_Arr_Rel_Insert_Input>;
+  working_hour_end?: InputMaybe<Scalars['timestamptz']>;
+  working_hour_start?: InputMaybe<Scalars['timestamptz']>;
 };
 
 /** aggregate max on columns */
@@ -7151,6 +7675,8 @@ export type Stores_Max_Fields = {
   longitude?: Maybe<Scalars['float8']>;
   name?: Maybe<Scalars['String']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
+  working_hour_end?: Maybe<Scalars['timestamptz']>;
+  working_hour_start?: Maybe<Scalars['timestamptz']>;
 };
 
 /** aggregate min on columns */
@@ -7163,6 +7689,8 @@ export type Stores_Min_Fields = {
   longitude?: Maybe<Scalars['float8']>;
   name?: Maybe<Scalars['String']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
+  working_hour_end?: Maybe<Scalars['timestamptz']>;
+  working_hour_start?: Maybe<Scalars['timestamptz']>;
 };
 
 /** response of any mutation on the table "stores" */
@@ -7194,12 +7722,15 @@ export type Stores_Order_By = {
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   inventory_products_aggregate?: InputMaybe<Inventory_Products_Aggregate_Order_By>;
+  is_record_attendance?: InputMaybe<Order_By>;
   latitude?: InputMaybe<Order_By>;
   longitude?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   transactions_aggregate?: InputMaybe<Transaction_Aggregate_Order_By>;
   updated_at?: InputMaybe<Order_By>;
   users_metadata_aggregate?: InputMaybe<Users_Metadata_Aggregate_Order_By>;
+  working_hour_end?: InputMaybe<Order_By>;
+  working_hour_start?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: stores */
@@ -7216,13 +7747,19 @@ export enum Stores_Select_Column {
   /** column name */
   Id = 'id',
   /** column name */
+  IsRecordAttendance = 'is_record_attendance',
+  /** column name */
   Latitude = 'latitude',
   /** column name */
   Longitude = 'longitude',
   /** column name */
   Name = 'name',
   /** column name */
-  UpdatedAt = 'updated_at'
+  UpdatedAt = 'updated_at',
+  /** column name */
+  WorkingHourEnd = 'working_hour_end',
+  /** column name */
+  WorkingHourStart = 'working_hour_start'
 }
 
 /** input type for updating data in table "stores" */
@@ -7230,10 +7767,13 @@ export type Stores_Set_Input = {
   address?: InputMaybe<Scalars['String']>;
   created_at?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['Int']>;
+  is_record_attendance?: InputMaybe<Scalars['Boolean']>;
   latitude?: InputMaybe<Scalars['float8']>;
   longitude?: InputMaybe<Scalars['float8']>;
   name?: InputMaybe<Scalars['String']>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
+  working_hour_end?: InputMaybe<Scalars['timestamptz']>;
+  working_hour_start?: InputMaybe<Scalars['timestamptz']>;
 };
 
 /** aggregate stddev on columns */
@@ -7277,13 +7817,19 @@ export enum Stores_Update_Column {
   /** column name */
   Id = 'id',
   /** column name */
+  IsRecordAttendance = 'is_record_attendance',
+  /** column name */
   Latitude = 'latitude',
   /** column name */
   Longitude = 'longitude',
   /** column name */
   Name = 'name',
   /** column name */
-  UpdatedAt = 'updated_at'
+  UpdatedAt = 'updated_at',
+  /** column name */
+  WorkingHourEnd = 'working_hour_end',
+  /** column name */
+  WorkingHourStart = 'working_hour_start'
 }
 
 /** aggregate var_pop on columns */
@@ -7318,6 +7864,18 @@ export type Subscription_Root = {
   active_fcm_tokens_aggregate: Active_Fcm_Tokens_Aggregate;
   /** fetch data from the table: "active_fcm_tokens" using primary key columns */
   active_fcm_tokens_by_pk?: Maybe<Active_Fcm_Tokens>;
+  /** fetch data from the table: "attendance" */
+  attendance: Array<Attendance>;
+  /** fetch aggregated fields from the table: "attendance" */
+  attendance_aggregate: Attendance_Aggregate;
+  /** fetch data from the table: "attendance" using primary key columns */
+  attendance_by_pk?: Maybe<Attendance>;
+  /** fetch data from the table: "attendance_type_enum" */
+  attendance_type_enum: Array<Attendance_Type_Enum>;
+  /** fetch aggregated fields from the table: "attendance_type_enum" */
+  attendance_type_enum_aggregate: Attendance_Type_Enum_Aggregate;
+  /** fetch data from the table: "attendance_type_enum" using primary key columns */
+  attendance_type_enum_by_pk?: Maybe<Attendance_Type_Enum>;
   /** fetch data from the table: "auth.providers" using primary key columns */
   authProvider?: Maybe<AuthProviders>;
   /** fetch data from the table: "auth.provider_requests" using primary key columns */
@@ -7497,6 +8055,52 @@ export type Subscription_RootActive_Fcm_Tokens_AggregateArgs = {
 
 export type Subscription_RootActive_Fcm_Tokens_By_PkArgs = {
   fcm_token: Scalars['String'];
+};
+
+
+export type Subscription_RootAttendanceArgs = {
+  distinct_on?: InputMaybe<Array<Attendance_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Attendance_Order_By>>;
+  where?: InputMaybe<Attendance_Bool_Exp>;
+};
+
+
+export type Subscription_RootAttendance_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Attendance_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Attendance_Order_By>>;
+  where?: InputMaybe<Attendance_Bool_Exp>;
+};
+
+
+export type Subscription_RootAttendance_By_PkArgs = {
+  id: Scalars['bigint'];
+};
+
+
+export type Subscription_RootAttendance_Type_EnumArgs = {
+  distinct_on?: InputMaybe<Array<Attendance_Type_Enum_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Attendance_Type_Enum_Order_By>>;
+  where?: InputMaybe<Attendance_Type_Enum_Bool_Exp>;
+};
+
+
+export type Subscription_RootAttendance_Type_Enum_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Attendance_Type_Enum_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Attendance_Type_Enum_Order_By>>;
+  where?: InputMaybe<Attendance_Type_Enum_Bool_Exp>;
+};
+
+
+export type Subscription_RootAttendance_Type_Enum_By_PkArgs = {
+  attendance_type: Scalars['String'];
 };
 
 
@@ -10025,7 +10629,9 @@ export type Users_Metadata_Bool_Exp = {
 /** unique or primary key constraints on table "users_metadata" */
 export enum Users_Metadata_Constraint {
   /** unique or primary key constraint */
-  UsersMetadataPkey = 'users_metadata_pkey'
+  UsersMetadataPkey = 'users_metadata_pkey',
+  /** unique or primary key constraint */
+  UsersMetadataUserIdStoreIdKey = 'users_metadata_user_id_store_id_key'
 }
 
 /** input type for incrementing numeric columns in table "users_metadata" */
@@ -10464,6 +11070,21 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
+export type Attendance_InsertOneMutationVariables = Exact<{
+  object?: InputMaybe<Attendance_Insert_Input>;
+}>;
+
+
+export type Attendance_InsertOneMutation = { __typename?: 'mutation_root', insert_attendance_one?: { __typename?: 'attendance', id: any } | null };
+
+export type Attendance_GetMyAttendanceTodayQueryVariables = Exact<{
+  working_hour_start: Scalars['timestamptz'];
+  user_id: Scalars['uuid'];
+}>;
+
+
+export type Attendance_GetMyAttendanceTodayQuery = { __typename?: 'query_root', attendance: Array<{ __typename?: 'attendance', id: any, attendance_type: Attendance_Type_Enum_Enum, user_id: any }> };
+
 export type Cashier_CreateTransactionMutationVariables = Exact<{
   payment_type: TransactionPaymentTypeEnum;
   total_transaction: Scalars['Int'];
@@ -10733,7 +11354,7 @@ export type Store_GetStoreByPkQueryVariables = Exact<{
 }>;
 
 
-export type Store_GetStoreByPkQuery = { __typename?: 'query_root', stores_by_pk?: { __typename?: 'stores', id: number, name: string, latitude?: any | null, longitude?: any | null, address: string, created_at: any, updated_at: any } | null };
+export type Store_GetStoreByPkQuery = { __typename?: 'query_root', stores_by_pk?: { __typename?: 'stores', id: number, name: string, latitude?: any | null, longitude?: any | null, address: string, created_at: any, updated_at: any, working_hour_end?: any | null, working_hour_start?: any | null, is_record_attendance: boolean } | null };
 
 export type Whatsapp_GetAuthStatusQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -10831,10 +11452,18 @@ export type User_GetUserByIdQueryVariables = Exact<{
 }>;
 
 
-export type User_GetUserByIdQuery = { __typename?: 'query_root', user?: { __typename?: 'users', avatarUrl: string, defaultRole: string, displayName: string, email?: any | null, emailVerified: boolean, id: any, newEmail?: any | null, disabled: boolean, users_metadata: Array<{ __typename?: 'users_metadata', store_id?: number | null }> } | null };
+export type User_GetUserByIdQuery = { __typename?: 'query_root', user?: { __typename?: 'users', avatarUrl: string, defaultRole: string, displayName: string, email?: any | null, emailVerified: boolean, newEmail?: any | null, id: any, disabled: boolean, users_metadata: Array<{ __typename?: 'users_metadata', store_id?: number | null }>, roles: Array<{ __typename?: 'authUserRoles', role: string }> } | null };
+
+export type User_GetUserByIdSubscriptionSubscriptionVariables = Exact<{
+  user_id?: InputMaybe<Scalars['uuid']>;
+}>;
+
+
+export type User_GetUserByIdSubscriptionSubscription = { __typename?: 'subscription_root', user?: { __typename?: 'users', avatarUrl: string, defaultRole: string, displayName: string, email?: any | null, emailVerified: boolean, newEmail?: any | null, id: any, disabled: boolean, users_metadata: Array<{ __typename?: 'users_metadata', store_id?: number | null }>, roles: Array<{ __typename?: 'authUserRoles', role: string }> } | null };
 
 export const namedOperations = {
   Query: {
+    Attendance_GetMyAttendanceToday: 'Attendance_GetMyAttendanceToday',
     Dashboard_GetDashboardData: 'Dashboard_GetDashboardData',
     Inventory_GetAllInventoryProductByStoreId: 'Inventory_GetAllInventoryProductByStoreId',
     Inventory_GetAllVariantMetadata: 'Inventory_GetAllVariantMetadata',
@@ -10856,6 +11485,7 @@ export const namedOperations = {
     User_GetUserById: 'User_GetUserById'
   },
   Mutation: {
+    Attendance_InsertOne: 'Attendance_InsertOne',
     Cashier_CreateTransaction: 'Cashier_CreateTransaction',
     Inventory_CreateInventoryProduct: 'Inventory_CreateInventoryProduct',
     Inventory_CreateInventoryVariantMetadata: 'Inventory_CreateInventoryVariantMetadata',
@@ -10888,10 +11518,84 @@ export const namedOperations = {
   },
   Subscription: {
     Inventory_GetAllInventoryProductByStoreIdSubscription: 'Inventory_GetAllInventoryProductByStoreIdSubscription',
-    Notification_GetNotificationsWithReadStatusByUserId: 'Notification_GetNotificationsWithReadStatusByUserId'
+    Notification_GetNotificationsWithReadStatusByUserId: 'Notification_GetNotificationsWithReadStatusByUserId',
+    User_GetUserByIdSubscription: 'User_GetUserByIdSubscription'
   }
 }
 
+export const Attendance_InsertOneDocument = gql`
+    mutation Attendance_InsertOne($object: attendance_insert_input = {}) {
+  insert_attendance_one(object: $object) {
+    id
+  }
+}
+    `;
+export type Attendance_InsertOneMutationFn = Apollo.MutationFunction<Attendance_InsertOneMutation, Attendance_InsertOneMutationVariables>;
+
+/**
+ * __useAttendance_InsertOneMutation__
+ *
+ * To run a mutation, you first call `useAttendance_InsertOneMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAttendance_InsertOneMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [attendanceInsertOneMutation, { data, loading, error }] = useAttendance_InsertOneMutation({
+ *   variables: {
+ *      object: // value for 'object'
+ *   },
+ * });
+ */
+export function useAttendance_InsertOneMutation(baseOptions?: Apollo.MutationHookOptions<Attendance_InsertOneMutation, Attendance_InsertOneMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<Attendance_InsertOneMutation, Attendance_InsertOneMutationVariables>(Attendance_InsertOneDocument, options);
+      }
+export type Attendance_InsertOneMutationHookResult = ReturnType<typeof useAttendance_InsertOneMutation>;
+export type Attendance_InsertOneMutationResult = Apollo.MutationResult<Attendance_InsertOneMutation>;
+export type Attendance_InsertOneMutationOptions = Apollo.BaseMutationOptions<Attendance_InsertOneMutation, Attendance_InsertOneMutationVariables>;
+export const Attendance_GetMyAttendanceTodayDocument = gql`
+    query Attendance_GetMyAttendanceToday($working_hour_start: timestamptz!, $user_id: uuid!) {
+  attendance(
+    where: {created_at: {_gte: $working_hour_start}, attendance_type: {_eq: enter}, user_id: {_eq: $user_id}}
+  ) {
+    id
+    attendance_type
+    user_id
+  }
+}
+    `;
+
+/**
+ * __useAttendance_GetMyAttendanceTodayQuery__
+ *
+ * To run a query within a React component, call `useAttendance_GetMyAttendanceTodayQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAttendance_GetMyAttendanceTodayQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAttendance_GetMyAttendanceTodayQuery({
+ *   variables: {
+ *      working_hour_start: // value for 'working_hour_start'
+ *      user_id: // value for 'user_id'
+ *   },
+ * });
+ */
+export function useAttendance_GetMyAttendanceTodayQuery(baseOptions: Apollo.QueryHookOptions<Attendance_GetMyAttendanceTodayQuery, Attendance_GetMyAttendanceTodayQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Attendance_GetMyAttendanceTodayQuery, Attendance_GetMyAttendanceTodayQueryVariables>(Attendance_GetMyAttendanceTodayDocument, options);
+      }
+export function useAttendance_GetMyAttendanceTodayLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Attendance_GetMyAttendanceTodayQuery, Attendance_GetMyAttendanceTodayQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Attendance_GetMyAttendanceTodayQuery, Attendance_GetMyAttendanceTodayQueryVariables>(Attendance_GetMyAttendanceTodayDocument, options);
+        }
+export type Attendance_GetMyAttendanceTodayQueryHookResult = ReturnType<typeof useAttendance_GetMyAttendanceTodayQuery>;
+export type Attendance_GetMyAttendanceTodayLazyQueryHookResult = ReturnType<typeof useAttendance_GetMyAttendanceTodayLazyQuery>;
+export type Attendance_GetMyAttendanceTodayQueryResult = Apollo.QueryResult<Attendance_GetMyAttendanceTodayQuery, Attendance_GetMyAttendanceTodayQueryVariables>;
 export const Cashier_CreateTransactionDocument = gql`
     mutation Cashier_CreateTransaction($payment_type: TransactionPaymentTypeEnum!, $total_transaction: Int!, $karyawan_name: String, $cash_in_amount: Int!, $store_id: Int!, $transaction_items: [transaction_items_input!]!) {
   Cashier_CreateTransaction(
@@ -12383,6 +13087,9 @@ export const Store_GetStoreByPkDocument = gql`
     address
     created_at
     updated_at
+    working_hour_end
+    working_hour_start
+    is_record_attendance
   }
 }
     `;
@@ -12966,12 +13673,15 @@ export const User_GetUserByIdDocument = gql`
     displayName
     email
     emailVerified
-    id
     newEmail
+    id
     users_metadata(limit: 1) {
       store_id
     }
     disabled
+    roles {
+      role
+    }
   }
 }
     `;
@@ -13003,3 +13713,46 @@ export function useUser_GetUserByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type User_GetUserByIdQueryHookResult = ReturnType<typeof useUser_GetUserByIdQuery>;
 export type User_GetUserByIdLazyQueryHookResult = ReturnType<typeof useUser_GetUserByIdLazyQuery>;
 export type User_GetUserByIdQueryResult = Apollo.QueryResult<User_GetUserByIdQuery, User_GetUserByIdQueryVariables>;
+export const User_GetUserByIdSubscriptionDocument = gql`
+    subscription User_GetUserByIdSubscription($user_id: uuid = "") {
+  user(id: $user_id) {
+    avatarUrl
+    defaultRole
+    displayName
+    email
+    emailVerified
+    newEmail
+    id
+    users_metadata(limit: 1) {
+      store_id
+    }
+    disabled
+    roles {
+      role
+    }
+  }
+}
+    `;
+
+/**
+ * __useUser_GetUserByIdSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useUser_GetUserByIdSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useUser_GetUserByIdSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUser_GetUserByIdSubscriptionSubscription({
+ *   variables: {
+ *      user_id: // value for 'user_id'
+ *   },
+ * });
+ */
+export function useUser_GetUserByIdSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<User_GetUserByIdSubscriptionSubscription, User_GetUserByIdSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<User_GetUserByIdSubscriptionSubscription, User_GetUserByIdSubscriptionSubscriptionVariables>(User_GetUserByIdSubscriptionDocument, options);
+      }
+export type User_GetUserByIdSubscriptionSubscriptionHookResult = ReturnType<typeof useUser_GetUserByIdSubscriptionSubscription>;
+export type User_GetUserByIdSubscriptionSubscriptionResult = Apollo.SubscriptionResult<User_GetUserByIdSubscriptionSubscription>;

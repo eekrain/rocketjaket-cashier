@@ -19,6 +19,13 @@ select_permissions:
 - permission:
     columns:
     - id
+    - user_id
+    - store_id
+    filter: {}
+  role: karyawan
+- permission:
+    columns:
+    - id
     - store_id
     - user_id
     filter:
