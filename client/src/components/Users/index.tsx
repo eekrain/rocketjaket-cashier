@@ -138,6 +138,11 @@ const UserHome = ({}: IUserHomeProps) => {
         <MyAvatar
           size={50}
           bgColor="white"
+          source={{
+            fileId: val.avatarUrl,
+            w: 50,
+            q: 60,
+          }}
           fallbackText={val?.displayName || ''}
         />
       ),

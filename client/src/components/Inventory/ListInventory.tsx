@@ -222,11 +222,9 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
         <MyImageViewer
           size={50}
           source={{
-            uri: getStorageFileUrlWImageTransform({
-              fileId: val.photo_id,
-              w: 50,
-              q: 60,
-            }),
+            fileId: val.photo_id,
+            w: 50,
+            q: 60,
           }}
         />
       ),

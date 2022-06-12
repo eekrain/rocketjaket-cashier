@@ -201,11 +201,9 @@ const productItemInner = (product: IInventoryProductData) => {
         <MyAvatar
           fallbackText={product.product_name}
           source={{
-            uri: getStorageFileUrlWImageTransform({
-              fileId: product.product_photo_id,
-              w: 150,
-              q: 80,
-            }),
+            fileId: product.product_photo_id,
+            w: 150,
+            q: 80,
           }}
           height={150}
           width="100%"

@@ -2,7 +2,7 @@
 
 import {nhost} from './nhost';
 
-interface IGetImageTransform {
+export interface IGetImageTransform {
   fileId?: string | null;
   fileUrl?: string | null;
   w?: number;
@@ -20,9 +20,10 @@ export const getStorageFileUrlWImageTransform = ({
   alwaysRefresh,
 }: IGetImageTransform): string => {
   let url = '';
-  if (fileUrl) url = fileUrl;
+  if (fileUrl && fileUrl === '') return 'default';
+  else if (fileUrl && fileUrl !== '') url = fileUrl;
   else if (fileId) url = nhost.storage.getPublicUrl({fileId: fileId});
-  else return '';
+  else return 'default';
 
   const arr = [];
   if (w) arr.push({key: 'w', val: w});
