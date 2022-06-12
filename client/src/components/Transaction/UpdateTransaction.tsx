@@ -310,9 +310,21 @@ const UpdateTransaction = ({route}: Props) => {
                       item.transaction_status ===
                       Transaction_Status_Enum_Enum.Success,
                   )}
-                  keyAccessor="id"
-                  rowHeight={50}
-                  headerHeight={40}
+                  rowKeysAccessor="id"
+                  tableSettings={{
+                    mainSettings: {
+                      tableWidth: 'full',
+                      withPagination: false,
+                      withSearch: false,
+                    },
+                    header: {
+                      headerHeight: 40,
+                    },
+                    row: {
+                      rowHeight: 50,
+                    },
+                  }}
+                  isLoading={false}
                   columns={[
                     {
                       Header: 'Produk',
@@ -400,9 +412,6 @@ const UpdateTransaction = ({route}: Props) => {
                         .toString(),
                     },
                   ]}
-                  isLoading={false}
-                  withPagination={false}
-                  withTableHeader={false}
                 />
 
                 {dataTransaction?.transaction_status ===
@@ -414,14 +423,25 @@ const UpdateTransaction = ({route}: Props) => {
                       Item Diretur
                     </Text>
                     <CustomTable
-                      keyAccessor="id"
+                      rowKeysAccessor="id"
+                      tableSettings={{
+                        mainSettings: {
+                          tableWidth: 'full',
+                          withPagination: false,
+                          withSearch: false,
+                        },
+                        header: {
+                          headerHeight: 40,
+                        },
+                        row: {
+                          rowHeight: 50,
+                        },
+                      }}
                       data={dataTransactionItems.filter(
                         item =>
                           item.transaction_status !==
                           Transaction_Status_Enum_Enum.Success,
                       )}
-                      rowHeight={50}
-                      headerHeight={40}
                       columns={[
                         {
                           Header: 'Produk',
@@ -461,8 +481,6 @@ const UpdateTransaction = ({route}: Props) => {
                         },
                       ]}
                       isLoading={false}
-                      withPagination={false}
-                      withTableHeader={false}
                     />
                   </>
                 ) : undefined}
@@ -480,10 +498,21 @@ const UpdateTransaction = ({route}: Props) => {
                   </Button>
                 </HStack>
                 <CustomTable
-                  keyAccessor="created_at"
+                  rowKeysAccessor="created_at"
                   data={dataTransactionReceipt}
-                  rowHeight={40}
-                  headerHeight={40}
+                  tableSettings={{
+                    mainSettings: {
+                      tableWidth: 'full',
+                      withPagination: false,
+                      withSearch: false,
+                    },
+                    header: {
+                      headerHeight: 40,
+                    },
+                    row: {
+                      rowHeight: 40,
+                    },
+                  }}
                   columns={[
                     {
                       Header: 'Nama Customer',
@@ -517,8 +546,6 @@ const UpdateTransaction = ({route}: Props) => {
                     },
                   ]}
                   isLoading={false}
-                  withPagination={false}
-                  withTableHeader={false}
                 />
               </Box>
               <HStack justifyContent="flex-end" mt="8" space="4">

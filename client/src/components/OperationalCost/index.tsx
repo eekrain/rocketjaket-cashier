@@ -220,11 +220,14 @@ const OperationalCostHome = ({navigation}: Props) => {
           isLoading={
             getAllOperationalCost.loading // || _deleteOperationalCostHomeMutationResult.loading
           }
-          keyAccessor="id"
+          tableSettings={{
+            mainSettings: {
+              tableWidth: 'full',
+              defaultSortFrom: 'desc',
+            },
+          }}
+          rowKeysAccessor="id"
           data={allOperationalCost}
-          headerHeight={90}
-          rowHeight={70}
-          defaultSortFrom="desc"
           columns={[
             {
               Header: 'Alasan',

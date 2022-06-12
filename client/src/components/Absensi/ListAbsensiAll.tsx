@@ -82,7 +82,8 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
             fallbackText={val.user.displayName}
           />
         ),
-        created_at: dayjs(val.created_at).format('D/M/YYYY H:mm'),
+        created_at_formatted: dayjs(val.created_at).format('D/M/YYYY H:mm'),
+        created_at_unix: dayjs(val.created_at).unix(),
       })) || [];
     const min_created_at =
       getAllAttendances.data?.attendance_aggregate.aggregate?.min?.created_at;
@@ -131,50 +132,62 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
       <Box pb="20">
         <Center>
           <CustomTable
-            customTopComponent={() => {
-              return (
-                <Box
-                  p="6"
-                  borderTopLeftRadius="xl"
-                  borderTopRightRadius="xl"
-                  backgroundColor="white">
-                  <Heading fontSize="lg" mb="4">
-                    Periode
-                  </Heading>
-                  <HStack
-                    w={420}
-                    alignItems="center"
-                    justifyContent={'space-between'}>
-                    <IconButton
-                      variant="solid"
-                      p="2"
-                      icon={<Icon as={Feather} name="chevron-left" size="sm" />}
-                      isDisabled={!attendancesData.isCanBackwards}
-                      disabled={!attendancesData.isCanBackwards}
-                      onPress={handleBackwards}
-                    />
-                    <Text>
-                      {dayjs(watch().startDate).format('ddd DD/MM/YYYY')} -{' '}
-                      {dayjs(watch().untilDate).format('ddd DD/MM/YYYY')}
-                    </Text>
-                    <IconButton
-                      variant="solid"
-                      p="2"
-                      icon={
-                        <Icon as={Feather} name="chevron-right" size="sm" />
-                      }
-                      isDisabled={!attendancesData.isCanForwards}
-                      disabled={!attendancesData.isCanForwards}
-                      onPress={handleForwards}
-                    />
-                  </HStack>
-                </Box>
-              );
+            tableSettings={{
+              mainSettings: {
+                tableWidth: 'full',
+                defaultSortFrom: 'asc',
+              },
+              row: {
+                rowHeight: 90,
+              },
+              customComponent: {
+                top: () => {
+                  return (
+                    <Box
+                      p="6"
+                      borderTopLeftRadius="xl"
+                      borderTopRightRadius="xl"
+                      backgroundColor="white">
+                      <Heading fontSize="lg" mb="4">
+                        Periode
+                      </Heading>
+                      <HStack
+                        w={420}
+                        alignItems="center"
+                        justifyContent={'space-between'}>
+                        <IconButton
+                          variant="solid"
+                          p="2"
+                          icon={
+                            <Icon as={Feather} name="chevron-left" size="sm" />
+                          }
+                          isDisabled={!attendancesData.isCanBackwards}
+                          disabled={!attendancesData.isCanBackwards}
+                          onPress={handleBackwards}
+                        />
+                        <Text>
+                          {dayjs(watch().startDate).format('ddd DD/MM/YYYY')} -{' '}
+                          {dayjs(watch().untilDate).format('ddd DD/MM/YYYY')}
+                        </Text>
+                        <IconButton
+                          variant="solid"
+                          p="2"
+                          icon={
+                            <Icon as={Feather} name="chevron-right" size="sm" />
+                          }
+                          isDisabled={!attendancesData.isCanForwards}
+                          disabled={!attendancesData.isCanForwards}
+                          onPress={handleForwards}
+                        />
+                      </HStack>
+                    </Box>
+                  );
+                },
+              },
             }}
-            tableWidth={'100%'}
             isLoading={getAllAttendances.loading}
-            rowHeight={80}
             data={attendancesData.list}
+            rowKeysAccessor="id"
             columns={[
               {
                 Header: 'Foto',
@@ -191,11 +204,11 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
               },
               {
                 Header: 'Tanggal',
-                accessor: 'created_at',
+                accessor: 'created_at_formatted',
                 widthRatio: 1,
+                sortAs: 'created_at_unix',
               },
             ]}
-            keyAccessor="id"
           />
         </Center>
       </Box>
