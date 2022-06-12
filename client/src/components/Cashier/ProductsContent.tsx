@@ -12,6 +12,7 @@ import {
   Button,
   Center,
   useToast,
+  useBreakpointValue,
 } from 'native-base';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {myNumberFormat, useMyUser} from '../../shared/utils';
@@ -61,97 +62,104 @@ const ProductsContent = ({
   const navigation = useNavigation<UpdateTransactionNavProps['navigation']>();
   const toast = useToast();
 
+  const isShowHeader: boolean = useBreakpointValue({
+    base: false,
+    lg: true,
+  });
+
   return (
-    <ScrollView w={['full', 'full', '4/6']}>
-      <Stack w="full" direction="column" space="3" pb="100">
-        {route.params?.invoiceNumberRefundPart && (
-          <HStack alignItems="center" justifyContent="space-between">
-            <Heading fontSize="xl" mb="2">
-              Retur Invoice {route.params.invoiceNumberRefundPart}
-            </Heading>
+    <Stack w={{base: 'full', lg: '4/6'}} direction="column" space="3">
+      {isShowHeader && (
+        <Box>
+          {route.params?.invoiceNumberRefundPart && (
+            <HStack alignItems="center" justifyContent="space-between">
+              <Heading fontSize="xl" mb="2">
+                Retur Invoice {route.params.invoiceNumberRefundPart}
+              </Heading>
 
-            <ButtonCancelDelete
-              customText="Cancel Retur"
-              variant={'solid'}
-              onPress={() => {
-                toast.show(
-                  TOAST_TEMPLATE.cancelled('Refund transaksi tidak jadi.'),
-                );
-                clearReturn(
-                  navigation,
-                  myCart,
-                  route.params?.invoiceNumberRefundPart,
-                );
-              }}
-            />
-          </HStack>
-        )}
-        <HStack space="4" alignItems="center">
-          <Heading fontSize="xl">Toko {selectedStoreName}</Heading>
-          {roles.includes(UserRolesEnum.administrator) && (
-            <Button
-              onPress={() => setValue('show_modal_change_toko', true)}
-              size="sm"
-              leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
-              Ganti Toko
-            </Button>
-          )}
-        </HStack>
-
-        <Box bgColor="white" borderRadius="lg">
-          <RHTextInput
-            control={control}
-            errors={errors}
-            label="Search..."
-            isDisableLabel={true}
-            name="search_term"
-            InputLeftElement={
-              <Icon
-                as={<FeatherIcon name="search" />}
-                size={5}
-                ml="2"
-                color="muted.400"
+              <ButtonCancelDelete
+                customText="Cancel Retur"
+                variant={'solid'}
+                onPress={() => {
+                  toast.show(
+                    TOAST_TEMPLATE.cancelled('Refund transaksi tidak jadi.'),
+                  );
+                  clearReturn(
+                    navigation,
+                    myCart,
+                    route.params?.invoiceNumberRefundPart,
+                  );
+                }}
               />
-            }
-          />
-        </Box>
-        {!searchTerm && (
-          <HStack>
-            <ScrollView horizontal={true} nestedScrollEnabled={true}>
-              {kategoriProdukTab.map((cat, i) => {
-                const borderColor =
-                  activeCategory === cat.value ? 'scarlet.400' : 'coolGray.200';
-
-                return (
-                  <Pressable
-                    key={`${cat.value}${cat.label}`}
-                    borderBottomWidth="3"
-                    borderColor={borderColor}
-                    alignItems="center"
-                    px="3"
-                    pb="2"
-                    onPress={() => {
-                      console.log(i);
-                      setValue('active_category', i === 0 ? null : cat.value);
-                    }}>
-                    <Text>{cat.label}</Text>
-                  </Pressable>
-                );
-              })}
-            </ScrollView>
+            </HStack>
+          )}
+          <HStack space="4" alignItems="center">
+            <Heading fontSize="xl">Toko {selectedStoreName}</Heading>
+            {roles.includes(UserRolesEnum.administrator) && (
+              <Button
+                onPress={() => setValue('show_modal_change_toko', true)}
+                size="sm"
+                leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
+                Ganti Toko
+              </Button>
+            )}
           </HStack>
-        )}
-        <HStack flexWrap="wrap" w="full" justifyContent="space-evenly" mt="2">
-          {!searchTerm
-            ? filteredByCategoryProductData.map(product => (
-                <ProductItem product={product} key={product.id} />
-              ))
-            : searchedInventoryProductData.map(product => (
-                <ProductItem product={product} key={product.id} />
-              ))}
+        </Box>
+      )}
+
+      <Box bgColor="white" borderRadius="lg">
+        <RHTextInput
+          control={control}
+          errors={errors}
+          label="Search..."
+          isDisableLabel={true}
+          name="search_term"
+          InputLeftElement={
+            <Icon
+              as={<FeatherIcon name="search" />}
+              size={5}
+              ml="2"
+              color="muted.400"
+            />
+          }
+        />
+      </Box>
+      {!searchTerm && (
+        <HStack>
+          <ScrollView horizontal={true} nestedScrollEnabled={true}>
+            {kategoriProdukTab.map((cat, i) => {
+              const borderColor =
+                activeCategory === cat.value ? 'scarlet.400' : 'coolGray.200';
+
+              return (
+                <Pressable
+                  key={`${cat.value}${cat.label}`}
+                  borderBottomWidth="3"
+                  borderColor={borderColor}
+                  alignItems="center"
+                  px="3"
+                  pb="2"
+                  onPress={() => {
+                    console.log(i);
+                    setValue('active_category', i === 0 ? null : cat.value);
+                  }}>
+                  <Text>{cat.label}</Text>
+                </Pressable>
+              );
+            })}
+          </ScrollView>
         </HStack>
-      </Stack>
-    </ScrollView>
+      )}
+      <HStack flexWrap="wrap" w="full" justifyContent="space-evenly" mt="2">
+        {!searchTerm
+          ? filteredByCategoryProductData.map(product => (
+              <ProductItem product={product} key={product.id} />
+            ))
+          : searchedInventoryProductData.map(product => (
+              <ProductItem product={product} key={product.id} />
+            ))}
+      </HStack>
+    </Stack>
   );
 };
 
@@ -200,6 +208,7 @@ const productItemInner = (product: IInventoryProductData) => {
             w: 150,
             q: 80,
           }}
+          isDisableZoom={true}
           height={150}
           width="100%"
           borderTopRadius={10}
