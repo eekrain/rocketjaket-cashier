@@ -48,7 +48,10 @@ export const MyLineChart = ({
       {chartData &&
         chartData.labels.length > 0 &&
         chartData.datasets.length > 0 && (
-          <Box p="6" bgColor="white" borderRadius="xl">
+          <Box
+            p={{base: 0, sm: 3, md: 4, lg: 6}}
+            bgColor="white"
+            borderRadius="xl">
             <Heading color={textColor} fontSize="lg" mb="2">
               {chartTitle}
             </Heading>

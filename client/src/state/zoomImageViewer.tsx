@@ -61,7 +61,7 @@ export const ZoomImageViewerModal = ({
   closeModalZoomImageOpen,
 }: IZoomImageViewerModalProps) => {
   const [isError, setError] = useState(false);
-  console.log('🚀 ~ file: zoomImageViewer.tsx ~ line 66 ~ isError', isError);
+  // console.log('🚀 ~ file: zoomImageViewer.tsx ~ line 66 ~ isError', isError);
 
   const scale = useSharedValue(1);
   const focalX = useSharedValue(0);
