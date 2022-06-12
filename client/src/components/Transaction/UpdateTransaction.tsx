@@ -11,6 +11,7 @@ import {
   Text,
   Badge,
   Icon,
+  useBreakpointValue,
 } from 'native-base';
 import withAppLayout from '../Layout/AppLayout';
 import {
@@ -20,8 +21,6 @@ import {
 } from '../../graphql/gql-generated';
 import * as yup from 'yup';
 import {TOAST_TEMPLATE} from '../../shared/constants';
-import {useForm} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
 import {SimpleDataGrid, DismissKeyboardWrapper} from '../../shared/components';
 import {ButtonBack, ButtonReturn} from '../Buttons';
 import {useEffect} from 'react';
@@ -34,45 +33,26 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import ModalSendReceipt from './ModalSendReceipt';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
+import {useWindowDimensions} from 'react-native';
 
 dayjs.extend(isSameOrBefore);
-
-interface IDefaultValues {
-  name: string;
-  description: string;
-}
-
-const schema = yup
-  .object({
-    name: yup.string().required('Nama kategori harus diisi'),
-    description: yup.string().optional(),
-  })
-  .required();
-
-const defaultValues: IDefaultValues = {name: '', description: ''};
 
 interface Props extends UpdateTransactionNavProps {}
 
 const UpdateTransaction = ({route}: Props) => {
+  const window = useWindowDimensions();
+
+  const tableWidth = useBreakpointValue({
+    base: window.width - 100,
+  });
+
   const toast = useToast();
   const myAppState = useMyAppState();
   const myCart = useMyCart();
   const [isErrorOnce, setErrorOnce] = useState(false);
   const [modalReceiptOpen, setModalReceiptOpen] = useState(false);
-  const [modalRefundOpen, setModalRefundOpen] = useState(false);
 
   const navigation = useNavigation<any>();
-
-  const {
-    handleSubmit,
-    control,
-    formState: {errors, isDirty, isSubmitSuccessful},
-    reset,
-    setValue,
-  } = useForm({
-    defaultValues,
-    resolver: yupResolver(schema),
-  });
 
   const getDataTransaction = useTransaction_GetTransactionByPkQuery({
     variables: {invoice_number: route.params.transaction_invoice_number},
@@ -157,7 +137,6 @@ const UpdateTransaction = ({route}: Props) => {
     getDataTransaction.data?.transaction_by_pk,
     isErrorOnce,
     navigation,
-    setValue,
     toast,
   ]);
 
@@ -241,10 +220,10 @@ const UpdateTransaction = ({route}: Props) => {
 
           <Box bgColor="white" p="8">
             <VStack space="4">
-              <HStack flexDirection="row-reverse">
+              <HStack justifyContent={'flex-end'}>
                 <Box>
                   <SimpleDataGrid
-                    gridWidth={400}
+                    gridWidth={250}
                     data={[
                       {
                         title: 'Toko',
@@ -313,7 +292,7 @@ const UpdateTransaction = ({route}: Props) => {
                   rowKeysAccessor="id"
                   tableSettings={{
                     mainSettings: {
-                      tableWidth: 'full',
+                      tableWidth,
                       withPagination: false,
                       withSearch: false,
                     },
@@ -329,7 +308,7 @@ const UpdateTransaction = ({route}: Props) => {
                     {
                       Header: 'Produk',
                       accessor: 'product_name',
-                      widthRatio: 0.8,
+                      widthRatio: 0.7,
                       isDisableSort: true,
                     },
                     {
@@ -426,7 +405,7 @@ const UpdateTransaction = ({route}: Props) => {
                       rowKeysAccessor="id"
                       tableSettings={{
                         mainSettings: {
-                          tableWidth: 'full',
+                          tableWidth,
                           withPagination: false,
                           withSearch: false,
                         },
@@ -485,7 +464,7 @@ const UpdateTransaction = ({route}: Props) => {
                   </>
                 ) : undefined}
 
-                <HStack alignItems="center" mt="6" mb="2">
+                <HStack alignItems="center" mt="6" mb="4">
                   <Text fontWeight="semibold">Log Pengiriman Nota</Text>
                   <Button
                     ml="4"
@@ -502,7 +481,7 @@ const UpdateTransaction = ({route}: Props) => {
                   data={dataTransactionReceipt}
                   tableSettings={{
                     mainSettings: {
-                      tableWidth: 'full',
+                      tableWidth,
                       withPagination: false,
                       withSearch: false,
                     },
@@ -517,7 +496,7 @@ const UpdateTransaction = ({route}: Props) => {
                     {
                       Header: 'Nama Customer',
                       accessor: 'customer_name',
-                      widthRatio: 1,
+                      widthRatio: 0.5,
                       isDisableSort: true,
                     },
                     {
@@ -529,13 +508,13 @@ const UpdateTransaction = ({route}: Props) => {
                     {
                       Header: 'Kirim Ke',
                       accessor: 'receipt_send_to',
-                      widthRatio: 1,
+                      widthRatio: 0.8,
                       isDisableSort: true,
                     },
                     {
                       Header: 'Tanggal',
                       accessor: 'created_at',
-                      widthRatio: 0.8,
+                      widthRatio: 0.7,
                       isDisableSort: true,
                     },
                     {

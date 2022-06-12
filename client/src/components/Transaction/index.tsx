@@ -7,12 +7,16 @@ import {
   Button,
   Icon,
   useToast,
-  ScrollView,
   Modal,
   Badge,
   useBreakpointValue,
 } from 'native-base';
-import {Alert, RefreshControl, useWindowDimensions, View} from 'react-native';
+import {
+  Alert,
+  RefreshControl,
+  useWindowDimensions,
+  ScrollView,
+} from 'react-native';
 import {
   Transaction_Status_Enum_Enum,
   useStore_GetAllStoreQuery,
@@ -69,9 +73,9 @@ interface Props extends ListTransactionNavProps {}
 
 const Produk = ({navigation}: Props) => {
   const window = useWindowDimensions();
-  const tableWidth = useBreakpointValue({
+  const tableWidth: number | 'full' = useBreakpointValue({
     base: 1000,
-    lg: window.width - 20,
+    lg: 'full',
   });
 
   const myUser = useMyUser();
@@ -186,6 +190,62 @@ const Produk = ({navigation}: Props) => {
     setSelectedStoreName(found?.label || '');
   }, [selectedStoreId, storeSelectOptions]);
 
+  // return (
+  //   <ScrollView
+  //     refreshControl={
+  //       <RefreshControl
+  //         refreshing={false}
+  //         onRefresh={async () => await getAllTransaction.refetch()}
+  //       />
+  //     }>
+  //     <CustomTable
+  //       data={allTransaction}
+  //       rowKeysAccessor="invoice_number"
+  //       isLoading={getAllTransaction.loading}
+  //       tableSettings={{
+  //         mainSettings: {
+  //           tableWidth,
+  //           defaultSortFrom: 'desc',
+  //         },
+  //       }}
+  //       columns={[
+  //         {
+  //           Header: 'Invoice',
+  //           accessor: 'invoice_number',
+  //           widthRatio: 1,
+  //           isDisableSort: true,
+  //         },
+  //         {
+  //           Header: 'Dibuat',
+  //           accessor: 'created_at_formatted',
+  //           widthRatio: 1,
+  //           sortAs: 'created_at_unix',
+  //         },
+  //         {
+  //           Header: 'Total Transaksi',
+  //           accessor: 'total_transaction',
+  //           widthRatio: 1,
+  //         },
+  //         {
+  //           Header: 'Profit',
+  //           accessor: 'profit',
+  //           widthRatio: 1,
+  //           isSkip: !myUser.roles.includes(UserRolesEnum.administrator),
+  //         },
+  //         {Header: 'Diproses Oleh', accessor: 'handled_by', widthRatio: 1},
+  //         {Header: 'Status', accessor: 'transaction_status', widthRatio: 1},
+  //         {
+  //           Header: 'Aksi',
+  //           accessor: 'action',
+  //           widthRatio: 1,
+  //           isAction: true,
+  //           isDisableSort: true,
+  //         },
+  //       ]}
+  //     />
+  //   </ScrollView>
+  // );
+
   return (
     <ScrollView
       refreshControl={
@@ -233,7 +293,7 @@ const Produk = ({navigation}: Props) => {
             isLoading={getAllTransaction.loading}
             tableSettings={{
               mainSettings: {
-                tableWidth: 'full',
+                tableWidth,
                 defaultSortFrom: 'desc',
               },
             }}
