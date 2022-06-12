@@ -6,8 +6,9 @@ import {useMemo} from 'react';
 import withAppLayout from '../Layout/AppLayout';
 import ListToko from './ListToko';
 import WhatsappHome from './WhatsappHome';
+import {IRouteTab} from '../../shared/components';
 
-const routes = [
+const routes: IRouteTab[] = [
   {key: 'first', title: 'List Toko', component: ListToko},
   {key: 'second', title: 'Whatsapp', component: WhatsappHome},
 ];

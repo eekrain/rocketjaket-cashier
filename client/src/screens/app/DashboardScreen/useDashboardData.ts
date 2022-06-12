@@ -32,7 +32,7 @@ interface useDashboardData {
     label: string;
     value: string;
   }[];
-  refetch: () => void;
+  refetch: () => Promise<void>;
   loading: boolean;
 }
 

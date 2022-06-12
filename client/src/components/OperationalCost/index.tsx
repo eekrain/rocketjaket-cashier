@@ -214,6 +214,7 @@ const Produk = ({navigation}: Props) => {
           isLoading={
             getAllOperationalCost.loading // || _deleteProdukMutationResult.loading
           }
+          keyAccessor="id"
           data={allOperationalCost}
           headerHeight={90}
           rowHeight={70}
