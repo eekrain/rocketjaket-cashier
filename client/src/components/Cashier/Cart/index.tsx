@@ -70,14 +70,6 @@ const Cart = () => {
     returnProcessResult,
     setReturnProcessResult,
   } = useReturn({setReturnTypeModalOpen, setReturnLandingModalOpen});
-  // console.log(
-  //   '🚀 ~ file: index.tsx ~ line 74 ~ Cart ~ returnedProduct',
-  //   returnedProduct,
-  // );
-  // console.log(
-  //   '🚀 ~ file: index.tsx ~ line 60 ~ Cart ~ isReturnDirty',
-  //   isReturnDirty,
-  // );
 
   const {
     watch,
@@ -149,16 +141,16 @@ const Cart = () => {
       />
       <Box
         bgColor="white"
-        w={['full', 'full', '2/6']}
-        h={['container', 'container', '89%']}
+        minW={{base: 'full', lg: '2/6'}}
+        minHeight={{base: '10', lg: '89%'}}
         borderRadius="xl"
+        mt={{base: -10, lg: undefined}}
         p="4">
         <Heading fontSize="xl" mb="4">
           Cart
         </Heading>
 
         <Box
-          h={380}
           borderTopWidth={1}
           borderBottomWidth={1}
           borderColor="gray.400"
