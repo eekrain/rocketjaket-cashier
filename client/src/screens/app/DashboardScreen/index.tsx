@@ -353,7 +353,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
                     }}
                   />
                 </HStack>
-                <HStack h="20" h={{base: 55, md: 91}} space="4">
+                <HStack h={{base: 55, md: 91}} space="4">
                   <CardWithIcon
                     title="Transaksi Diretur"
                     value={
