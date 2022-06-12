@@ -8971,6 +8971,13 @@ react-native-svg@^12.3.0:
     css-select "^4.2.1"
     css-tree "^1.0.0-alpha.39"
 
+react-native-table-component-2@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmmirror.com/react-native-table-component-2/-/react-native-table-component-2-2.0.0.tgz#e30686960c64de770c158a34aba7831884dcc502"
+  integrity sha512-3YbjJxarVniWqerTbWdisDuunoRCTtfO3WJQC8yatpk5jTx+lQ77WJnnfIjwWYcNAN9f98JtAjPBLFHlD3C6dQ==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-vector-icons@^9.1.0:
   version "9.1.0"
   resolved "https://registry.npmmirror.com/react-native-vector-icons/-/react-native-vector-icons-9.1.0.tgz#52eaa205f5954d567b7048eb93d58ac854a2c59e"

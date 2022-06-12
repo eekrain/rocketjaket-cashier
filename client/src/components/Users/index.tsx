@@ -184,9 +184,17 @@ const UserHome = ({}: IUserHomeProps) => {
           </Button>
         </HStack>
         <CustomTable
-          keyAccessor="id"
-          isLoading={getAllUser.loading} //  || _deleteUserResult.loading
-          rowHeight={80}
+          rowKeysAccessor="id"
+          isLoading={getAllUser.loading || _deleteUserResult.loading}
+          tableSettings={{
+            mainSettings: {
+              tableWidth: 'full',
+              defaultSortFrom: 'asc',
+            },
+            row: {
+              rowHeight: 90,
+            },
+          }}
           data={data}
           columns={[
             {

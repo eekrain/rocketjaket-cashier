@@ -140,9 +140,14 @@ const TokoHome = () => {
           </Button>
         </HStack>
         <CustomTable
-          keyAccessor="id"
-          isLoading={getAllToko.loading} // || _deleteStoreMutationResult.loading
-          rowHeight={80}
+          rowKeysAccessor="id"
+          tableSettings={{
+            mainSettings: {
+              tableWidth: 'full',
+              defaultSortFrom: 'asc',
+            },
+          }}
+          isLoading={getAllToko.loading || _deleteStoreMutationResult.loading}
           data={data}
           columns={[
             {Header: 'Nama Toko', accessor: 'name', widthRatio: 1},
