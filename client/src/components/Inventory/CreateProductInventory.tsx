@@ -123,11 +123,14 @@ const CreateProductInventory = ({
         setDataReady(true);
       }
     }
+
+    return () => {
+      myAppState.setLoadingWholePage(false);
+    };
   }, [
     getProductData.data?.products_by_pk,
     getProductData.loading,
     isDataReady,
-    myAppState,
   ]);
 
   const selectedProductData = useMemo(() => {

@@ -167,9 +167,7 @@ const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
       refreshControl={
         <RefreshControl
           refreshing={false}
-          onRefresh={() => {
-            getAllVariantMetadata.refetch();
-          }}
+          onRefresh={async () => await getAllVariantMetadata.refetch()}
         />
       }>
       <Box paddingBottom={300}>
@@ -191,8 +189,8 @@ const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
         <CustomTable
           keyAccessor="variant_value"
           isLoading={
-            getAllVariantMetadata.loading
-            // || _deleteVariantMetadataMutationResult.loading
+            getAllVariantMetadata.loading ||
+            _deleteVariantMetadataMutationResult.loading
           }
           rowHeight={80}
           data={data}

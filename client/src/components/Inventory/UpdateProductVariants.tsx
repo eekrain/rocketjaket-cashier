@@ -95,12 +95,12 @@ const CreateProductVariants = ({
   });
 
   useEffect(() => {
-    if (!isSubmitSuccessful) {
-      myAppState.setLoadingWholePage(getVariantMetadata.loading);
-    } else {
+    myAppState.setLoadingWholePage(getVariantMetadata.loading);
+
+    return () => {
       myAppState.setLoadingWholePage(false);
-    }
-  }, [getVariantMetadata.loading, isSubmitSuccessful, myAppState]);
+    };
+  }, [getVariantMetadata.loading]);
 
   useEffect(() => {
     const variantMetadata =

@@ -140,12 +140,12 @@ const UpdateTransaction = ({route}: Props) => {
   }, [dataTransaction?.transaction_receipts]);
 
   useEffect(() => {
-    if (!isSubmitSuccessful) {
-      myAppState.setLoadingWholePage(getDataTransaction.loading);
-    } else {
+    myAppState.setLoadingWholePage(getDataTransaction.loading);
+
+    return () => {
       myAppState.setLoadingWholePage(false);
-    }
-  }, [getDataTransaction.loading, isSubmitSuccessful, myAppState]);
+    };
+  }, [getDataTransaction.loading]);
 
   useEffect(() => {
     if (getDataTransaction.data?.transaction_by_pk === null && !isErrorOnce) {

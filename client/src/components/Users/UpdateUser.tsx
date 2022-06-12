@@ -124,12 +124,12 @@ const UpdateUser = ({navigation, route}: IUpdateUserProps) => {
   });
 
   useEffect(() => {
-    if (!isSubmitSuccessful) {
-      myAppState.setLoadingWholePage(getUserById.loading);
-    } else {
+    myAppState.setLoadingWholePage(getUserById.loading);
+
+    return () => {
       myAppState.setLoadingWholePage(false);
-    }
-  }, [getUserById.loading, isSubmitSuccessful, myAppState]);
+    };
+  }, [getUserById.loading]);
 
   const userData = useMemo(() => {
     return getUserById.data?.user;

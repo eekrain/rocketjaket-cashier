@@ -14,9 +14,8 @@ import {Alert, RefreshControl} from 'react-native';
 import {
   useOperationalCost_GetAllCostByStoreQuery,
   useStore_GetAllStoreQuery,
-  useStore_GetStoreByPkQuery,
 } from '../../graphql/gql-generated';
-import CustomTable, {CustomTableColumn} from '../CustomTable';
+import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
 import {ButtonEdit} from '../Buttons';
 import {myNumberFormat, useMyUser} from '../../shared/utils';
@@ -27,10 +26,7 @@ import {UserRolesEnum} from '../../types/user';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {RHSelect} from '../../shared/components';
 import dayjs from 'dayjs';
-import {
-  ListOperationalCostNavProps,
-  OperationalCostScreenScreenProps,
-} from '../../screens/app/OperationalCostScreen';
+import {ListOperationalCostNavProps} from '../../screens/app/OperationalCostScreen';
 
 export interface IDefaultValues {
   show_modal_change_toko: boolean;
@@ -66,7 +62,7 @@ const Action = ({id, navigation}: IActionProps) => {
 
 interface Props extends ListOperationalCostNavProps {}
 
-const Produk = ({navigation}: Props) => {
+const OperationalCostHome = ({navigation}: Props) => {
   const myUser = useMyUser();
   const toast = useToast();
   const [isDataStoreReady, setDataStoreReady] = useState(false);
@@ -80,6 +76,11 @@ const Produk = ({navigation}: Props) => {
     defaultValues,
   });
   const selectedStoreId = watch('store_id');
+  const [selectedStoreName, setSelectedStoreName] = useState('');
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 83 ~ OperationalCostHome ~ selectedStoreId',
+    selectedStoreId,
+  );
 
   const getAllStore = useStore_GetAllStoreQuery();
   const storeSelectOptions = useMemo(() => {
@@ -87,24 +88,23 @@ const Produk = ({navigation}: Props) => {
     return data.map(store => ({label: store.name, value: store.id.toString()}));
   }, [getAllStore.data?.stores]);
 
-  const getStoreActive = useStore_GetStoreByPkQuery({
-    variables: {
-      id: parseInt(selectedStoreId || '0', 10),
-    },
-  });
-  const dataStoreActive = useMemo(() => {
-    return getStoreActive.data?.stores_by_pk;
-  }, [getStoreActive.data?.stores_by_pk]);
-
   const getAllOperationalCost = useOperationalCost_GetAllCostByStoreQuery({
     variables: {
       store_id: myUser.store_id,
     },
   });
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 104 ~ OperationalCostHome ~ getAllOperationalCost.error',
+    getAllOperationalCost.error,
+  );
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 104 ~ OperationalCostHome ~ getAllOperationalCost.data',
+    getAllOperationalCost.data,
+  );
 
-  // const [deleteProdukMutation, _deleteProdukMutationResult] =
-  //   useProduk_DeleteProdukByPkMutation({
-  //     refetchQueries: [namedOperations.Query.Produk_GetAllProduk],
+  // const [deleteOperationalCostHomeMutation, _deleteOperationalCostHomeMutationResult] =
+  //   useOperationalCostHome_DeleteOperationalCostHomeByPkMutation({
+  //     refetchQueries: [namedOperations.Query.OperationalCostHome_GetAllOperationalCostHome],
   //   });
 
   const allOperationalCost = useMemo(() => {
@@ -121,31 +121,33 @@ const Produk = ({navigation}: Props) => {
   }, [getAllOperationalCost.data?.operational_costs, navigation]);
 
   useEffect(() => {
+    if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
+      myUser.updateStoreId(parseInt(selectedStoreId, 10));
+    }
     if (
       myUser.roles.includes(UserRolesEnum.administrator) &&
       !selectedStoreId
     ) {
       setValue('show_modal_change_toko', true);
-    } else if (
-      myUser.roles.includes(UserRolesEnum.administrator) &&
-      selectedStoreId
-    ) {
+    }
+    if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
       setValue('show_modal_change_toko', false);
     }
-    if (!isDataStoreReady) {
-      console.log(
-        '🚀 ~ file: index.tsx ~ line 227 ~ useEffect ~ nhostAuth.user.store_id',
-        myUser.store_id,
+  }, [myUser.roles, selectedStoreId]);
+
+  useEffect(() => {
+    if (!isDataStoreReady && myUser.store_id) {
+      setValue('store_id', myUser.store_id.toString());
+      setDataStoreReady(true);
+    } else if (
+      isDataStoreReady &&
+      !myUser.roles.includes(UserRolesEnum.administrator) &&
+      !myUser.store_id
+    ) {
+      Alert.alert(
+        'Akun Anda Belum Terdaftar',
+        'Akun anda belum terdaftar di store manapun! Silahkan kontak owner / admin untuk mendaftarkan akun anda ke penempatan toko sesuai.',
       );
-      if (myUser.store_id) {
-        setValue('store_id', myUser.store_id.toString());
-        setDataStoreReady(true);
-      } else if (!myUser.roles.includes(UserRolesEnum.administrator)) {
-        Alert.alert(
-          'Akun Anda Belum Terdaftar',
-          'Akun anda belum terdaftar di store manapun! Silahkan kontak owner / admin untuk mendaftarkan akun anda ke penempatan toko sesuai.',
-        );
-      }
     }
   }, [
     isDataStoreReady,
@@ -155,6 +157,10 @@ const Produk = ({navigation}: Props) => {
     setValue,
   ]);
 
+  useEffect(() => {
+    const found = storeSelectOptions.find(val => val.value === selectedStoreId);
+    setSelectedStoreName(found?.label || '');
+  }, [selectedStoreId, storeSelectOptions]);
   return (
     <ScrollView
       refreshControl={
@@ -186,7 +192,7 @@ const Produk = ({navigation}: Props) => {
         <HStack justifyContent="space-between" alignItems="center" mb="10">
           <HStack space="4" alignItems="center">
             <Heading fontSize="xl">
-              List Semua Biaya Operasional di Toko {dataStoreActive?.name}
+              List Semua Biaya Operasional di Toko {selectedStoreName}
             </Heading>
             {myUser.roles.includes(UserRolesEnum.administrator) && (
               <Button
@@ -212,7 +218,7 @@ const Produk = ({navigation}: Props) => {
 
         <CustomTable
           isLoading={
-            getAllOperationalCost.loading // || _deleteProdukMutationResult.loading
+            getAllOperationalCost.loading // || _deleteOperationalCostHomeMutationResult.loading
           }
           keyAccessor="id"
           data={allOperationalCost}
@@ -256,4 +262,4 @@ const Produk = ({navigation}: Props) => {
   );
 };
 
-export default withAppLayout(Produk);
+export default withAppLayout(OperationalCostHome);

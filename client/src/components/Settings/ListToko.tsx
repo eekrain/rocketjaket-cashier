@@ -120,9 +120,7 @@ const TokoHome = () => {
       refreshControl={
         <RefreshControl
           refreshing={false}
-          onRefresh={() => {
-            getAllToko.refetch();
-          }}
+          onRefresh={async () => await getAllToko.refetch()}
         />
       }>
       <Box paddingBottom={300}>

@@ -14,11 +14,7 @@ import {
   useToast,
 } from 'native-base';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import {
-  getStorageFileUrlWImageTransform,
-  myNumberFormat,
-  useMyUser,
-} from '../../shared/utils';
+import {myNumberFormat, useMyUser} from '../../shared/utils';
 import {UserRolesEnum} from '../../types/user';
 import {Control, UseFormSetValue} from 'react-hook-form';
 import {MyAvatar, MyImageViewer, RHTextInput} from '../../shared/components';
@@ -27,16 +23,15 @@ import {useMyCart} from '../../state';
 import {CashierHomeNavProps} from '../../screens/app/CashierScreen';
 import FastImage from 'react-native-fast-image';
 import {ButtonCancelDelete} from '../Buttons';
-import {CommonActions, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {UpdateTransactionNavProps} from '../../screens/app/TransactionScreen';
 import {TOAST_TEMPLATE} from '../../shared/constants';
-import {Store_GetStoreByPkQuery} from '../../graphql/gql-generated';
 
 interface Props {
   route: CashierHomeNavProps['route'];
   searchTerm: string;
   setValue: UseFormSetValue<IDefaultValues>;
-  dataStoreActive: Store_GetStoreByPkQuery['stores_by_pk'];
+  selectedStoreName: string;
   control: Control<IDefaultValues, object>;
   errors: any;
   kategoriProdukTab: {
@@ -52,7 +47,7 @@ const ProductsContent = ({
   route,
   setValue,
   searchTerm,
-  dataStoreActive,
+  selectedStoreName,
   control,
   errors,
   kategoriProdukTab,
@@ -92,7 +87,7 @@ const ProductsContent = ({
           </HStack>
         )}
         <HStack space="4" alignItems="center">
-          <Heading fontSize="xl">Toko {dataStoreActive?.name}</Heading>
+          <Heading fontSize="xl">Toko {selectedStoreName}</Heading>
           {roles.includes(UserRolesEnum.administrator) && (
             <Button
               onPress={() => setValue('show_modal_change_toko', true)}
