@@ -1,5 +1,16 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Box, Stack, Modal} from 'native-base';
+import {
+  Box,
+  Stack,
+  Modal,
+  ScrollView,
+  HStack,
+  Heading,
+  useToast,
+  Button,
+  Icon,
+  useBreakpointValue,
+} from 'native-base';
 import ProductsContent from './ProductsContent';
 import withAppLayout from '../Layout/AppLayout';
 import {
@@ -12,11 +23,14 @@ import {useForm} from 'react-hook-form';
 import {RHSelect} from '../../shared/components';
 import {Alert} from 'react-native';
 import {CashierHomeNavProps} from '../../screens/app/CashierScreen';
-import {ICart, useMyAppState} from '../../state';
+import {ICart, useMyAppState, useMyCart} from '../../state';
 import Cart from './Cart';
 import {UpdateTransactionNavProps} from '../../screens/app/TransactionScreen';
-import {CommonActions} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import {sort} from 'fast-sort';
+import {ButtonCancelDelete} from '../Buttons';
+import {TOAST_TEMPLATE} from '../../shared/constants';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 export interface IDefaultValues {
   search_term: string;
@@ -53,7 +67,18 @@ interface Props extends CashierHomeNavProps {}
 const CashierHome = ({route}: Props) => {
   const myUser = useMyUser();
   const myAppState = useMyAppState();
+
+  const myCart = useMyCart();
+  const roles = useMemo(() => myUser.roles, [myUser.roles]);
+  const navigation = useNavigation<UpdateTransactionNavProps['navigation']>();
+  const toast = useToast();
   const [isDataStoreReady, setDataStoreReady] = useState(false);
+
+  const isShowHeader: boolean = useBreakpointValue({
+    base: true,
+    lg: false,
+  });
+
   const {
     watch,
     control,
@@ -259,42 +284,85 @@ const CashierHome = ({route}: Props) => {
   }, [getAllStore.loading, getAllInventoryProduct.loading]);
 
   return (
-    <Box>
-      <Modal
-        isOpen={watch('show_modal_change_toko')}
-        onClose={() => setValue('show_modal_change_toko', false)}>
-        <Modal.Content maxWidth="400px">
-          <Modal.CloseButton />
-          <Modal.Header>Pilih Toko</Modal.Header>
-          <Box p="3">
-            <RHSelect
-              selectOptions={storeSelectOptions}
-              control={control}
-              errors={errors}
-              name="store_id"
-              label="Toko"
-            />
+    <ScrollView>
+      <Box pb="40">
+        <Modal
+          isOpen={watch('show_modal_change_toko')}
+          onClose={() => setValue('show_modal_change_toko', false)}>
+          <Modal.Content maxWidth="400px">
+            <Modal.CloseButton />
+            <Modal.Header>Pilih Toko</Modal.Header>
+            <Box p="3">
+              <RHSelect
+                selectOptions={storeSelectOptions}
+                control={control}
+                errors={errors}
+                name="store_id"
+                label="Toko"
+              />
+            </Box>
+          </Modal.Content>
+        </Modal>
+        {isShowHeader && (
+          <Box>
+            {route.params?.invoiceNumberRefundPart && (
+              <HStack alignItems="center" justifyContent="space-between">
+                <Heading fontSize="xl" mb="2">
+                  Retur Invoice {route.params.invoiceNumberRefundPart}
+                </Heading>
+
+                <ButtonCancelDelete
+                  customText="Cancel Retur"
+                  variant={'solid'}
+                  onPress={() => {
+                    toast.show(
+                      TOAST_TEMPLATE.cancelled('Refund transaksi tidak jadi.'),
+                    );
+                    clearReturn(
+                      navigation,
+                      myCart,
+                      route.params?.invoiceNumberRefundPart,
+                    );
+                  }}
+                />
+              </HStack>
+            )}
+            <HStack space="4" alignItems="center">
+              <Heading fontSize="xl">Toko {selectedStoreName}</Heading>
+              {roles.includes(UserRolesEnum.administrator) && (
+                <Button
+                  onPress={() => setValue('show_modal_change_toko', true)}
+                  size="sm"
+                  leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
+                  Ganti Toko
+                </Button>
+              )}
+            </HStack>
           </Box>
-        </Modal.Content>
-      </Modal>
-      <Stack direction={['column', 'column', 'row']} space="4" h="full">
-        <ProductsContent
-          route={route}
-          searchTerm={searchTerm}
-          activeCategory={activeCategory}
-          control={control}
-          errors={errors}
-          selectedStoreName={selectedStoreName}
-          kategoriProdukTab={kategoriProdukTab}
-          setValue={setValue}
-          filteredByCategoryProductData={
-            inventoryProductData.filteredByCategory
-          }
-          searchedInventoryProductData={searchedInventoryProductData}
-        />
-        <Cart />
-      </Stack>
-    </Box>
+        )}
+        <Stack
+          direction={{base: 'column-reverse', lg: 'row'}}
+          space={{base: '8', lg: '4'}}
+          h="full"
+          p="0">
+          <ProductsContent
+            route={route}
+            searchTerm={searchTerm}
+            activeCategory={activeCategory}
+            control={control}
+            errors={errors}
+            selectedStoreName={selectedStoreName}
+            kategoriProdukTab={kategoriProdukTab}
+            setValue={setValue}
+            filteredByCategoryProductData={
+              inventoryProductData.filteredByCategory
+            }
+            searchedInventoryProductData={searchedInventoryProductData}
+          />
+          <Cart />
+        </Stack>
+      </Box>
+    </ScrollView>
   );
 };
 

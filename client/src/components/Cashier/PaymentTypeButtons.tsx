@@ -72,7 +72,11 @@ export const EDCButtons = ({setValue, formValue}: PaymentTypeButtonProps) => {
       <Text fontSize="lg" w={100}>
         EDC
       </Text>
-      <HStack space="4" flex={1} flexWrap="wrap" justifyContent="space-between">
+      <HStack
+        space={{base: '2', md: '4'}}
+        flex={1}
+        flexWrap="wrap"
+        justifyContent="space-between">
         {PAYMENT_METHOD.edc.map(opt => (
           <Button
             onPress={() => {
@@ -100,17 +104,22 @@ export const EwalletButtons = ({
 }: PaymentTypeButtonProps) => {
   return (
     <HStack mt="6" alignItems="center">
-      <Text fontSize="lg" w={100}>
+      <Text fontSize={{base: 'md', md: 'lg'}} w={100}>
         E-Wallet
       </Text>
-      <HStack space="4" flex={1} flexWrap="wrap" justifyContent="space-between">
-        {PAYMENT_METHOD.ewallet.map(opt => (
+      <HStack
+        space={{base: '2', md: '4'}}
+        flex={1}
+        flexWrap="wrap"
+        justifyContent="space-between">
+        {PAYMENT_METHOD.ewallet.map((opt, index) => (
           <Button
             onPress={() => {
               setValue('payment_type', opt.payment_type);
             }}
             key={opt.payment_type}
-            w="30%"
+            w="45%"
+            mt={{base: index > 1 ? '2' : 0, md: 0}}
             variant={
               formValue.payment_type === opt.payment_type ? 'solid' : 'outline'
             }
