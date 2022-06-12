@@ -13,14 +13,14 @@ import Feather from 'react-native-vector-icons/Feather';
 interface Props {
   handleChangeRowsPerPage: (newValue: number) => void;
   rowsPerPage: number;
-  possibleRowsPerPage: number[];
+  optionRowsPerPage: number[];
   currentPage: number;
   dataLength: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const CustomTablePagination = ({
-  possibleRowsPerPage,
+  optionRowsPerPage,
   handleChangeRowsPerPage,
   rowsPerPage,
   currentPage,
@@ -85,7 +85,7 @@ const CustomTablePagination = ({
           onValueChange={itemValue =>
             handleChangeRowsPerPage(parseInt(itemValue, 10))
           }>
-          {possibleRowsPerPage.map(num => (
+          {optionRowsPerPage.map(num => (
             <Select.Item
               key={num}
               label={num.toString()}

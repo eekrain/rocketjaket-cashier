@@ -344,21 +344,27 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
             getAllInventory.loading ||
             _deleteInventoryProductMutationResult.loading
           }
-          keyAccessor="id"
-          rowHeight={80}
+          tableSettings={{
+            mainSettings: {
+              tableWidth: 'full',
+              defaultSortFrom: 'asc',
+            },
+            row: {
+              rowHeight: 80,
+            },
+          }}
+          rowKeysAccessor="id"
           data={data}
-          // tableWidth={3000}
           columns={[
             {
               Header: '',
               accessor: 'photo',
-              widthRatio: 0.3,
-              isAvatar: true,
+              widthRatio: 0.4,
               isDisableSort: true,
             },
             {Header: 'Produk', accessor: 'product_label', widthRatio: 1},
             {Header: 'Varian', accessor: 'variant_values', widthRatio: 0.4},
-            {Header: 'Tersedia', accessor: 'available_qty', widthRatio: 0.6},
+            {Header: 'Tersedia', accessor: 'available_qty', widthRatio: 0.4},
             {Header: 'Harga Modal', accessor: 'capital_price', widthRatio: 0.6},
             {Header: 'Harga Jual', accessor: 'selling_price', widthRatio: 0.6},
             {Header: 'Diskon', accessor: 'discount', widthRatio: 0.6},

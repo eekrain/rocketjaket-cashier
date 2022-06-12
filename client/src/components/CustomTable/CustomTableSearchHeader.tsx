@@ -5,16 +5,16 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 interface Props {
   searchTerm: string;
   setSearhTerm: React.Dispatch<React.SetStateAction<string>>;
-  customTableHeaderStyle?: IBoxProps;
+  customTableSeachHeaderStyle?: IBoxProps;
 }
 
-const CustomTableHeader = ({
+const CustomTableSearchHeader = ({
   searchTerm,
   setSearhTerm,
-  customTableHeaderStyle,
+  customTableSeachHeaderStyle,
 }: Props) => {
   return (
-    <HStack {...defaultStyle.container} {...customTableHeaderStyle}>
+    <HStack {...defaultStyle.container} {...customTableSeachHeaderStyle}>
       <Input
         value={searchTerm}
         onChangeText={text => setSearhTerm(text)}
@@ -36,7 +36,7 @@ const CustomTableHeader = ({
   );
 };
 
-export default CustomTableHeader;
+export default CustomTableSearchHeader;
 
 const defaultStyle: {container: IBoxProps} = {
   container: {

@@ -119,50 +119,62 @@ export const ListAbsensiByUser = ({}: IListAbsensiByUserProps) => {
       <Box pb="20">
         <Center>
           <CustomTable
-            customTopComponent={() => {
-              return (
-                <Box
-                  p="6"
-                  borderTopLeftRadius="xl"
-                  borderTopRightRadius="xl"
-                  backgroundColor="white">
-                  <Heading fontSize="lg" mb="4">
-                    Periode
-                  </Heading>
-                  <HStack
-                    w={420}
-                    alignItems="center"
-                    justifyContent={'space-between'}>
-                    <IconButton
-                      variant="solid"
-                      p="2"
-                      icon={<Icon as={Feather} name="chevron-left" size="sm" />}
-                      isDisabled={!attendancesData.isCanBackwards}
-                      disabled={!attendancesData.isCanBackwards}
-                      onPress={handleBackwards}
-                    />
-                    <Text>
-                      {dayjs(watch().startDate).format('ddd DD/MM/YYYY')} -{' '}
-                      {dayjs(watch().untilDate).format('ddd DD/MM/YYYY')}
-                    </Text>
-                    <IconButton
-                      variant="solid"
-                      p="2"
-                      icon={
-                        <Icon as={Feather} name="chevron-right" size="sm" />
-                      }
-                      isDisabled={!attendancesData.isCanForwards}
-                      disabled={!attendancesData.isCanForwards}
-                      onPress={handleForwards}
-                    />
-                  </HStack>
-                </Box>
-              );
+            tableSettings={{
+              mainSettings: {
+                tableWidth: 'full',
+                defaultSortFrom: 'desc',
+              },
+              row: {
+                rowHeight: 80,
+              },
+              customComponent: {
+                top: () => {
+                  return (
+                    <Box
+                      p="6"
+                      borderTopLeftRadius="xl"
+                      borderTopRightRadius="xl"
+                      backgroundColor="white">
+                      <Heading fontSize="lg" mb="4">
+                        Periode
+                      </Heading>
+                      <HStack
+                        w={420}
+                        alignItems="center"
+                        justifyContent={'space-between'}>
+                        <IconButton
+                          variant="solid"
+                          p="2"
+                          icon={
+                            <Icon as={Feather} name="chevron-left" size="sm" />
+                          }
+                          isDisabled={!attendancesData.isCanBackwards}
+                          disabled={!attendancesData.isCanBackwards}
+                          onPress={handleBackwards}
+                        />
+                        <Text>
+                          {dayjs(watch().startDate).format('ddd DD/MM/YYYY')} -{' '}
+                          {dayjs(watch().untilDate).format('ddd DD/MM/YYYY')}
+                        </Text>
+                        <IconButton
+                          variant="solid"
+                          p="2"
+                          icon={
+                            <Icon as={Feather} name="chevron-right" size="sm" />
+                          }
+                          isDisabled={!attendancesData.isCanForwards}
+                          disabled={!attendancesData.isCanForwards}
+                          onPress={handleForwards}
+                        />
+                      </HStack>
+                    </Box>
+                  );
+                },
+              },
             }}
-            tableWidth={700}
             isLoading={getAttendancesByUser.loading}
-            rowHeight={80}
             data={attendancesData.list}
+            rowKeysAccessor="id"
             columns={[
               {Header: 'Nama Karyawan', accessor: 'name', widthRatio: 5},
               {
@@ -171,7 +183,6 @@ export const ListAbsensiByUser = ({}: IListAbsensiByUserProps) => {
                 widthRatio: 3,
               },
             ]}
-            keyAccessor="id"
           />
         </Center>
       </Box>

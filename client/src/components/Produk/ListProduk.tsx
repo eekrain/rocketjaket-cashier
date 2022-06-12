@@ -175,13 +175,20 @@ const Produk = ({}: Props) => {
         </HStack>
 
         <CustomTable
-          keyAccessor="id"
+          tableSettings={{
+            mainSettings: {
+              tableWidth: 'full',
+              defaultSortFrom: 'asc',
+            },
+            row: {
+              rowHeight: 80,
+            },
+          }}
+          rowKeysAccessor="id"
           isLoading={
             getAllProduk.loading // || _deleteProdukMutationResult.loading
           }
           data={data}
-          headerHeight={90}
-          rowHeight={70}
           columns={[
             {
               Header: 'Foto',

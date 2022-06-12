@@ -10,15 +10,16 @@ import {
   ScrollView,
   Modal,
   Badge,
+  useBreakpointValue,
 } from 'native-base';
-import {Alert, RefreshControl} from 'react-native';
+import {Alert, RefreshControl, useWindowDimensions, View} from 'react-native';
 import {
   Transaction_Status_Enum_Enum,
   useStore_GetAllStoreQuery,
   useStore_GetStoreByPkQuery,
   useTransaction_GetAllTransactionByStoreIdQuery,
 } from '../../graphql/gql-generated';
-import CustomTable, {CustomTableColumn} from '../CustomTable';
+import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
 import {ButtonEdit} from '../Buttons';
 import {myNumberFormat, useMyUser} from '../../shared/utils';
@@ -38,7 +39,8 @@ export interface IDefaultValues {
 
 const defaultValues: IDefaultValues = {
   show_modal_change_toko: false,
-  store_id: null,
+  // store_id: null,
+  store_id: '1',
 };
 
 interface IActionProps {
@@ -66,6 +68,12 @@ const Action = ({invoice_number, navigation}: IActionProps) => {
 interface Props extends ListTransactionNavProps {}
 
 const Produk = ({navigation}: Props) => {
+  const window = useWindowDimensions();
+  const tableWidth = useBreakpointValue({
+    base: 1000,
+    lg: window.width - 20,
+  });
+
   const myUser = useMyUser();
   const toast = useToast();
   const [isDataStoreReady, setDataStoreReady] = useState(false);
@@ -106,7 +114,10 @@ const Produk = ({navigation}: Props) => {
       handled_by: transaction.karyawan_name,
       total_transaction: myNumberFormat.rp(transaction.total_transaction),
       profit: myNumberFormat.rp(transaction.total_profit),
-      created_at: dayjs(transaction?.created_at).format('D/M/YYYY H:mm'),
+      created_at_formatted: dayjs(transaction?.created_at).format(
+        'D/M/YYYY H:mm',
+      ),
+      created_at_unix: dayjs(transaction?.created_at).unix(),
       transaction_status: (
         <Badge
           colorScheme={
@@ -183,81 +194,85 @@ const Produk = ({navigation}: Props) => {
           onRefresh={async () => await getAllTransaction.refetch()}
         />
       }>
-      <Modal
-        isOpen={watch('show_modal_change_toko')}
-        onClose={() => setValue('show_modal_change_toko', false)}>
-        <Modal.Content maxWidth="400px">
-          <Modal.CloseButton />
-          <Modal.Header>Pilih Toko</Modal.Header>
-          <Box p="3">
-            <RHSelect
-              selectOptions={storeSelectOptions}
-              control={control}
-              errors={errors}
-              name="store_id"
-              label="Toko"
-            />
-          </Box>
-        </Modal.Content>
-      </Modal>
-      <Box w="full" paddingBottom={'20'}>
-        <HStack space="4" alignItems="center" mb="10">
-          <Heading fontSize="xl">
-            List Semua Transaksi di Toko {selectedStoreName}
-          </Heading>
-          {myUser.roles.includes(UserRolesEnum.administrator) && (
-            <Button
-              onPress={() => setValue('show_modal_change_toko', true)}
-              size="sm"
-              leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
-              Ganti Toko
-            </Button>
-          )}
-        </HStack>
+      <Box>
+        <Modal
+          isOpen={watch('show_modal_change_toko')}
+          onClose={() => setValue('show_modal_change_toko', false)}>
+          <Modal.Content maxWidth="400px">
+            <Modal.CloseButton />
+            <Modal.Header>Pilih Toko</Modal.Header>
+            <Box p="3">
+              <RHSelect
+                selectOptions={storeSelectOptions}
+                control={control}
+                errors={errors}
+                name="store_id"
+                label="Toko"
+              />
+            </Box>
+          </Modal.Content>
+        </Modal>
+        <Box w="full" paddingBottom={'20'}>
+          <HStack space="4" alignItems="center" mb="10">
+            <Heading fontSize="xl">
+              List Semua Transaksi di Toko {selectedStoreName}
+            </Heading>
+            {myUser.roles.includes(UserRolesEnum.administrator) && (
+              <Button
+                onPress={() => setValue('show_modal_change_toko', true)}
+                size="sm"
+                leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
+                Ganti Toko
+              </Button>
+            )}
+          </HStack>
 
-        <CustomTable
-          keyAccessor="invoice_number"
-          isLoading={
-            getAllTransaction.loading // || _deleteProdukMutationResult.loading
-          }
-          data={allTransaction}
-          headerHeight={90}
-          rowHeight={70}
-          defaultSortFrom="desc"
-          columns={[
-            {
-              Header: 'Invoice',
-              accessor: 'invoice_number',
-              widthRatio: 1,
-              isDisableSort: true,
-            },
-            {
-              Header: 'Dibuat',
-              accessor: 'created_at',
-              widthRatio: 1,
-            },
-            {
-              Header: 'Total Transaksi',
-              accessor: 'total_transaction',
-              widthRatio: 1,
-            },
-            {
-              Header: 'Profit',
-              accessor: 'profit',
-              widthRatio: 1,
-              isSkip: !myUser.roles.includes(UserRolesEnum.administrator),
-            },
-            {Header: 'Diproses Oleh', accessor: 'handled_by', widthRatio: 1},
-            {Header: 'Status', accessor: 'transaction_status', widthRatio: 1},
-            {
-              Header: 'Aksi',
-              accessor: 'action',
-              widthRatio: 1,
-              isAction: true,
-              isDisableSort: true,
-            },
-          ]}
-        />
+          <CustomTable
+            data={allTransaction}
+            rowKeysAccessor="invoice_number"
+            isLoading={getAllTransaction.loading}
+            tableSettings={{
+              mainSettings: {
+                tableWidth: 'full',
+                defaultSortFrom: 'desc',
+              },
+            }}
+            columns={[
+              {
+                Header: 'Invoice',
+                accessor: 'invoice_number',
+                widthRatio: 1,
+                isDisableSort: true,
+              },
+              {
+                Header: 'Dibuat',
+                accessor: 'created_at_formatted',
+                widthRatio: 1,
+                sortAs: 'created_at_unix',
+              },
+              {
+                Header: 'Total Transaksi',
+                accessor: 'total_transaction',
+                widthRatio: 1,
+              },
+              {
+                Header: 'Profit',
+                accessor: 'profit',
+                widthRatio: 1,
+                isSkip: !myUser.roles.includes(UserRolesEnum.administrator),
+              },
+              {Header: 'Diproses Oleh', accessor: 'handled_by', widthRatio: 1},
+              {Header: 'Status', accessor: 'transaction_status', widthRatio: 1},
+              {
+                Header: 'Aksi',
+                accessor: 'action',
+                widthRatio: 1,
+                isAction: true,
+                isDisableSort: true,
+              },
+            ]}
+          />
+        </Box>
       </Box>
     </ScrollView>
   );

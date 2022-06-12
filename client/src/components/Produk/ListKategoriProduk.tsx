@@ -147,7 +147,13 @@ const KategoriProduk = ({}: Props) => {
             getAllKategoriProduk.loading
             // || _deleteKategoriMutationResult.loading
           }
-          keyAccessor="id"
+          tableSettings={{
+            mainSettings: {
+              tableWidth: 'full',
+              defaultSortFrom: 'asc',
+            },
+          }}
+          rowKeysAccessor="id"
           data={data}
           columns={[
             {Header: 'Nama Kategori', accessor: 'name', widthRatio: 2},
