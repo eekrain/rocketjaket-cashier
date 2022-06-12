@@ -308,13 +308,9 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
                 <Center>
                   <MyAvatar
                     source={{
-                      uri: userPhoto?.asset?.uri
-                        ? userPhoto.asset.uri
-                        : getStorageFileUrlWImageTransform({
-                            fileUrl: myUser.avatarUrl,
-                            w: 100,
-                            q: 60,
-                          }),
+                      fileId: userDataFetched?.avatarUrl,
+                      w: 100,
+                      q: 60,
                     }}
                     disableErrorFallback={true}
                     fallbackText={userDataFetched?.displayName || ''}

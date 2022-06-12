@@ -20,6 +20,10 @@ import AuthNavigation from './src/screens/auth';
 import Config from 'react-native-config';
 import ModalAbsensi from './src/components/Absensi/ModalAbsensi';
 import {useAbsensi} from './src/components/Absensi/useAbsensi';
+import {
+  useMyZoomImageViewer,
+  ZoomImageViewerModal,
+} from './src/state/zoomImageViewer';
 
 const App = () => {
   const authStatus = useAuthenticationStatus();
@@ -43,6 +47,9 @@ const App = () => {
     distanceMeter,
     maximumDistanceFromToko,
   } = useAbsensi();
+
+  const {closeModalZoomImageOpen, isModalZoomImageOpen} =
+    useMyZoomImageViewer();
 
   useEffect(() => {
     nhost.storage.setAccessToken(accessTokenLatest);
@@ -72,6 +79,10 @@ const App = () => {
     <NavigationContainer<AppNavigationParamList>>
       {!loading && authStatus.isAuthenticated ? (
         <>
+          <ZoomImageViewerModal
+            isModalZoomImageOpen={isModalZoomImageOpen}
+            closeModalZoomImageOpen={closeModalZoomImageOpen}
+          />
           <ModalAbsensi
             modalAbsensiOpen={isModalAbsensiOpen}
             onPressClose={onModalAbsensiClose}

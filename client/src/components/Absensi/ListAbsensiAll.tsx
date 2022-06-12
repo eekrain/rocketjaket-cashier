@@ -78,12 +78,7 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
         photo: (
           <MyAvatar
             size={50}
-            source={{
-              uri: getStorageFileUrlWImageTransform({
-                fileId: val.photo_file_id,
-                q: 60,
-              }),
-            }}
+            source={{fileId: val.photo_file_id, q: 60}}
             fallbackText={val.user.displayName}
           />
         ),
