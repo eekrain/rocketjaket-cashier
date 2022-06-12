@@ -24,6 +24,7 @@ import {NavigatorScreenParams} from '@react-navigation/native';
 import NotificationScreen from './NotificationScreen';
 import {useMyNotifee, useMyUser} from '../../shared/utils';
 import {useMyNotificationBackgroundTask} from '../../state';
+import AbsensiScreen from './Absensi';
 
 export type AppNavigationParamList = {
   Dashboard: undefined;
@@ -34,6 +35,7 @@ export type AppNavigationParamList = {
   SettingsRoot: undefined;
   InventoryRoot: undefined;
   UserRoot: undefined;
+  AbsensiRoot: undefined;
   CashierRoot: NavigatorScreenParams<CashierRootStackParamList>;
   OperationalCostRoot: undefined;
 };
@@ -94,6 +96,12 @@ export const rootAppRoutes: IAppRoutes[] = [
     name: 'UserRoot',
     component: UserScreen,
     routeNiceName: 'Pengguna',
+    role: ['administrator'],
+  },
+  {
+    name: 'AbsensiRoot',
+    component: AbsensiScreen,
+    routeNiceName: 'Absensi',
     role: ['administrator'],
   },
   {
@@ -168,6 +176,7 @@ export const getAppIcon = (screenName: keyof AppNavigationParamList) => {
   if (screenName === 'SettingsRoot') return 'settings';
   if (screenName === 'InventoryRoot') return 'archive';
   if (screenName === 'UserRoot') return 'user';
+  if (screenName === 'AbsensiRoot') return 'user-check';
   if (screenName === 'OperationalCostRoot') return 'activity';
   return '';
 };

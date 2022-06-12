@@ -401,10 +401,37 @@ export type Attendance_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
+/** order by aggregate values of table "attendance" */
+export type Attendance_Aggregate_Order_By = {
+  avg?: InputMaybe<Attendance_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Attendance_Max_Order_By>;
+  min?: InputMaybe<Attendance_Min_Order_By>;
+  stddev?: InputMaybe<Attendance_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Attendance_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Attendance_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Attendance_Sum_Order_By>;
+  var_pop?: InputMaybe<Attendance_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Attendance_Var_Samp_Order_By>;
+  variance?: InputMaybe<Attendance_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "attendance" */
+export type Attendance_Arr_Rel_Insert_Input = {
+  data: Array<Attendance_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Attendance_On_Conflict>;
+};
+
 /** aggregate avg on columns */
 export type Attendance_Avg_Fields = {
   __typename?: 'attendance_avg_fields';
   id?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "attendance" */
+export type Attendance_Avg_Order_By = {
+  id?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "attendance". All fields are combined with a logical 'AND'. */
@@ -452,6 +479,14 @@ export type Attendance_Max_Fields = {
   user_id?: Maybe<Scalars['uuid']>;
 };
 
+/** order by max() on columns of table "attendance" */
+export type Attendance_Max_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  photo_file_id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Attendance_Min_Fields = {
   __typename?: 'attendance_min_fields';
@@ -459,6 +494,14 @@ export type Attendance_Min_Fields = {
   id?: Maybe<Scalars['bigint']>;
   photo_file_id?: Maybe<Scalars['uuid']>;
   user_id?: Maybe<Scalars['uuid']>;
+};
+
+/** order by min() on columns of table "attendance" */
+export type Attendance_Min_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  photo_file_id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "attendance" */
@@ -522,10 +565,20 @@ export type Attendance_Stddev_Fields = {
   id?: Maybe<Scalars['Float']>;
 };
 
+/** order by stddev() on columns of table "attendance" */
+export type Attendance_Stddev_Order_By = {
+  id?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_pop on columns */
 export type Attendance_Stddev_Pop_Fields = {
   __typename?: 'attendance_stddev_pop_fields';
   id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "attendance" */
+export type Attendance_Stddev_Pop_Order_By = {
+  id?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_samp on columns */
@@ -534,10 +587,20 @@ export type Attendance_Stddev_Samp_Fields = {
   id?: Maybe<Scalars['Float']>;
 };
 
+/** order by stddev_samp() on columns of table "attendance" */
+export type Attendance_Stddev_Samp_Order_By = {
+  id?: InputMaybe<Order_By>;
+};
+
 /** aggregate sum on columns */
 export type Attendance_Sum_Fields = {
   __typename?: 'attendance_sum_fields';
   id?: Maybe<Scalars['bigint']>;
+};
+
+/** order by sum() on columns of table "attendance" */
+export type Attendance_Sum_Order_By = {
+  id?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "attendance_type_enum" */
@@ -696,16 +759,31 @@ export type Attendance_Var_Pop_Fields = {
   id?: Maybe<Scalars['Float']>;
 };
 
+/** order by var_pop() on columns of table "attendance" */
+export type Attendance_Var_Pop_Order_By = {
+  id?: InputMaybe<Order_By>;
+};
+
 /** aggregate var_samp on columns */
 export type Attendance_Var_Samp_Fields = {
   __typename?: 'attendance_var_samp_fields';
   id?: Maybe<Scalars['Float']>;
 };
 
+/** order by var_samp() on columns of table "attendance" */
+export type Attendance_Var_Samp_Order_By = {
+  id?: InputMaybe<Order_By>;
+};
+
 /** aggregate variance on columns */
 export type Attendance_Variance_Fields = {
   __typename?: 'attendance_variance_fields';
   id?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "attendance" */
+export type Attendance_Variance_Order_By = {
+  id?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "auth.provider_requests" */
@@ -10228,6 +10306,10 @@ export type Transaction_Variance_Order_By = {
 export type Users = {
   __typename?: 'users';
   activeMfaType?: Maybe<Scalars['String']>;
+  /** An array relationship */
+  attendances: Array<Attendance>;
+  /** An aggregate relationship */
+  attendances_aggregate: Attendance_Aggregate;
   avatarUrl: Scalars['String'];
   createdAt: Scalars['timestamptz'];
   defaultRole: Scalars['String'];
@@ -10269,6 +10351,26 @@ export type Users = {
   users_metadata: Array<Users_Metadata>;
   /** An aggregate relationship */
   users_metadata_aggregate: Users_Metadata_Aggregate;
+};
+
+
+/** columns and relationships of "auth.users" */
+export type UsersAttendancesArgs = {
+  distinct_on?: InputMaybe<Array<Attendance_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Attendance_Order_By>>;
+  where?: InputMaybe<Attendance_Bool_Exp>;
+};
+
+
+/** columns and relationships of "auth.users" */
+export type UsersAttendances_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Attendance_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Attendance_Order_By>>;
+  where?: InputMaybe<Attendance_Bool_Exp>;
 };
 
 
@@ -10404,6 +10506,7 @@ export type Users_Bool_Exp = {
   _not?: InputMaybe<Users_Bool_Exp>;
   _or?: InputMaybe<Array<Users_Bool_Exp>>;
   activeMfaType?: InputMaybe<String_Comparison_Exp>;
+  attendances?: InputMaybe<Attendance_Bool_Exp>;
   avatarUrl?: InputMaybe<String_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   defaultRole?: InputMaybe<String_Comparison_Exp>;
@@ -10462,6 +10565,7 @@ export type Users_Delete_Key_Input = {
 /** input type for inserting data into table "auth.users" */
 export type Users_Insert_Input = {
   activeMfaType?: InputMaybe<Scalars['String']>;
+  attendances?: InputMaybe<Attendance_Arr_Rel_Insert_Input>;
   avatarUrl?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   defaultRole?: InputMaybe<Scalars['String']>;
@@ -10885,6 +10989,7 @@ export type Users_On_Conflict = {
 /** Ordering options when selecting data from "auth.users". */
 export type Users_Order_By = {
   activeMfaType?: InputMaybe<Order_By>;
+  attendances_aggregate?: InputMaybe<Attendance_Aggregate_Order_By>;
   avatarUrl?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   defaultRole?: InputMaybe<Order_By>;
@@ -11076,6 +11181,22 @@ export type Attendance_InsertOneMutationVariables = Exact<{
 
 
 export type Attendance_InsertOneMutation = { __typename?: 'mutation_root', insert_attendance_one?: { __typename?: 'attendance', id: any } | null };
+
+export type Attendance_GetAllAttendancesQueryVariables = Exact<{
+  startDate: Scalars['timestamptz'];
+  untilDate: Scalars['timestamptz'];
+}>;
+
+
+export type Attendance_GetAllAttendancesQuery = { __typename?: 'query_root', attendance: Array<{ __typename?: 'attendance', id: any, photo_file_id?: any | null, created_at: any, user: { __typename?: 'users', displayName: string, users_metadata: Array<{ __typename?: 'users_metadata', stores?: { __typename?: 'stores', name: string } | null }> } }>, attendance_aggregate: { __typename?: 'attendance_aggregate', aggregate?: { __typename?: 'attendance_aggregate_fields', min?: { __typename?: 'attendance_min_fields', created_at?: any | null } | null } | null } };
+
+export type Attendance_GetAttendancesByUserQueryVariables = Exact<{
+  startDate: Scalars['timestamptz'];
+  untilDate: Scalars['timestamptz'];
+}>;
+
+
+export type Attendance_GetAttendancesByUserQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: any, displayName: string, attendances: Array<{ __typename?: 'attendance', id: any, created_at: any, photo_file_id?: any | null }> }>, attendance_aggregate: { __typename?: 'attendance_aggregate', aggregate?: { __typename?: 'attendance_aggregate_fields', min?: { __typename?: 'attendance_min_fields', created_at?: any | null } | null } | null } };
 
 export type Attendance_GetMyAttendanceTodayQueryVariables = Exact<{
   working_hour_start: Scalars['timestamptz'];
@@ -11463,6 +11584,8 @@ export type User_GetUserByIdSubscriptionSubscription = { __typename?: 'subscript
 
 export const namedOperations = {
   Query: {
+    Attendance_GetAllAttendances: 'Attendance_GetAllAttendances',
+    Attendance_GetAttendancesByUser: 'Attendance_GetAttendancesByUser',
     Attendance_GetMyAttendanceToday: 'Attendance_GetMyAttendanceToday',
     Dashboard_GetDashboardData: 'Dashboard_GetDashboardData',
     Inventory_GetAllInventoryProductByStoreId: 'Inventory_GetAllInventoryProductByStoreId',
@@ -11556,6 +11679,110 @@ export function useAttendance_InsertOneMutation(baseOptions?: Apollo.MutationHoo
 export type Attendance_InsertOneMutationHookResult = ReturnType<typeof useAttendance_InsertOneMutation>;
 export type Attendance_InsertOneMutationResult = Apollo.MutationResult<Attendance_InsertOneMutation>;
 export type Attendance_InsertOneMutationOptions = Apollo.BaseMutationOptions<Attendance_InsertOneMutation, Attendance_InsertOneMutationVariables>;
+export const Attendance_GetAllAttendancesDocument = gql`
+    query Attendance_GetAllAttendances($startDate: timestamptz!, $untilDate: timestamptz!) {
+  attendance(
+    where: {user: {defaultRole: {_eq: "karyawan"}, createdAt: {_gt: $startDate, _lte: $untilDate}}}
+  ) {
+    id
+    photo_file_id
+    created_at
+    user {
+      displayName
+      users_metadata {
+        stores {
+          name
+        }
+      }
+    }
+  }
+  attendance_aggregate {
+    aggregate {
+      min {
+        created_at
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useAttendance_GetAllAttendancesQuery__
+ *
+ * To run a query within a React component, call `useAttendance_GetAllAttendancesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAttendance_GetAllAttendancesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAttendance_GetAllAttendancesQuery({
+ *   variables: {
+ *      startDate: // value for 'startDate'
+ *      untilDate: // value for 'untilDate'
+ *   },
+ * });
+ */
+export function useAttendance_GetAllAttendancesQuery(baseOptions: Apollo.QueryHookOptions<Attendance_GetAllAttendancesQuery, Attendance_GetAllAttendancesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Attendance_GetAllAttendancesQuery, Attendance_GetAllAttendancesQueryVariables>(Attendance_GetAllAttendancesDocument, options);
+      }
+export function useAttendance_GetAllAttendancesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Attendance_GetAllAttendancesQuery, Attendance_GetAllAttendancesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Attendance_GetAllAttendancesQuery, Attendance_GetAllAttendancesQueryVariables>(Attendance_GetAllAttendancesDocument, options);
+        }
+export type Attendance_GetAllAttendancesQueryHookResult = ReturnType<typeof useAttendance_GetAllAttendancesQuery>;
+export type Attendance_GetAllAttendancesLazyQueryHookResult = ReturnType<typeof useAttendance_GetAllAttendancesLazyQuery>;
+export type Attendance_GetAllAttendancesQueryResult = Apollo.QueryResult<Attendance_GetAllAttendancesQuery, Attendance_GetAllAttendancesQueryVariables>;
+export const Attendance_GetAttendancesByUserDocument = gql`
+    query Attendance_GetAttendancesByUser($startDate: timestamptz!, $untilDate: timestamptz!) {
+  users(where: {defaultRole: {_eq: "karyawan"}}) {
+    id
+    displayName
+    attendances(where: {created_at: {_gt: $startDate, _lte: $untilDate}}) {
+      id
+      created_at
+      photo_file_id
+    }
+  }
+  attendance_aggregate {
+    aggregate {
+      min {
+        created_at
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useAttendance_GetAttendancesByUserQuery__
+ *
+ * To run a query within a React component, call `useAttendance_GetAttendancesByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAttendance_GetAttendancesByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAttendance_GetAttendancesByUserQuery({
+ *   variables: {
+ *      startDate: // value for 'startDate'
+ *      untilDate: // value for 'untilDate'
+ *   },
+ * });
+ */
+export function useAttendance_GetAttendancesByUserQuery(baseOptions: Apollo.QueryHookOptions<Attendance_GetAttendancesByUserQuery, Attendance_GetAttendancesByUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Attendance_GetAttendancesByUserQuery, Attendance_GetAttendancesByUserQueryVariables>(Attendance_GetAttendancesByUserDocument, options);
+      }
+export function useAttendance_GetAttendancesByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Attendance_GetAttendancesByUserQuery, Attendance_GetAttendancesByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Attendance_GetAttendancesByUserQuery, Attendance_GetAttendancesByUserQueryVariables>(Attendance_GetAttendancesByUserDocument, options);
+        }
+export type Attendance_GetAttendancesByUserQueryHookResult = ReturnType<typeof useAttendance_GetAttendancesByUserQuery>;
+export type Attendance_GetAttendancesByUserLazyQueryHookResult = ReturnType<typeof useAttendance_GetAttendancesByUserLazyQuery>;
+export type Attendance_GetAttendancesByUserQueryResult = Apollo.QueryResult<Attendance_GetAttendancesByUserQuery, Attendance_GetAttendancesByUserQueryVariables>;
 export const Attendance_GetMyAttendanceTodayDocument = gql`
     query Attendance_GetMyAttendanceToday($working_hour_start: timestamptz!, $user_id: uuid!) {
   attendance(

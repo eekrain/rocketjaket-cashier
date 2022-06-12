@@ -310,6 +310,7 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
           isLoading={
             getAllToko.loading // || _deleteInventoryProductMutationResult.loading
           }
+          keyAccessor="id"
           rowHeight={80}
           data={data}
           // tableWidth={3000}

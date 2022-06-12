@@ -189,6 +189,7 @@ const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
           </Button>
         </HStack>
         <CustomTable
+          keyAccessor="variant_value"
           isLoading={
             getAllVariantMetadata.loading
             // || _deleteVariantMetadataMutationResult.loading

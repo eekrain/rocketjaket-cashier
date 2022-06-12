@@ -310,6 +310,7 @@ const UpdateTransaction = ({route}: Props) => {
                       item.transaction_status ===
                       Transaction_Status_Enum_Enum.Success,
                   )}
+                  keyAccessor="id"
                   rowHeight={50}
                   headerHeight={40}
                   columns={[
@@ -413,6 +414,7 @@ const UpdateTransaction = ({route}: Props) => {
                       Item Diretur
                     </Text>
                     <CustomTable
+                      keyAccessor="id"
                       data={dataTransactionItems.filter(
                         item =>
                           item.transaction_status !==
@@ -478,6 +480,7 @@ const UpdateTransaction = ({route}: Props) => {
                   </Button>
                 </HStack>
                 <CustomTable
+                  keyAccessor="created_at"
                   data={dataTransactionReceipt}
                   rowHeight={40}
                   headerHeight={40}
