@@ -45,6 +45,8 @@ interface Props<T extends Record<string, unknown>> {
   withTableHeader?: boolean;
   withPagination?: boolean;
   defaultSortFrom?: 'asc' | 'desc';
+  keyAccessor?: keyof T;
+  customTopComponent?: React.ComponentType<any>;
 }
 const CustomTable = <T extends Record<string, unknown>>({
   data,
@@ -63,6 +65,8 @@ const CustomTable = <T extends Record<string, unknown>>({
   withTableHeader = true,
   withPagination = true,
   defaultSortFrom = 'asc',
+  keyAccessor = 'id',
+  customTopComponent: CustomTopComponent,
 }: Props<T>) => {
   const styles = {
     tableStyle: {...defaultStyles.tableStyle, width: tableWidth},
@@ -206,7 +210,7 @@ const CustomTable = <T extends Record<string, unknown>>({
 
   const table = useCallback(
     () => (
-      <Grid style={{minWidth: '100%'}}>
+      <Grid style={{width: tableWidth}}>
         {columns
           .filter(col => (col?.isSkip ? !col.isSkip : true))
           .map(col => (
@@ -225,7 +229,7 @@ const CustomTable = <T extends Record<string, unknown>>({
               </Row>
               {processedData.map((rowdata, i) => (
                 <Row
-                  key={`${col.Header}${col.accessor}${i}`}
+                  key={`${col.Header}${col.accessor}${i}${rowdata[keyAccessor]}`}
                   style={[
                     i % 2 ? styles.rowOdd : styles.row,
                     col?.isAvatar
@@ -264,9 +268,24 @@ const CustomTable = <T extends Record<string, unknown>>({
   );
 
   return (
-    <VStack w="full">
+    <VStack w={tableWidth}>
+      {CustomTopComponent && <CustomTopComponent />}
       <LoadingOverlay size="md" visible={isLoading} />
-      {withTableHeader && <CustomTableHeader {...{searchTerm, setSearhTerm}} />}
+      {withTableHeader && (
+        <CustomTableHeader
+          {...{
+            searchTerm,
+            setSearhTerm,
+            customTableHeaderStyle: CustomTopComponent
+              ? {
+                  borderTopLeftRadius: 'none',
+                  borderTopRightRadius: 'none',
+                  paddingTop: 0,
+                }
+              : undefined,
+          }}
+        />
+      )}
       {tableWidth === '100%' ? (
         table()
       ) : (
@@ -274,7 +293,6 @@ const CustomTable = <T extends Record<string, unknown>>({
           {table()}
         </ScrollView>
       )}
-
       {withPagination && (
         <CustomTablePagination
           handleChangeRowsPerPage={handleChangeRowsPerPage}

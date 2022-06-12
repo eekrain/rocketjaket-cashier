@@ -221,6 +221,7 @@ const Produk = ({navigation}: Props) => {
         </HStack>
 
         <CustomTable
+          keyAccessor="invoice_number"
           isLoading={
             getAllTransaction.loading // || _deleteProdukMutationResult.loading
           }

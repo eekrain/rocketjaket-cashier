@@ -142,6 +142,7 @@ const TokoHome = () => {
           </Button>
         </HStack>
         <CustomTable
+          keyAccessor="id"
           isLoading={getAllToko.loading} // || _deleteStoreMutationResult.loading
           rowHeight={80}
           data={data}
