@@ -1,19 +1,20 @@
 import React from 'react';
-import {HStack, Input, Icon} from 'native-base';
+import {HStack, Input, Icon, IBoxProps} from 'native-base';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 interface Props {
   searchTerm: string;
   setSearhTerm: React.Dispatch<React.SetStateAction<string>>;
+  customTableHeaderStyle?: IBoxProps;
 }
 
-const CustomTableHeader = ({searchTerm, setSearhTerm}: Props) => {
+const CustomTableHeader = ({
+  searchTerm,
+  setSearhTerm,
+  customTableHeaderStyle,
+}: Props) => {
   return (
-    <HStack
-      bgColor="white"
-      borderTopLeftRadius="xl"
-      borderTopRightRadius="xl"
-      style={{paddingLeft: 20, paddingTop: 20}}>
+    <HStack {...defaultStyle.container} {...customTableHeaderStyle}>
       <Input
         value={searchTerm}
         onChangeText={text => setSearhTerm(text)}
@@ -36,3 +37,13 @@ const CustomTableHeader = ({searchTerm, setSearhTerm}: Props) => {
 };
 
 export default CustomTableHeader;
+
+const defaultStyle: {container: IBoxProps} = {
+  container: {
+    bgColor: 'white',
+    borderTopLeftRadius: 'xl',
+    borderTopRightRadius: 'xl',
+    paddingLeft: 21,
+    paddingTop: 21,
+  },
+};

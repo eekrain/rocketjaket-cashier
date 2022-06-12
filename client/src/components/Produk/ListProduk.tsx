@@ -184,6 +184,7 @@ const Produk = ({}: Props) => {
         </HStack>
 
         <CustomTable
+          keyAccessor="id"
           isLoading={
             getAllProduk.loading // || _deleteProdukMutationResult.loading
           }

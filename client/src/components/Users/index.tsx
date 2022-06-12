@@ -181,6 +181,7 @@ const UserHome = ({}: IUserHomeProps) => {
           </Button>
         </HStack>
         <CustomTable
+          keyAccessor="id"
           isLoading={getAllUser.loading} //  || _deleteUserResult.loading
           rowHeight={80}
           data={data}

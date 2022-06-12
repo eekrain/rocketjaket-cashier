@@ -149,6 +149,7 @@ const KategoriProduk = ({}: Props) => {
             getAllKategoriProduk.loading
             // || _deleteKategoriMutationResult.loading
           }
+          keyAccessor="id"
           data={data}
           columns={[
             {Header: 'Nama Kategori', accessor: 'name', widthRatio: 2},
