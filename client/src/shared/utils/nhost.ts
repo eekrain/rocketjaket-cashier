@@ -126,10 +126,10 @@ export const useMyUser = (): useMyUser => {
     };
     return temp;
   }, [getUserById.data?.user]);
-  console.log(
-    '🚀 ~ file: nhost.ts ~ line 134 ~ userFromRemote ~ myUserData.user?.store_id',
-    myUserData.user?.store_id,
-  );
+  // console.log(
+  //   '🚀 ~ file: nhost.ts ~ line 134 ~ userFromRemote ~ myUserData.user?.store_id',
+  //   myUserData.user?.store_id,
+  // );
 
   useEffect(() => {
     if (user) {

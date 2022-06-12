@@ -128,11 +128,9 @@ const Produk = ({}: Props) => {
           <MyImageViewer
             size={50}
             source={{
-              uri: getStorageFileUrlWImageTransform({
-                fileId: produk?.photo_id,
-                w: 50,
-                q: 60,
-              }),
+              fileId: produk?.photo_id,
+              w: 50,
+              q: 60,
             }}
           />
         ),

@@ -383,15 +383,12 @@ const UpdateProduk = ({navigation, route}: Props) => {
                 <Center>
                   <MyImageViewer
                     source={{
-                      uri: photo?.asset?.uri
-                        ? photo.asset.uri
-                        : getStorageFileUrlWImageTransform({
-                            fileId: photo.currentPhotoFileId,
-                            w: 180,
-                            q: 60,
-                          }),
+                      fileId: photo.currentPhotoFileId,
+                      w: 180,
+                      q: 60,
                     }}
                     size={180}
+                    isDisableZoom={true}
                   />
                 </Center>
                 <VStack space="2" justifyContent="center" alignItems="center">
