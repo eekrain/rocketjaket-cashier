@@ -9,6 +9,8 @@ import {
   ScrollView,
   VStack,
   Center,
+  useBreakpointValue,
+  Stack,
 } from 'native-base';
 import withAppLayout from '../../../components/Layout/AppLayout';
 import {useForm} from 'react-hook-form';
@@ -17,7 +19,7 @@ import 'dayjs/locale/id';
 import {RHSelect} from '../../../shared/components';
 import Feather from 'react-native-vector-icons/Feather';
 import {myNumberFormat} from '../../../shared/utils';
-import {Dimensions, RefreshControl} from 'react-native';
+import {Dimensions, RefreshControl, useWindowDimensions} from 'react-native';
 import {useDashboardData} from './useDashboardData';
 import {MyLineChart} from './MyLineChart';
 import {MyPieChart} from './MyPieChart';
@@ -52,6 +54,22 @@ interface IDashboardScreenProps {}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const DashboardScreen = ({}: IDashboardScreenProps) => {
+  const window = useWindowDimensions();
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 57 ~ DashboardScreen ~ window',
+    window,
+  );
+  const lineChartWidth: number = useBreakpointValue({
+    sm: window.width - 60,
+    md: window.width - 65,
+    lg: window.width - 80,
+    xl: window.width - 80,
+  });
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 63 ~ DashboardScreen ~ lineChartWidth',
+    lineChartWidth,
+  );
+
   const {
     handleSubmit,
     control,
@@ -135,10 +153,6 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
       }
     }
   };
-  // console.log(
-  //   '🚀 ~ file: index.tsx ~ line 352 ~ DashboardScreen ~ dashboardData?.loading',
-  //   dashboardData?.loading,
-  // );
 
   return (
     <ScrollView
@@ -154,7 +168,11 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
         <Heading fontSize="xl" mb="6">
           Dashboard
         </Heading>
-        <HStack space="8" mb="6" justifyContent={'center'}>
+        <Stack
+          direction={{base: 'column', lg: 'row'}}
+          space="8"
+          mb="6"
+          justifyContent={'center'}>
           <Box p="6" borderRadius="xl" backgroundColor="white">
             <Heading fontSize="lg" mb="4">
               Toko
@@ -172,7 +190,10 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
             <Heading fontSize="lg" mb="4">
               Periode
             </Heading>
-            <HStack space={'4'} alignItems="center">
+            <Stack
+              direction={{base: 'column', md: 'row'}}
+              space={{base: '4', md: '16', lg: '4'}}
+              alignItems="center">
               <Box>
                 <RHSelect
                   isDisableLabel={true}
@@ -211,9 +232,9 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
                   onPress={handleForwards}
                 />
               </HStack>
-            </HStack>
+            </Stack>
           </Box>
-        </HStack>
+        </Stack>
 
         {dashboardData && (
           <>
@@ -221,7 +242,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
               <MyLineChart
                 chartTitle="Omset"
                 chartData={dashboardData?.omsetChart}
-                chartWidth={Dimensions.get('window').width - 80}
+                chartWidth={lineChartWidth}
                 total={myNumberFormat.rp(dashboardData?.totalOmset)}
                 bgColor="#818cf8"
                 bgGradientFromLeft="#c7d2fe"
@@ -241,7 +262,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
               <MyLineChart
                 chartTitle="Profit"
                 chartData={dashboardData?.profitChart}
-                chartWidth={Dimensions.get('window').width - 80}
+                chartWidth={lineChartWidth}
                 total={myNumberFormat.rp(dashboardData?.totalProfit)}
                 formatYLabel={yValue =>
                   numbro(yValue).formatCurrency({
@@ -256,7 +277,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
               <MyLineChart
                 chartTitle="Biaya Operasional"
                 chartData={dashboardData?.operasionalChart}
-                chartWidth={Dimensions.get('window').width - 80}
+                chartWidth={lineChartWidth}
                 total={myNumberFormat.rp(dashboardData?.totalOperasional) || ''}
                 bgColor="#f87171"
                 bgGradientFromLeft="#fecaca"
@@ -276,7 +297,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
               <MyLineChart
                 chartTitle="Item Terjual"
                 chartData={dashboardData?.itemSoldChart}
-                chartWidth={Dimensions.get('window').width - 80}
+                chartWidth={lineChartWidth}
                 total={dashboardData?.totalItemSold.toString() || ''}
                 bgColor="#e879f9"
                 bgGradientFromLeft="#f5d0fe"
@@ -286,7 +307,11 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
               />
             </Box>
 
-            <HStack alignItems={'center'} justifyContent="space-between">
+            <Stack
+              direction={{base: 'column', md: 'row'}}
+              alignItems={'center'}
+              justifyContent="space-between"
+              space={{base: '6', md: undefined}}>
               <Box p="4" bgColor="white" borderRadius="xl">
                 <Heading color={'info.900'} fontSize="lg" mb="2">
                   Tipe Pembayaran
@@ -296,12 +321,17 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
                   accessor="total_transaksi"
                 />
               </Box>
-              <Box p="4" h="full" bgColor="white" borderRadius="xl">
+              <Box
+                p="4"
+                h="full"
+                w={{base: 'full', md: undefined}}
+                bgColor="white"
+                borderRadius="xl">
                 <Heading color={'indigo.900'} fontSize="lg" mb="2">
                   Lainnya
                 </Heading>
 
-                <HStack h="20" space="4" mb="4">
+                <HStack h={{base: 55, md: 77}} space="4" mb="4">
                   <CardWithIcon
                     title="Transaksi Sukses"
                     value={
@@ -346,7 +376,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
                   />
                 </HStack>
               </Box>
-            </HStack>
+            </Stack>
           </>
         )}
       </Box>

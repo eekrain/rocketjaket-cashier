@@ -54,10 +54,6 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
   const getWAAuthStatus = useWhatsapp_GetAuthStatusQuery({
     fetchPolicy: 'network-only',
   });
-  console.log(
-    '🚀 ~ file: WhatsappHome.tsx ~ line 57 ~ WhatsappHome ~ getWAAuthStatus',
-    getWAAuthStatus.data?.Whatsapp_GetAuthStatus,
-  );
 
   useEffect(() => {
     myAppState.setLoadingWholePage(getWAAuthStatus.loading);
