@@ -59,7 +59,7 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
     tes,
   );
 
-  const getAttendancesByUser = useAttendance_GetAllAttendancesQuery({
+  const getAllAttendances = useAttendance_GetAllAttendancesQuery({
     variables: {
       startDate: startDate,
       untilDate: untilDate,
@@ -68,7 +68,7 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
 
   const attendancesData = useMemo(() => {
     const list =
-      getAttendancesByUser.data?.attendance.map(val => ({
+      getAllAttendances.data?.attendance.map(val => ({
         id: val.id,
         name: val.user.displayName,
         store_name: val.user.users_metadata?.[0].stores?.name || '',
@@ -85,8 +85,7 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
         created_at: dayjs(val.created_at).format('D/M/YYYY H:mm'),
       })) || [];
     const min_created_at =
-      getAttendancesByUser.data?.attendance_aggregate.aggregate?.min
-        ?.created_at;
+      getAllAttendances.data?.attendance_aggregate.aggregate?.min?.created_at;
     const isCanBackwards = min_created_at
       ? dayjs(min_created_at).isBefore(dayjs(startDate))
       : false;
@@ -95,8 +94,8 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
 
     return {list, isCanBackwards, isCanForwards};
   }, [
-    getAttendancesByUser.data?.attendance,
-    getAttendancesByUser.data?.attendance_aggregate,
+    getAllAttendances.data?.attendance,
+    getAllAttendances.data?.attendance_aggregate,
     startDate,
     untilDate,
   ]);
@@ -125,7 +124,7 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
         <RefreshControl
           refreshing={false}
           onRefresh={async () => {
-            await getAttendancesByUser.refetch();
+            await getAllAttendances.refetch();
           }}
         />
       }>
@@ -173,7 +172,7 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
               );
             }}
             tableWidth={'100%'}
-            isLoading={getAttendancesByUser.loading} // || _deleteStoreMutationResult.loading
+            isLoading={getAllAttendances.loading}
             rowHeight={80}
             data={attendancesData.list}
             columns={[

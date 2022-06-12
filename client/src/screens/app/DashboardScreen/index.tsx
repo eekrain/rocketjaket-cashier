@@ -146,7 +146,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
         <RefreshControl
           refreshing={dashboardData?.loading || false}
           onRefresh={async () => {
-            if (dashboardData?.refetch()) await dashboardData.refetch();
+            if (dashboardData?.refetch()) return await dashboardData.refetch();
           }}
         />
       }>

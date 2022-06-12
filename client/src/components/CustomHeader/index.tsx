@@ -13,11 +13,7 @@ import {
   Badge,
   useContrastText,
 } from 'native-base';
-import {
-  useMyUser,
-  getStorageFileUrlWImageTransform,
-  getXHasuraContextHeader,
-} from '../../shared/utils';
+import {useMyUser, getXHasuraContextHeader} from '../../shared/utils';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {useState} from 'react';
 import {allAppRoutes, AppNavigationParamList} from '../../screens/app';

@@ -79,21 +79,13 @@ const Produk = ({navigation}: Props) => {
     defaultValues,
   });
   const selectedStoreId = watch('store_id');
+  const [selectedStoreName, setSelectedStoreName] = useState('');
 
   const getAllStore = useStore_GetAllStoreQuery();
   const storeSelectOptions = useMemo(() => {
     const data = getAllStore.data?.stores || [];
     return data.map(store => ({label: store.name, value: store.id.toString()}));
   }, [getAllStore.data?.stores]);
-
-  const getStoreActive = useStore_GetStoreByPkQuery({
-    variables: {
-      id: parseInt(selectedStoreId || '0', 10),
-    },
-  });
-  const dataStoreActive = useMemo(() => {
-    return getStoreActive.data?.stores_by_pk;
-  }, [getStoreActive.data?.stores_by_pk]);
 
   const getAllTransaction = useTransaction_GetAllTransactionByStoreIdQuery({
     variables: {
@@ -142,31 +134,33 @@ const Produk = ({navigation}: Props) => {
   }, [getAllTransaction.data?.transaction, navigation]);
 
   useEffect(() => {
+    if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
+      myUser.updateStoreId(parseInt(selectedStoreId, 10));
+    }
     if (
       myUser.roles.includes(UserRolesEnum.administrator) &&
       !selectedStoreId
     ) {
       setValue('show_modal_change_toko', true);
-    } else if (
-      myUser.roles.includes(UserRolesEnum.administrator) &&
-      selectedStoreId
-    ) {
+    }
+    if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
       setValue('show_modal_change_toko', false);
     }
-    if (!isDataStoreReady) {
-      console.log(
-        '🚀 ~ file: index.tsx ~ line 227 ~ useEffect ~ nhostAuth.user.store_id',
-        myUser.store_id,
+  }, [myUser.roles, selectedStoreId]);
+
+  useEffect(() => {
+    if (!isDataStoreReady && myUser.store_id) {
+      setValue('store_id', myUser.store_id.toString());
+      setDataStoreReady(true);
+    } else if (
+      isDataStoreReady &&
+      !myUser.roles.includes(UserRolesEnum.administrator) &&
+      !myUser.store_id
+    ) {
+      Alert.alert(
+        'Akun Anda Belum Terdaftar',
+        'Akun anda belum terdaftar di store manapun! Silahkan kontak owner / admin untuk mendaftarkan akun anda ke penempatan toko sesuai.',
       );
-      if (myUser.store_id) {
-        setValue('store_id', myUser.store_id.toString());
-        setDataStoreReady(true);
-      } else if (!myUser.roles.includes(UserRolesEnum.administrator)) {
-        Alert.alert(
-          'Akun Anda Belum Terdaftar',
-          'Akun anda belum terdaftar di store manapun! Silahkan kontak owner / admin untuk mendaftarkan akun anda ke penempatan toko sesuai.',
-        );
-      }
     }
   }, [
     isDataStoreReady,
@@ -176,14 +170,17 @@ const Produk = ({navigation}: Props) => {
     setValue,
   ]);
 
+  useEffect(() => {
+    const found = storeSelectOptions.find(val => val.value === selectedStoreId);
+    setSelectedStoreName(found?.label || '');
+  }, [selectedStoreId, storeSelectOptions]);
+
   return (
     <ScrollView
       refreshControl={
         <RefreshControl
           refreshing={false}
-          onRefresh={() => {
-            getAllTransaction.refetch();
-          }}
+          onRefresh={async () => await getAllTransaction.refetch()}
         />
       }>
       <Modal
@@ -203,21 +200,19 @@ const Produk = ({navigation}: Props) => {
           </Box>
         </Modal.Content>
       </Modal>
-      <Box w="full" paddingBottom={300}>
-        <HStack alignItems="center" mb="10">
-          <HStack space="4" alignItems="center">
-            <Heading fontSize="xl">
-              List Semua Transaksi di Toko {dataStoreActive?.name}
-            </Heading>
-            {myUser.roles.includes(UserRolesEnum.administrator) && (
-              <Button
-                onPress={() => setValue('show_modal_change_toko', true)}
-                size="sm"
-                leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
-                Ganti Toko
-              </Button>
-            )}
-          </HStack>
+      <Box w="full" paddingBottom={'20'}>
+        <HStack space="4" alignItems="center" mb="10">
+          <Heading fontSize="xl">
+            List Semua Transaksi di Toko {selectedStoreName}
+          </Heading>
+          {myUser.roles.includes(UserRolesEnum.administrator) && (
+            <Button
+              onPress={() => setValue('show_modal_change_toko', true)}
+              size="sm"
+              leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
+              Ganti Toko
+            </Button>
+          )}
         </HStack>
 
         <CustomTable

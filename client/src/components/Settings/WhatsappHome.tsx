@@ -61,7 +61,10 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
 
   useEffect(() => {
     myAppState.setLoadingWholePage(getWAAuthStatus.loading);
-  }, [getWAAuthStatus.loading, myAppState]);
+    return () => {
+      myAppState.setLoadingWholePage(false);
+    };
+  }, [getWAAuthStatus.loading]);
 
   const WAAuthStatus = useMemo(() => {
     return getWAAuthStatus.data?.Whatsapp_GetAuthStatus || null;
@@ -103,10 +106,7 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
     <Box>
       <HStack mb="10" mt="4" justifyContent="space-between">
         <Heading fontSize="xl">Whatsapp</Heading>
-        <Button
-          onPress={() => {
-            getWAAuthStatus.refetch();
-          }}>
+        <Button onPress={async () => await getWAAuthStatus.refetch()}>
           Refresh
         </Button>
       </HStack>

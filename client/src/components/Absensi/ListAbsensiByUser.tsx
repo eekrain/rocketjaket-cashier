@@ -160,7 +160,7 @@ export const ListAbsensiByUser = ({}: IListAbsensiByUserProps) => {
               );
             }}
             tableWidth={700}
-            isLoading={getAttendancesByUser.loading} // || _deleteStoreMutationResult.loading
+            isLoading={getAttendancesByUser.loading}
             rowHeight={80}
             data={attendancesData.list}
             columns={[

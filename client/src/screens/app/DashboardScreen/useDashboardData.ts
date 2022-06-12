@@ -165,6 +165,10 @@ export const useDashboardData = ({
     myAppState.setLoadingWholePage(
       getDashboardData.loading || getAllStore.loading,
     );
+
+    return () => {
+      myAppState.setLoadingWholePage(false);
+    };
   }, [getDashboardData.loading, getAllStore.loading]);
 
   if (!dashboardData) return null;
