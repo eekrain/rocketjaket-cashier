@@ -5,7 +5,6 @@ import withAppLayout from '../Layout/AppLayout';
 import {
   useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription,
   useStore_GetAllStoreQuery,
-  useStore_GetStoreByPkQuery,
 } from '../../graphql/gql-generated';
 import {getUniqArrayObject, useFlexSearch, useMyUser} from '../../shared/utils';
 import {UserRolesEnum} from '../../types/user';
@@ -64,6 +63,7 @@ const CashierHome = ({route}: Props) => {
     defaultValues,
   });
   const selectedStoreId = watch('store_id');
+  const [selectedStoreName, setSelectedStoreName] = useState('');
   const activeCategory = watch('active_category');
   const searchTerm = watch('search_term');
 
@@ -73,19 +73,20 @@ const CashierHome = ({route}: Props) => {
     return data.map(store => ({label: store.name, value: store.id.toString()}));
   }, [getAllStore.data?.stores]);
 
-  const getStoreActive = useStore_GetStoreByPkQuery({
-    variables: {
-      id: parseInt(selectedStoreId || '0', 10),
-    },
-  });
-  const dataStoreActive = useMemo(() => {
-    return getStoreActive.data?.stores_by_pk;
-  }, [getStoreActive.data?.stores_by_pk]);
-
   const getAllInventoryProduct =
     useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription({
       variables: {store_id: parseInt(selectedStoreId || '0', 10)},
     });
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 86 ~ CashierHome ~ getAllInventoryProduct.error',
+    getAllInventoryProduct.error,
+  );
+
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 94 ~ CashierHome ~ getAllInventoryProduct.data?.inventory_products',
+    getAllInventoryProduct.data?.inventory_products,
+  );
+
   const inventoryProductData: {
     raw: IInventoryProductData[];
     filteredByCategory: IInventoryProductData[];
@@ -223,14 +224,8 @@ const CashierHome = ({route}: Props) => {
 
   useEffect(() => {
     if (!isDataStoreReady && myUser.store_id) {
-      // console.log(
-      //   '🚀 ~ file: index.tsx ~ line 227 ~ useEffect ~ myUser.store_id',
-      //   myUser.store_id,
-      // );
-      if (myUser.store_id) {
-        setValue('store_id', myUser.store_id.toString());
-        setDataStoreReady(true);
-      }
+      setValue('store_id', myUser.store_id.toString());
+      setDataStoreReady(true);
     } else if (
       isDataStoreReady &&
       !myUser.roles.includes(UserRolesEnum.administrator) &&
@@ -250,16 +245,18 @@ const CashierHome = ({route}: Props) => {
   ]);
 
   useEffect(() => {
+    const found = storeSelectOptions.find(val => val.value === selectedStoreId);
+    setSelectedStoreName(found?.label || '');
+  }, [selectedStoreId, storeSelectOptions]);
+
+  useEffect(() => {
     myAppState.setLoadingWholePage(
-      getAllStore.loading ||
-        getStoreActive.loading ||
-        getAllInventoryProduct.loading,
+      getAllStore.loading || getAllInventoryProduct.loading,
     );
-  }, [
-    getAllStore.loading,
-    getStoreActive.loading,
-    getAllInventoryProduct.loading,
-  ]);
+    return () => {
+      myAppState.setLoadingWholePage(false);
+    };
+  }, [getAllStore.loading, getAllInventoryProduct.loading]);
 
   return (
     <Box>
@@ -287,7 +284,7 @@ const CashierHome = ({route}: Props) => {
           activeCategory={activeCategory}
           control={control}
           errors={errors}
-          dataStoreActive={dataStoreActive}
+          selectedStoreName={selectedStoreName}
           kategoriProdukTab={kategoriProdukTab}
           setValue={setValue}
           filteredByCategoryProductData={

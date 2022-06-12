@@ -155,19 +155,12 @@ const Produk = ({}: Props) => {
     toast,
   ]);
 
-  useEffect(() => {
-    getAllProduk.refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <ScrollView
       refreshControl={
         <RefreshControl
           refreshing={false}
-          onRefresh={() => {
-            getAllProduk.refetch();
-          }}
+          onRefresh={async () => await getAllProduk.refetch()}
         />
       }>
       <Box w="full" paddingBottom={300}>

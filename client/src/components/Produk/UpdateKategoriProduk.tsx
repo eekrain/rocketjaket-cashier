@@ -57,12 +57,12 @@ const UpdateKategoriProduk = ({}: Props) => {
   });
 
   useEffect(() => {
-    if (!isSubmitSuccessful) {
-      myAppState.setLoadingWholePage(getDataKategori.loading);
-    } else {
+    myAppState.setLoadingWholePage(getDataKategori.loading);
+
+    return () => {
       myAppState.setLoadingWholePage(false);
-    }
-  }, [getDataKategori.loading, isSubmitSuccessful, myAppState]);
+    };
+  }, [getDataKategori.loading]);
 
   useEffect(() => {
     const dataKategori = getDataKategori.data?.product_categories_by_pk;

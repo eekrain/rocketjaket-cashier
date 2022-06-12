@@ -2,7 +2,7 @@ import React from 'react';
 import {Box, VStack, Button, HStack, Text, IBoxProps} from 'native-base';
 import {RHTextInput} from '../../shared/components';
 import {Control} from 'react-hook-form';
-import {ISendReceiptFormDefaultValues} from './PaymentLanding';
+import {ISendReceiptFormDefaultValues} from './Payment/PaymentLandingModal';
 
 interface Props {
   control: Control<ISendReceiptFormDefaultValues, object>;

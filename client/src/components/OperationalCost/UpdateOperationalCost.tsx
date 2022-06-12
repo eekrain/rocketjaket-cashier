@@ -71,7 +71,11 @@ const UpdateOperationalCost = ({
 
   useEffect(() => {
     myAppState.setLoadingWholePage(getDataOperationalCost.loading);
-  }, [getDataOperationalCost.loading, myAppState]);
+
+    return () => {
+      myAppState.setLoadingWholePage(false);
+    };
+  }, [getDataOperationalCost.loading]);
 
   useEffect(() => {
     if (dataOperationalCost === null && !isErrorOnce) {

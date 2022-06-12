@@ -130,17 +130,14 @@ const UpdateToko = ({}: IUpdateTokoProps) => {
       });
     },
   });
-  useEffect(() => {
-    myAppState.setLoadingWholePage(getDataToko.loading);
-  }, [getDataToko.loading, myAppState]);
 
   useEffect(() => {
-    if (!isSubmitSuccessful) {
-      myAppState.setLoadingWholePage(getDataToko.loading);
-    } else {
+    myAppState.setLoadingWholePage(getDataToko.loading);
+
+    return () => {
       myAppState.setLoadingWholePage(false);
-    }
-  }, [getDataToko.loading, isSubmitSuccessful, myAppState]);
+    };
+  }, [getDataToko.loading]);
 
   const [updateStoreMutation, _updateStoreMutationResult] =
     useStore_UpdateStoreMutation({

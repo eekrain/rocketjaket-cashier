@@ -7,6 +7,7 @@ import {
   Icon,
   useToast,
   ScrollView,
+  Modal,
 } from 'native-base';
 import {Alert, RefreshControl} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -23,13 +24,12 @@ import {RHSelect, MyAvatar, MyImageViewer} from '../../shared/components';
 import {useMyAppState} from '../../state';
 import {InventoryScreenProps} from '../../screens/app/InventoryScreen';
 import {useForm} from 'react-hook-form';
-import {
-  getStorageFileUrlWImageTransform,
-  myNumberFormat,
-} from '../../shared/utils';
+import {myNumberFormat, useMyUser} from '../../shared/utils';
 import {nanoid} from 'nanoid/non-secure';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import to from 'await-to-js';
+import {UserRolesEnum} from '../../types/user';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 interface IActionProps {
   navigation: InventoryScreenProps['InventoryHome']['navigation'];
@@ -67,11 +67,13 @@ const Action = ({
   );
 };
 
-interface InventoryForm {
+export interface IDefaultValues {
+  show_modal_change_toko: boolean;
   store_id: string | null;
 }
 
-const defaultValues: InventoryForm = {
+const defaultValues: IDefaultValues = {
+  show_modal_change_toko: false,
   store_id: null,
 };
 
@@ -80,24 +82,25 @@ type X = InventoryScreenProps['InventoryHome'];
 interface IListInventoryProps extends X {}
 
 const ListInventory = ({navigation}: IListInventoryProps) => {
+  const myUser = useMyUser();
   const myAppState = useMyAppState();
   const getAllToko = useStore_GetAllStoreQuery();
   const toast = useToast();
-  const [isDataReady, setDataReady] = useState(false);
+  const [isDataStoreReady, setDataStoreReady] = useState(false);
 
   const {
     watch,
     control,
     setValue,
     formState: {errors},
-  } = useForm<InventoryForm>({
+  } = useForm({
     defaultValues,
   });
 
   const selectedStoreId = watch('store_id');
   const [selectedStoreName, setSelectedStoreName] = useState('');
 
-  const tokoSelectOptions = useMemo(() => {
+  const storeSelectOptions = useMemo(() => {
     const allToko = getAllToko.data?.stores || [];
 
     const normalized = allToko.map(toko => ({
@@ -107,27 +110,6 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
 
     return normalized;
   }, [getAllToko.data?.stores]);
-
-  useEffect(() => {
-    if (!isDataReady && tokoSelectOptions.length > 0) {
-      setValue('store_id', tokoSelectOptions?.[0].value);
-      setDataReady(true);
-      myAppState.setLoadingWholePage(false);
-    } else if (!isDataReady) {
-      myAppState.setLoadingWholePage(true);
-    }
-  }, [
-    getAllToko.loading,
-    isDataReady,
-    myAppState,
-    setValue,
-    tokoSelectOptions,
-  ]);
-
-  useEffect(() => {
-    const found = tokoSelectOptions.find(val => val.value === selectedStoreId);
-    setSelectedStoreName(found?.label || '');
-  }, [selectedStoreId, tokoSelectOptions]);
 
   const getAllInventory = useInventory_GetAllInventoryProductByStoreIdQuery({
     variables: {
@@ -251,44 +233,96 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
     toast,
   ]);
 
+  useEffect(() => {
+    if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
+      myUser.updateStoreId(parseInt(selectedStoreId, 10));
+    }
+    if (
+      myUser.roles.includes(UserRolesEnum.administrator) &&
+      !selectedStoreId
+    ) {
+      setValue('show_modal_change_toko', true);
+    }
+    if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
+      setValue('show_modal_change_toko', false);
+    }
+  }, [myUser.roles, selectedStoreId]);
+
+  useEffect(() => {
+    if (!isDataStoreReady && myUser.store_id) {
+      setValue('store_id', myUser.store_id.toString());
+      setDataStoreReady(true);
+    } else if (
+      isDataStoreReady &&
+      !myUser.roles.includes(UserRolesEnum.administrator) &&
+      !myUser.store_id
+    ) {
+      Alert.alert(
+        'Akun Anda Belum Terdaftar',
+        'Akun anda belum terdaftar di store manapun! Silahkan kontak owner / admin untuk mendaftarkan akun anda ke penempatan toko sesuai.',
+      );
+    }
+  }, [
+    isDataStoreReady,
+    myUser.roles,
+    myUser.store_id,
+    selectedStoreId,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    const found = storeSelectOptions.find(val => val.value === selectedStoreId);
+    setSelectedStoreName(found?.label || '');
+  }, [selectedStoreId, storeSelectOptions]);
+
   return (
     <ScrollView
       refreshControl={
         <RefreshControl
           refreshing={false}
-          onRefresh={() => {
-            getAllToko.refetch();
-            getAllInventory.refetch();
+          onRefresh={async () => {
+            await getAllToko.refetch();
+            await getAllInventory.refetch();
           }}
         />
       }>
-      <Box paddingBottom={300}>
-        <Box mb="4">
-          <Heading fontSize="xl" mb="2">
-            Pilih Toko
-          </Heading>
-          <Box bgColor="white" rounded="lg">
+      <Modal
+        isOpen={watch('show_modal_change_toko')}
+        onClose={() => setValue('show_modal_change_toko', false)}>
+        <Modal.Content maxWidth="400px">
+          <Modal.CloseButton />
+          <Modal.Header>Pilih Toko</Modal.Header>
+          <Box p="3">
             <RHSelect
-              selectOptions={tokoSelectOptions}
-              name="store_id"
+              selectOptions={storeSelectOptions}
               control={control}
               errors={errors}
-              label="Pilih Toko"
-              isDisableLabel={true}
-              w="full"
-              fontSize="lg"
-              placeholderTextColor="gray.400"
+              name="store_id"
+              label="Toko"
             />
           </Box>
-        </Box>
+        </Modal.Content>
+      </Modal>
+      <Box paddingBottom={300}>
         <HStack
           justifyContent="space-between"
           alignItems="center"
           mb="10"
           mt="4">
-          <Heading fontSize="xl">
-            List Inventory / Stok Produk Toko {selectedStoreName}
-          </Heading>
+          <HStack space="4" alignItems="center">
+            <Heading fontSize="xl">
+              List Inventory / Stok Produk Toko {selectedStoreName}
+            </Heading>
+            {myUser.roles.includes(UserRolesEnum.administrator) && (
+              <Button
+                onPress={() => setValue('show_modal_change_toko', true)}
+                size="sm"
+                leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
+                Ganti Toko
+              </Button>
+            )}
+          </HStack>
+
           <Button
             onPress={() => {
               if (selectedStoreId) {
@@ -306,7 +340,9 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
         </HStack>
         <CustomTable
           isLoading={
-            getAllToko.loading // || _deleteInventoryProductMutationResult.loading
+            getAllToko.loading ||
+            getAllInventory.loading ||
+            _deleteInventoryProductMutationResult.loading
           }
           keyAccessor="id"
           rowHeight={80}

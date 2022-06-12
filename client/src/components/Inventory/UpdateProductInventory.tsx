@@ -291,15 +291,11 @@ const UpdateProductInventory = ({
 
   useEffect(() => {
     myAppState.setLoadingWholePage(getInventoryProductData.loading);
-  }, [getInventoryProductData.loading, myAppState]);
 
-  useEffect(() => {
-    if (!isSubmitSuccessful) {
-      myAppState.setLoadingWholePage(getInventoryProductData.loading);
-    } else {
+    return () => {
       myAppState.setLoadingWholePage(false);
-    }
-  }, [getInventoryProductData.loading, isSubmitSuccessful, myAppState]);
+    };
+  }, [getInventoryProductData.loading]);
 
   return (
     <KeyboardAwareScrollView enableOnAndroid={true}>

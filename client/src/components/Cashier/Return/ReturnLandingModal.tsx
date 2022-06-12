@@ -15,10 +15,8 @@ import {myNumberFormat, myTextFormat} from '../../../shared/utils';
 import {useForm} from 'react-hook-form';
 import {DismissKeyboardWrapper} from '../../../shared/components';
 import {
-  Cashier_CreateTransactionMutation,
   namedOperations,
   TotalTransactionCompare,
-  TransactionPaymentTypeEnum,
   TransactionReceiptTypeEnum,
   Transaction_ReturnTransactionMutation,
   useTransaction_SendReceiptToCustomerMutation,

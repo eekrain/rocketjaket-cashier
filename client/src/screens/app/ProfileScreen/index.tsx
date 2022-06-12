@@ -114,7 +114,11 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
 
   useEffect(() => {
     myAppState.setLoadingWholePage(getUserData.loading);
-  }, [getUserData.loading, myAppState]);
+
+    return () => {
+      myAppState.setLoadingWholePage(false);
+    };
+  }, [getUserData.loading]);
 
   useEffect(() => {
     if (userDataFetched === null && !isErrorOnce) {
