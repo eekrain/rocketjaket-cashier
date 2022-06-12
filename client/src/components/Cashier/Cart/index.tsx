@@ -141,8 +141,8 @@ const Cart = () => {
       />
       <Box
         bgColor="white"
-        minW={{base: 'full', lg: '2/6'}}
-        minHeight={{base: '10', lg: '89%'}}
+        minW={{base: 'full', lg: '3/6'}}
+        minHeight={{base: '64', lg: '89%'}}
         borderRadius="xl"
         mt={{base: -10, lg: undefined}}
         p="4">
