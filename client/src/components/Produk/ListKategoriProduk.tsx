@@ -127,9 +127,7 @@ const KategoriProduk = ({}: Props) => {
       refreshControl={
         <RefreshControl
           refreshing={false}
-          onRefresh={() => {
-            getAllKategoriProduk.refetch();
-          }}
+          onRefresh={async () => await getAllKategoriProduk.refetch()}
         />
       }>
       <Box paddingBottom={300}>

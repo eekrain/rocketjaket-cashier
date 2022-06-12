@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import to from 'await-to-js';
 import {useToast} from 'native-base';
 import {TOAST_TEMPLATE} from '../shared/constants';
+import {useMyAppState} from './myApp';
 
 interface INotification {
   id: number;
@@ -134,10 +135,7 @@ export const useMyNotification = () => {
 export const useMyNotificationBackgroundTask = () => {
   const myUser = useMyUser();
   const myNotif = useMyNotification();
-  // console.log(
-  //   '🚀 ~ file: notification.ts ~ line 37 ~ useMyNotificationBackgroundTask ~ myNotif',
-  //   myNotif,
-  // );
+  const myApp = useMyAppState();
 
   const getNotifications =
     useNotification_GetNotificationsWithReadStatusByUserIdSubscription({
@@ -173,4 +171,11 @@ export const useMyNotificationBackgroundTask = () => {
     );
     myNotif.updateTotalUnread(total_unread);
   }, [notifications]);
+
+  useEffect(() => {
+    myApp.setLoadingWholePage(getNotifications.loading);
+    return () => {
+      myApp.setLoadingWholePage(false);
+    };
+  }, [getNotifications.loading]);
 };

@@ -164,9 +164,7 @@ const UserHome = ({}: IUserHomeProps) => {
       refreshControl={
         <RefreshControl
           refreshing={false}
-          onRefresh={() => {
-            getAllUser.refetch();
-          }}
+          onRefresh={async () => await getAllUser.refetch()}
         />
       }>
       <Box paddingBottom={300}>

@@ -14,7 +14,7 @@
     "generate-types": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
-    "@apollo/client": "^3.5.10",
+    "@apollo/client": "^3.7.0-beta.5",
     "@hookform/resolvers": "^2.8.8",
     "@nhost/nhost-js": "^1.1.11",
     "@nhost/react": "^0.7.5",

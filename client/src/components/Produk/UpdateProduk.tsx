@@ -146,12 +146,12 @@ const UpdateProduk = ({navigation, route}: Props) => {
   });
 
   useEffect(() => {
-    if (!isSubmitSuccessful) {
-      myAppState.setLoadingWholePage(getProdukData.loading);
-    } else {
+    myAppState.setLoadingWholePage(getProdukData.loading);
+
+    return () => {
       myAppState.setLoadingWholePage(false);
-    }
-  }, [getProdukData.loading, isSubmitSuccessful, myAppState]);
+    };
+  }, [getProdukData.loading]);
 
   useEffect(() => {
     const produkData = getProdukData.data?.products_by_pk;
