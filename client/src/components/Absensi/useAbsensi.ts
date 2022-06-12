@@ -60,9 +60,9 @@ export const useAbsensi = () => {
       working_hour_start: working_hour_start.toISOString(),
     },
     onCompleted: data => {
-      console.log(
-        '🚀 ~ file: useAbsensi.ts ~ line 62 ~ useAbsensi ~ onCompleted useAttendance_GetMyAttendanceTodayQuery',
-      );
+      // console.log(
+      //   '🚀 ~ file: useAbsensi.ts ~ line 62 ~ useAbsensi ~ onCompleted useAttendance_GetMyAttendanceTodayQuery',
+      // );
       const todayAttendance = data.attendance?.[0];
       if (
         literallyToday.isAfter(working_hour_start) &&

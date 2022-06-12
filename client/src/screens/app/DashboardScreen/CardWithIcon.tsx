@@ -16,17 +16,18 @@ interface CardWithIconProps {
 const cardDefault: InterfaceHStackProps = {
   alignItems: 'center',
   borderRadius: 'lg',
-  pl: 4,
+  pl: {base: '2', md: '4'},
   bgColor: 'teal.600',
-  w: '64',
-  h: '20',
+  w: {base: '48%', md: '35%', lg: '36%'},
+  h: {base: 55, md: 77},
   py: 2,
-  space: '4',
+  space: '2',
 };
 const titleDefault: InterfaceTextProps = {
   fontWeight: 'bold',
-  fontSize: 'lg',
+  fontSize: {base: 'sm', md: 'sm', lg: 'lg'},
   color: 'white',
+  w: {base: '100%', md: '80%', lg: '80%'},
   opacity: '0.8',
 };
 
@@ -36,7 +37,11 @@ const iconDefault: InterfaceIconProps = {
   opacity: 0.3,
 };
 
-const valueDefault: InterfaceTextProps = {fontWeight: 'bold', color: 'white'};
+const valueDefault: InterfaceTextProps = {
+  fontWeight: 'bold',
+  color: 'white',
+  fontSize: {base: 'sm', md: 'sm', lg: 'lg'},
+};
 
 export const CardWithIcon = ({
   title,

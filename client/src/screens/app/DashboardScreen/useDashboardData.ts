@@ -81,7 +81,7 @@ export const useDashboardData = ({
       mode: mode as TimeMode,
     },
     onCompleted: () => {
-      console.log('useDashboard_GetDashboardDataQuery onCompleted');
+      // console.log('useDashboard_GetDashboardDataQuery onCompleted');
     },
   });
 
