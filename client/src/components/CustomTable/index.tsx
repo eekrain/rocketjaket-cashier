@@ -49,12 +49,22 @@ const MyCustomTable = <T extends Record<string, unknown>>({
         tableSettingParams.mainSettings.tableWidth === 'full'
           ? window.width - 32
           : tableSettingParams.mainSettings.tableWidth,
-      withPagination: tableSettingParams?.mainSettings?.withPagination || true,
+      withPagination:
+        tableSettingParams.mainSettings.withPagination === false
+          ? false
+          : tableSettingParams.mainSettings.withPagination === undefined
+          ? true
+          : true,
       defaultSortFrom:
         tableSettingParams?.mainSettings?.defaultSortFrom || 'asc',
       optionRowsPerPage: tableSettingParams?.mainSettings
         ?.optionRowsPerPage || [10, 25, 50],
-      withSearch: tableSettingParams?.mainSettings?.withSearch || true,
+      withSearch:
+        tableSettingParams.mainSettings.withSearch === false
+          ? false
+          : tableSettingParams.mainSettings.withSearch === undefined
+          ? true
+          : true,
     },
     header: {
       ...tableSettingParams.header,
@@ -68,6 +78,15 @@ const MyCustomTable = <T extends Record<string, unknown>>({
       rowHeight: tableSettingParams?.row?.rowHeight || 60,
     },
   };
+
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 42 ~ tableSettingParams.mainSettings',
+    tableSettingParams.mainSettings,
+  );
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 42 ~ tableSettings.mainSettings',
+    tableSettings.mainSettings,
+  );
 
   const [searchTerm, setSearhTerm] = useState('');
   const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>(
@@ -165,10 +184,7 @@ const MyCustomTable = <T extends Record<string, unknown>>({
   ]);
 
   return (
-    <VStack
-      w={tableSettings.mainSettings.tableWidth}
-      bgColor="white"
-      borderRadius={'xl'}>
+    <VStack bgColor="white" borderRadius={'xl'}>
       {tableSettings.customComponent?.top && (
         <tableSettings.customComponent.top />
       )}
@@ -198,7 +214,6 @@ const MyCustomTable = <T extends Record<string, unknown>>({
         valueToOrderByForDisplay={valueToOrderByForDisplay}
         footer={footer}
       />
-
       {tableSettings.mainSettings.withPagination && (
         <CustomTablePagination
           handleChangeRowsPerPage={handleChangeRowsPerPage}
@@ -216,36 +231,5 @@ const MyCustomTable = <T extends Record<string, unknown>>({
     </VStack>
   );
 };
-
-const defaultStyles = StyleSheet.create({
-  tableStyle: {
-    width: '100%',
-  },
-  header: {
-    height: 50,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  headerText: {
-    fontWeight: '500',
-    color: '#dc2626',
-    paddingHorizontal: 20,
-  },
-  text: {
-    fontWeight: '300',
-    color: '#000',
-    paddingHorizontal: 20,
-  },
-  dataWrapper: {
-    marginTop: -1,
-  },
-  row: {
-    backgroundColor: '#e4e4e7',
-    alignItems: 'center',
-    position: 'relative',
-    paddingHorizontal: 20,
-  },
-});
 
 export default MyCustomTable;

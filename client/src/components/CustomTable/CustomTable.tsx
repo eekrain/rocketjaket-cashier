@@ -159,7 +159,7 @@ export const CustomTable = <T extends Record<string, unknown>>({
   );
 
   return (
-    <ScrollView horizontal={true}>
+    <ScrollView horizontal={true} nestedScrollEnabled={true}>
       <Box
         width={tableSettings.mainSettings.tableWidth}
         height={

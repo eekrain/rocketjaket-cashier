@@ -327,7 +327,10 @@ const CashierHome = ({route}: Props) => {
                 />
               </HStack>
             )}
-            <HStack space="4" alignItems="center">
+            <HStack
+              space="4"
+              alignItems="center"
+              mb={route.params?.invoiceNumberRefundPart ? -30 : undefined}>
               <Heading fontSize="xl">Toko {selectedStoreName}</Heading>
               {roles.includes(UserRolesEnum.administrator) && (
                 <Button
