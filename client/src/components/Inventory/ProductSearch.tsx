@@ -101,13 +101,9 @@ const ProductSearch = ({control, errors, setSelectedProductId}: Props) => {
             py="2"
             space="6">
             <MyImageViewer
-              source={{
-                uri: getStorageFileUrlWImageTransform({
-                  fileId: selectedProduct.photo_id,
-                  w: 50,
-                }),
-              }}
+              source={{fileId: selectedProduct.photo_id, w: 50}}
               size={50}
+              isDisableZoom={true}
             />
             <Text>{selectedProduct.label}</Text>
           </HStack>
@@ -172,11 +168,10 @@ const searchDropdown = (
                     borderColor="gray.200">
                     <MyImageViewer
                       source={{
-                        uri: getStorageFileUrlWImageTransform({
-                          fileId: item.photo_id,
-                          w: 50,
-                        }),
+                        fileId: item.photo_id,
+                        w: 50,
                       }}
+                      isDisableZoom={true}
                       size={50}
                     />
                     <Text>{item.label}</Text>

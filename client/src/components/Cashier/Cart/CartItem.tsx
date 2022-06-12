@@ -35,11 +35,9 @@ const CartItem = ({item, showBorderBottom, isReturnItem}: CartItemProps) => {
       <MyAvatar
         fallbackText={item.product_name}
         source={{
-          uri: getStorageFileUrlWImageTransform({
-            fileId: item.product_photo_id,
-            w: 50,
-            q: 80,
-          }),
+          fileId: item.product_photo_id,
+          w: 50,
+          q: 80,
         }}
         size={50}
       />

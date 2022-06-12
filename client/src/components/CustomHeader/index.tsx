@@ -123,11 +123,9 @@ const CustomHeader = ({}: ICustomHeaderProps) => {
               {...triggerProps}>
               <MyAvatar
                 source={{
-                  uri: getStorageFileUrlWImageTransform({
-                    fileUrl: myUser.avatarUrl,
-                    w: 150,
-                    q: 60,
-                  }),
+                  fileUrl: myUser.avatarUrl,
+                  w: 150,
+                  q: 60,
                 }}
                 fallbackText={myUser.displayName || ''}
                 size={50}
@@ -135,6 +133,7 @@ const CustomHeader = ({}: ICustomHeaderProps) => {
                 textColor={
                   isAvatarPressed ? 'milano_red.500' : 'milano_red.600'
                 }
+                isDisableZoom={true}
               />
             </Pressable>
           )}>
