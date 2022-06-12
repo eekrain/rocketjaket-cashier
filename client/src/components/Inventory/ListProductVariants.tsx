@@ -187,12 +187,17 @@ const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
           </Button>
         </HStack>
         <CustomTable
-          keyAccessor="variant_value"
+          rowKeysAccessor="variant_value"
           isLoading={
             getAllVariantMetadata.loading ||
             _deleteVariantMetadataMutationResult.loading
           }
-          rowHeight={80}
+          tableSettings={{
+            mainSettings: {
+              tableWidth: 'full',
+              defaultSortFrom: 'asc',
+            },
+          }}
           data={data}
           columns={[
             {Header: 'Judul Variasi', accessor: 'variant_title', widthRatio: 1},
