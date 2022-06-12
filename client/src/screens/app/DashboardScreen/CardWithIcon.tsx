@@ -19,7 +19,7 @@ const cardDefault: InterfaceHStackProps = {
   pl: {base: '2', md: '4'},
   bgColor: 'teal.600',
   w: {base: '48%', md: '35%', lg: '36%'},
-  h: {base: 55, md: 77},
+  h: {base: 55, md: 91},
   py: 2,
   space: '2',
 };
