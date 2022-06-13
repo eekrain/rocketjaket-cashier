@@ -44,6 +44,14 @@ interface IDefaultValues {
 const schema = yup
   .object({
     variant_title: yup.string().required('Nama toko harus diisi'),
+    variant_values: yup
+      .array()
+      .of(
+        yup.object().shape({
+          value: yup.string().required('Opsi variasi harus diisi'),
+        }),
+      )
+      .min(1, 'Opsi variasi minimal ada 1'),
   })
   .required();
 
@@ -225,6 +233,16 @@ const CreateProductVariants = ({
                           control={control}
                           errors={errors}
                           label={`Opsi Variasi ${index + 1}`}
+                          overrideErrorMessage={
+                            errors?.variant_values?.[index]?.value?.message
+                              ? errors.variant_values?.[index]?.value?.message
+                              : ''
+                          }
+                          overrideIsInvalid={
+                            errors?.variant_values?.[index]?.value?.message
+                              ? true
+                              : false
+                          }
                         />
                       </Box>
                       <Box>

@@ -41,20 +41,20 @@ export const MyPieChart = ({
     lg: 320,
     xl: 320,
   });
-  console.log(
-    '🚀 ~ file: MyPieChart.tsx ~ line 46 ~ pieChartWidth',
-    pieChartWidth,
-  );
+  // console.log(
+  //   '🚀 ~ file: MyPieChart.tsx ~ line 46 ~ pieChartWidth',
+  //   pieChartWidth,
+  // );
   const pieChartHeight: number = useBreakpointValue({
     sm: 200,
     md: 130,
     lg: 200,
     xl: 200,
   });
-  console.log(
-    '🚀 ~ file: MyPieChart.tsx ~ line 52 ~ pieChartHeight',
-    pieChartHeight,
-  );
+  // console.log(
+  //   '🚀 ~ file: MyPieChart.tsx ~ line 52 ~ pieChartHeight',
+  //   pieChartHeight,
+  // );
   return (
     <>
       {data && data.length > 0 && (

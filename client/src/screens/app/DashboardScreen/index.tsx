@@ -55,20 +55,20 @@ interface IDashboardScreenProps {}
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const DashboardScreen = ({}: IDashboardScreenProps) => {
   const window = useWindowDimensions();
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 57 ~ DashboardScreen ~ window',
-    window,
-  );
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 57 ~ DashboardScreen ~ window',
+  //   window,
+  // );
   const lineChartWidth: number = useBreakpointValue({
     sm: window.width - 60,
     md: window.width - 65,
     lg: window.width - 80,
     xl: window.width - 80,
   });
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 63 ~ DashboardScreen ~ lineChartWidth',
-    lineChartWidth,
-  );
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 63 ~ DashboardScreen ~ lineChartWidth',
+  //   lineChartWidth,
+  // );
 
   const {
     handleSubmit,
