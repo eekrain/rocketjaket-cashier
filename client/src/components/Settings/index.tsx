@@ -17,7 +17,6 @@ interface ITokoHomeProps {}
 
 const TokoHome = ({}: ITokoHomeProps) => {
   const [activeTab, setActiveTab] = React.useState(0);
-
   const Component: React.ComponentType<any> = useMemo(() => {
     return routes[activeTab].component;
   }, [activeTab]);

@@ -7,6 +7,7 @@ import {
   Icon,
   useToast,
   ScrollView,
+  useBreakpointValue,
 } from 'native-base';
 import {Alert, RefreshControl} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -51,6 +52,10 @@ const Action = ({id, navigation, handleDeleteToko}: IActionProps) => {
 interface ITokoHomeProps {}
 
 const TokoHome = () => {
+  const tableWidth: number | 'full' = useBreakpointValue({
+    base: 600,
+    md: 'full',
+  });
   const getAllToko = useStore_GetAllStoreQuery();
   const navigation =
     useNavigation<SettingsScreenProps['ListToko']['navigation']>();
@@ -143,19 +148,19 @@ const TokoHome = () => {
           rowKeysAccessor="id"
           tableSettings={{
             mainSettings: {
-              tableWidth: 'full',
+              tableWidth,
               defaultSortFrom: 'asc',
             },
           }}
           isLoading={getAllToko.loading || _deleteStoreMutationResult.loading}
           data={data}
           columns={[
-            {Header: 'Nama Toko', accessor: 'name', widthRatio: 1},
-            {Header: 'Alamat', accessor: 'address', widthRatio: 3},
+            {Header: 'Nama Toko', accessor: 'name', widthRatio: 0.5},
+            {Header: 'Alamat', accessor: 'address', widthRatio: 1},
             {
               Header: 'Aksi',
               accessor: 'component',
-              widthRatio: 0.7,
+              widthRatio: 0.4,
               isAction: true,
             },
           ]}
