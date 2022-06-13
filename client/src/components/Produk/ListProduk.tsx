@@ -61,7 +61,6 @@ interface IProductPhotoProps {
 interface Props {}
 
 const Produk = ({}: Props) => {
-  const window = useWindowDimensions();
   const tableWidth: number | 'full' = useBreakpointValue({
     base: 900,
     md: 'full',

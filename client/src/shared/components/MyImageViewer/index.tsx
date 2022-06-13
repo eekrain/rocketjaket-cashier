@@ -38,7 +38,7 @@ IMyImageViewerProps) => {
   // console.log('🚀 ~ file: index.tsx ~ line 23 ~ source', source);
   const accessToken = useAccessToken();
   const [isError, setError] = useState(false);
-  console.log('🚀 ~ file: index.tsx ~ line 39 ~ isError', isError);
+  // console.log('🚀 ~ file: index.tsx ~ line 39 ~ isError', isError);
   const myZoomImageViewer = useMyZoomImageViewer();
 
   const finalSource = useMemo(

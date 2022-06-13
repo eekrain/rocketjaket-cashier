@@ -14,6 +14,8 @@ interface IRHTextInputProps extends IInputProps {
   isDisableLabel?: boolean;
   overrideErrorName?: string;
   format?: TRHTextInputFormat;
+  overrideErrorMessage?: string;
+  overrideIsInvalid?: boolean;
 }
 
 const formatText = (text: string, format?: TRHTextInputFormat) => {
@@ -35,12 +37,18 @@ export const RHTextInput = ({
   isDisableLabel,
   overrideErrorName,
   format,
+  overrideErrorMessage,
+  overrideIsInvalid,
   ...rest
 }: IRHTextInputProps) => {
   return (
     <FormControl
       isInvalid={
-        overrideErrorName ? overrideErrorName in errors : name in errors
+        overrideIsInvalid !== undefined
+          ? overrideIsInvalid
+          : overrideErrorName
+          ? overrideErrorName in errors
+          : name in errors
       }>
       {!isDisableLabel ? <FormControl.Label>{label}</FormControl.Label> : null}
       <Controller
@@ -61,7 +69,9 @@ export const RHTextInput = ({
         )}
       />
       <FormControl.ErrorMessage>
-        {overrideErrorName
+        {overrideErrorMessage
+          ? overrideErrorMessage
+          : overrideErrorName
           ? errors[overrideErrorName]?.message
           : errors[name]?.message}
       </FormControl.ErrorMessage>

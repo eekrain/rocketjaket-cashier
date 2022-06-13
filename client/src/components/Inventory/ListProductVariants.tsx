@@ -7,6 +7,7 @@ import {
   Icon,
   useToast,
   ScrollView,
+  useBreakpointValue,
 } from 'native-base';
 import {Alert, RefreshControl} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -56,6 +57,10 @@ type X = InventoryScreenProps['InventoryHome'];
 interface IListProductVariantsProps extends X {}
 
 const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
+  const tableWidth: number | 'full' = useBreakpointValue({
+    base: 700,
+    md: 'full',
+  });
   const getAllVariantMetadata = useInventory_GetAllVariantMetadataQuery();
   const toast = useToast();
 
@@ -170,7 +175,7 @@ const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
           onRefresh={async () => await getAllVariantMetadata.refetch()}
         />
       }>
-      <Box paddingBottom={300}>
+      <Box pb={'56'}>
         <HStack
           justifyContent="space-between"
           alignItems="center"
@@ -194,7 +199,7 @@ const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
           }
           tableSettings={{
             mainSettings: {
-              tableWidth: 'full',
+              tableWidth,
               defaultSortFrom: 'asc',
             },
           }}
