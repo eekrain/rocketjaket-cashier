@@ -1633,67 +1633,67 @@
   resolved "https://registry.npmmirror.com/@n1ru4l/graphql-live-query/-/graphql-live-query-0.9.0.tgz#defaebdd31f625bee49e6745934f36312532b2bc"
   integrity sha512-BTpWy1e+FxN82RnLz4x1+JcEewVdfmUhV1C6/XYD5AjS7PQp9QFF7K8bCD6gzPTr2l+prvqOyVueQhFJxB1vfg==
 
-"@nhost/apollo@0.5.4":
-  version "0.5.4"
-  resolved "https://registry.npmmirror.com/@nhost/apollo/-/apollo-0.5.4.tgz#639c6517a8f24940920225d418a0885bff1bae82"
-  integrity sha512-uqIh38UeG72517FaQFhBH/hBGuVxlOwNOcSlpfl9sgIKm/eE/gUDJgn1IZh4U0Jw3Wpp8FOtVBSdbU0Jn5thSA==
+"@nhost/apollo@0.5.15":
+  version "0.5.15"
+  resolved "https://registry.npmmirror.com/@nhost/apollo/-/apollo-0.5.15.tgz#b33d615546b81585d6fbd0e98b528d28631f1e1d"
+  integrity sha512-sEXqqn2QfNvQ0FlAOtiR7uArRGn/OvLzVS9jzHE/SV06XmDIbiXO8P4lEVDlKmI0Gp5Q4ajex2YyksEu7UAwdQ==
   dependencies:
-    "@nhost/nhost-js" "1.1.11"
+    "@nhost/nhost-js" "1.3.0"
     graphql "16"
     graphql-ws "^5.7.0"
 
-"@nhost/core@0.5.4":
-  version "0.5.4"
-  resolved "https://registry.npmmirror.com/@nhost/core/-/core-0.5.4.tgz#56293f6e4284dc6ca31b8eade7ce17469c54c974"
-  integrity sha512-MqlGJjyIZJh3kP2UhvQbJ2rhIL2hItXD2m+Asxjd9HzXxiRFFvUUJwAumZhCKKmAJ2qfOZwFBWyhtiV9LjxPxQ==
+"@nhost/core@0.7.0":
+  version "0.7.0"
+  resolved "https://registry.npmmirror.com/@nhost/core/-/core-0.7.0.tgz#2f566e9e89267871c98efa677433ad1f57fe0a14"
+  integrity sha512-Yt2+5wHwlBSke8CGk/zACP51mo67VpX6iiKHl57aq83SYxxBCuD1DGNFWW2DaxQw4ry8HBCIGi2uta45fKvlQQ==
   dependencies:
     axios "^0.27.2"
     js-cookie "^3.0.1"
     xstate "^4.31.0"
 
-"@nhost/hasura-auth-js@1.1.6":
-  version "1.1.6"
-  resolved "https://registry.npmmirror.com/@nhost/hasura-auth-js/-/hasura-auth-js-1.1.6.tgz#dd07c757ca590429ed7a6cde6f3cbb2d25570321"
-  integrity sha512-VTB546HhEbw/kDO/SyJGdR7zPEsg5ZuuJXo98lFFdw1lq+yyZV9LWzkM5KuKDDdZe9LFjYd7H4XEKOzxl7iqMw==
+"@nhost/hasura-auth-js@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.npmmirror.com/@nhost/hasura-auth-js/-/hasura-auth-js-1.2.0.tgz#4dcede6e0afe414ceabf025ef02c0d24b0c35cf0"
+  integrity sha512-KcyAaYq3sxp/5XpMB5xl/CT9QfUm1wL25KBpyymHnwubXDQoc9gw3aEVuuQtEiUrDqqTY2fG5V4V6pVQ64qj7Q==
   dependencies:
-    "@nhost/core" "0.5.4"
+    "@nhost/core" "0.7.0"
     jwt-decode "^3.1.2"
     xstate "^4.31.0"
 
-"@nhost/hasura-storage-js@0.2.2":
-  version "0.2.2"
-  resolved "https://registry.npmmirror.com/@nhost/hasura-storage-js/-/hasura-storage-js-0.2.2.tgz#45f0eaea088537419d6596a9d111da7c2945fdb2"
-  integrity sha512-rZ8AtgB/iN7qHZ9s+nuzduwfFfmAzUeBN1ei9SHLsVOYllGrrhKrUK83UiZvK8vm0ND5tji2NGFsZ7cXEiElPw==
+"@nhost/hasura-storage-js@0.3.3":
+  version "0.3.3"
+  resolved "https://registry.npmmirror.com/@nhost/hasura-storage-js/-/hasura-storage-js-0.3.3.tgz#df261864e085ee2162e77db546d83f596a509f56"
+  integrity sha512-QNXMOp3cPdyob6ADg+LGj/27nVdhnnqX/i3OuNj3KTbXWrFX/zkLpWV88Etk+MHA+rWPviQiN5Zjh5FNdaoCzw==
   dependencies:
     axios "^0.27.2"
 
-"@nhost/nhost-js@1.1.11", "@nhost/nhost-js@^1.1.11":
-  version "1.1.11"
-  resolved "https://registry.npmmirror.com/@nhost/nhost-js/-/nhost-js-1.1.11.tgz#5b7d0ba7f24dfecbdacbb2384aa5db477aa3ed5a"
-  integrity sha512-e+00lpnBLmlT51ftxxWfRqpyNB1PzlxcCIQdbL/1wxrncMReKstHmEFOfrw5n0sd1m9gYLzrLWP/FY8lV6rkxw==
+"@nhost/nhost-js@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.npmmirror.com/@nhost/nhost-js/-/nhost-js-1.3.0.tgz#65ecbd73397260ad03031fe06bb5eec8993646c6"
+  integrity sha512-kX1EhcPYdaRqsFs5RslkOsrXN3TnCFVRNNxIeARwgBma3xMwrau1XW/JxyOjpKP+1s9i1jJCImBVg8hL+I9DJg==
   dependencies:
-    "@nhost/hasura-auth-js" "1.1.6"
-    "@nhost/hasura-storage-js" "0.2.2"
+    "@nhost/hasura-auth-js" "1.2.0"
+    "@nhost/hasura-storage-js" "0.3.3"
     axios "^0.27.2"
     jwt-decode "^3.1.2"
     query-string "^7.0.1"
 
-"@nhost/react-apollo@^4.2.5":
-  version "4.2.5"
-  resolved "https://registry.npmmirror.com/@nhost/react-apollo/-/react-apollo-4.2.5.tgz#49e2a6352212acb317ab2aa8e6582a09acdc0e70"
-  integrity sha512-yyq7iEhku0SRZ17ew2G5egoN67AO4Ruhd0xJavRpud8a+FUMQWXCH0f1DqvkQL0iAyDRs9kw6z6ReBICxl+MHQ==
+"@nhost/react-apollo@4.3.0":
+  version "4.3.0"
+  resolved "https://registry.npmmirror.com/@nhost/react-apollo/-/react-apollo-4.3.0.tgz#4b7c98977c0f4aa45a73b39e70960e9892d2a4f6"
+  integrity sha512-EWubc4iQvPI+uG7wJjO46V/+z6O6ZBfIV7jv3Mi7G3AxVI4P28eyme2HY+Xmk63VDML8LpO6ICZxI3EcQAvtzw==
   dependencies:
-    "@nhost/apollo" "0.5.4"
+    "@nhost/apollo" "0.5.15"
 
-"@nhost/react@^0.7.5":
-  version "0.7.5"
-  resolved "https://registry.npmmirror.com/@nhost/react/-/react-0.7.5.tgz#e3e6d81fb0b55afe3088251f3d687c1655330965"
-  integrity sha512-96l1I1CN/XncRMsrYqmq4kuriaVkufeCemeyiZlfaKkD0LX/bPympIxpTcTI2paLMutxhLPnTtwA3LM7V9Gu5g==
+"@nhost/react@0.8.0":
+  version "0.8.0"
+  resolved "https://registry.npmmirror.com/@nhost/react/-/react-0.8.0.tgz#93ca0b9592ed20e5cdb885f82521ddf3951e3644"
+  integrity sha512-STouqNO7sgc7f4EGPY9YxMbK1jS0lpkeM4hwmUFnNPzsUwrfhBXWQ9hacYTV5G5ZkIE+yCQMXRBVrQMZvm3HNQ==
   dependencies:
-    "@nhost/core" "0.5.4"
-    "@nhost/nhost-js" "1.1.11"
+    "@nhost/core" "0.7.0"
+    "@nhost/nhost-js" "1.3.0"
     "@xstate/react" "^3.0.0"
-    immer "^9.0.12"
+    immer "^9.0.14"
     jwt-decode "^3.1.2"
     xstate "^4.31.0"
 
@@ -5983,10 +5983,10 @@ image-size@^0.6.0:
   resolved "https://registry.npmmirror.com/image-size/-/image-size-0.6.3.tgz#e7e5c65bb534bd7cdcedd6cb5166272a85f75fb2"
   integrity sha512-47xSUiQioGaB96nqtp5/q55m0aBQSQdyIloMOc/x+QVTDZLNmXE892IIDrJ0hM1A5vcNUDD5tDffkSP5lCaIIA==
 
-immer@^9.0.12:
-  version "9.0.12"
-  resolved "https://registry.npmmirror.com/immer/-/immer-9.0.12.tgz#2d33ddf3ee1d247deab9d707ca472c8c942a0f20"
-  integrity sha512-lk7UNmSbAukB5B6dh9fnh5D0bJTOFKxVg2cyJWTYrWRfhLrLMBquONcUs3aFq507hNoIZEDDh8lb8UtOizSMhA==
+immer@^9.0.14:
+  version "9.0.15"
+  resolved "https://registry.npmmirror.com/immer/-/immer-9.0.15.tgz#0b9169e5b1d22137aba7d43f8a81a495dd1b62dc"
+  integrity sha512-2eB/sswms9AEUSkOm4SbV5Y7Vmt/bKRwByd52jfLkW4OLYeaTP3EEiJ9agqU0O/tq6Dk62Zfj+TJSqfm1rLVGQ==
 
 immutable@~3.7.6:
   version "3.7.6"
