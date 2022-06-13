@@ -7,8 +7,9 @@ import {
   Icon,
   useToast,
   ScrollView,
+  useBreakpointValue,
 } from 'native-base';
-import {Alert, RefreshControl} from 'react-native';
+import {Alert, RefreshControl, useWindowDimensions} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import {ProdukScreenProps} from '../../screens/app/ProdukScreen';
 import {
@@ -60,6 +61,11 @@ interface IProductPhotoProps {
 interface Props {}
 
 const Produk = ({}: Props) => {
+  const window = useWindowDimensions();
+  const tableWidth: number | 'full' = useBreakpointValue({
+    base: 900,
+    md: 'full',
+  });
   const navigation =
     useNavigation<ProdukScreenProps['ProdukHome']['navigation']>();
   const getAllProduk = useProduk_GetAllProdukQuery();
@@ -177,7 +183,7 @@ const Produk = ({}: Props) => {
         <CustomTable
           tableSettings={{
             mainSettings: {
-              tableWidth: 'full',
+              tableWidth: tableWidth,
               defaultSortFrom: 'asc',
             },
             row: {

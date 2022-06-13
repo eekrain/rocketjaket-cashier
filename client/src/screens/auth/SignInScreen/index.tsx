@@ -17,6 +17,7 @@ import {useSignInEmailPassword} from '@nhost/react';
 import Config from 'react-native-config';
 import {TOAST_TEMPLATE} from '../../../shared/constants';
 import {useApolloClient} from '@apollo/client';
+import to from 'await-to-js';
 
 interface ISignInScreenProps extends SigninNavProps {}
 
@@ -50,15 +51,22 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
       data,
     );
 
-    const res = await signInEmailPassword(data.username, data.password);
+    const [err, res] = await to(
+      signInEmailPassword(data.username, data.password),
+    );
+    if (err || !res) {
+      console.log('🚀 ~ file: index.tsx ~ line 58 ~ handleSignIn ~ err', err);
+    } else {
+      console.log('🚀 ~ file: index.tsx ~ line 58 ~ handleSignIn ~ res', res);
+      if (res.needsEmailVerification)
+        toast.show(TOAST_TEMPLATE.error(`Email anda belum terverifikasi!`));
 
-    if (res.needsEmailVerification)
-      toast.show(TOAST_TEMPLATE.error(`Email anda belum terverifikasi!`));
+      if (res.isError) {
+        toast.show(TOAST_TEMPLATE.error(res?.error?.message || 'Error'));
+      }
 
-    if (res.isError)
-      toast.show(TOAST_TEMPLATE.error(res.error?.message || 'Error'));
-
-    if (res.isSuccess) await client.refetchQueries({include: 'active'});
+      if (res.isSuccess) await client.refetchQueries({include: 'active'});
+    }
   };
 
   return (
