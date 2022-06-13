@@ -8,6 +8,9 @@ import {
   useToast,
   ScrollView,
   Modal,
+  useBreakpointValue,
+  Stack,
+  IStackProps,
 } from 'native-base';
 import {Alert, RefreshControl} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -20,7 +23,7 @@ import {
 import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
 import {ButtonEdit, IconButtonDelete} from '../Buttons';
-import {RHSelect, MyAvatar, MyImageViewer} from '../../shared/components';
+import {RHSelect, MyImageViewer} from '../../shared/components';
 import {useMyAppState} from '../../state';
 import {InventoryScreenProps} from '../../screens/app/InventoryScreen';
 import {useForm} from 'react-hook-form';
@@ -82,6 +85,22 @@ type X = InventoryScreenProps['InventoryHome'];
 interface IListInventoryProps extends X {}
 
 const ListInventory = ({navigation}: IListInventoryProps) => {
+  const flexDirHeader: IStackProps['direction'] = useBreakpointValue({
+    base: 'column',
+    md: 'row',
+  });
+  const showWhenSm: boolean = useBreakpointValue({
+    base: true,
+    md: false,
+  });
+  const showWhenMd: boolean = useBreakpointValue({
+    base: false,
+    md: true,
+  });
+  const tableWidth: number | 'full' = useBreakpointValue({
+    base: 900,
+    md: 'full',
+  });
   const myUser = useMyUser();
   const myAppState = useMyAppState();
   const getAllToko = useStore_GetAllStoreQuery();
@@ -303,17 +322,19 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
           </Box>
         </Modal.Content>
       </Modal>
-      <Box paddingBottom={300}>
-        <HStack
+      <Box pb={'56'}>
+        <Stack
+          direction={flexDirHeader}
           justifyContent="space-between"
-          alignItems="center"
+          alignItems={{base: 'flex-start', md: 'center'}}
+          space={{base: '4', md: undefined}}
           mb="10"
           mt="4">
           <HStack space="4" alignItems="center">
             <Heading fontSize="xl">
               List Inventory / Stok Produk Toko {selectedStoreName}
             </Heading>
-            {myUser.roles.includes(UserRolesEnum.administrator) && (
+            {myUser.roles.includes(UserRolesEnum.administrator) && showWhenMd && (
               <Button
                 onPress={() => setValue('show_modal_change_toko', true)}
                 size="sm"
@@ -323,21 +344,33 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
             )}
           </HStack>
 
-          <Button
-            onPress={() => {
-              if (selectedStoreId) {
-                myAppState.setLoadingWholePage(true);
-                navigation.navigate('CreateProductInventory', {
-                  storeId: parseInt(selectedStoreId, 10),
-                  storeName: selectedStoreName,
-                });
-              }
-            }}
-            size="lg"
-            leftIcon={<Icon as={Feather} name="plus-square" size="sm" />}>
-            Buat Baru
-          </Button>
-        </HStack>
+          <HStack
+            justifyContent={'space-between'}
+            w={{base: 'full', md: undefined}}>
+            {myUser.roles.includes(UserRolesEnum.administrator) && showWhenSm && (
+              <Button
+                onPress={() => setValue('show_modal_change_toko', true)}
+                size="sm"
+                leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
+                Ganti Toko
+              </Button>
+            )}
+            <Button
+              onPress={() => {
+                if (selectedStoreId) {
+                  myAppState.setLoadingWholePage(true);
+                  navigation.navigate('CreateProductInventory', {
+                    storeId: parseInt(selectedStoreId, 10),
+                    storeName: selectedStoreName,
+                  });
+                }
+              }}
+              size="lg"
+              leftIcon={<Icon as={Feather} name="plus-square" size="sm" />}>
+              Buat Baru
+            </Button>
+          </HStack>
+        </Stack>
         <CustomTable
           isLoading={
             getAllToko.loading ||
@@ -346,7 +379,7 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
           }
           tableSettings={{
             mainSettings: {
-              tableWidth: 'full',
+              tableWidth,
               defaultSortFrom: 'asc',
             },
             row: {

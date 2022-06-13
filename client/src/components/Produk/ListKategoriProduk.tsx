@@ -9,7 +9,7 @@ import {
   ScrollView,
   useBreakpointValue,
 } from 'native-base';
-import {Alert, RefreshControl, useWindowDimensions} from 'react-native';
+import {Alert, RefreshControl} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import {ProdukScreenProps} from '../../screens/app/ProdukScreen';
 import {
@@ -52,7 +52,6 @@ const Action = ({id, navigation, handleDeleteKategori}: IActionProps) => {
 interface Props {}
 
 const KategoriProduk = ({}: Props) => {
-  const window = useWindowDimensions();
   const tableWidth: number | 'full' = useBreakpointValue({
     base: 700,
     md: 'full',

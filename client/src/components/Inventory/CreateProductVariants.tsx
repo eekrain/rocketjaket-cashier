@@ -7,6 +7,7 @@ import {
   ScrollView,
   useToast,
   Text,
+  FormControl,
 } from 'native-base';
 import {
   namedOperations,
@@ -33,7 +34,15 @@ interface IDefaultValues {
 
 const schema = yup
   .object({
-    variation_title: yup.string().required('Nama toko harus diisi'),
+    variation_title: yup.string().required('Nama variasi harus diisi'),
+    variation_values: yup
+      .array()
+      .of(
+        yup.object().shape({
+          value: yup.string().required('Opsi variasi harus diisi'),
+        }),
+      )
+      .min(1, 'Opsi variasi minimal ada 1'),
   })
   .required();
 
@@ -122,18 +131,36 @@ const CreateProductVariants = ({navigation}: ICreateProductVariantsProps) => {
                 {fields.map((field, index) => {
                   return (
                     <HStack key={field.id} alignItems="flex-end" space="5">
-                      <Box w="4/5">
+                      <Box w={{base: '3/5', md: '4/5'}}>
                         <RHTextInput
                           name={`variation_values.${index}.value`}
                           control={control}
                           errors={errors}
                           label={`Opsi Variasi ${index + 1}`}
+                          overrideErrorMessage={
+                            errors?.variation_values?.[index]?.value?.message
+                              ? errors.variation_values?.[index].value?.message
+                              : ''
+                          }
+                          overrideIsInvalid={
+                            errors?.variation_values?.[index]?.value?.message
+                              ? true
+                              : false
+                          }
                         />
                       </Box>
                       <Box>
                         <ButtonDelete
                           customText="Hapus Opsi"
-                          onPress={() => remove(index)}
+                          onPress={() => {
+                            if (fields.length > 1) remove(index);
+                            else
+                              toast.show(
+                                TOAST_TEMPLATE.error(
+                                  'Opsi variasi minimal ada 1',
+                                ),
+                              );
+                          }}
                         />
                       </Box>
                     </HStack>
