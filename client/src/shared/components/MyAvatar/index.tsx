@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import FastImage, {Source} from 'react-native-fast-image';
 import {Box, HStack, Text, IBoxProps} from 'native-base';
 import {
@@ -48,9 +48,13 @@ export const MyAvatar = ({
   isDisableZoom = false,
 }: Props) => {
   const [isError, setError] = useState(false);
-  // console.log('🚀 ~ file: index.tsx ~ line 51 ~ isError', isError);
+  console.log('🚀 ~ file: index.tsx ~ line 51 ~ isError', isError);
   const accessToken = useAccessToken();
   const myZoomImageViewer = useMyZoomImageViewer();
+
+  console.log('🚀 ~ file: index.tsx ~ line 50 ~ source', source);
+
+  useEffect(() => setError(false), [source]);
 
   const finalSource = useMemo(
     () => ({
@@ -75,6 +79,10 @@ export const MyAvatar = ({
     }),
     [source, accessToken],
   );
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 82 ~ finalSource.normal',
+    finalSource.normal.uri,
+  );
 
   const render = () => {
     return (
@@ -90,10 +98,14 @@ export const MyAvatar = ({
               source={finalSource.normal}
               style={{
                 borderRadius: borderTopRadius ? undefined : borderRadius,
-                borderTopLeftRadius: borderTopRadius
+                borderTopLeftRadius: borderRadius
+                  ? undefined
+                  : borderTopRadius
                   ? borderTopRadius
                   : undefined,
-                borderTopRightRadius: borderTopRadius
+                borderTopRightRadius: borderRadius
+                  ? undefined
+                  : borderTopRadius
                   ? borderTopRadius
                   : undefined,
                 width: size ? size : width,

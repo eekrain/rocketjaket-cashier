@@ -1,17 +1,13 @@
-import React, {useMemo, useState} from 'react';
-import FastImage, {Source} from 'react-native-fast-image';
+import React, {useEffect, useMemo, useState} from 'react';
+import FastImage from 'react-native-fast-image';
 import {Box} from 'native-base';
 import {useAccessToken} from '@nhost/react';
 import {
   getStorageFileUrlWImageTransform,
   IGetImageTransform,
 } from '../../utils';
-import type {RequireAtLeastOne} from 'type-fest';
-import {Pressable, Animated} from 'react-native';
+import {Pressable} from 'react-native';
 import {useMyZoomImageViewer} from '../../../state/zoomImageViewer';
-// import {SharedValue, useAnimatedStyle} from 'react-native-reanimated';
-const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
-
 interface IMyImageViewerProps {
   source: IGetImageTransform;
   size?: number | string;
@@ -70,6 +66,13 @@ IMyImageViewerProps) => {
     }),
     [isError, source, accessToken],
   );
+  // console.log('🚀 ~ file: index.tsx ~ line 38 ~ source', source);
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 73 ~ finalSource',
+  //   finalSource.normal,
+  // );
+
+  useEffect(() => setError(false), [source]);
 
   const imageComponent = () => {
     return (
