@@ -141,7 +141,7 @@ const UpdateOperationalCost = ({
   return (
     <ScrollView>
       <DismissKeyboardWrapper>
-        <Box>
+        <Box pb="20">
           <Heading fontSize="xl" mb="10">
             Update Biaya Operasional
           </Heading>

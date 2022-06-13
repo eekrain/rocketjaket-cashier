@@ -9,6 +9,9 @@ import {
   useToast,
   ScrollView,
   Modal,
+  useBreakpointValue,
+  IStackProps,
+  Stack,
 } from 'native-base';
 import {Alert, RefreshControl} from 'react-native';
 import {
@@ -63,6 +66,23 @@ const Action = ({id, navigation}: IActionProps) => {
 interface Props extends ListOperationalCostNavProps {}
 
 const OperationalCostHome = ({navigation}: Props) => {
+  const flexDirHeader: IStackProps['direction'] = useBreakpointValue({
+    base: 'column',
+    md: 'row',
+  });
+  const showWhenSm: boolean = useBreakpointValue({
+    base: true,
+    md: false,
+  });
+  const showWhenMd: boolean = useBreakpointValue({
+    base: false,
+    md: true,
+  });
+  const tableWidth: number | 'full' = useBreakpointValue({
+    base: 900,
+    md: 'full',
+  });
+
   const myUser = useMyUser();
   const toast = useToast();
   const [isDataStoreReady, setDataStoreReady] = useState(false);
@@ -189,12 +209,17 @@ const OperationalCostHome = ({navigation}: Props) => {
         </Modal.Content>
       </Modal>
       <Box w="full" paddingBottom={300}>
-        <HStack justifyContent="space-between" alignItems="center" mb="10">
+        <Stack
+          direction={flexDirHeader}
+          justifyContent="space-between"
+          alignItems={{base: 'flex-start', md: 'center'}}
+          space={{base: '4', md: undefined}}
+          mb="10">
           <HStack space="4" alignItems="center">
             <Heading fontSize="xl">
               List Semua Biaya Operasional di Toko {selectedStoreName}
             </Heading>
-            {myUser.roles.includes(UserRolesEnum.administrator) && (
+            {myUser.roles.includes(UserRolesEnum.administrator) && showWhenMd && (
               <Button
                 onPress={() => setValue('show_modal_change_toko', true)}
                 size="sm"
@@ -204,17 +229,29 @@ const OperationalCostHome = ({navigation}: Props) => {
             )}
           </HStack>
 
-          <Button
-            onPress={() => {
-              navigation.navigate('CreateOperationalCost', {
-                storeId: parseInt(watch().store_id || '0', 10),
-              });
-            }}
-            size="lg"
-            leftIcon={<Icon as={FeatherIcon} name="plus-square" size="sm" />}>
-            Buat Baru
-          </Button>
-        </HStack>
+          <HStack
+            justifyContent={'space-between'}
+            w={{base: 'full', md: undefined}}>
+            {myUser.roles.includes(UserRolesEnum.administrator) && showWhenSm && (
+              <Button
+                onPress={() => setValue('show_modal_change_toko', true)}
+                size="sm"
+                leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
+                Ganti Toko
+              </Button>
+            )}
+            <Button
+              onPress={() => {
+                navigation.navigate('CreateOperationalCost', {
+                  storeId: parseInt(watch().store_id || '0', 10),
+                });
+              }}
+              size="lg"
+              leftIcon={<Icon as={FeatherIcon} name="plus-square" size="sm" />}>
+              Buat Baru
+            </Button>
+          </HStack>
+        </Stack>
 
         <CustomTable
           isLoading={
@@ -222,7 +259,7 @@ const OperationalCostHome = ({navigation}: Props) => {
           }
           tableSettings={{
             mainSettings: {
-              tableWidth: 'full',
+              tableWidth,
               defaultSortFrom: 'desc',
             },
           }}
