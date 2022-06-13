@@ -136,6 +136,10 @@ const UpdateProduk = ({navigation, route}: Props) => {
     resolver: yupResolver(schema),
   });
   const photo = watch('photo');
+  console.log(
+    '🚀 ~ file: UpdateProduk.tsx ~ line 139 ~ UpdateProduk ~ photo',
+    photo,
+  );
 
   const [isErrorOnce, setErrorOnce] = useState(false);
   const getProdukData = useProduk_GetProdukByPkQuery({
@@ -241,9 +245,22 @@ const UpdateProduk = ({navigation, route}: Props) => {
         res?.fileMetadata?.id &&
         getProdukData.data?.products_by_pk?.photo_id !== ''
       ) {
-        await nhost.storage.delete({
-          fileId: getProdukData?.data?.products_by_pk?.photo_id || '',
-        });
+        const [err, res] = await to(
+          nhost.storage.delete({
+            fileId: getProdukData?.data?.products_by_pk?.photo_id || '',
+          }),
+        );
+        if (err || !res) {
+          console.log(
+            '🚀 ~ file: UpdateProduk.tsx ~ line 250 ~ handleSubmission ~ err',
+            err,
+          );
+        } else {
+          console.log(
+            '🚀 ~ file: UpdateProduk.tsx ~ line 250 ~ handleSubmission ~ res',
+            res,
+          );
+        }
       }
       photo_id = res?.fileMetadata?.id ? res?.fileMetadata?.id : photo_id;
     }
@@ -319,6 +336,10 @@ const UpdateProduk = ({navigation, route}: Props) => {
                 <HStack justifyContent="flex-end">
                   <Box>
                     <SimpleDataGrid
+                      gridWidth={220}
+                      titleWidthRatio={0.9}
+                      dividerWidthRatio={0.1}
+                      valueWidthRatio={1}
                       data={[
                         {
                           title: 'Dibuat tanggal',
@@ -383,7 +404,12 @@ const UpdateProduk = ({navigation, route}: Props) => {
                 <Center>
                   <MyImageViewer
                     source={{
-                      fileId: photo.currentPhotoFileId,
+                      fileUrl: photo.asset?.uri,
+                      fileId: photo.asset?.uri
+                        ? undefined
+                        : photo.currentPhotoFileId
+                        ? photo.currentPhotoFileId
+                        : undefined,
                       w: 180,
                       q: 60,
                     }}

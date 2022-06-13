@@ -83,10 +83,17 @@ const Produk = ({}: Props) => {
       const mutation = async () => {
         if (photo_id && photo_id !== '') {
           const [err, res] = await to(nhost.storage.delete({fileId: photo_id}));
-          console.log(
-            '🚀 ~ file: ListProduk.tsx ~ line 80 ~ mutation ~ err',
-            err,
-          );
+          if (err || !res) {
+            console.log(
+              '🚀 ~ file: ListProduk.tsx ~ line 87 ~ mutation ~ err',
+              err,
+            );
+          } else {
+            console.log(
+              '🚀 ~ file: ListProduk.tsx ~ line 87 ~ mutation ~ res',
+              res,
+            );
+          }
         }
         const [err, res] = await to(deleteProdukMutation({variables: {id}}));
         if (err || !res) {

@@ -83,12 +83,14 @@ const UserHome = ({}: IUserHomeProps) => {
     ) => {
       const mutation = async () => {
         if (avatarFileId && avatarFileId !== '') {
-          await nhost.storage.delete({fileId: avatarFileId}).catch(error => {
-            console.log(
-              '🚀 ~ file: index.tsx ~ line 108 ~ mutation - storage.delete ~ error',
-              error,
-            );
-          });
+          const [err, res] = await to(
+            nhost.storage.delete({fileId: avatarFileId}),
+          );
+          if (err || !res) {
+            console.log('🚀 ~ file: index.tsx ~ line 90 ~ mutation ~ err', err);
+          } else {
+            console.log('🚀 ~ file: index.tsx ~ line 90 ~ mutation ~ res', res);
+          }
         }
         const [err, res] = await to(
           deleteUser({variables: {id: user_id}}).catch(error => {
