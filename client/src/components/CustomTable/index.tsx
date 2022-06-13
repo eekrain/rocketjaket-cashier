@@ -79,14 +79,14 @@ const MyCustomTable = <T extends Record<string, unknown>>({
     },
   };
 
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 42 ~ tableSettingParams.mainSettings',
-    tableSettingParams.mainSettings,
-  );
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 42 ~ tableSettings.mainSettings',
-    tableSettings.mainSettings,
-  );
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 42 ~ tableSettingParams.mainSettings',
+  //   tableSettingParams.mainSettings,
+  // );
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 42 ~ tableSettings.mainSettings',
+  //   tableSettings.mainSettings,
+  // );
 
   const [searchTerm, setSearhTerm] = useState('');
   const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>(
