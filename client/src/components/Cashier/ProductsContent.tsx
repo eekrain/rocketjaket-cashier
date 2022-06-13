@@ -68,7 +68,7 @@ const ProductsContent = ({
   });
 
   return (
-    <Stack w={{base: 'full', lg: '4/6'}} direction="column" space="3">
+    <Stack w={{base: 'full', lg: '3/5'}} direction="column" space="3">
       {isShowHeader && (
         <Box>
           {route.params?.invoiceNumberRefundPart && (
@@ -150,7 +150,12 @@ const ProductsContent = ({
           </ScrollView>
         </HStack>
       )}
-      <HStack flexWrap="wrap" w="full" justifyContent="space-evenly" mt="2">
+      <HStack
+        direction={'row'}
+        flexWrap="wrap"
+        w="full"
+        justifyContent="space-evenly"
+        mt="2">
         {!searchTerm
           ? filteredByCategoryProductData.map(product => (
               <ProductItem product={product} key={product.id} />

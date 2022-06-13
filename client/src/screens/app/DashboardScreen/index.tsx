@@ -7,8 +7,6 @@ import {
   IconButton,
   Icon,
   ScrollView,
-  VStack,
-  Center,
   useBreakpointValue,
   Stack,
 } from 'native-base';
@@ -19,12 +17,13 @@ import 'dayjs/locale/id';
 import {RHSelect} from '../../../shared/components';
 import Feather from 'react-native-vector-icons/Feather';
 import {myNumberFormat} from '../../../shared/utils';
-import {Dimensions, RefreshControl, useWindowDimensions} from 'react-native';
+import {RefreshControl, useWindowDimensions} from 'react-native';
 import {useDashboardData} from './useDashboardData';
 import {MyLineChart} from './MyLineChart';
 import {MyPieChart} from './MyPieChart';
 import numbro from 'numbro';
 import {CardWithIcon} from './CardWithIcon';
+import {Grid, Col, Row} from 'react-native-easy-grid';
 
 dayjs.locale('id');
 interface IDashboardFormValue {
@@ -56,19 +55,22 @@ interface IDashboardScreenProps {}
 const DashboardScreen = ({}: IDashboardScreenProps) => {
   const window = useWindowDimensions();
   // console.log(
-  //   '🚀 ~ file: index.tsx ~ line 57 ~ DashboardScreen ~ window',
+  //   '🚀 ~ file: index.tsx ~ line 59 ~ DashboardScreen ~ window',
   //   window,
   // );
   const lineChartWidth: number = useBreakpointValue({
+    base: window.width - 65,
     sm: window.width - 60,
     md: window.width - 65,
     lg: window.width - 80,
     xl: window.width - 80,
   });
-  // console.log(
-  //   '🚀 ~ file: index.tsx ~ line 63 ~ DashboardScreen ~ lineChartWidth',
-  //   lineChartWidth,
-  // );
+
+  const otherDataHorizontalPadding: number = useBreakpointValue({
+    base: 4,
+    md: 8,
+    lg: 20,
+  });
 
   const {
     handleSubmit,
@@ -158,9 +160,12 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
     <ScrollView
       refreshControl={
         <RefreshControl
-          refreshing={dashboardData?.loading || false}
+          refreshing={
+            dashboardData && dashboardData.loading === true ? true : false
+          }
           onRefresh={async () => {
-            if (dashboardData?.refetch()) return await dashboardData.refetch();
+            if (dashboardData && typeof dashboardData.refetch === 'function')
+              return await dashboardData.refetch();
           }}
         />
       }>
@@ -205,7 +210,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
                 />
               </Box>
               <HStack
-                w={420}
+                w={{base: 'full', md: 420}}
                 alignItems="center"
                 justifyContent={'space-between'}>
                 <IconButton
@@ -236,7 +241,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
           </Box>
         </Stack>
 
-        {dashboardData && (
+        {dashboardData !== null && (
           <>
             <Box mb="6">
               <MyLineChart
@@ -321,9 +326,11 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
                   accessor="total_transaksi"
                 />
               </Box>
+
               <Box
                 p="4"
-                h="full"
+                h={{base: '56', md: 'full'}}
+                flex={1}
                 w={{base: 'full', md: undefined}}
                 bgColor="white"
                 borderRadius="xl">
@@ -331,50 +338,69 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
                   Lainnya
                 </Heading>
 
-                <HStack h={{base: 55, md: 91}} space="4" mb="4">
-                  <CardWithIcon
-                    title="Transaksi Sukses"
-                    value={
-                      dashboardData?.totalSuccessTransaction.toString() || ''
-                    }
-                    _cardStyle={{bgColor: 'emerald.600'}}
-                    __icon={{
-                      as: Feather,
-                      name: 'chevrons-up',
-                    }}
-                  />
-                  <CardWithIcon
-                    title="Total Customer"
-                    value={dashboardData?.totalCustomer.toString() || ''}
-                    _cardStyle={{bgColor: 'indigo.600'}}
-                    __icon={{
-                      as: Feather,
-                      name: 'user-check',
-                    }}
-                  />
-                </HStack>
-                <HStack h={{base: 55, md: 91}} space="4">
-                  <CardWithIcon
-                    title="Transaksi Diretur"
-                    value={
-                      dashboardData?.totalReturnedTransaction.toString() || ''
-                    }
-                    _cardStyle={{bgColor: 'amber.600'}}
-                    __icon={{
-                      as: Feather,
-                      name: 'chevrons-down',
-                    }}
-                  />
-                  <CardWithIcon
-                    title="Item Diretur"
-                    value={dashboardData?.totalItemReturned.toString() || ''}
-                    _cardStyle={{bgColor: 'rose.600'}}
-                    __icon={{
-                      as: Feather,
-                      name: 'corner-left-down',
-                    }}
-                  />
-                </HStack>
+                <Grid>
+                  <Col
+                    size={1}
+                    style={{paddingHorizontal: otherDataHorizontalPadding}}>
+                    <Row>
+                      <CardWithIcon
+                        title="Transaksi Sukses"
+                        value={
+                          dashboardData?.totalSuccessTransaction.toString() ||
+                          ''
+                        }
+                        _cardStyle={{bgColor: 'emerald.600'}}
+                        __icon={{
+                          as: Feather,
+                          name: 'chevrons-up',
+                        }}
+                      />
+                    </Row>
+                    <Row>
+                      <CardWithIcon
+                        title="Transaksi Diretur"
+                        value={
+                          dashboardData?.totalReturnedTransaction.toString() ||
+                          ''
+                        }
+                        _cardStyle={{bgColor: 'amber.600'}}
+                        __icon={{
+                          as: Feather,
+                          name: 'chevrons-down',
+                        }}
+                      />
+                    </Row>
+                  </Col>
+
+                  <Col
+                    size={1}
+                    style={{paddingHorizontal: otherDataHorizontalPadding}}>
+                    <Row>
+                      <CardWithIcon
+                        title="Total Customer"
+                        value={dashboardData?.totalCustomer.toString() || ''}
+                        _cardStyle={{bgColor: 'indigo.600'}}
+                        __icon={{
+                          as: Feather,
+                          name: 'user-check',
+                        }}
+                      />
+                    </Row>
+                    <Row>
+                      <CardWithIcon
+                        title="Item Diretur"
+                        value={
+                          dashboardData?.totalItemReturned.toString() || ''
+                        }
+                        _cardStyle={{bgColor: 'rose.600'}}
+                        __icon={{
+                          as: Feather,
+                          name: 'corner-left-down',
+                        }}
+                      />
+                    </Row>
+                  </Col>
+                </Grid>
               </Box>
             </Stack>
           </>
