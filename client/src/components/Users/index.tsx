@@ -8,6 +8,7 @@ import {
   Icon,
   useToast,
   ScrollView,
+  useBreakpointValue,
 } from 'native-base';
 import {Alert, RefreshControl} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -56,6 +57,11 @@ const Action = ({id, handleDeleteUser}: IActionProps) => {
 interface IUserHomeProps {}
 
 const UserHome = ({}: IUserHomeProps) => {
+  const tableWidth: number | 'full' = useBreakpointValue({
+    base: 1000,
+    lg: 'full',
+  });
+
   const toast = useToast();
   const navigation = useNavigation<UserScreenProps['ListUser']['navigation']>();
 
@@ -188,7 +194,7 @@ const UserHome = ({}: IUserHomeProps) => {
           isLoading={getAllUser.loading || _deleteUserResult.loading}
           tableSettings={{
             mainSettings: {
-              tableWidth: 'full',
+              tableWidth,
               defaultSortFrom: 'asc',
             },
             row: {
