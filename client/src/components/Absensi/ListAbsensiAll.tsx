@@ -9,6 +9,7 @@ import {
   IconButton,
   ScrollView,
   Text,
+  useBreakpointValue,
 } from 'native-base';
 import {RefreshControl} from 'react-native';
 import dayjs from 'dayjs';
@@ -37,6 +38,10 @@ const defaultValues = (): IDefaultValues => {
 
 interface IListAbsensiByUserProps {}
 export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
+  const tableWidth: number | 'full' = useBreakpointValue({
+    base: 700,
+    md: 'full',
+  });
   const {
     handleSubmit,
     control,
@@ -129,12 +134,12 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
           }}
         />
       }>
-      <Box pb="20">
+      <Box pb="64">
         <Center>
           <CustomTable
             tableSettings={{
               mainSettings: {
-                tableWidth: 'full',
+                tableWidth,
                 defaultSortFrom: 'asc',
               },
               row: {
@@ -152,7 +157,7 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
                         Periode
                       </Heading>
                       <HStack
-                        w={420}
+                        w={{base: 'full', md: 420}}
                         alignItems="center"
                         justifyContent={'space-between'}>
                         <IconButton
@@ -192,20 +197,20 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
               {
                 Header: 'Foto',
                 accessor: 'photo',
-                widthRatio: 1,
+                widthRatio: 0.5,
                 isAvatar: true,
                 isDisableSort: true,
               },
-              {Header: 'Nama Karyawan', accessor: 'name', widthRatio: 3},
+              {Header: 'Nama Karyawan', accessor: 'name', widthRatio: 1},
               {
-                Header: 'Total Absen Masuk',
+                Header: 'Toko',
                 accessor: 'store_name',
-                widthRatio: 1,
+                widthRatio: 0.7,
               },
               {
                 Header: 'Tanggal',
                 accessor: 'created_at_formatted',
-                widthRatio: 1,
+                widthRatio: 0.7,
                 sortAs: 'created_at_unix',
               },
             ]}
