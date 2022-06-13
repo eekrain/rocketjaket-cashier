@@ -27,8 +27,8 @@ interface IDefaultValues {
 }
 
 const defaultValues = {
-  username: 'ardianoption@gmail.com',
-  password: 'ardianeka',
+  username: Config.APP_ENV === 'development' ? 'ardianoption@gmail.com' : '',
+  password: Config.APP_ENV === 'development' ? 'ardianeka' : '',
 };
 
 const SignInScreen = ({navigation}: ISignInScreenProps) => {
