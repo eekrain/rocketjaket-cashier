@@ -39,6 +39,7 @@ import {
   RHNumberInput,
   RHSelect,
   TRHNumberValueType,
+  MyImageViewer,
 } from '../../shared/components';
 import {
   launchCamera,
@@ -283,23 +284,18 @@ const CreateProduk = ({}: Props) => {
                 <Center>
                   <Text fontWeight="bold">Foto Produk</Text>
                 </Center>
-                {productFoto?.uri ? (
-                  <Box h="40">
-                    <Image
-                      source={{uri: productFoto?.uri}}
-                      resizeMode="contain"
-                      style={{height: '100%'}}
-                    />
-                  </Box>
-                ) : (
-                  <Center h="40">
-                    <Image
-                      source={require('../../assets/images/image-not-found.png')}
-                      resizeMode="contain"
-                      style={{height: '100%'}}
-                    />
-                  </Center>
-                )}
+
+                <Center>
+                  <MyImageViewer
+                    source={{
+                      fileUrl: productFoto?.uri,
+                      w: 180,
+                      q: 60,
+                    }}
+                    size={180}
+                    isDisableZoom={true}
+                  />
+                </Center>
                 <VStack space="2" justifyContent="center" alignItems="center">
                   <Box mb="4">
                     <Text>Belum ada foto</Text>

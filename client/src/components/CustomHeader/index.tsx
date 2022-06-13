@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
+import {Pressable} from 'react-native';
 import {
   Button,
   HamburgerIcon,
-  Pressable,
   Heading,
   HStack,
   Popover,
@@ -113,10 +113,7 @@ const CustomHeader = ({}: ICustomHeaderProps) => {
         </Pressable>
         <Popover
           trigger={triggerProps => (
-            <Pressable
-              onPressIn={() => setAvatarPressed(true)}
-              onPressOut={() => setAvatarPressed(false)}
-              {...triggerProps}>
+            <Pressable {...triggerProps}>
               <MyAvatar
                 source={{
                   fileUrl: myUser.avatarUrl,

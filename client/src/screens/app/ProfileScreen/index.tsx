@@ -96,10 +96,10 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
   //   watch(),
   // );
 
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 99 ~ ProfileScreen ~ myUser',
-    myUser,
-  );
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 99 ~ ProfileScreen ~ myUser',
+  //   myUser,
+  // );
 
   const getUserData = useUser_GetUserByIdQuery({
     variables: {user_id: myUser.id},
@@ -173,32 +173,37 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
           bucketId: 'avatarPhoto',
         }),
       );
-      // console.log(
-      //   '🚀 ~ file: index.tsx ~ line 180 ~ handleSubmission ~ errUpload',
-      //   errUpload,
-      // );
-      // console.log(
-      //   '🚀 ~ file: index.tsx ~ line 179 ~ handleSubmission ~ resUpload',
-      //   resUpload,
-      // );
+      if (errUpload || !resUpload) {
+        console.log(
+          '🚀 ~ file: index.tsx ~ line 177 ~ handleSubmission ~ errUpload',
+          errUpload,
+        );
+      } else {
+        console.log(
+          '🚀 ~ file: index.tsx ~ line 177 ~ handleSubmission ~ resUpload',
+          resUpload,
+        );
+      }
 
       if (
         !errUpload &&
         resUpload?.fileMetadata?.id &&
         data.photo.currentAvatarFileId !== ''
       ) {
-        const resdelete = await nhost.storage
-          .delete({fileId: data.photo.currentAvatarFileId})
-          .catch(error => {
-            console.log(
-              '🚀 ~ file: index.tsx ~ line 177 ~ handleSubmission - storage.delete ~ error',
-              error,
-            );
-          });
-        console.log(
-          '🚀 ~ file: index.tsx ~ line 199 ~ handleSubmission ~ resdelete',
-          resdelete,
+        const [err, res] = await to(
+          nhost.storage.delete({fileId: data.photo.currentAvatarFileId}),
         );
+        if (err || !res) {
+          console.log(
+            '🚀 ~ file: index.tsx ~ line 194 ~ handleSubmission ~ err',
+            err,
+          );
+        } else {
+          console.log(
+            '🚀 ~ file: index.tsx ~ line 194 ~ handleSubmission ~ res',
+            res,
+          );
+        }
       }
 
       newAvatarFileId = resUpload?.fileMetadata?.id
@@ -276,7 +281,7 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
       enableOnAndroid={true}
       enableResetScrollToCoords={false}>
       <DismissKeyboardWrapper>
-        <Box>
+        <Box pb="24">
           <Heading fontSize="xl" mb="10">
             Profile Saya
           </Heading>
@@ -306,35 +311,40 @@ const ProfileScreen = ({}: IProfileScreenProps) => {
                 <ChangePassword />
               </VStack>
             </Box>
-            <Box bgColor="white" p="8" w={['full', 'full', '2/5']}>
-              <VStack space="4">
-                <Text fontWeight="semibold">Foto</Text>
-                <Center>
-                  <MyAvatar
-                    source={{
-                      fileId: userDataFetched?.avatarUrl,
-                      w: 100,
-                      q: 60,
-                    }}
-                    disableErrorFallback={true}
-                    fallbackText={userDataFetched?.displayName || ''}
-                    size={150}
-                  />
-                </Center>
+            <VStack space="4" bgColor="white" p="8" w={['full', 'full', '2/5']}>
+              <Text fontWeight="semibold">Foto</Text>
 
-                <Button
-                  onPress={getImageFromCamera}
-                  leftIcon={<Icon as={Feather} name="camera" size="sm" />}>
-                  Ambil Dari Kamera
-                </Button>
+              <Box alignSelf={'center'}>
+                <MyAvatar
+                  fallbackText={userDataFetched?.displayName || 'unknown'}
+                  source={{
+                    fileUrl: userPhoto.asset?.uri,
+                    fileId: userPhoto.asset?.uri
+                      ? undefined
+                      : userDataFetched?.avatarUrl
+                      ? userDataFetched.avatarUrl
+                      : undefined,
+                    w: 150,
+                    q: 60,
+                  }}
+                  isDisableZoom={true}
+                  size={150}
+                  borderRadius={10}
+                  fontSize="4xl"
+                />
+              </Box>
+              <Button
+                onPress={getImageFromCamera}
+                leftIcon={<Icon as={Feather} name="camera" size="sm" />}>
+                Ambil Dari Kamera
+              </Button>
 
-                <Button
-                  onPress={getImageFromGallery}
-                  leftIcon={<Icon as={Feather} name="image" size="sm" />}>
-                  Ambil Dari Galeri
-                </Button>
-              </VStack>
-            </Box>
+              <Button
+                onPress={getImageFromGallery}
+                leftIcon={<Icon as={Feather} name="image" size="sm" />}>
+                Ambil Dari Galeri
+              </Button>
+            </VStack>
           </Stack>
           <HStack justifyContent="flex-end" mt="8" space="4">
             <ButtonSave
