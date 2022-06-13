@@ -116,7 +116,7 @@ export const ListAbsensiByUser = ({}: IListAbsensiByUserProps) => {
           }}
         />
       }>
-      <Box pb="20">
+      <Box pb="64">
         <Center>
           <CustomTable
             tableSettings={{
@@ -139,7 +139,7 @@ export const ListAbsensiByUser = ({}: IListAbsensiByUserProps) => {
                         Periode
                       </Heading>
                       <HStack
-                        w={420}
+                        w={{base: 'full', md: 420}}
                         alignItems="center"
                         justifyContent={'space-between'}>
                         <IconButton
