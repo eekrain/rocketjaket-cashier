@@ -11,17 +11,26 @@ import {
   Button,
   useToast,
   Modal,
+  Center,
 } from 'native-base';
 import {
   useWhatsapp_GetAuthStatusQuery,
   useWhatsapp_SignOutMutation,
 } from '../../graphql/gql-generated';
 import {Grid, Row, Col} from 'react-native-easy-grid';
-import {Alert, StyleProp, StyleSheet, ViewStyle} from 'react-native';
+import {
+  Alert,
+  ScrollView,
+  StyleProp,
+  StyleSheet,
+  useWindowDimensions,
+  ViewStyle,
+} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import {useMyAppState} from '../../state';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {myNumberFormat} from '../../shared/utils';
+import {IDataSimpleGrid, SimpleDataGrid} from '../../shared/components';
 
 interface ITokoHomeProps {}
 
@@ -29,27 +38,12 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
   const myAppState = useMyAppState();
   const toast = useToast();
 
-  const colTitleW = useBreakpointValue({
-    base: '40%',
-    lg: '30%',
+  const window = useWindowDimensions();
+
+  const simpleGridWidth: number | 'full' = useBreakpointValue({
+    base: 'full',
+    lg: window.width * 0.5,
   });
-  const colTitle: StyleProp<ViewStyle> = {
-    width: colTitleW,
-  };
-  const colDividerW = useBreakpointValue({
-    base: '5%',
-    lg: '5%',
-  });
-  const colDivider: StyleProp<ViewStyle> = {
-    width: colDividerW,
-  };
-  const colValueW = useBreakpointValue({
-    base: '55%',
-    lg: '55%',
-  });
-  const colValue: StyleProp<ViewStyle> = {
-    width: colValueW,
-  };
 
   const getWAAuthStatus = useWhatsapp_GetAuthStatusQuery({
     fetchPolicy: 'network-only',
@@ -98,158 +92,96 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
     );
   }, [WAAuthStatus?.client_name, toast, whatsappSignout]);
 
+  const errorGrid: IDataSimpleGrid[] = WAAuthStatus?.isError
+    ? [
+        {
+          title: 'Error',
+          value: () => <Text color="red.600">{WAAuthStatus.errorMessage}</Text>,
+        },
+      ]
+    : [];
+
+  const otherStatus: IDataSimpleGrid[] =
+    WAAuthStatus?.isError === false && WAAuthStatus?.client_state
+      ? [
+          {
+            title: 'Status',
+            value: WAAuthStatus.client_state,
+          },
+          {
+            title: 'Nama Whatsapp',
+            value: WAAuthStatus?.client_name,
+          },
+          {
+            title: 'Nomor Whatsapp',
+            value: myNumberFormat.phoneNumber(
+              WAAuthStatus.client_phone_number,
+              'with+62',
+            ),
+          },
+          {
+            title: 'Platform',
+            value: WAAuthStatus?.client_platform,
+          },
+        ]
+      : [];
+
   return (
-    <Box>
-      <HStack mb="10" mt="4" justifyContent="space-between">
-        <Heading fontSize="xl">Whatsapp</Heading>
-        <Button onPress={async () => await getWAAuthStatus.refetch()}>
-          Refresh
-        </Button>
-      </HStack>
-      <Stack direction={['column', 'column', 'row-reverse']}>
-        <Box flex={1} alignItems="center">
+    <ScrollView>
+      <Box pb="64">
+        <HStack mb="10" mt="4" justifyContent="space-between">
+          <Heading fontSize="xl">Whatsapp</Heading>
+          <Button onPress={async () => await getWAAuthStatus.refetch()}>
+            Refresh
+          </Button>
+        </HStack>
+
+        <Stack
+          direction={{base: 'column', lg: 'row'}}
+          alignItems="center"
+          space={{base: '20', lg: 0}}>
+          <SimpleDataGrid
+            titleWidthRatio={0.5}
+            dividerWidthRatio={0.1}
+            valueWidthRatio={1.2}
+            rowHeight={50}
+            gridWidth={simpleGridWidth}
+            data={[
+              {
+                title: 'Autentikasi',
+                value: () => (
+                  <Badge
+                    padding={2}
+                    width="20"
+                    colorScheme={
+                      WAAuthStatus?.is_authenticated ? 'success' : 'danger'
+                    }>
+                    {WAAuthStatus?.is_authenticated
+                      ? 'Signed In'
+                      : 'Signed Out'}
+                  </Badge>
+                ),
+              },
+              ...errorGrid,
+              ...otherStatus,
+            ]}
+          />
+
           {WAAuthStatus?.qrcode && (
-            <>
-              <QRCode value={WAAuthStatus.qrcode} size={200} />
-              <Heading fontSize="lg" mt="4">
-                Scan Untuk Masuk
-              </Heading>
-            </>
+            <Box flex={1}>
+              <Center>
+                <QRCode value={WAAuthStatus.qrcode} size={200} />
+                <Center>
+                  <Heading fontSize="lg" mt="4">
+                    Scan Untuk Masuk
+                  </Heading>
+                </Center>
+              </Center>
+            </Box>
           )}
-        </Box>
-        <Box w={['full', '4/5', '2/5']}>
-          <Grid style={{width: '100%'}}>
-            <Row style={defaultStyles.row}>
-              <Col style={colTitle}>
-                <Text>Autentikasi</Text>
-              </Col>
-              <Col style={colDivider}>
-                <Text>:</Text>
-              </Col>
-              <Col style={{width: 'auto'}}>
-                <Badge
-                  padding={2}
-                  colorScheme={
-                    WAAuthStatus?.is_authenticated ? 'success' : 'danger'
-                  }>
-                  {WAAuthStatus?.is_authenticated ? 'Signed In' : 'Signed Out'}
-                </Badge>
-              </Col>
-            </Row>
-            {WAAuthStatus?.isError && (
-              <Row
-                style={{
-                  ...defaultStyles.row,
-                  height: defaultStyles.row.height + 25,
-                }}>
-                <Col
-                  style={{
-                    ...colTitle,
-                    height: defaultStyles.row.height + 25,
-                  }}>
-                  <HStack alignItems={'center'} h="full">
-                    <Text>Autentikasi</Text>
-                  </HStack>
-                </Col>
-                <Col
-                  style={{
-                    ...colDivider,
-                    height: defaultStyles.row.height + 25,
-                  }}>
-                  <HStack alignItems={'center'} h="full">
-                    <Text>:</Text>
-                  </HStack>
-                </Col>
-                <Col
-                  style={{
-                    width: 'auto',
-                    height: defaultStyles.row.height + 25,
-                  }}>
-                  <HStack alignItems={'center'} h="full">
-                    <Text color="red.700">{WAAuthStatus.errorMessage}</Text>
-                  </HStack>
-                </Col>
-              </Row>
-            )}
-            {WAAuthStatus?.client_state && (
-              <Row style={defaultStyles.row}>
-                <Col style={colTitle}>
-                  <Text>Status</Text>
-                </Col>
-                <Col style={colDivider}>
-                  <Text>:</Text>
-                </Col>
-                <Col style={colValue}>
-                  <Text>{WAAuthStatus.client_state}</Text>
-                </Col>
-              </Row>
-            )}
-            {WAAuthStatus?.client_name && (
-              <Row style={defaultStyles.row}>
-                <Col style={colTitle}>
-                  <Text>Nama WA</Text>
-                </Col>
-                <Col style={colDivider}>
-                  <Text>:</Text>
-                </Col>
-                <Col style={colValue}>
-                  <Text>{WAAuthStatus?.client_name}</Text>
-                </Col>
-              </Row>
-            )}
-            {WAAuthStatus?.client_phone_number && (
-              <Row style={defaultStyles.row}>
-                <Col style={colTitle}>
-                  <Text>Nomor WA</Text>
-                </Col>
-                <Col style={colDivider}>
-                  <Text>:</Text>
-                </Col>
-                <Col style={colValue}>
-                  <Text>
-                    {WAAuthStatus?.client_phone_number
-                      ? myNumberFormat.phoneNumber(
-                          WAAuthStatus.client_phone_number,
-                          'with+62',
-                        )
-                      : ''}
-                  </Text>
-                </Col>
-              </Row>
-            )}
-            {WAAuthStatus?.client_platform && (
-              <Row style={defaultStyles.row}>
-                <Col style={colTitle}>
-                  <Text>HP</Text>
-                </Col>
-                <Col style={colDivider}>
-                  <Text>:</Text>
-                </Col>
-                <Col style={colValue}>
-                  <Text>{WAAuthStatus?.client_platform}</Text>
-                </Col>
-              </Row>
-            )}
-            {WAAuthStatus?.is_authenticated && (
-              <Row
-                style={{
-                  height: 80,
-                  alignItems: 'center',
-                }}>
-                <Col>
-                  <Button
-                    w="100"
-                    colorScheme="milano_red"
-                    onPress={handleWhatsappSignout}>
-                    Sign Out
-                  </Button>
-                </Col>
-              </Row>
-            )}
-          </Grid>
-        </Box>
-      </Stack>
-    </Box>
+        </Stack>
+      </Box>
+    </ScrollView>
   );
 };
 
