@@ -102,15 +102,15 @@ const CashierHome = ({route}: Props) => {
     useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription({
       variables: {store_id: parseInt(selectedStoreId || '0', 10)},
     });
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 86 ~ CashierHome ~ getAllInventoryProduct.error',
-    getAllInventoryProduct.error,
-  );
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 86 ~ CashierHome ~ getAllInventoryProduct.error',
+  //   getAllInventoryProduct.error,
+  // );
 
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 94 ~ CashierHome ~ getAllInventoryProduct.data?.inventory_products',
-    getAllInventoryProduct.data?.inventory_products,
-  );
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 94 ~ CashierHome ~ getAllInventoryProduct.data?.inventory_products',
+  //   getAllInventoryProduct.data?.inventory_products,
+  // );
 
   const inventoryProductData: {
     raw: IInventoryProductData[];

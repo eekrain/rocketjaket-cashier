@@ -71,7 +71,13 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
 
   return (
     <ScrollView>
-      <Box safeArea flex={1} p="2" py="8" w="md" mx="auto">
+      <Box
+        safeArea
+        flex={1}
+        p={4}
+        pt="8"
+        w={{base: 'full', md: 'md'}}
+        mx="auto">
         <Box justifyContent="center" alignItems="center">
           <Image
             source={require('../../../assets/images/logo.png')}
@@ -87,7 +93,7 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
           </Heading>
         </Box>
 
-        <VStack space={3} mt="5">
+        <VStack space={3} mt="5" bgColor={'white'} p="8" borderRadius={'xl'}>
           <RHTextInput
             name="username"
             label="Username"

@@ -48,11 +48,11 @@ export const MyAvatar = ({
   isDisableZoom = false,
 }: Props) => {
   const [isError, setError] = useState(false);
-  console.log('🚀 ~ file: index.tsx ~ line 51 ~ isError', isError);
+  // console.log('🚀 ~ file: index.tsx ~ line 51 ~ isError', isError);
   const accessToken = useAccessToken();
   const myZoomImageViewer = useMyZoomImageViewer();
 
-  console.log('🚀 ~ file: index.tsx ~ line 50 ~ source', source);
+  // console.log('🚀 ~ file: index.tsx ~ line 50 ~ source', source);
 
   useEffect(() => setError(false), [source]);
 
@@ -79,10 +79,10 @@ export const MyAvatar = ({
     }),
     [source, accessToken],
   );
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 82 ~ finalSource.normal',
-    finalSource.normal.uri,
-  );
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 82 ~ finalSource.normal',
+  //   finalSource.normal.uri,
+  // );
 
   const render = () => {
     return (

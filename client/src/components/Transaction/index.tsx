@@ -10,6 +10,7 @@ import {
   Modal,
   Badge,
   useBreakpointValue,
+  Stack,
 } from 'native-base';
 import {
   Alert,
@@ -20,7 +21,6 @@ import {
 import {
   Transaction_Status_Enum_Enum,
   useStore_GetAllStoreQuery,
-  useStore_GetStoreByPkQuery,
   useTransaction_GetAllTransactionByStoreIdQuery,
 } from '../../graphql/gql-generated';
 import CustomTable from '../CustomTable';
@@ -273,7 +273,11 @@ const Produk = ({navigation}: Props) => {
           </Modal.Content>
         </Modal>
         <Box w="full" paddingBottom={'20'}>
-          <HStack space="4" alignItems="center" mb="10">
+          <Stack
+            direction={{base: 'column', md: 'row'}}
+            space="4"
+            alignItems={{base: 'flex-start', md: 'center'}}
+            mb="10">
             <Heading fontSize="xl">
               List Semua Transaksi di Toko {selectedStoreName}
             </Heading>
@@ -285,7 +289,7 @@ const Produk = ({navigation}: Props) => {
                 Ganti Toko
               </Button>
             )}
-          </HStack>
+          </Stack>
 
           <CustomTable
             data={allTransaction}
