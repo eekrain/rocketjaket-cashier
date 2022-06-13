@@ -1,5 +1,15 @@
 import React from 'react';
-import {Box, Text, ScrollView, Heading, Button, useToast} from 'native-base';
+import {
+  Box,
+  Text,
+  ScrollView,
+  Heading,
+  Button,
+  useToast,
+  Center,
+  useBreakpointValue,
+  VStack,
+} from 'native-base';
 import {useForm} from 'react-hook-form';
 import {TransactionPaymentTypeEnum} from '../../../graphql/gql-generated';
 import {TRHNumberValueType} from '../../../shared/components';
@@ -18,6 +28,7 @@ import {clearReturn} from '..';
 import {UpdateTransactionNavProps} from '../../../screens/app/TransactionScreen';
 import {TOAST_TEMPLATE} from '../../../shared/constants';
 import ReturnLandingModal from '../Return/ReturnLandingModal';
+import {useWindowDimensions} from 'react-native';
 
 export interface ICashierCartDefaultValues {
   payment_type: TransactionPaymentTypeEnum | null;
@@ -35,6 +46,17 @@ const defaultValues: ICashierCartDefaultValues = {
 };
 
 const Cart = () => {
+  const window = useWindowDimensions();
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 59 ~ DashboardScreen ~ window',
+    window,
+  );
+
+  const cartHeight: number | undefined = useBreakpointValue({
+    base: undefined,
+    lg: window.height - 130,
+  });
+
   const myCart = useMyCart();
   const route = useRoute<CashierHomeNavProps['route']>();
   const navigation = useNavigation<UpdateTransactionNavProps['navigation']>();
@@ -141,8 +163,8 @@ const Cart = () => {
       />
       <Box
         bgColor="white"
-        minW={{base: 'full', lg: '3/6'}}
-        minHeight={{base: '64', lg: '89%'}}
+        flex={1}
+        height={{base: '64', lg: cartHeight}}
         borderRadius="xl"
         mt={{base: -10, lg: undefined}}
         p="4">
@@ -150,11 +172,11 @@ const Cart = () => {
           Cart
         </Heading>
 
-        <Box
-          borderTopWidth={1}
-          borderBottomWidth={1}
-          borderColor="gray.400"
-          py="4">
+        <VStack
+          py="4"
+          flex={1}
+          justifyContent={myCart.cartItems.length === 0 ? 'center' : undefined}
+          alignItems={myCart.cartItems.length === 0 ? 'center' : undefined}>
           <ScrollView>
             {route.params?.invoiceNumberRefundPart ? (
               <>
@@ -212,7 +234,7 @@ const Cart = () => {
               </>
             )}
           </ScrollView>
-        </Box>
+        </VStack>
 
         <CartFooter
           onPayButtonPress={() => {

@@ -14,12 +14,13 @@ interface CardWithIconProps {
 }
 
 const cardDefault: InterfaceHStackProps = {
+  height: '70%',
   alignItems: 'center',
+  w: 'full',
   borderRadius: 'lg',
+  p: '8',
   pl: {base: '2', md: '4'},
   bgColor: 'teal.600',
-  w: {base: '48%', md: '35%', lg: '36%'},
-  h: {base: 55, md: 91},
   py: 2,
   space: '2',
 };
@@ -27,7 +28,6 @@ const titleDefault: InterfaceTextProps = {
   fontWeight: 'bold',
   fontSize: {base: 'sm', md: 'sm', lg: 'lg'},
   color: 'white',
-  w: {base: '100%', md: '80%', lg: '80%'},
   opacity: '0.8',
 };
 

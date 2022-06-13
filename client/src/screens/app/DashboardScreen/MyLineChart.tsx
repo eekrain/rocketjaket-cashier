@@ -1,6 +1,7 @@
 import {Box, Heading} from 'native-base';
 import numbro from 'numbro';
 import React from 'react';
+import {Dimensions} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 
 export interface IMyLineChart {
@@ -17,7 +18,7 @@ interface MyLineChartProps {
   chartData?: IMyLineChart;
   total: string;
   chartWidth: number;
-  chartHheight?: number;
+  chartHeight?: number;
   textColor?: string;
   bgColor?: string;
   bgGradientFromLeft?: string;
@@ -33,7 +34,7 @@ export const MyLineChart = ({
   chartData,
   total,
   chartWidth,
-  chartHheight = 220,
+  chartHeight = 220,
   textColor = '#065f46',
   bgColor = '#6ee7b7',
   bgGradientFromLeft = '#d1fae5',
@@ -48,10 +49,7 @@ export const MyLineChart = ({
       {chartData &&
         chartData.labels.length > 0 &&
         chartData.datasets.length > 0 && (
-          <Box
-            p={{base: 0, sm: 3, md: 4, lg: 6}}
-            bgColor="white"
-            borderRadius="xl">
+          <Box p={{base: 4, lg: 6}} bgColor="white" borderRadius="xl">
             <Heading color={textColor} fontSize="lg" mb="2">
               {chartTitle}
             </Heading>
@@ -65,7 +63,7 @@ export const MyLineChart = ({
                 legend: chartData.legend,
               }}
               width={chartWidth} // from react-native
-              height={chartHheight}
+              height={chartHeight}
               formatYLabel={formatYLabel}
               yAxisInterval={yAxisInterval} // optional, defaults to 1
               yLabelsOffset={10}
@@ -86,7 +84,6 @@ export const MyLineChart = ({
                   strokeWidth: '2',
                   stroke: '#ffffff',
                 },
-                useShadowColorFromDataset: true,
               }}
               bezier
               style={{

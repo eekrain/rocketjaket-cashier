@@ -35,21 +35,19 @@ export const MyPieChart = ({
   formatValue = value =>
     numbro(value).formatCurrency({currencySymbol: 'Rp ', average: true}),
 }: IMyPieChartProps) => {
+  const window = useWindowDimensions();
+
   const pieChartWidth: number = useBreakpointValue({
+    base: 320,
     sm: 320,
-    md: 210,
+    md: 220,
     lg: 320,
-    xl: 320,
   });
-  // console.log(
-  //   '🚀 ~ file: MyPieChart.tsx ~ line 46 ~ pieChartWidth',
-  //   pieChartWidth,
-  // );
   const pieChartHeight: number = useBreakpointValue({
+    base: 200,
     sm: 200,
-    md: 130,
+    md: 120,
     lg: 200,
-    xl: 200,
   });
   // console.log(
   //   '🚀 ~ file: MyPieChart.tsx ~ line 52 ~ pieChartHeight',
@@ -70,7 +68,7 @@ export const MyPieChart = ({
             hasLegend={false}
             paddingLeft="0"
           />
-          <VStack space="2" ml={{base: -55, md: -90, lg: -100}}>
+          <VStack space="2" ml={{base: -110, md: -90, lg: -100}}>
             {data.map(x => (
               <HStack
                 alignItems={'center'}
