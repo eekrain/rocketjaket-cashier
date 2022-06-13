@@ -14,7 +14,7 @@ export const CartFooter = ({onPayButtonPress}: CartFooterProps) => {
   const route = useRoute<CashierHomeNavProps['route']>();
 
   return (
-    <Box mt="4">
+    <Box mt="4" borderTopWidth={1} paddingTop={'8'} borderColor="gray.400">
       <HStack>
         <Heading fontSize="lg" w={120}>
           Total Item
