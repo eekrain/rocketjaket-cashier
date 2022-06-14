@@ -158,16 +158,19 @@ export const CustomTable = <T extends Record<string, unknown>>({
     [footer, styles.header],
   );
 
+  const lengthMin1 = processedData.length > 0 ? processedData.length : 1;
+
+  const tableHeight = tableSettings.mainSettings?.tableHeight
+    ? tableSettings.mainSettings?.tableHeight
+    : lengthMin1 * tableSettings.row!.rowHeight! +
+      tableSettings.header!.headerHeight! +
+      1;
+
   return (
     <ScrollView horizontal={true} nestedScrollEnabled={true}>
       <Box
         width={tableSettings.mainSettings.tableWidth}
-        height={
-          tableSettings.mainSettings?.tableHeight
-            ? tableSettings.mainSettings?.tableHeight
-            : processedData.length * tableSettings.row!.rowHeight! +
-              tableSettings.header!.headerHeight!
-        }
+        height={tableHeight}
         backgroundColor="red">
         <Grid
           style={{
