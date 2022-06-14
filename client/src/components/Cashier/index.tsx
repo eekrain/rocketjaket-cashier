@@ -10,6 +10,7 @@ import {
   Button,
   Icon,
   useBreakpointValue,
+  VStack,
 } from 'native-base';
 import ProductsContent from './ProductsContent';
 import withAppLayout from '../Layout/AppLayout';
@@ -78,6 +79,10 @@ const CashierHome = ({route}: Props) => {
     base: true,
     lg: false,
   });
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 81 ~ CashierHome ~ isShowHeader',
+    isShowHeader,
+  );
 
   const {
     watch,
@@ -285,7 +290,7 @@ const CashierHome = ({route}: Props) => {
 
   return (
     <ScrollView>
-      <Box pb="40">
+      <Box pb={300}>
         <Modal
           isOpen={watch('show_modal_change_toko')}
           onClose={() => setValue('show_modal_change_toko', false)}>
@@ -304,7 +309,7 @@ const CashierHome = ({route}: Props) => {
           </Modal.Content>
         </Modal>
         {isShowHeader && (
-          <Box>
+          <VStack mb={route.params?.invoiceNumberRefundPart ? '20' : '16'}>
             {route.params?.invoiceNumberRefundPart && (
               <HStack alignItems="center" justifyContent="space-between">
                 <Heading fontSize="xl" mb="2">
@@ -327,10 +332,8 @@ const CashierHome = ({route}: Props) => {
                 />
               </HStack>
             )}
-            <HStack
-              space="4"
-              alignItems="center"
-              mb={route.params?.invoiceNumberRefundPart ? -30 : undefined}>
+
+            <HStack space="4" alignItems="center">
               <Heading fontSize="xl">Toko {selectedStoreName}</Heading>
               {roles.includes(UserRolesEnum.administrator) && (
                 <Button
@@ -341,8 +344,9 @@ const CashierHome = ({route}: Props) => {
                 </Button>
               )}
             </HStack>
-          </Box>
+          </VStack>
         )}
+
         <Stack
           direction={{base: 'column-reverse', lg: 'row'}}
           space={{base: '8', lg: '4'}}
