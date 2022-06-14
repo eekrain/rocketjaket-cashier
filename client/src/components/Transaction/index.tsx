@@ -12,12 +12,7 @@ import {
   useBreakpointValue,
   Stack,
 } from 'native-base';
-import {
-  Alert,
-  RefreshControl,
-  useWindowDimensions,
-  ScrollView,
-} from 'react-native';
+import {Alert, RefreshControl, ScrollView} from 'react-native';
 import {
   Transaction_Status_Enum_Enum,
   useStore_GetAllStoreQuery,
@@ -72,7 +67,6 @@ const Action = ({invoice_number, navigation}: IActionProps) => {
 interface Props extends ListTransactionNavProps {}
 
 const Produk = ({navigation}: Props) => {
-  const window = useWindowDimensions();
   const tableWidth: number | 'full' = useBreakpointValue({
     base: 1000,
     lg: 'full',
