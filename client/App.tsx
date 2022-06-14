@@ -62,7 +62,7 @@ const App = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setAccessTokenLatest(nhost.auth.getAccessToken());
-    }, 5000);
+    }, 5 * 60 * 1000);
 
     const splash = setTimeout(() => {
       setLoadingSplashScreen(false);
