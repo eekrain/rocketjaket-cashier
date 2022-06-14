@@ -150,12 +150,7 @@ const ProductsContent = ({
           </ScrollView>
         </HStack>
       )}
-      <HStack
-        direction={'row'}
-        flexWrap="wrap"
-        w="full"
-        justifyContent="space-evenly"
-        mt="2">
+      <HStack flexWrap="wrap" w="full" justifyContent="space-evenly" mt="2">
         {!searchTerm
           ? filteredByCategoryProductData.map(product => (
               <ProductItem product={product} key={product.id} />
@@ -179,7 +174,7 @@ const ProductItem = ({product}: {product: IInventoryProductData}) => {
 
   return (
     <Pressable
-      w="32%"
+      w={{base: '40%', sm: '32%'}}
       onPress={() => {
         if (product.available_qty > 0) {
           myCart.handleAddToCart({

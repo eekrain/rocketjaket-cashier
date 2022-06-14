@@ -164,7 +164,7 @@ const Cart = () => {
       <Box
         bgColor="white"
         flex={1}
-        height={{base: '64', lg: cartHeight}}
+        height={{base: '48', lg: cartHeight}}
         borderRadius="xl"
         mt={{base: -10, lg: undefined}}
         p="4">
@@ -177,7 +177,7 @@ const Cart = () => {
           flex={1}
           justifyContent={myCart.cartItems.length === 0 ? 'center' : undefined}
           alignItems={myCart.cartItems.length === 0 ? 'center' : undefined}>
-          <ScrollView>
+          <ScrollView nestedScrollEnabled={true}>
             {route.params?.invoiceNumberRefundPart ? (
               <>
                 <Box>

@@ -4,7 +4,6 @@ import {Pressable} from 'react-native';
 import {
   Button,
   HamburgerIcon,
-  Heading,
   HStack,
   Popover,
   Text,
@@ -75,16 +74,13 @@ const CustomHeader = ({}: ICustomHeaderProps) => {
       bgColor="milano_red.500"
       alignItems="center"
       justifyContent="space-between"
-      px="4"
+      pr="4"
       height={customHeaderHeight}>
-      <HStack space="6">
-        <Pressable onPress={() => navigation.toggleDrawer()}>
+      <Pressable onPress={() => navigation.toggleDrawer()}>
+        <HStack h="full" alignItems={'center'} pl="4" pr="10">
           <HamburgerIcon size="sm" color="white" />
-        </Pressable>
-        <Heading size="md" color="white">
-          {getRouteNiceName(route.name)}
-        </Heading>
-      </HStack>
+        </HStack>
+      </Pressable>
       <HStack space="6" alignItems="center">
         <Pressable
           onPressIn={() => setNotifPressed(true)}

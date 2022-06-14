@@ -90,6 +90,11 @@ const CreateToko = ({}: ICreateTokoProps) => {
   const working_hour_start = watch().working_hour_start;
   const working_hour_end = watch().working_hour_end;
 
+  const watchCoords = {
+    latitude: watch().latitude,
+    longitude: watch().longitude,
+  };
+
   const [createStoreMutation, _createStoreMutationResult] =
     useStore_CreateStoreMutation({
       ...getXHasuraContextHeader({role: 'administrator'}),
@@ -194,7 +199,12 @@ const CreateToko = ({}: ICreateTokoProps) => {
                 errors={errors}
                 label="Alamat"
               />
+
               <MapViewWithMarker
+                currentLocation={{
+                  latitude: watchCoords.latitude,
+                  longitude: watchCoords.longitude,
+                }}
                 onUpdateLocation={onUpdateLocation}
                 // mapRef={mapRef}
                 onPressMapWithUpdateLocation={onPressMapWithUpdateLocation}
