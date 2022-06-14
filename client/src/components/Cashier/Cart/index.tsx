@@ -47,10 +47,10 @@ const defaultValues: ICashierCartDefaultValues = {
 
 const Cart = () => {
   const window = useWindowDimensions();
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 59 ~ DashboardScreen ~ window',
-    window,
-  );
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 59 ~ DashboardScreen ~ window',
+  //   window,
+  // );
 
   const cartHeight: number | undefined = useBreakpointValue({
     base: undefined,
@@ -163,10 +163,10 @@ const Cart = () => {
       />
       <Box
         bgColor="white"
-        flex={1}
-        height={{base: '48', lg: cartHeight}}
+        height={{base: 300, lg: cartHeight}}
+        mt={{base: 6, md: 6, lg: undefined}}
         borderRadius="xl"
-        mt={{base: -10, lg: undefined}}
+        flex={1}
         p="4">
         <Heading fontSize="xl" mb="4">
           Cart

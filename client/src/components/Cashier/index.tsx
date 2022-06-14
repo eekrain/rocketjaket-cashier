@@ -22,7 +22,7 @@ import {getUniqArrayObject, useFlexSearch, useMyUser} from '../../shared/utils';
 import {UserRolesEnum} from '../../types/user';
 import {useForm} from 'react-hook-form';
 import {RHSelect} from '../../shared/components';
-import {Alert} from 'react-native';
+import {Alert, useWindowDimensions} from 'react-native';
 import {CashierHomeNavProps} from '../../screens/app/CashierScreen';
 import {ICart, useMyAppState, useMyCart} from '../../state';
 import Cart from './Cart';
@@ -66,6 +66,13 @@ export interface IInventoryProductData {
 interface Props extends CashierHomeNavProps {}
 
 const CashierHome = ({route}: Props) => {
+  const window = useWindowDimensions();
+
+  const heightOnLg: number | string = useBreakpointValue({
+    base: 'full',
+    lg: window.height - 130,
+  });
+
   const myUser = useMyUser();
   const myAppState = useMyAppState();
 
@@ -75,14 +82,10 @@ const CashierHome = ({route}: Props) => {
   const toast = useToast();
   const [isDataStoreReady, setDataStoreReady] = useState(false);
 
-  const isShowHeader: boolean = useBreakpointValue({
+  const isFalseWhenLg: boolean = useBreakpointValue({
     base: true,
     lg: false,
   });
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 81 ~ CashierHome ~ isShowHeader',
-    isShowHeader,
-  );
 
   const {
     watch,
@@ -287,10 +290,11 @@ const CashierHome = ({route}: Props) => {
       myAppState.setLoadingWholePage(false);
     };
   }, [getAllStore.loading, getAllInventoryProduct.loading]);
+  //pb={{base: 300, lg: undefined}}
 
-  return (
-    <ScrollView>
-      <Box pb={300}>
+  const render = () => (
+    <>
+      <Box pb={150}>
         <Modal
           isOpen={watch('show_modal_change_toko')}
           onClose={() => setValue('show_modal_change_toko', false)}>
@@ -308,8 +312,9 @@ const CashierHome = ({route}: Props) => {
             </Box>
           </Modal.Content>
         </Modal>
-        {isShowHeader && (
-          <VStack mb={route.params?.invoiceNumberRefundPart ? '20' : '16'}>
+
+        {isFalseWhenLg && (
+          <VStack>
             {route.params?.invoiceNumberRefundPart && (
               <HStack alignItems="center" justifyContent="space-between">
                 <Heading fontSize="xl" mb="2">
@@ -350,7 +355,7 @@ const CashierHome = ({route}: Props) => {
         <Stack
           direction={{base: 'column-reverse', lg: 'row'}}
           space={{base: '8', lg: '4'}}
-          h="full"
+          h={heightOnLg}
           p="0">
           <ProductsContent
             route={route}
@@ -369,8 +374,13 @@ const CashierHome = ({route}: Props) => {
           <Cart />
         </Stack>
       </Box>
-    </ScrollView>
+    </>
   );
+
+  if (isFalseWhenLg)
+    return <ScrollView scrollEnabled={isFalseWhenLg}>{render()}</ScrollView>;
+
+  return render();
 };
 
 export const clearReturn = (
