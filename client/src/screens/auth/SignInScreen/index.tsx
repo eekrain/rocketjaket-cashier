@@ -5,10 +5,11 @@ import {
   Heading,
   Image,
   VStack,
-  Link,
+  // Link,
   Button,
   ScrollView,
   useToast,
+  Center,
 } from 'native-base';
 import {SigninNavProps} from '..';
 import {RHTextInput} from '../../../shared/components';
@@ -78,22 +79,31 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
         pt="8"
         w={{base: 'full', md: 'md'}}
         mx="auto">
-        <Box justifyContent="center" alignItems="center">
+        <Center>
           <Image
             source={require('../../../assets/images/logo.png')}
             alt="Logo Rocketjaketr"
             w="xs"
             resizeMode="contain"
           />
-          <Heading size="lg" fontWeight="600" color="coolGray.800">
-            Kasir
-          </Heading>
-          <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
-            Selamat Datang!
-          </Heading>
-        </Box>
+        </Center>
 
         <VStack space={3} mt="5" bgColor={'white'} p="8" borderRadius={'xl'}>
+          <Center>
+            <Heading fontSize={'3xl'} fontWeight="600" color="coolGray.800">
+              Kasir
+            </Heading>
+          </Center>
+          <Center>
+            <Heading
+              mb="6"
+              color="coolGray.600"
+              fontWeight="medium"
+              fontSize={'xl'}>
+              Selamat Datang!
+            </Heading>
+          </Center>
+
           <RHTextInput
             name="username"
             label="Username"
