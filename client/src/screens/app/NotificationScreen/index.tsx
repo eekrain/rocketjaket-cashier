@@ -8,6 +8,7 @@ import {
   HStack,
   VStack,
   Pressable,
+  Stack,
 } from 'native-base';
 import withAppLayout from '../../../components/Layout/AppLayout';
 import {useMyNotification} from '../../../state';
@@ -22,7 +23,12 @@ const NotificationScreen = ({}: INotificationScreenProps) => {
   const myUser = useMyUser();
   return (
     <Box>
-      <HStack mb="6" justifyContent="space-between" alignItems="center">
+      <Stack
+        space={{base: '4', md: undefined}}
+        direction={{base: 'column', md: 'row'}}
+        mb="6"
+        justifyContent="space-between"
+        alignItems={{base: 'flex-start', md: 'center'}}>
         <Heading fontSize="xl">Notifikasi</Heading>
         <HStack space="4">
           <Button
@@ -41,7 +47,7 @@ const NotificationScreen = ({}: INotificationScreenProps) => {
             </Button>
           )}
         </HStack>
-      </HStack>
+      </Stack>
       <FlatList
         maxHeight="86%"
         data={myNotif.notifications}
