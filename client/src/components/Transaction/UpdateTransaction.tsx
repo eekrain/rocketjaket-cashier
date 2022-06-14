@@ -42,8 +42,13 @@ interface Props extends UpdateTransactionNavProps {}
 const UpdateTransaction = ({route}: Props) => {
   const window = useWindowDimensions();
 
-  const tableWidth = useBreakpointValue({
-    base: window.width - 100,
+  const tableItemsBoughtWidth = useBreakpointValue({
+    base: 700,
+    md: window.width - 100,
+  });
+  const tableReceiptWidth = useBreakpointValue({
+    base: 1000,
+    md: window.width - 100,
   });
 
   const toast = useToast();
@@ -292,7 +297,7 @@ const UpdateTransaction = ({route}: Props) => {
                   rowKeysAccessor="id"
                   tableSettings={{
                     mainSettings: {
-                      tableWidth,
+                      tableWidth: tableItemsBoughtWidth,
                       withPagination: false,
                       withSearch: false,
                     },
@@ -405,7 +410,7 @@ const UpdateTransaction = ({route}: Props) => {
                       rowKeysAccessor="id"
                       tableSettings={{
                         mainSettings: {
-                          tableWidth,
+                          tableWidth: tableItemsBoughtWidth,
                           withPagination: false,
                           withSearch: false,
                         },
@@ -476,12 +481,13 @@ const UpdateTransaction = ({route}: Props) => {
                     Kirim Ulang Nota
                   </Button>
                 </HStack>
+
                 <CustomTable
                   rowKeysAccessor="created_at"
                   data={dataTransactionReceipt}
                   tableSettings={{
                     mainSettings: {
-                      tableWidth,
+                      tableWidth: tableReceiptWidth,
                       withPagination: false,
                       withSearch: false,
                     },

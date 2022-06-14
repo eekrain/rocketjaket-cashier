@@ -27,6 +27,7 @@ import {ButtonCancelDelete} from '../Buttons';
 import {useNavigation} from '@react-navigation/native';
 import {UpdateTransactionNavProps} from '../../screens/app/TransactionScreen';
 import {TOAST_TEMPLATE} from '../../shared/constants';
+import {ContextOptions} from 'flexsearch';
 
 interface Props {
   route: CashierHomeNavProps['route'];
@@ -62,14 +63,32 @@ const ProductsContent = ({
   const navigation = useNavigation<UpdateTransactionNavProps['navigation']>();
   const toast = useToast();
 
-  const isShowHeader: boolean = useBreakpointValue({
+  const isTrueWhenLg: boolean = useBreakpointValue({
     base: false,
     lg: true,
   });
 
+  const content = () => (
+    <HStack
+      direction={'column'}
+      flexWrap="wrap"
+      w="full"
+      justifyContent="space-evenly"
+      mt="2"
+      flex={1}>
+      {!searchTerm
+        ? filteredByCategoryProductData.map(product => (
+            <ProductItem product={product} key={product.id} />
+          ))
+        : searchedInventoryProductData.map(product => (
+            <ProductItem product={product} key={product.id} />
+          ))}
+    </HStack>
+  );
+
   return (
     <Stack w={{base: 'full', lg: '3/5'}} direction="column" space="3">
-      {isShowHeader && (
+      {isTrueWhenLg && (
         <Box>
           {route.params?.invoiceNumberRefundPart && (
             <HStack alignItems="center" justifyContent="space-between">
@@ -150,15 +169,14 @@ const ProductsContent = ({
           </ScrollView>
         </HStack>
       )}
-      <HStack flexWrap="wrap" w="full" justifyContent="space-evenly" mt="2">
-        {!searchTerm
-          ? filteredByCategoryProductData.map(product => (
-              <ProductItem product={product} key={product.id} />
-            ))
-          : searchedInventoryProductData.map(product => (
-              <ProductItem product={product} key={product.id} />
-            ))}
-      </HStack>
+
+      {isTrueWhenLg ? (
+        <ScrollView nestedScrollEnabled={true} scrollEnabled={true}>
+          {content()}
+        </ScrollView>
+      ) : (
+        content()
+      )}
     </Stack>
   );
 };
