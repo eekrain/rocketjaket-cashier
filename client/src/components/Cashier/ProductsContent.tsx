@@ -70,7 +70,7 @@ const ProductsContent = ({
 
   const content = () => (
     <HStack
-      direction={'column'}
+      direction={'row'}
       flexWrap="wrap"
       w="full"
       justifyContent="space-evenly"
