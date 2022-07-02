@@ -105,7 +105,9 @@ const UpdateToko = ({}: IUpdateTokoProps) => {
   };
 
   const getDataToko = useStore_GetStoreByPkQuery({
-    variables: {id: route.params?.storeId || 0},
+    variables: {
+      id: typeof route.params?.storeId === 'number' ? route.params?.storeId : 0,
+    },
     onError: error => {
       navigation.goBack();
       toast.show(
@@ -130,6 +132,10 @@ const UpdateToko = ({}: IUpdateTokoProps) => {
       });
     },
   });
+  // console.log(
+  //   '🚀 ~ file: UpdateToko.tsx ~ line 133 ~ UpdateToko ~ getDataToko',
+  //   getDataToko.data?.stores_by_pk,
+  // );
 
   useEffect(() => {
     myAppState.setLoadingWholePage(getDataToko.loading);
