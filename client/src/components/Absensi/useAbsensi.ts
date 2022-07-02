@@ -16,8 +16,9 @@ import turfCircle from '@turf/circle';
 import {calculateDistanceKilometer} from '../../shared/utils/calculateDistanceKilometer';
 import {UserRolesEnum} from '../../types/user';
 
-const intervalOpenModalAbsensi =
-  Config.APP_ENV === 'development' ? 1000 : 5 * 60 * 1000;
+let tes = 0;
+
+const timeoutOpenModal = Config.APP_ENV === 'development' ? 1000 : 30 * 1000;
 
 interface IUseAbsensiProps {
   onUpdateLocation: (latitude: number, longitude: number) => void;
@@ -64,7 +65,9 @@ export const useAbsensi = () => {
       //   '🚀 ~ file: useAbsensi.ts ~ line 62 ~ useAbsensi ~ onCompleted useAttendance_GetMyAttendanceTodayQuery',
       // );
       const todayAttendance = data.attendance?.[0];
-      if (
+      if (!myUser.roles.includes(UserRolesEnum.karyawan))
+        setNeedRecordAttendance(false);
+      else if (
         literallyToday.isAfter(working_hour_start) &&
         data.attendance.length < 1 &&
         myUser.roles.includes(UserRolesEnum.karyawan)
@@ -85,16 +88,20 @@ export const useAbsensi = () => {
       : defaultCoords;
 
   useEffect(() => {
-    if (!isNeedRecordAttendance) setModalAbsensiOpen(false);
-    const interval = setInterval(() => {
-      if (isNeedRecordAttendance) {
-        setModalAbsensiOpen(true);
-      }
-    }, intervalOpenModalAbsensi);
+    let timeout: number[] = [];
+    if (isNeedRecordAttendance && isModalAbsensiOpen === false) {
+      tes += 1;
+      console.log('🚀 ~ file: useAbsensi.ts ~ line 100 ~ useEffect ~ tes', tes);
+      timeout.push(
+        setTimeout(() => {
+          setModalAbsensiOpen(true);
+        }, timeoutOpenModal),
+      );
+    }
     return () => {
-      clearInterval(interval);
+      timeout.forEach(x => clearTimeout(x));
     };
-  }, [isNeedRecordAttendance]);
+  }, [isNeedRecordAttendance, isModalAbsensiOpen]);
 
   const useGetLocationReturn = useGetLocation({
     onUpdateLocation: (latitude, longitude) => {
