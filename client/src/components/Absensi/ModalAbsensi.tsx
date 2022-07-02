@@ -12,6 +12,7 @@ import {
   useToast,
   VStack,
   Badge,
+  ScrollView,
 } from 'native-base';
 import Feather from 'react-native-vector-icons/Feather';
 import {
@@ -142,7 +143,7 @@ const ModalAbsensi = ({
   }, [photo]);
 
   return (
-    <Modal isOpen={modalAbsensiOpen} size="xl" pb="16">
+    <Modal isOpen={modalAbsensiOpen} size="xl">
       <Modal.Content>
         <Modal.Header>
           <Box>
@@ -168,68 +169,74 @@ const ModalAbsensi = ({
             </HStack>
           </Box>
         </Modal.Header>
-        <Box px="3" pt="3" pb="40">
-          <MapViewWithRadiusAndUserLocation
-            onUpdateLocation={() => {
-              console.log('update');
-            }}
-            containerProps={{h: 250}}
-            radiusLocation={tokoCoords}
-            isLazyFetch={false}
-            zoomLevel={16}
-            useGetLocationReturn={useGetLocationReturn}
-            radiusCircle={radiusCircle}
-            distanceMeter={distanceMeter}
-          />
-          <Center mb="4">
-            <Heading>Anda belum absen hari ini</Heading>
-          </Center>
-          <Center>
-            <VStack space="2">
-              <HStack>
-                <Text w="32">Jarak dari toko</Text>
-                <Text w="4">:</Text>
-                <Text>{Math.round(distanceMeter)} meter</Text>
-              </HStack>
-              <HStack>
-                <Text w="32">Maksimal jarak</Text>
-                <Text w="4">:</Text>
-                <Text>{Math.round(maximumDistanceFromToko)} meter</Text>
-              </HStack>
-              <HStack>
-                <Text w="32">Bisa absen</Text>
-                <Text w="4">:</Text>
-                <Badge
-                  colorScheme={
-                    Math.round(distanceMeter) <
+        <ScrollView>
+          <Box px="3" pt="3" pb="4">
+            <MapViewWithRadiusAndUserLocation
+              onUpdateLocation={() => {
+                console.log('update');
+              }}
+              containerProps={{h: 250}}
+              radiusLocation={tokoCoords}
+              isLazyFetch={false}
+              zoomLevel={16}
+              useGetLocationReturn={useGetLocationReturn}
+              radiusCircle={radiusCircle}
+              distanceMeter={distanceMeter}
+            />
+            <Center mb="4">
+              <Heading>Anda belum absen hari ini</Heading>
+            </Center>
+            <Center>
+              <VStack space="2">
+                <HStack>
+                  <Text w="32">Jarak dari toko</Text>
+                  <Text w="4">:</Text>
+                  <Text>{Math.round(distanceMeter)} meter</Text>
+                </HStack>
+                <HStack>
+                  <Text w="32">Maksimal jarak</Text>
+                  <Text w="4">:</Text>
+                  <Text>{Math.round(maximumDistanceFromToko)} meter</Text>
+                </HStack>
+                <HStack>
+                  <Text w="32">Bisa absen</Text>
+                  <Text w="4">:</Text>
+                  <Badge
+                    colorScheme={
+                      Math.round(distanceMeter) <
+                      Math.round(maximumDistanceFromToko)
+                        ? 'success'
+                        : 'error'
+                    }>
+                    {Math.round(distanceMeter) <
                     Math.round(maximumDistanceFromToko)
-                      ? 'success'
-                      : 'error'
-                  }>
-                  {Math.round(distanceMeter) <
+                      ? 'Bisa'
+                      : 'Tidak'}
+                  </Badge>
+                </HStack>
+              </VStack>
+            </Center>
+            <HStack justifyContent={'center'} mt="4">
+              <Button
+                disabled={
+                  Math.round(distanceMeter) >
                   Math.round(maximumDistanceFromToko)
-                    ? 'Bisa'
-                    : 'Tidak'}
-                </Badge>
-              </HStack>
-            </VStack>
-          </Center>
-          <HStack justifyContent={'center'} mt="4">
-            <Button
-              disabled={
-                Math.round(distanceMeter) > Math.round(maximumDistanceFromToko)
-              }
-              isDisabled={
-                Math.round(distanceMeter) > Math.round(maximumDistanceFromToko)
-              }
-              isLoading={_insertAttendanceStatus.loading}
-              size={'lg'}
-              leftIcon={<Icon as={Ionicons} name="enter-sharp" size={'3xl'} />}
-              onPress={openCamera}>
-              Masuk
-            </Button>
-          </HStack>
-        </Box>
+                }
+                isDisabled={
+                  Math.round(distanceMeter) >
+                  Math.round(maximumDistanceFromToko)
+                }
+                isLoading={_insertAttendanceStatus.loading}
+                size={'lg'}
+                leftIcon={
+                  <Icon as={Ionicons} name="enter-sharp" size={'3xl'} />
+                }
+                onPress={openCamera}>
+                Masuk
+              </Button>
+            </HStack>
+          </Box>
+        </ScrollView>
       </Modal.Content>
     </Modal>
   );
