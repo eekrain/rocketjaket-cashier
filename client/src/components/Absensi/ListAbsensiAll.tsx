@@ -56,7 +56,7 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
   const untilDate = watch().untilDate;
 
   const tes = {
-    startDate: dayjs(startDate).format('D/M/YYYY H:mm:ss'),
+    startDate: dayjs('2022-07-01T10:58:25.663646+00:00').toISOString(),
     untilDate: dayjs(untilDate).format('D/M/YYYY H:mm:ss'),
   };
   console.log(
@@ -140,7 +140,7 @@ export const ListAbsensiAll = ({}: IListAbsensiByUserProps) => {
             tableSettings={{
               mainSettings: {
                 tableWidth,
-                defaultSortFrom: 'asc',
+                defaultSortFrom: 'desc',
               },
               row: {
                 rowHeight: 90,

@@ -42,6 +42,8 @@ interface ModalAbsensiProps {
   radiusCircle: ReturnType<typeof turfCircle>;
   distanceMeter: number;
   maximumDistanceFromToko: number;
+  setModalAbsensiOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setNeedRecordAttendance: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ModalAbsensi = ({
@@ -52,6 +54,8 @@ const ModalAbsensi = ({
   radiusCircle,
   distanceMeter,
   maximumDistanceFromToko,
+  setModalAbsensiOpen,
+  setNeedRecordAttendance,
 }: ModalAbsensiProps) => {
   const toast = useToast();
   const myUser = useMyUser();
@@ -120,6 +124,8 @@ const ModalAbsensi = ({
             },
           }),
         );
+        setModalAbsensiOpen(false);
+        setNeedRecordAttendance(false);
         if (err || !res) {
           console.log(
             '🚀 ~ file: ModalAbsensi.tsx ~ line 98 ~ mutation ~ err',
@@ -127,7 +133,7 @@ const ModalAbsensi = ({
           );
           toast.show(TOAST_TEMPLATE.error('Gagal melakukan absensi'));
         } else {
-          toast.show(TOAST_TEMPLATE.success('Gagal melakukan absensi'));
+          toast.show(TOAST_TEMPLATE.success('Berhasil melakukan absensi'));
         }
       }
     };

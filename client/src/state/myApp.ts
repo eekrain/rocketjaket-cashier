@@ -1,22 +1,29 @@
 import create from 'zustand';
 import {createTrackedSelector} from 'react-tracked';
+import {useEffect} from 'react';
 // import {ScaledSize, Dimensions, useWindowDimensions} from 'react-native';
 // import {useEffect} from 'react';
 
 interface MyAppStore {
   isLoadingWholePage: boolean;
-  // window: ScaledSize;
-  // screen: ScaledSize;
+  isLoadingSplashScreen: boolean;
   setLoadingWholePage: (newVal: boolean) => void;
+  setLoadingSplashScreen: (newVal: boolean) => void;
 }
 
 const zustandAppStore = create<MyAppStore>(set => ({
   isLoadingWholePage: false,
-  // window: Dimensions.get('window'),
-  // screen: Dimensions.get('screen'),
+  isLoadingSplashScreen: false,
   setLoadingWholePage: newVal => {
     set(state => ({
       ...state,
+      isLoadingWholePage: newVal,
+    }));
+  },
+  setLoadingSplashScreen: newVal => {
+    set(state => ({
+      ...state,
+      isLoadingSplashScreen: newVal,
       isLoadingWholePage: newVal,
     }));
   },

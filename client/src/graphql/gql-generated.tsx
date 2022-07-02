@@ -11682,7 +11682,7 @@ export type Attendance_InsertOneMutationOptions = Apollo.BaseMutationOptions<Att
 export const Attendance_GetAllAttendancesDocument = gql`
     query Attendance_GetAllAttendances($startDate: timestamptz!, $untilDate: timestamptz!) {
   attendance(
-    where: {user: {defaultRole: {_eq: "karyawan"}, createdAt: {_gt: $startDate, _lte: $untilDate}}}
+    where: {user: {defaultRole: {_eq: "karyawan"}}, created_at: {_gt: $startDate, _lte: $untilDate}}
   ) {
     id
     photo_file_id
