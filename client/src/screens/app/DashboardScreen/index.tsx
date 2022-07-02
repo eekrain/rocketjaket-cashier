@@ -89,7 +89,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
   });
 
   const [apiLevel] = useState(getApiLevelSync());
-  const [isShowCharts, setShowCharts] = useState(apiLevel <= 25 ? false : true);
+  const [isShowCharts, setShowCharts] = useState(apiLevel < 28 ? false : true);
   console.log(
     '🚀 ~ file: index.tsx ~ line 93 ~ DashboardScreen ~ isShowCharts',
     isShowCharts,
@@ -169,7 +169,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
   };
 
   const handleShowChartsBelowAPITarget = () => {
-    if (isShowCharts === false && apiLevel <= 25) {
+    if (isShowCharts === false && apiLevel < 28) {
       Alert.alert(
         'Menampilkan chart',
         `Versi android anda dibawah target dari aplikasi. Menampilkan chart mungkin akan force closed.`,
@@ -277,7 +277,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
           </Box>
         </Stack>
 
-        {apiLevel <= 25 && (
+        {apiLevel < 28 && (
           <>
             <Center mb="2">
               <Text>Tampilkan chart</Text>
