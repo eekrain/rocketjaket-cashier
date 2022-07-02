@@ -64,6 +64,7 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
     md: window.width - 65,
     lg: window.width - 80,
     xl: window.width - 80,
+    '2xl': window.width - 80,
   });
 
   const otherDataHorizontalPadding: number = useBreakpointValue({
