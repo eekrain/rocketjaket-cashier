@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Box,
   Text,
@@ -9,6 +9,9 @@ import {
   ScrollView,
   useBreakpointValue,
   Stack,
+  Switch,
+  VStack,
+  Center,
 } from 'native-base';
 import withAppLayout from '../../../components/Layout/AppLayout';
 import {useForm} from 'react-hook-form';
@@ -17,13 +20,14 @@ import 'dayjs/locale/id';
 import {RHSelect} from '../../../shared/components';
 import Feather from 'react-native-vector-icons/Feather';
 import {myNumberFormat} from '../../../shared/utils';
-import {RefreshControl, useWindowDimensions} from 'react-native';
+import {RefreshControl, useWindowDimensions, Alert} from 'react-native';
 import {useDashboardData} from './useDashboardData';
 import {MyLineChart} from './MyLineChart';
 import {MyPieChart} from './MyPieChart';
 import numbro from 'numbro';
 import {CardWithIcon} from './CardWithIcon';
 import {Grid, Col, Row} from 'react-native-easy-grid';
+import {getApiLevelSync} from 'react-native-device-info';
 
 dayjs.locale('id');
 interface IDashboardFormValue {
@@ -83,6 +87,13 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
   } = useForm({
     defaultValues: defaultValues(),
   });
+
+  const [apiLevel] = useState(getApiLevelSync());
+  const [isShowCharts, setShowCharts] = useState(apiLevel <= 25 ? false : true);
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 93 ~ DashboardScreen ~ isShowCharts',
+    isShowCharts,
+  );
 
   const mode = watch().timeMode;
   const startDate = watch().startDate;
@@ -155,6 +166,30 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
         setValue('untilDate', ref.add(1, 'd').endOf('y').toISOString());
       }
     }
+  };
+
+  const handleShowChartsBelowAPITarget = () => {
+    if (isShowCharts === false && apiLevel <= 25) {
+      Alert.alert(
+        'Menampilkan chart',
+        `Versi android anda dibawah target dari aplikasi. Menampilkan chart mungkin akan force closed.`,
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            onPress: () => setShowCharts(true),
+            text: 'Tetap Tampilkan',
+            style: 'destructive',
+          },
+        ],
+        {
+          cancelable: true,
+        },
+      );
+    } else if (isShowCharts === false) setShowCharts(true);
+    else setShowCharts(false);
   };
 
   return (
@@ -242,13 +277,30 @@ const DashboardScreen = ({}: IDashboardScreenProps) => {
           </Box>
         </Stack>
 
-        {dashboardData !== null && (
+        {apiLevel <= 25 && (
+          <>
+            <Center mb="2">
+              <Text>Tampilkan chart</Text>
+            </Center>
+            <Center mb="6">
+              <Switch
+                isChecked={isShowCharts}
+                onToggle={() => {
+                  handleShowChartsBelowAPITarget();
+                }}
+              />
+            </Center>
+          </>
+        )}
+
+        {dashboardData !== null && isShowCharts && (
           <>
             <Box mb="6">
               <MyLineChart
                 chartTitle="Omset"
                 chartData={dashboardData?.omsetChart}
-                chartWidth={lineChartWidth}
+                chartWidth={1000}
+                // chartWidth={lineChartWidth}
                 total={myNumberFormat.rp(dashboardData?.totalOmset)}
                 bgColor="#818cf8"
                 bgGradientFromLeft="#c7d2fe"
