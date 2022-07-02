@@ -8,6 +8,7 @@ import {createTrackedSelector} from 'react-tracked';
 import Config from 'react-native-config';
 import {useEffect, useMemo} from 'react';
 import {useUser_GetUserByIdQuery} from '../../graphql/gql-generated';
+import {useMyAppState} from '../../state';
 
 export const nhost = new NhostClient({
   backendUrl: Config.NHOST_BACKEND_URL,
@@ -102,12 +103,17 @@ interface useMyUser extends CustomUserData {
 export const useMyUser = (): useMyUser => {
   const user = useUserData();
   const myUserData = useMyUserSelector();
+  const myApp = useMyAppState();
   // console.log('🚀 ~ file: nhost.ts ~ line 109 ~ useMyUser ~ user.id', user?.id);
 
   const getUserById = useUser_GetUserByIdQuery({
     variables: {user_id: user?.id || ''},
     ...getXHasuraContextHeader({role: 'me', withUserId: true}),
   });
+
+  useEffect(() => {
+    myApp.setLoadingSplashScreen(getUserById.loading);
+  }, [getUserById.loading]);
 
   const userFromRemote = useMemo(() => {
     const remote = getUserById.data?.user;

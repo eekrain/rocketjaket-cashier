@@ -12,7 +12,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import MyNativeBaseProvider from './src/components/MyNativeBaseProvider';
 import {NhostReactProvider, useAuthenticationStatus} from '@nhost/react';
 import {NhostApolloProvider} from '@nhost/react-apollo';
-import {appPermission, nhost} from './src/shared/utils';
+import {appPermission, nhost, useMyUser} from './src/shared/utils';
 import SplashScreen from './src/components/Overlay/Splashscreen';
 import {NavigationContainer} from '@react-navigation/native';
 import AppNavigation, {AppNavigationParamList} from './src/screens/app';
@@ -23,9 +23,12 @@ import {
   useMyZoomImageViewer,
   ZoomImageViewerModal,
 } from './src/state/zoomImageViewer';
+import {useMyAppState} from './src/state';
 
 const App = () => {
   const authStatus = useAuthenticationStatus();
+  const myApp = useMyAppState();
+  const myUser = useMyUser();
 
   const [accessTokenLatest, setAccessTokenLatest] = useState(
     nhost.auth.getAccessToken(),
@@ -36,10 +39,8 @@ const App = () => {
   // );
 
   const [loadingSplashScreen, setLoadingSplashScreen] = useState(true);
-  const loading = useMemo(
-    () => authStatus.isLoading || loadingSplashScreen,
-    [authStatus, loadingSplashScreen],
-  );
+  const loading =
+    authStatus.isLoading || loadingSplashScreen || myApp.isLoadingSplashScreen;
 
   const {
     isModalAbsensiOpen,
@@ -49,6 +50,8 @@ const App = () => {
     radiusCircle,
     distanceMeter,
     maximumDistanceFromToko,
+    setModalAbsensiOpen,
+    setNeedRecordAttendance,
   } = useAbsensi();
 
   const {closeModalZoomImageOpen, isModalZoomImageOpen} =
@@ -94,6 +97,8 @@ const App = () => {
             radiusCircle={radiusCircle}
             distanceMeter={distanceMeter}
             maximumDistanceFromToko={maximumDistanceFromToko}
+            setModalAbsensiOpen={setModalAbsensiOpen}
+            setNeedRecordAttendance={setNeedRecordAttendance}
           />
           <AppNavigation />
         </>
