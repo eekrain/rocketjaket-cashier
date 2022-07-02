@@ -104,6 +104,10 @@ const MyCustomTable = <T extends Record<string, unknown>>({
     columns.find(col => col?.isDisableSort === false || !col?.isDisableSort)
       ?.accessor || '',
   );
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 102 ~ valueToOrderByForDisplay',
+    valueToOrderByForDisplay,
+  );
 
   // pagination
   const [currentPage, setCurrentPage] = useState(0);
@@ -129,6 +133,14 @@ const MyCustomTable = <T extends Record<string, unknown>>({
       actualValueToOrderByNew: keyof T,
       valueToOrderByNewForDisplay?: keyof T,
     ) => {
+      console.log(
+        '🚀 ~ file: index.tsx ~ line 136 ~ valueToOrderByNewForDisplay',
+        valueToOrderByNewForDisplay,
+      );
+      console.log(
+        '🚀 ~ file: index.tsx ~ line 136 ~ actualValueToOrderByNew',
+        actualValueToOrderByNew,
+      );
       const isAscending =
         valueToOrderBy === actualValueToOrderByNew && orderDirection === 'asc';
 

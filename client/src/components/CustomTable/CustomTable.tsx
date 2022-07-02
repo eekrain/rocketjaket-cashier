@@ -119,7 +119,9 @@ export const CustomTable = <T extends Record<string, unknown>>({
       } else {
         return (
           <Pressable
-            onPress={() => handleRequestSort(col.accessor, col.sortAs)}>
+            onPress={() =>
+              handleRequestSort(col.sortAs || col.accessor, col.accessor)
+            }>
             <HStack space="3" alignItems="center">
               <Text color="milano_red.500">{col.Header}</Text>
               <Icon

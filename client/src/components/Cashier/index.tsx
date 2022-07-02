@@ -244,16 +244,24 @@ const CashierHome = ({route}: Props) => {
     if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
       myUser.updateStoreId(parseInt(selectedStoreId, 10));
     }
-    if (
-      myUser.roles.includes(UserRolesEnum.administrator) &&
-      !selectedStoreId
-    ) {
-      setValue('show_modal_change_toko', true);
-    }
+
     if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
       setValue('show_modal_change_toko', false);
     }
-  }, [myUser.roles, selectedStoreId]);
+    const timeout = setTimeout(() => {
+      if (
+        myUser.roles.includes(UserRolesEnum.administrator) &&
+        !selectedStoreId &&
+        !myAppState.isLoadingSplashScreen
+      ) {
+        setValue('show_modal_change_toko', true);
+      }
+    }, 2000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [myUser.roles, selectedStoreId, myAppState.isLoadingSplashScreen]);
 
   useEffect(() => {
     if (!isDataStoreReady && myUser.store_id) {

@@ -55,15 +55,23 @@ export const useAbsensi = () => {
   const [isNeedRecordAttendance, setNeedRecordAttendance] = useState(false);
   const literallyToday = dayjs();
 
+  const variables = {
+    user_id: myUser.id,
+    working_hour_start: working_hour_start.toISOString(),
+  };
+  console.log(
+    '🚀 ~ file: useAbsensi.ts ~ line 62 ~ useAbsensi ~ variables',
+    variables,
+  );
+
   const myAttendance = useAttendance_GetMyAttendanceTodayQuery({
-    variables: {
-      user_id: myUser.id,
-      working_hour_start: working_hour_start.toISOString(),
-    },
+    variables: variables,
     onCompleted: data => {
-      // console.log(
-      //   '🚀 ~ file: useAbsensi.ts ~ line 62 ~ useAbsensi ~ onCompleted useAttendance_GetMyAttendanceTodayQuery',
-      // );
+      console.log(
+        '🚀 ~ file: useAbsensi.ts ~ line 64 ~ useAbsensi ~ data',
+        data,
+      );
+
       const todayAttendance = data.attendance?.[0];
       if (!myUser.roles.includes(UserRolesEnum.karyawan))
         setNeedRecordAttendance(false);
@@ -77,8 +85,10 @@ export const useAbsensi = () => {
         literallyToday.isAfter(working_hour_start) &&
         todayAttendance?.attendance_type === Attendance_Type_Enum_Enum.Enter &&
         myUser.roles.includes(UserRolesEnum.karyawan)
-      )
+      ) {
         setNeedRecordAttendance(false);
+        setModalAbsensiOpen(false);
+      }
     },
   });
 
@@ -138,5 +148,7 @@ export const useAbsensi = () => {
     radiusCircle,
     distanceMeter,
     maximumDistanceFromToko,
+    setModalAbsensiOpen,
+    setNeedRecordAttendance,
   };
 };
