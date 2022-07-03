@@ -13,6 +13,8 @@ import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {DismissKeyboardWrapper, RHTextInput} from '../../shared/components';
 import ButtonSave from '../Buttons/ButtonSave';
+import {ButtonBack} from '../Buttons';
+import to from 'await-to-js';
 
 interface IDefaultValues {
   name: string;
@@ -51,20 +53,23 @@ const CreateKategoriProduk = ({}: Props) => {
     });
 
   const handleSubmission = async (data: IDefaultValues) => {
-    const res = await createKategoriMutation({
-      variables: {name: data.name, description: data.description},
-    });
-    if (res.errors) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Gagal melakukan penambahan kategori.'),
-      });
+    const [err, res] = await to(
+      createKategoriMutation({
+        variables: {
+          category: {
+            name: data.name,
+            description: data.description,
+          },
+        },
+      }),
+    );
+    if (err || !res) {
+      toast.show(TOAST_TEMPLATE.error('Gagal melakukan penambahan kategori.'));
     } else {
       reset();
-      toast.show({
-        ...TOAST_TEMPLATE.success(
-          `Berhasil menambahkan kategori ${res.data?.insert_rocketjaket_product_category_one?.name}.`,
-        ),
-      });
+      toast.show(
+        TOAST_TEMPLATE.success(`Berhasil menambahkan kategori ${data.name}.`),
+      );
       navigation.goBack();
     }
   };
@@ -91,11 +96,13 @@ const CreateKategoriProduk = ({}: Props) => {
                 errors={errors}
                 label="Deskripsi"
               />
-              <HStack justifyContent="flex-end" mt="5">
+
+              <HStack justifyContent="flex-end" mt="8" space="4">
                 <ButtonSave
                   isLoading={_createKategoriMutationResult.loading}
                   onPress={handleSubmit(handleSubmission)}
                 />
+                <ButtonBack onPress={() => navigation.goBack()} />
               </HStack>
             </VStack>
           </Box>

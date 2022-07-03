@@ -1,3 +1,43 @@
 table:
   name: users_metadata
   schema: public
+object_relationships:
+- name: stores
+  using:
+    foreign_key_constraint_on: store_id
+- name: user
+  using:
+    foreign_key_constraint_on: user_id
+select_permissions:
+- permission:
+    columns:
+    - id
+    - store_id
+    - user_id
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - id
+    - user_id
+    - store_id
+    filter: {}
+  role: karyawan
+- permission:
+    columns:
+    - id
+    - store_id
+    - user_id
+    filter:
+      user_id:
+        _eq: X-Hasura-User-Id
+  role: me
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - id
+    - store_id
+    - user_id
+    filter: {}
+  role: administrator

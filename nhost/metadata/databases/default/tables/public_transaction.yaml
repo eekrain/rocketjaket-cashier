@@ -1,0 +1,148 @@
+table:
+  name: transaction
+  schema: public
+object_relationships:
+- name: store
+  using:
+    foreign_key_constraint_on: store_id
+- name: transaction_payment_type_enum
+  using:
+    foreign_key_constraint_on: payment_type
+- name: transaction_status_enum
+  using:
+    foreign_key_constraint_on: transaction_status
+array_relationships:
+- name: transaction_items
+  using:
+    foreign_key_constraint_on:
+      column: transaction_invoice_number
+      table:
+        name: transaction_items
+        schema: public
+- name: transaction_receipts
+  using:
+    foreign_key_constraint_on:
+      column: transaction_invoice_number
+      table:
+        name: transaction_receipts
+        schema: public
+computed_fields:
+- definition:
+    function:
+      name: transaction_cash_change
+      schema: public
+  name: cash_change
+- definition:
+    function:
+      name: transaction_total_profit
+      schema: public
+  name: total_profit
+- definition:
+    function:
+      name: transaction_total_purchased_product
+      schema: public
+  name: total_purchased_product
+- definition:
+    function:
+      name: transaction_total_transaction
+      schema: public
+  name: total_transaction
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - cash_in_amount
+    - created_at
+    - invoice_number
+    - karyawan_name
+    - payment_type
+    - return_reason
+    - store_id
+    - transaction_status
+    - updated_at
+  role: administrator
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - cash_in_amount
+    - created_at
+    - invoice_number
+    - karyawan_name
+    - payment_type
+    - return_reason
+    - store_id
+    - transaction_status
+    - updated_at
+  role: karyawan
+select_permissions:
+- permission:
+    columns:
+    - cash_in_amount
+    - store_id
+    - invoice_number
+    - karyawan_name
+    - payment_type
+    - return_reason
+    - transaction_status
+    - created_at
+    - updated_at
+    computed_fields:
+    - cash_change
+    - total_profit
+    - total_purchased_product
+    - total_transaction
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - cash_in_amount
+    - store_id
+    - invoice_number
+    - karyawan_name
+    - payment_type
+    - return_reason
+    - transaction_status
+    - created_at
+    - updated_at
+    computed_fields:
+    - cash_change
+    - total_profit
+    - total_purchased_product
+    - total_transaction
+    filter: {}
+  role: karyawan
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - cash_in_amount
+    - created_at
+    - invoice_number
+    - karyawan_name
+    - payment_type
+    - return_reason
+    - store_id
+    - transaction_status
+    - updated_at
+    filter: {}
+  role: administrator
+- permission:
+    check: {}
+    columns:
+    - cash_in_amount
+    - created_at
+    - invoice_number
+    - karyawan_name
+    - payment_type
+    - return_reason
+    - store_id
+    - transaction_status
+    - updated_at
+    filter: {}
+  role: karyawan
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator

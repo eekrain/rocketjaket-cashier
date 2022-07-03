@@ -7,6 +7,7 @@ import {
   ScrollView,
   useToast,
   Text,
+  FormControl,
 } from 'native-base';
 import {
   namedOperations,
@@ -18,9 +19,9 @@ import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useFieldArray, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {DismissKeyboardWrapper, RHTextInput} from '../../shared/components';
-import {ButtonSave, ButtonAdd, ButtonDelete} from '../Buttons';
+import {ButtonSave, ButtonAdd, ButtonDelete, ButtonBack} from '../Buttons';
 import withAppLayout from '../Layout/AppLayout';
-import {CreateProductVariantsNavProps} from '../../screens/app/InventoryScreen';
+import {InventoryScreenProps} from '../../screens/app/InventoryScreen';
 
 interface VariationValue {
   value: string;
@@ -33,7 +34,15 @@ interface IDefaultValues {
 
 const schema = yup
   .object({
-    variation_title: yup.string().required('Nama toko harus diisi'),
+    variation_title: yup.string().required('Nama variasi harus diisi'),
+    variation_values: yup
+      .array()
+      .of(
+        yup.object().shape({
+          value: yup.string().required('Opsi variasi harus diisi'),
+        }),
+      )
+      .min(1, 'Opsi variasi minimal ada 1'),
   })
   .required();
 
@@ -42,7 +51,9 @@ const defaultValues: IDefaultValues = {
   variation_values: [{value: ''}],
 };
 
-interface ICreateProductVariantsProps extends CreateProductVariantsNavProps {}
+type X = InventoryScreenProps['CreateProductVariants'];
+
+interface ICreateProductVariantsProps extends X {}
 
 const CreateProductVariants = ({navigation}: ICreateProductVariantsProps) => {
   const toast = useToast();
@@ -81,18 +92,18 @@ const CreateProductVariants = ({navigation}: ICreateProductVariantsProps) => {
       },
     });
     if (res.errors) {
-      toast.show({
-        ...TOAST_TEMPLATE.error(
+      toast.show(
+        TOAST_TEMPLATE.error(
           `Gagal melakukan penambahan variasi produk dengan nama ${data.variation_title}.`,
         ),
-      });
+      );
     } else {
       reset();
-      toast.show({
-        ...TOAST_TEMPLATE.success(
+      toast.show(
+        TOAST_TEMPLATE.success(
           `Berhasil menambahkan variasi produk dengan nama ${data.variation_title}.`,
         ),
-      });
+      );
       navigation.goBack();
     }
   };
@@ -120,18 +131,36 @@ const CreateProductVariants = ({navigation}: ICreateProductVariantsProps) => {
                 {fields.map((field, index) => {
                   return (
                     <HStack key={field.id} alignItems="flex-end" space="5">
-                      <Box w="4/5">
+                      <Box w={{base: '3/5', md: '4/5'}}>
                         <RHTextInput
                           name={`variation_values.${index}.value`}
                           control={control}
                           errors={errors}
                           label={`Opsi Variasi ${index + 1}`}
+                          overrideErrorMessage={
+                            errors?.variation_values?.[index]?.value?.message
+                              ? errors.variation_values?.[index].value?.message
+                              : ''
+                          }
+                          overrideIsInvalid={
+                            errors?.variation_values?.[index]?.value?.message
+                              ? true
+                              : false
+                          }
                         />
                       </Box>
                       <Box>
                         <ButtonDelete
                           customText="Hapus Opsi"
-                          onPress={() => remove(index)}
+                          onPress={() => {
+                            if (fields.length > 1) remove(index);
+                            else
+                              toast.show(
+                                TOAST_TEMPLATE.error(
+                                  'Opsi variasi minimal ada 1',
+                                ),
+                              );
+                          }}
                         />
                       </Box>
                     </HStack>
@@ -144,11 +173,13 @@ const CreateProductVariants = ({navigation}: ICreateProductVariantsProps) => {
                   onPress={() => append({value: ''})}
                 />
               </HStack>
-              <HStack justifyContent="flex-end" mt="5">
+
+              <HStack justifyContent="flex-end" mt="8" space="4">
                 <ButtonSave
                   isLoading={_createVariantMetadataMutationResult.loading}
                   onPress={handleSubmit(handleSubmission)}
                 />
+                <ButtonBack onPress={() => navigation.goBack()} />
               </HStack>
             </VStack>
           </Box>

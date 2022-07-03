@@ -1,8 +1,8 @@
 import React from 'react';
-import {Box, Button, HStack, Text, IBoxProps} from 'native-base';
+import {Box, VStack, Button, HStack, Text, IBoxProps} from 'native-base';
 import {RHTextInput} from '../../shared/components';
 import {Control} from 'react-hook-form';
-import {ISendReceiptFormDefaultValues} from './PaymentLanding';
+import {ISendReceiptFormDefaultValues} from './Payment/PaymentLandingModal';
 
 interface Props {
   control: Control<ISendReceiptFormDefaultValues, object>;
@@ -22,8 +22,8 @@ const SendReceiptForm = ({
   w = ['full', 'full', '3/5'],
 }: Props) => {
   return (
-    <Box>
-      <Box w={w}>
+    <Box w={w}>
+      <Box>
         <RHTextInput
           name="customer_name"
           control={control}

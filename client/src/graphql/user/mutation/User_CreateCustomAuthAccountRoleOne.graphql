@@ -1,9 +1,0 @@
-mutation User_CreateCustomAuthAccountRoleOne(
-  $insert_auth_account_roles_one: auth_account_roles_insert_input!
-) {
-  insert_auth_account_roles_one(object: $insert_auth_account_roles_one) {
-    id
-    is_custom
-    role
-  }
-}

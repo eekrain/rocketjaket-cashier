@@ -7,6 +7,7 @@ import {
   Icon,
   useToast,
   ScrollView,
+  useBreakpointValue,
 } from 'native-base';
 import {Alert, RefreshControl} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -18,17 +19,15 @@ import {
 import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
 import {ButtonEdit, IconButtonDelete} from '../Buttons';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useMyAppState} from '../../state';
-import {
-  InventoryHomeNavProps,
-  InventoryRootStackParamList,
-} from '../../screens/app/InventoryScreen';
+import {InventoryScreenProps} from '../../screens/app/InventoryScreen';
+import to from 'await-to-js';
+import {checkErrorMessage} from '../../shared/utils';
 
 interface IActionProps {
   variant_title: string;
-  navigation: StackNavigationProp<InventoryRootStackParamList, 'InventoryHome'>;
+  navigation: InventoryScreenProps['InventoryHome']['navigation'];
   handleDeleteKategori: () => Promise<void>;
 }
 
@@ -53,34 +52,51 @@ const Action = ({
   );
 };
 
-interface IListProductVariantsProps extends InventoryHomeNavProps {}
+type X = InventoryScreenProps['InventoryHome'];
+
+interface IListProductVariantsProps extends X {}
 
 const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
+  const tableWidth: number | 'full' = useBreakpointValue({
+    base: 700,
+    md: 'full',
+  });
   const getAllVariantMetadata = useInventory_GetAllVariantMetadataQuery();
   const toast = useToast();
 
   const [deleteVariantMetadataMutation, _deleteVariantMetadataMutationResult] =
     useInventory_DeleteInventoryVariantsMetadataByTitleMutation({
-      refetchQueries: [namedOperations.Query.Inventory_GetAllVariantMetadata],
+      refetchQueries: [
+        namedOperations.Query.Inventory_GetAllInventoryProductByStoreId,
+        namedOperations.Query.Inventory_GetAllVariantMetadata,
+        namedOperations.Query.Inventory_GetInventoryProductById,
+        namedOperations.Query.Inventory_GetVariantMetadataByTitle,
+      ],
     });
+
   const data = useMemo(() => {
     const handleDeleteKategori = async (variant_title: string) => {
       const mutation = async () => {
-        const res = await deleteVariantMetadataMutation({
-          variables: {variant_title},
-        });
-        if (res.errors) {
-          toast.show({
-            ...TOAST_TEMPLATE.error(
-              `Hapus data variasi ${variant_title} gagal.`,
+        const [err, res] = await to(
+          deleteVariantMetadataMutation({
+            variables: {variant_title},
+          }),
+        );
+        if (err || !res) {
+          const fkError = checkErrorMessage.fkError(err.message)
+            ? `\nMasih ada inventory dengan variasi ${variant_title}.`
+            : '';
+          toast.show(
+            TOAST_TEMPLATE.error(
+              `Hapus data variasi ${variant_title} gagal.${fkError}`,
             ),
-          });
+          );
         } else {
-          toast.show({
-            ...TOAST_TEMPLATE.success(
+          toast.show(
+            TOAST_TEMPLATE.success(
               `Hapus data variasi ${variant_title} berhasil.`,
             ),
-          });
+          );
         }
       };
       Alert.alert(
@@ -103,7 +119,7 @@ const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
       );
     };
     const varianstMetadata =
-      getAllVariantMetadata.data?.rocketjaket_inventory_variant_metadata || [];
+      getAllVariantMetadata.data?.inventory_variants_metadata || [];
 
     const map = new Map();
     for (const item of varianstMetadata) {
@@ -111,10 +127,7 @@ const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
         map.set(item.variant_title, true); // set any value to Map
       }
     }
-    console.log(
-      '🚀 ~ file: ListProductVariants.tsx ~ line 68 ~ data ~ map',
-      map,
-    );
+
     const processedVarianstMetadata: {
       variant_title: any;
       variant_value: string;
@@ -139,10 +152,8 @@ const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
       ...val,
       component: (
         <Action
-          {...{
-            variant_title: val.variant_title,
-            navigation,
-          }}
+          variant_title={val.variant_title}
+          navigation={navigation}
           handleDeleteKategori={() => handleDeleteKategori(val.variant_title)}
         />
       ),
@@ -150,8 +161,8 @@ const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
 
     return withAction;
   }, [
-    deleteVariantMetadataMutation,
-    getAllVariantMetadata.data?.rocketjaket_inventory_variant_metadata,
+    // deleteVariantMetadataMutation,
+    getAllVariantMetadata.data?.inventory_variants_metadata,
     navigation,
     toast,
   ]);
@@ -161,18 +172,16 @@ const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
       refreshControl={
         <RefreshControl
           refreshing={false}
-          onRefresh={() => {
-            getAllVariantMetadata.refetch();
-          }}
+          onRefresh={async () => await getAllVariantMetadata.refetch()}
         />
       }>
-      <Box paddingBottom={300}>
+      <Box pb={'56'}>
         <HStack
           justifyContent="space-between"
           alignItems="center"
           mb="10"
           mt="4">
-          <Heading fontSize="xl">List Inventory / Stok Produk</Heading>
+          <Heading fontSize="xl">List Kemungkinan Variasi Produk</Heading>
           <Button
             onPress={() => {
               navigation.navigate('CreateProductVariants');
@@ -183,11 +192,17 @@ const ListProductVariants = ({navigation}: IListProductVariantsProps) => {
           </Button>
         </HStack>
         <CustomTable
+          rowKeysAccessor="variant_value"
           isLoading={
             getAllVariantMetadata.loading ||
             _deleteVariantMetadataMutationResult.loading
           }
-          rowHeight={80}
+          tableSettings={{
+            mainSettings: {
+              tableWidth,
+              defaultSortFrom: 'asc',
+            },
+          }}
           data={data}
           columns={[
             {Header: 'Judul Variasi', accessor: 'variant_title', widthRatio: 1},

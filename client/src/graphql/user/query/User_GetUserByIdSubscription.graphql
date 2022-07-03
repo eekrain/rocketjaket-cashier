@@ -1,0 +1,18 @@
+subscription User_GetUserByIdSubscription($user_id: uuid = "") {
+  user(id: $user_id) {
+    avatarUrl
+    defaultRole
+    displayName
+    email
+    emailVerified
+    newEmail
+    id
+    users_metadata(limit: 1) {
+      store_id
+    }
+    disabled
+    roles {
+      role
+    }
+  }
+}

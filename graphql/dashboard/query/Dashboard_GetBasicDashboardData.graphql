@@ -1,0 +1,80 @@
+query Dashboard_GetBasicDashboardData(
+  $startDate: timestamptz!
+  $untilDate: timestamptz!
+  $storeIds: [Int!]!
+) {
+  totalCustomer: customers_aggregate(
+    where: {
+      _or: [
+        { created_at: { _gte: $startDate, _lte: $untilDate } }
+        { updated_at: { _gte: $startDate, _lte: $untilDate } }
+      ]
+      transaction_receipts: { transaction: { store_id: { _in: $storeIds } } }
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  firstTransactionDate: transaction_aggregate(
+    where: { store_id: { _in: $storeIds } }
+  ) {
+    aggregate {
+      min {
+        created_at
+      }
+    }
+  }
+  totalSuccessTransaction: transaction_aggregate(
+    where: {
+      store_id: { _in: $storeIds }
+      created_at: { _gte: $startDate, _lte: $untilDate }
+      transaction_status: { _in: [success] }
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  totalReturnedTransaction: transaction_aggregate(
+    where: {
+      store_id: { _in: $storeIds }
+      created_at: { _gte: $startDate, _lte: $untilDate }
+      transaction_status: { _in: [return_part, return_all] }
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  totalItemSold: transaction_items_aggregate(
+    where: {
+      transaction_status: { _in: success }
+      transaction: {
+        store_id: { _in: $storeIds }
+        created_at: { _gte: $startDate, _lte: $untilDate }
+      }
+    }
+  ) {
+    aggregate {
+      sum {
+        purchase_qty
+      }
+    }
+  }
+  totalItemReturned: transaction_items_aggregate(
+    where: {
+      transaction_status: { _in: [return_all, return_part] }
+      transaction: {
+        store_id: { _in: $storeIds }
+        created_at: { _gte: $startDate, _lte: $untilDate }
+      }
+    }
+  ) {
+    aggregate {
+      sum {
+        purchase_qty
+      }
+    }
+  }
+}

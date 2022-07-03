@@ -1,9 +1,9 @@
 query Store_GetAllStore {
-  rocketjaket_store {
+  stores {
     id
     name
+    address
     latitude
     longitude
-    address
   }
 }

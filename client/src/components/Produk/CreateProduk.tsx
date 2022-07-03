@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useMemo, useState} from 'react';
 import {
   Box,
   HStack,
@@ -27,24 +27,26 @@ import {useNavigation} from '@react-navigation/native';
 import {
   getXHasuraContextHeader,
   renameFilenameWithAddedNanoid,
-  storage,
+  nhost,
 } from '../../shared/utils';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
-import {DismissKeyboardWrapper, RHTextInput} from '../../shared/components';
-import {ButtonSave} from '../Buttons';
-import RHNumberInput, {
+import {ButtonBack, ButtonSave} from '../Buttons';
+import {
+  DismissKeyboardWrapper,
+  RHTextInput,
+  RHNumberInput,
+  RHSelect,
   TRHNumberValueType,
-} from '../../shared/components/RHNumberInput';
-import {useMemo} from 'react';
-import RHSelect from '../../shared/components/RHSelect';
+  MyImageViewer,
+} from '../../shared/components';
 import {
   launchCamera,
   Asset,
   launchImageLibrary,
 } from 'react-native-image-picker';
-import {useState} from 'react';
+import to from 'await-to-js';
 
 interface IDefaultValues {
   product_category_id: string;
@@ -120,74 +122,77 @@ const CreateProduk = ({}: Props) => {
   const getAllKategoriProduk = useProduk_GetAllKategoriProdukQuery();
   const kategoriProduk = useMemo(() => {
     const kategori =
-      getAllKategoriProduk.data?.rocketjaket_product_category.map(cat => ({
+      getAllKategoriProduk.data?.product_categories.map(cat => ({
         value: cat.id.toString(),
         label: cat.name,
       })) || [];
     return kategori;
-  }, [getAllKategoriProduk.data?.rocketjaket_product_category]);
+  }, [getAllKategoriProduk.data?.product_categories]);
 
-  const [createKategoriMutation, _createKategoriMutationResult] =
+  const [createProdukMutation, _createProdukMutationResult] =
     useProduk_CreateProdukMutation({
       ...getXHasuraContextHeader({role: 'administrator'}),
       refetchQueries: [namedOperations.Query.Produk_GetAllProduk],
     });
 
   const handleSubmission = async (data: IDefaultValues) => {
-    let photo_url = '';
+    let photo_id = '';
     if (productFoto?.uri) {
-      try {
-        const finalFileName = renameFilenameWithAddedNanoid(
-          data.name,
-          productFoto.uri,
-        );
-        const image = {
-          type: productFoto.type,
-          uri: productFoto.uri,
-          name: finalFileName.originalName.name,
-        };
+      const finalFileName = renameFilenameWithAddedNanoid(
+        data.name,
+        productFoto.uri,
+      );
+      const image = {
+        type: productFoto.type,
+        uri: productFoto.uri,
+        name: finalFileName.originalName.name,
+      };
 
-        const res = await storage.put(
-          `/public/products/${finalFileName.modifiedName}`,
-          image,
-        );
-        photo_url = res?.key || '';
-      } catch (error) {
+      const [errUpload, resUpload] = await to(
+        nhost.storage.upload({
+          file: image,
+          bucketId: 'products',
+        }),
+      );
+
+      if (errUpload || !resUpload) {
         console.log(
-          '🚀 ~ file: CreateProduk.tsx ~ line 145 ~ handleSubmission ~ error',
-          error,
+          '🚀 ~ file: CreateProduk.tsx ~ line 145 ~ handleSubmission ~ errUpload',
+          errUpload,
         );
-        toast.show({
-          ...TOAST_TEMPLATE.error(
+        toast.show(
+          TOAST_TEMPLATE.error(
             `Gagal melakukan upload foto produk ${data.name}.`,
           ),
-        });
+        );
       }
+
+      photo_id = resUpload?.fileMetadata?.id || '';
     }
 
-    const res = await createKategoriMutation({
-      variables: {
-        name: data.name,
-        photo_url: photo_url,
-        capital_price: data.capital_price.value || 0,
-        selling_price: data.selling_price.value || 0,
-        discount: data.discount.value || 0,
-        product_category_id: parseInt(data.product_category_id, 10),
-      },
-    });
-    if (res.errors) {
-      toast.show({
-        ...TOAST_TEMPLATE.error(
-          `Gagal melakukan penambahan produk ${res.data?.insert_rocketjaket_product_one?.name}.`,
-        ),
-      });
+    const [errCreateProduk, resCreateProduk] = await to(
+      createProdukMutation({
+        variables: {
+          object: {
+            name: data.name,
+            photo_id: photo_id,
+            capital_price: data.capital_price.value || 0,
+            selling_price: data.selling_price.value || 0,
+            discount: data.discount.value || 0,
+            product_category_id: parseInt(data.product_category_id, 10),
+          },
+        },
+      }),
+    );
+    if (errCreateProduk || !resCreateProduk) {
+      toast.show(
+        TOAST_TEMPLATE.error(`Gagal melakukan penambahan produk ${data.name}.`),
+      );
     } else {
       reset();
-      toast.show({
-        ...TOAST_TEMPLATE.success(
-          `Berhasil menambahkan produk ${res.data?.insert_rocketjaket_product_one?.name}.`,
-        ),
-      });
+      toast.show(
+        TOAST_TEMPLATE.success(`Berhasil menambahkan produk ${data.name}.`),
+      );
       navigation.goBack();
     }
   };
@@ -279,23 +284,18 @@ const CreateProduk = ({}: Props) => {
                 <Center>
                   <Text fontWeight="bold">Foto Produk</Text>
                 </Center>
-                {productFoto?.uri ? (
-                  <Box h="40">
-                    <Image
-                      source={{uri: productFoto?.uri}}
-                      resizeMode="contain"
-                      style={{height: '100%'}}
-                    />
-                  </Box>
-                ) : (
-                  <Center h="40">
-                    <Image
-                      source={require('../../assets/images/image-not-found.png')}
-                      resizeMode="contain"
-                      style={{height: '100%'}}
-                    />
-                  </Center>
-                )}
+
+                <Center>
+                  <MyImageViewer
+                    source={{
+                      fileUrl: productFoto?.uri,
+                      w: 180,
+                      q: 60,
+                    }}
+                    size={180}
+                    isDisableZoom={true}
+                  />
+                </Center>
                 <VStack space="2" justifyContent="center" alignItems="center">
                   <Box mb="4">
                     <Text>Belum ada foto</Text>
@@ -319,11 +319,12 @@ const CreateProduk = ({}: Props) => {
             </Box>
           </Stack>
 
-          <HStack justifyContent="flex-end" mt="8">
+          <HStack justifyContent="flex-end" mt="8" space="4">
             <ButtonSave
-              isLoading={_createKategoriMutationResult.loading}
+              isLoading={_createProdukMutationResult.loading}
               onPress={handleSubmit(handleSubmission)}
             />
+            <ButtonBack onPress={() => navigation.goBack()} />
           </HStack>
         </Box>
       </DismissKeyboardWrapper>

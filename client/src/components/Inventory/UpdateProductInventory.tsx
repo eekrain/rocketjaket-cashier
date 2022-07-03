@@ -8,11 +8,13 @@ import {
   Text,
   FormControl,
   Input,
+  Button,
+  ScrollView,
 } from 'native-base';
 import {
   namedOperations,
-  useInventory_BulkUpdateInventoryProductMutation,
-  useInventory_GetInventoryProductByPkQuery,
+  useInventory_UpdateInventoryProductMutation,
+  useInventory_GetInventoryProductByIdQuery,
   useProduk_GetProdukByPkQuery,
 } from '../../graphql/gql-generated';
 import * as yup from 'yup';
@@ -20,7 +22,11 @@ import {getXHasuraContextHeader, myNumberFormat} from '../../shared/utils';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
-import {DismissKeyboardWrapper, RHNumberInput} from '../../shared/components';
+import {
+  DismissKeyboardWrapper,
+  RHNumberInput,
+  RHTextInput,
+} from '../../shared/components';
 import {ButtonSave, ButtonBack} from '../Buttons';
 import withAppLayout from '../Layout/AppLayout';
 import {UpdateProductInventoryNavProps} from '../../screens/app/InventoryScreen';
@@ -30,6 +36,7 @@ import {useMyAppState} from '../../state';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {IProductInventoryDefaultValues} from './types';
 import {useIsFocused} from '@react-navigation/native';
+import to from 'await-to-js';
 
 const schema = yup
   .object({
@@ -77,8 +84,8 @@ const defaultValues: IProductInventoryDefaultValues = {
     value: 0,
   },
   min_available_qty: {
-    formattedValue: '1',
-    value: 1,
+    formattedValue: '0',
+    value: 0,
   },
 };
 
@@ -88,43 +95,104 @@ const UpdateProductInventory = ({
   navigation,
   route,
 }: IUpdateProductInventoryProps) => {
-  const focused = useIsFocused();
   const toast = useToast();
   const myAppState = useMyAppState();
-  const [isDataReady, setDataReady] = useState(false);
-  console.log(
-    '🚀 ~ file: UpdateProductInventory.tsx ~ line 69 ~ isDataReady',
-    isDataReady,
-  );
   const [isErrorOnce, setErrorOnce] = useState(false);
-  console.log(
-    '🚀 ~ file: UpdateProductInventory.tsx ~ line 71 ~ isErrorOnce',
-    isErrorOnce,
-  );
 
   const {
-    watch,
     handleSubmit,
     control,
     setValue,
-    formState: {errors, isSubmitSuccessful},
+    watch,
+    formState: {errors, isSubmitSuccessful, isDirty},
     reset,
-  } = useForm<IProductInventoryDefaultValues>({
+  } = useForm({
     defaultValues,
     resolver: yupResolver(schema),
   });
 
-  const tes = watch('available_qty');
-  console.log('🚀 ~ file: UpdateProductInventory.tsx ~ line 88 ~ tes', tes);
-
   const selectedProductId = watch('product_id');
-  const setSelectedProductId = useCallback(
-    (newProductId: string | null) => {
-      setValue('product_id', newProductId);
-    },
-    [setValue],
-  );
+  const setSelectedProductId = (newProductId: string | null) => {
+    setValue('product_id', newProductId);
+  };
   const variationValues = watch('variation_values');
+
+  const getInventoryProductData = useInventory_GetInventoryProductByIdQuery({
+    variables: {id: route.params.inventoryProductId},
+    fetchPolicy: 'network-only',
+  });
+
+  useEffect(() => {
+    const inventoryProductData =
+      getInventoryProductData.data?.inventory_products_by_pk;
+    if (inventoryProductData === null && !isErrorOnce) {
+      toast.show(TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'));
+      navigation.goBack();
+      setErrorOnce(true);
+    } else {
+      if (inventoryProductData) {
+        reset({
+          product_id: inventoryProductData.product_id,
+          available_qty: {
+            formattedValue: myNumberFormat.thousandSeparated(
+              inventoryProductData.available_qty,
+            ),
+            value: inventoryProductData.available_qty,
+          },
+          min_available_qty: {
+            formattedValue: myNumberFormat.thousandSeparated(
+              inventoryProductData?.min_available_qty,
+            ),
+            value: inventoryProductData?.min_available_qty || 1,
+          },
+          override_capital_price: {
+            formattedValue: myNumberFormat.thousandSeparated(
+              inventoryProductData?.override_capital_price,
+              'nullAsEmpty',
+            ),
+            value: inventoryProductData?.override_capital_price || null,
+          },
+          override_selling_price: {
+            formattedValue: myNumberFormat.thousandSeparated(
+              inventoryProductData?.override_selling_price,
+              'nullAsEmpty',
+            ),
+            value: inventoryProductData?.override_selling_price || null,
+          },
+          override_discount: {
+            formattedValue: myNumberFormat.thousandSeparated(
+              inventoryProductData?.override_discount,
+              'nullAsEmpty',
+            ),
+            value: inventoryProductData?.override_discount || null,
+          },
+          enabled_variations:
+            inventoryProductData.inventory_product_variants.map(
+              variant => variant.inventory_variants_metadata.variant_title,
+            ),
+          variation_values: variationValues.map(variation => {
+            const found = inventoryProductData.inventory_product_variants.find(
+              pdkVariation =>
+                pdkVariation.inventory_variants_metadata.variant_title ===
+                variation.variation_title,
+            );
+            return {
+              variation_title: variation.variation_title,
+              variant_metadata_id: found
+                ? found.inventory_variants_metadata.id.toString()
+                : undefined,
+            };
+          }),
+        });
+      }
+    }
+  }, [
+    getInventoryProductData.data?.inventory_products_by_pk,
+    isErrorOnce,
+    navigation,
+    setValue,
+    toast,
+  ]);
 
   const getProductData = useProduk_GetProdukByPkQuery({
     variables: {
@@ -133,220 +201,101 @@ const UpdateProductInventory = ({
     fetchPolicy: 'no-cache',
   });
 
-  useEffect(() => {
-    setDataReady(false);
-    setErrorOnce(false);
-  }, [focused]);
-
-  const getInventoryProductData = useInventory_GetInventoryProductByPkQuery({
-    variables: {id: route.params.inventoryProductId},
-    fetchPolicy: 'no-cache',
-  });
-
-  useEffect(() => {
-    const inventoryProductData =
-      getInventoryProductData.data?.rocketjaket_inventory_product_by_pk;
-    console.log(
-      '🚀 ~ file: UpdateProductInventory.tsx ~ line 115 ~ useEffect ~ inventoryProductData',
-      inventoryProductData,
-    );
-    if (inventoryProductData === null && !isErrorOnce) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'),
-      });
-      navigation.goBack();
-      setErrorOnce(true);
-    } else if (inventoryProductData !== null && !isDataReady && !isErrorOnce) {
-      if (inventoryProductData) {
-        console.log(
-          '🚀 ~ file: UpdateProductInventory.tsx ~ line 131 ~ useEffect ~ inventoryProductData',
-          inventoryProductData,
-        );
-        setSelectedProductId(inventoryProductData.product_id);
-        setValue('available_qty', {
-          formattedValue: myNumberFormat.thousandSeparated(
-            inventoryProductData.available_qty,
-          ),
-          value: inventoryProductData.available_qty,
-        });
-        setValue('min_available_qty', {
-          formattedValue: myNumberFormat.thousandSeparated(
-            inventoryProductData?.min_available_qty,
-          ),
-          value: inventoryProductData?.min_available_qty || 1,
-        });
-        setValue('override_capital_price', {
-          formattedValue: myNumberFormat.thousandSeparated(
-            inventoryProductData?.override_capital_price,
-            'nullAsEmpty',
-          ),
-          value: inventoryProductData?.override_capital_price || null,
-        });
-        setValue('override_selling_price', {
-          formattedValue: myNumberFormat.thousandSeparated(
-            inventoryProductData?.override_selling_price,
-            'nullAsEmpty',
-          ),
-          value: inventoryProductData?.override_selling_price || null,
-        });
-        setValue('override_discount', {
-          formattedValue: myNumberFormat.thousandSeparated(
-            inventoryProductData?.override_discount,
-            'nullAsEmpty',
-          ),
-          value: inventoryProductData?.override_discount || null,
-        });
-        setValue(
-          'enabled_variations',
-          inventoryProductData.inventory_product_variants.map(
-            variant => variant.inventory_variant_metadata.variant_title,
-          ),
-        );
-        setValue(
-          'variation_values',
-          variationValues.map(variation => {
-            const found = inventoryProductData.inventory_product_variants.find(
-              pdkVariation =>
-                pdkVariation.inventory_variant_metadata.variant_title ===
-                variation.variation_title,
-            );
-            console.log(
-              '🚀 ~ file: UpdateProductInventory.tsx ~ line 156 ~ useEffect ~ found',
-              found,
-            );
-            return {
-              variation_title: variation.variation_title,
-              variant_metadata_id: found
-                ? found.inventory_variant_metadata.id.toString()
-                : undefined,
-            };
-          }),
-        );
-        setDataReady(true);
-      }
-    }
-  }, [
-    getInventoryProductData.data?.rocketjaket_inventory_product_by_pk,
-    isDataReady,
-    isErrorOnce,
-    navigation,
-    setSelectedProductId,
-    setValue,
-    toast,
-    variationValues,
-    focused,
-  ]);
-
-  console.log(
-    "🚀 ~ file: UpdateProductInventory.tsx ~ line 246 ~ watch('override_capital_price.value')",
-    watch('override_capital_price.value'),
-  );
-
-  useEffect(() => {
-    if (!isDataReady) {
-      myAppState.setLoadingWholePage(getInventoryProductData.loading);
-    } else {
-      myAppState.setLoadingWholePage(false);
-    }
-  }, [getInventoryProductData.loading, isDataReady, myAppState, focused]);
-
   const selectedProductData = useMemo(() => {
-    return getProductData?.data?.rocketjaket_product_by_pk || null;
-  }, [getProductData?.data?.rocketjaket_product_by_pk]);
+    return getProductData?.data?.products_by_pk || null;
+  }, [getProductData?.data?.products_by_pk]);
 
   const [
     updateInventoryProductMutation,
     _updateInventoryProductMutationResult,
-  ] = useInventory_BulkUpdateInventoryProductMutation({
-    ...getXHasuraContextHeader({role: 'administrator'}),
+  ] = useInventory_UpdateInventoryProductMutation({
     refetchQueries: [
-      namedOperations.Query.Inventory_GetAllInventoryProductByStorePK,
+      namedOperations.Query.Inventory_GetAllInventoryProductByStoreId,
     ],
   });
 
-  const handleSubmission = useCallback(
-    async (data: IProductInventoryDefaultValues) => {
-      const inventoryProductVariants = data.enabled_variations
-        .filter(enabled_variations_title => {
-          const found = data.variation_values.find(fnd =>
-            fnd.variation_title === enabled_variations_title &&
-            fnd?.variant_metadata_id
-              ? true
-              : false,
-          );
-          if (found) return true;
-          else return false;
-        })
-        .map(enabled_variations_title => {
-          const found = data.variation_values.find(
-            fnd => fnd.variation_title === enabled_variations_title,
-          );
-          return {
-            inventory_product_id: route.params.inventoryProductId,
-            inventory_variant_metadata_id: parseInt(
-              found!.variant_metadata_id!,
-              10,
-            ),
-          };
-        });
-      const price = {
+  const handleSubmission = async (data: IProductInventoryDefaultValues) => {
+    const inventoryProductVariants = data.enabled_variations
+      .filter(enabled_variations_title => {
+        const found = data.variation_values.find(fnd =>
+          fnd.variation_title === enabled_variations_title &&
+          fnd?.variant_metadata_id
+            ? true
+            : false,
+        );
+        if (found) return true;
+        else return false;
+      })
+      .map(enabled_variations_title => {
+        const found = data.variation_values.find(
+          fnd => fnd.variation_title === enabled_variations_title,
+        );
+        return {
+          inventory_product_id: route.params.inventoryProductId,
+          inventory_variant_metadata_id: parseInt(
+            found!.variant_metadata_id!,
+            10,
+          ),
+        };
+      });
+
+    const input = {
+      inventory_product_id: route.params.inventoryProductId,
+      insert_rocketjaket_inventory_product_variant: inventoryProductVariants,
+      update_rocketjaket_inventory_product_by_pk: {
+        product_id: selectedProductId,
         override_capital_price: data.override_capital_price.value,
         override_selling_price: data.override_selling_price.value,
-        override_discount: data.override_discount.value,
-      };
-      try {
-        const res = await updateInventoryProductMutation({
-          variables: {
-            inventory_product_id: route.params.inventoryProductId,
-            insert_rocketjaket_inventory_product_variant:
-              inventoryProductVariants,
-            update_rocketjaket_inventory_product_by_pk: {
-              product_id: selectedProductId,
-              override_capital_price: price.override_capital_price,
-              override_selling_price: price.override_selling_price,
-              override_discount: price.override_discount,
-              available_qty: data.available_qty.value,
-              min_available_qty: data.min_available_qty.value,
-            },
-          },
-        });
+        override_discount: data.override_selling_price.value,
+        available_qty: data.available_qty.value,
+        min_available_qty: data.min_available_qty.value,
+      },
+    };
+    console.log(
+      '🚀 ~ file: UpdateProductInventory.tsx ~ line 256 ~ handleSubmission ~ input',
+      input,
+    );
 
-        if (res.errors) {
-          toast.show({
-            ...TOAST_TEMPLATE.error(
-              `Gagal melakukan update variasi produk dengan nama ${selectedProductData?.product_category.name} / ${selectedProductData?.name}.`,
-            ),
-          });
-        } else {
-          toast.show({
-            ...TOAST_TEMPLATE.success(
-              `Berhasil update manajemen stok untuk produk ${res.data?.update_rocketjaket_inventory_product_by_pk?.product.product_category.name} / ${res.data?.update_rocketjaket_inventory_product_by_pk?.product.name}.`,
-            ),
-          });
-        }
-      } catch (error) {
-        console.log(
-          '🚀 ~ file: UpdateProductInventory.tsx ~ line 165 ~ handleSubmission ~ error',
-          error,
-        );
-      }
-    },
-    [
-      route.params.inventoryProductId,
-      selectedProductData?.name,
-      selectedProductData?.product_category.name,
-      selectedProductId,
-      toast,
-      updateInventoryProductMutation,
-    ],
-  );
+    const [err, res] = await to(
+      updateInventoryProductMutation({
+        variables: {
+          ...input,
+        },
+      }),
+    );
+
+    if (err || !res) {
+      console.log(
+        '🚀 ~ file: UpdateProductInventory.tsx ~ line 304 ~ handleSubmission ~ err',
+        err,
+      );
+      toast.show(
+        TOAST_TEMPLATE.error(
+          `Gagal melakukan update variasi produk dengan nama ${selectedProductData?.product_category.name} / ${selectedProductData?.name}.`,
+        ),
+      );
+    } else {
+      console.log(
+        '🚀 ~ file: UpdateProductInventory.tsx ~ line 304 ~ handleSubmission ~ res',
+        res,
+      );
+      reset(defaultValues);
+      toast.show(
+        TOAST_TEMPLATE.success(
+          `Berhasil update manajemen stok untuk produk ${selectedProductData?.product_category.name} / ${selectedProductData?.name}.`,
+        ),
+      );
+      navigation.goBack();
+    }
+  };
 
   useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset(defaultValues);
-      navigation.navigate('InventoryHome');
-    }
-  }, [isSubmitSuccessful, navigation, reset]);
+    myAppState.setLoadingWholePage(getInventoryProductData.loading);
+
+    return () => {
+      myAppState.setLoadingWholePage(false);
+    };
+  }, [getInventoryProductData.loading]);
 
   return (
     <KeyboardAwareScrollView enableOnAndroid={true}>

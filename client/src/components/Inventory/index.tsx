@@ -5,14 +5,13 @@ import withAppLayout from '../Layout/AppLayout';
 import ListInventory from './ListInventory';
 import ListProductVariants from './ListProductVariants';
 import {useMemo} from 'react';
-import {InventoryHomeNavProps} from '../../screens/app/InventoryScreen';
 
 const routes = [
   {key: 'first', title: 'List Inventory', component: ListInventory},
   {key: 'second', title: 'List Variasi Produk', component: ListProductVariants},
 ];
 
-interface Props extends InventoryHomeNavProps {}
+interface Props {}
 
 const InventoryHome = (props: Props) => {
   const [activeTab, setActiveTab] = React.useState(0);
@@ -35,7 +34,6 @@ const InventoryHome = (props: Props) => {
             flex={1}
             alignItems="center"
             p="3"
-            cursor="pointer"
             onPress={() => {
               console.log(i);
               setActiveTab(i);

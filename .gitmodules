@@ -1,0 +1,3 @@
+[submodule "whatsapp-express-api"]
+	path = whatsapp-express-api
+	url = https://github.com/eekrain/whatsapp-express-api.git

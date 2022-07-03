@@ -1,24 +1,37 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Box, Stack, Modal} from 'native-base';
+import {
+  Box,
+  Stack,
+  Modal,
+  ScrollView,
+  HStack,
+  Heading,
+  useToast,
+  Button,
+  Icon,
+  useBreakpointValue,
+  VStack,
+} from 'native-base';
 import ProductsContent from './ProductsContent';
 import withAppLayout from '../Layout/AppLayout';
 import {
-  useInventory_GetAllInventoryProductByStorePkQuery,
-  useProduk_GetAllKategoriProdukQuery,
+  useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription,
   useStore_GetAllStoreQuery,
-  useStore_GetStoreByPkQuery,
 } from '../../graphql/gql-generated';
-import {
-  getStorageFileUrlWImageTransform,
-  useFlexSearch,
-  useMyUser,
-} from '../../shared/utils';
+import {getUniqArrayObject, useFlexSearch, useMyUser} from '../../shared/utils';
 import {UserRolesEnum} from '../../types/user';
 import {useForm} from 'react-hook-form';
 import {RHSelect} from '../../shared/components';
-import {Alert} from 'react-native';
-import CashierCart from './CashierCart';
+import {Alert, useWindowDimensions} from 'react-native';
 import {CashierHomeNavProps} from '../../screens/app/CashierScreen';
+import {ICart, useMyAppState, useMyCart} from '../../state';
+import Cart from './Cart';
+import {UpdateTransactionNavProps} from '../../screens/app/TransactionScreen';
+import {CommonActions, useNavigation} from '@react-navigation/native';
+import {sort} from 'fast-sort';
+import {ButtonCancelDelete} from '../Buttons';
+import {TOAST_TEMPLATE} from '../../shared/constants';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 export interface IDefaultValues {
   search_term: string;
@@ -39,25 +52,41 @@ export interface IInventoryProductData {
   product_updated_at: any;
   inventory_product_updated_at: any;
   product_name: string;
+  product_name_concise: string;
   product_category: string;
   product_category_id: number;
-  available_qty: number;
   variant: string;
+  available_qty: number;
   capital_price: number;
   selling_price: number;
   discount: number;
-  product_photo_url: string;
+  product_photo_id?: string | null;
 }
 
 interface Props extends CashierHomeNavProps {}
 
 const CashierHome = ({route}: Props) => {
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 55 ~ CashierHome ~ route.params?.invoiceNumberRefundPart',
-    route.params?.invoiceNumberRefundPart,
-  );
+  const window = useWindowDimensions();
+
+  const heightOnLg: number | string = useBreakpointValue({
+    base: 'full',
+    lg: window.height - 130,
+  });
+
   const myUser = useMyUser();
+  const myAppState = useMyAppState();
+
+  const myCart = useMyCart();
+  const roles = useMemo(() => myUser.roles, [myUser.roles]);
+  const navigation = useNavigation<UpdateTransactionNavProps['navigation']>();
+  const toast = useToast();
   const [isDataStoreReady, setDataStoreReady] = useState(false);
+
+  const isFalseWhenLg: boolean = useBreakpointValue({
+    base: true,
+    lg: false,
+  });
+
   const {
     watch,
     control,
@@ -67,64 +96,51 @@ const CashierHome = ({route}: Props) => {
     defaultValues,
   });
   const selectedStoreId = watch('store_id');
+  const [selectedStoreName, setSelectedStoreName] = useState('');
   const activeCategory = watch('active_category');
   const searchTerm = watch('search_term');
 
-  useEffect(() => {
-    if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
-      myUser.updateStoreId(parseInt(selectedStoreId, 10));
-    }
-  }, [myUser, selectedStoreId]);
-
-  const getAllCategory = useProduk_GetAllKategoriProdukQuery();
-  const kategoriProdukTab = useMemo(() => {
-    const data = getAllCategory.data?.rocketjaket_product_category || [];
-
-    const tabs: {value: number | null; label: string}[] = [
-      {value: null, label: 'Semua Kategori'},
-      ...data.map(cat => ({value: cat.id, label: cat.name})),
-    ];
-    return tabs;
-  }, [getAllCategory.data?.rocketjaket_product_category]);
-
   const getAllStore = useStore_GetAllStoreQuery();
   const storeSelectOptions = useMemo(() => {
-    const data = getAllStore.data?.rocketjaket_store || [];
+    const data = getAllStore.data?.stores || [];
     return data.map(store => ({label: store.name, value: store.id.toString()}));
-  }, [getAllStore.data?.rocketjaket_store]);
-
-  const getStoreActive = useStore_GetStoreByPkQuery({
-    variables: {
-      id: parseInt(selectedStoreId || '0', 10),
-    },
-  });
-  const dataStoreActive = useMemo(() => {
-    return getStoreActive.data?.rocketjaket_store_by_pk;
-  }, [getStoreActive.data?.rocketjaket_store_by_pk]);
+  }, [getAllStore.data?.stores]);
 
   const getAllInventoryProduct =
-    useInventory_GetAllInventoryProductByStorePkQuery({
+    useInventory_GetAllInventoryProductByStoreIdSubscriptionSubscription({
       variables: {store_id: parseInt(selectedStoreId || '0', 10)},
     });
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 86 ~ CashierHome ~ getAllInventoryProduct.error',
+  //   getAllInventoryProduct.error,
+  // );
+
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 94 ~ CashierHome ~ getAllInventoryProduct.data?.inventory_products',
+  //   getAllInventoryProduct.data?.inventory_products,
+  // );
+
   const inventoryProductData: {
     raw: IInventoryProductData[];
     filteredByCategory: IInventoryProductData[];
   } = useMemo(() => {
-    const data =
-      getAllInventoryProduct.data?.rocketjaket_inventory_product || [];
+    const data = getAllInventoryProduct.data?.inventory_products || [];
 
     const processed: IInventoryProductData[] = data.map(pdk => {
+      const variant = pdk.inventory_product_variants
+        .map(variant => variant.inventory_variants_metadata.variant_value)
+        .join(' / ');
+      const product_name_concise = `${pdk.product.product_category.name} / ${pdk.product.name} / ${variant}`;
       return {
         id: pdk.id,
         product_updated_at: pdk.product.updated_at,
         inventory_product_updated_at: pdk.updated_at,
         product_name: pdk.product.name,
+        product_name_concise,
         product_category: pdk.product.product_category.name,
+        variant,
         product_category_id: pdk.product.product_category.id,
         available_qty: pdk.available_qty,
-        variant: pdk.inventory_product_variants
-          .map(variant => variant.inventory_variant_metadata.variant_value)
-          .join(' / '),
         capital_price: pdk.override_capital_price
           ? pdk.override_capital_price
           : pdk.product.capital_price,
@@ -134,11 +150,7 @@ const CashierHome = ({route}: Props) => {
         discount: pdk.override_discount
           ? pdk.override_discount
           : pdk.product.discount,
-        product_photo_url: getStorageFileUrlWImageTransform({
-          fileKey: pdk.product.photo_url,
-          h: 150,
-          q: 80,
-        }),
+        product_photo_id: pdk.product.photo_id,
       };
     });
 
@@ -147,10 +159,28 @@ const CashierHome = ({route}: Props) => {
     );
 
     return {raw: processed, filteredByCategory};
-  }, [
-    activeCategory,
-    getAllInventoryProduct.data?.rocketjaket_inventory_product,
-  ]);
+  }, [activeCategory, getAllInventoryProduct.data?.inventory_products]);
+
+  const kategoriProdukTab = useMemo(() => {
+    const data = getAllInventoryProduct.data?.inventory_products || [];
+    const uniq: {
+      __typename?: 'product_categories' | undefined;
+      id: number;
+      name: string;
+    }[] = getUniqArrayObject(
+      data.map(x => x.product.product_category),
+      'id',
+    );
+
+    const sorted = sort(uniq).asc('name');
+
+    const tabs: {value: number | null; label: string}[] = [
+      {value: null, label: 'Semua Kategori'},
+      ...sorted.map(x => ({value: x.id, label: x.name})),
+    ];
+    return tabs;
+  }, [getAllInventoryProduct.data?.inventory_products]);
+
   const flexSearch = useFlexSearch<IInventoryProductData>(
     searchTerm,
     inventoryProductData.raw,
@@ -211,72 +241,177 @@ const CashierHome = ({route}: Props) => {
   }, [flexSearch]);
 
   useEffect(() => {
-    if (
-      myUser.roles.includes(UserRolesEnum.administrator) &&
-      !selectedStoreId
-    ) {
-      setValue('show_modal_change_toko', true);
-    } else if (
-      myUser.roles.includes(UserRolesEnum.administrator) &&
-      selectedStoreId
-    ) {
+    if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
+      myUser.updateStoreId(parseInt(selectedStoreId, 10));
+    }
+
+    if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
       setValue('show_modal_change_toko', false);
     }
-    if (!isDataStoreReady) {
-      console.log(
-        '🚀 ~ file: index.tsx ~ line 227 ~ useEffect ~ myUser.store_id',
-        myUser.store_id,
-      );
-      if (myUser.store_id) {
-        setValue('store_id', myUser.store_id.toString());
-        setDataStoreReady(true);
-      } else if (!myUser.roles.includes(UserRolesEnum.administrator)) {
-        Alert.alert(
-          'Akun Anda Belum Terdaftar',
-          'Akun anda belum terdaftar di store manapun! Silahkan kontak owner / admin untuk mendaftarkan akun anda ke penempatan toko sesuai.',
-        );
+    const timeout = setTimeout(() => {
+      if (
+        myUser.roles.includes(UserRolesEnum.administrator) &&
+        !selectedStoreId &&
+        !myAppState.isLoadingSplashScreen
+      ) {
+        setValue('show_modal_change_toko', true);
       }
-    }
-  }, [isDataStoreReady, myUser, selectedStoreId, setValue]);
+    }, 2000);
 
-  return (
-    <Box>
-      <Modal
-        isOpen={watch('show_modal_change_toko')}
-        onClose={() => setValue('show_modal_change_toko', false)}>
-        <Modal.Content maxWidth="400px">
-          <Modal.CloseButton />
-          <Modal.Header>Pilih Toko</Modal.Header>
-          <Box p="3">
-            <RHSelect
-              selectOptions={storeSelectOptions}
-              control={control}
-              errors={errors}
-              name="store_id"
-              label="Toko"
-            />
-          </Box>
-        </Modal.Content>
-      </Modal>
-      <Stack direction={['column', 'column', 'row']} space="4" h="full">
-        <ProductsContent
-          route={route}
-          searchTerm={searchTerm}
-          activeCategory={activeCategory}
-          control={control}
-          errors={errors}
-          dataStoreActive={dataStoreActive}
-          kategoriProdukTab={kategoriProdukTab}
-          setValue={setValue}
-          filteredByCategoryProductData={
-            inventoryProductData.filteredByCategory
-          }
-          searchedInventoryProductData={searchedInventoryProductData}
-        />
-        <CashierCart route={route} />
-      </Stack>
-    </Box>
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [myUser.roles, selectedStoreId, myAppState.isLoadingSplashScreen]);
+
+  useEffect(() => {
+    if (!isDataStoreReady && myUser.store_id) {
+      setValue('store_id', myUser.store_id.toString());
+      setDataStoreReady(true);
+    } else if (
+      isDataStoreReady &&
+      !myUser.roles.includes(UserRolesEnum.administrator) &&
+      !myUser.store_id
+    ) {
+      Alert.alert(
+        'Akun Anda Belum Terdaftar',
+        'Akun anda belum terdaftar di store manapun! Silahkan kontak owner / admin untuk mendaftarkan akun anda ke penempatan toko sesuai.',
+      );
+    }
+  }, [
+    isDataStoreReady,
+    myUser.roles,
+    myUser.store_id,
+    selectedStoreId,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    const found = storeSelectOptions.find(val => val.value === selectedStoreId);
+    setSelectedStoreName(found?.label || '');
+  }, [selectedStoreId, storeSelectOptions]);
+
+  useEffect(() => {
+    myAppState.setLoadingWholePage(
+      getAllStore.loading || getAllInventoryProduct.loading,
+    );
+    return () => {
+      myAppState.setLoadingWholePage(false);
+    };
+  }, [getAllStore.loading, getAllInventoryProduct.loading]);
+  //pb={{base: 300, lg: undefined}}
+
+  const render = () => (
+    <>
+      <Box pb={150}>
+        <Modal
+          isOpen={watch('show_modal_change_toko')}
+          onClose={() => setValue('show_modal_change_toko', false)}>
+          <Modal.Content maxWidth="400px">
+            <Modal.CloseButton />
+            <Modal.Header>Pilih Toko</Modal.Header>
+            <Box p="3">
+              <RHSelect
+                selectOptions={storeSelectOptions}
+                control={control}
+                errors={errors}
+                name="store_id"
+                label="Toko"
+              />
+            </Box>
+          </Modal.Content>
+        </Modal>
+
+        {isFalseWhenLg && (
+          <VStack>
+            {route.params?.invoiceNumberRefundPart && (
+              <HStack alignItems="center" justifyContent="space-between">
+                <Heading fontSize="xl" mb="2">
+                  Retur Invoice {route.params.invoiceNumberRefundPart}
+                </Heading>
+
+                <ButtonCancelDelete
+                  customText="Cancel Retur"
+                  variant={'solid'}
+                  onPress={() => {
+                    toast.show(
+                      TOAST_TEMPLATE.cancelled('Refund transaksi tidak jadi.'),
+                    );
+                    clearReturn(
+                      navigation,
+                      myCart,
+                      route.params?.invoiceNumberRefundPart,
+                    );
+                  }}
+                />
+              </HStack>
+            )}
+
+            <HStack space="4" alignItems="center">
+              <Heading fontSize="xl">Toko {selectedStoreName}</Heading>
+              {roles.includes(UserRolesEnum.administrator) && (
+                <Button
+                  onPress={() => setValue('show_modal_change_toko', true)}
+                  size="sm"
+                  leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
+                  Ganti Toko
+                </Button>
+              )}
+            </HStack>
+          </VStack>
+        )}
+
+        <Stack
+          direction={{base: 'column-reverse', lg: 'row'}}
+          space={{base: '8', lg: '4'}}
+          h={heightOnLg}
+          p="0">
+          <ProductsContent
+            route={route}
+            searchTerm={searchTerm}
+            activeCategory={activeCategory}
+            control={control}
+            errors={errors}
+            selectedStoreName={selectedStoreName}
+            kategoriProdukTab={kategoriProdukTab}
+            setValue={setValue}
+            filteredByCategoryProductData={
+              inventoryProductData.filteredByCategory
+            }
+            searchedInventoryProductData={searchedInventoryProductData}
+          />
+          <Cart />
+        </Stack>
+      </Box>
+    </>
   );
+
+  if (isFalseWhenLg)
+    return <ScrollView scrollEnabled={isFalseWhenLg}>{render()}</ScrollView>;
+
+  return render();
+};
+
+export const clearReturn = (
+  navigation: UpdateTransactionNavProps['navigation'],
+  myCart: ICart,
+  transaction_invoice_number: string = '',
+) => {
+  myCart.clearCart();
+  navigation.dispatch(
+    CommonActions.reset({
+      routes: [
+        {
+          name: 'CashierHome',
+          params: {invoiceNumberRefundPart: null},
+        },
+      ],
+    }),
+  );
+  if (transaction_invoice_number !== '')
+    navigation.navigate('UpdateTransaction', {
+      transaction_invoice_number,
+    });
+  else navigation.navigate('ListTransaction');
 };
 
 export default withAppLayout(CashierHome);

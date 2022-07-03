@@ -1,12 +1,13 @@
 import React from 'react';
-import {AppNavProps, InventoryRootNavProps} from '../index';
 import InventoryHome from '../../../components/Inventory';
 import CreateProductVariants from '../../../components/Inventory/CreateProductVariants';
 import UpdateProductVariants from '../../../components/Inventory/UpdateProductVariants';
 import CreateProductInventory from '../../../components/Inventory/CreateProductInventory';
 import UpdateProductInventory from '../../../components/Inventory/UpdateProductInventory';
-import {createStackNavigator, StackScreenProps} from '@react-navigation/stack';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 
 export type InventoryRootStackParamList = {
   InventoryHome: undefined;
@@ -51,30 +52,29 @@ export const rootInventoryRoutes: ISettingsRoutes[] = [
   },
 ];
 
-export type InventoryHomeNavProps = CompositeScreenProps<
-  StackScreenProps<InventoryRootStackParamList, 'InventoryHome'>,
-  AppNavProps
+export type InventoryScreenProps = {
+  [Properties in keyof InventoryRootStackParamList]: NativeStackScreenProps<
+    InventoryRootStackParamList,
+    keyof InventoryRootStackParamList
+  >;
+};
+export type CreateProductInventoryNavProps = NativeStackScreenProps<
+  InventoryRootStackParamList,
+  'CreateProductInventory'
 >;
-export type CreateProductVariantsNavProps = CompositeScreenProps<
-  StackScreenProps<InventoryRootStackParamList, 'CreateProductVariants'>,
-  AppNavProps
+export type UpdateProductVariantsNavProps = NativeStackScreenProps<
+  InventoryRootStackParamList,
+  'UpdateProductVariants'
 >;
-export type UpdateProductVariantsNavProps = CompositeScreenProps<
-  StackScreenProps<InventoryRootStackParamList, 'UpdateProductVariants'>,
-  AppNavProps
->;
-export type CreateProductInventoryNavProps = CompositeScreenProps<
-  StackScreenProps<InventoryRootStackParamList, 'CreateProductInventory'>,
-  AppNavProps
->;
-export type UpdateProductInventoryNavProps = CompositeScreenProps<
-  StackScreenProps<InventoryRootStackParamList, 'UpdateProductInventory'>,
-  AppNavProps
+export type UpdateProductInventoryNavProps = NativeStackScreenProps<
+  InventoryRootStackParamList,
+  'UpdateProductInventory'
 >;
 
-const InventoryStack = createStackNavigator<InventoryRootStackParamList>();
+const InventoryStack =
+  createNativeStackNavigator<InventoryRootStackParamList>();
 
-interface IInventoryScreenProps extends InventoryRootNavProps {}
+interface IInventoryScreenProps {}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const InventoryScreen = (props: IInventoryScreenProps) => {

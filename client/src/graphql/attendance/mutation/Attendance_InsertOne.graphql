@@ -1,0 +1,5 @@
+mutation Attendance_InsertOne($object: attendance_insert_input = {}) {
+  insert_attendance_one(object: $object) {
+    id
+  }
+}

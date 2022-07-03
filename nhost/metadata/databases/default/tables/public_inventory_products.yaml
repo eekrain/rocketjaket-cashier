@@ -1,0 +1,123 @@
+table:
+  name: inventory_products
+  schema: public
+object_relationships:
+- name: product
+  using:
+    foreign_key_constraint_on: product_id
+- name: store
+  using:
+    foreign_key_constraint_on: store_id
+array_relationships:
+- name: inventory_product_variants
+  using:
+    foreign_key_constraint_on:
+      column: inventory_product_id
+      table:
+        name: inventory_product_variants
+        schema: public
+- name: transaction_items
+  using:
+    foreign_key_constraint_on:
+      column: inventory_product_id
+      table:
+        name: transaction_items
+        schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - available_qty
+    - min_available_qty
+    - override_capital_price
+    - override_discount
+    - override_selling_price
+    - store_id
+    - created_at
+    - updated_at
+    - id
+    - product_id
+  role: administrator
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - available_qty
+    - min_available_qty
+    - override_capital_price
+    - override_discount
+    - override_selling_price
+    - store_id
+    - created_at
+    - updated_at
+    - id
+    - product_id
+  role: karyawan
+select_permissions:
+- permission:
+    columns:
+    - available_qty
+    - min_available_qty
+    - override_capital_price
+    - override_discount
+    - override_selling_price
+    - store_id
+    - created_at
+    - updated_at
+    - id
+    - product_id
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - available_qty
+    - min_available_qty
+    - override_capital_price
+    - override_discount
+    - override_selling_price
+    - store_id
+    - created_at
+    - updated_at
+    - id
+    - product_id
+    filter: {}
+  role: karyawan
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - available_qty
+    - min_available_qty
+    - override_capital_price
+    - override_discount
+    - override_selling_price
+    - store_id
+    - created_at
+    - updated_at
+    - id
+    - product_id
+    filter: {}
+  role: administrator
+- permission:
+    check: {}
+    columns:
+    - available_qty
+    - min_available_qty
+    - override_capital_price
+    - override_discount
+    - override_selling_price
+    - store_id
+    - created_at
+    - updated_at
+    - id
+    - product_id
+    filter: {}
+  role: karyawan
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator
+- permission:
+    filter: {}
+  role: karyawan

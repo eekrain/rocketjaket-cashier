@@ -1,0 +1,17 @@
+table:
+  name: attendance_type_enum
+  schema: public
+is_enum: true
+select_permissions:
+- permission:
+    columns:
+    - attendance_type
+    - title
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - attendance_type
+    - title
+    filter: {}
+  role: karyawan

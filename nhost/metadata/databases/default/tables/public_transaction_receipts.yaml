@@ -1,0 +1,84 @@
+table:
+  name: transaction_receipts
+  schema: public
+object_relationships:
+- name: customer
+  using:
+    foreign_key_constraint_on: customer_id
+- name: transaction
+  using:
+    foreign_key_constraint_on: transaction_invoice_number
+- name: transaction_receipt_type_enum
+  using:
+    foreign_key_constraint_on: receipt_type
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - transaction_invoice_number
+    - receipt_type
+    - is_sent
+    - customer_id
+    - created_at
+  role: administrator
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - is_sent
+    - receipt_type
+    - transaction_invoice_number
+    - created_at
+    - customer_id
+    - id
+  role: karyawan
+select_permissions:
+- permission:
+    columns:
+    - is_sent
+    - receipt_type
+    - transaction_invoice_number
+    - created_at
+    - customer_id
+    - id
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - is_sent
+    - receipt_type
+    - transaction_invoice_number
+    - created_at
+    - customer_id
+    - id
+    filter: {}
+  role: karyawan
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - is_sent
+    - receipt_type
+    - transaction_invoice_number
+    - created_at
+    - customer_id
+    - id
+    filter: {}
+  role: administrator
+- permission:
+    check: {}
+    columns:
+    - is_sent
+    - receipt_type
+    - transaction_invoice_number
+    - created_at
+    - customer_id
+    - id
+    filter: {}
+  role: karyawan
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator

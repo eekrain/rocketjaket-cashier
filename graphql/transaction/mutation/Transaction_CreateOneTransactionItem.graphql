@@ -1,0 +1,7 @@
+mutation Transaction_CreateOneTransactionItem(
+  $object: transaction_items_insert_input = {}
+) {
+  insert_transaction_items_one(object: $object) {
+    id
+  }
+}

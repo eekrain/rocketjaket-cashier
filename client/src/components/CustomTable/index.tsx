@@ -1,89 +1,96 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useCallback} from 'react';
-import {ViewStyle, StyleSheet, TextStyle} from 'react-native';
-import {ScrollView, HStack, Icon, Text, Pressable, VStack} from 'native-base';
-import {useState} from 'react';
-import {useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
+import {
+  ViewStyle,
+  StyleSheet,
+  TextStyle,
+  ScrollView,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import {HStack, Icon, Text, Pressable, VStack, Box} from 'native-base';
 import {sort} from 'fast-sort';
 import CustomTablePagination from './CustomTablePagination';
-import CustomTableHeader from './CustomTableHeader';
+import CustomTableSearchHeader from './CustomTableSearchHeader';
 import Feather from 'react-native-vector-icons/Feather';
 import {useEffect} from 'react';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import LoadingOverlay from '../Overlay/LoadingOverlay';
+import {
+  CustomTable,
+  CustomTableColumn,
+  CustomTableFooter,
+  ICustomTableSettings,
+} from './CustomTable';
 
-export type CustomTableColumn<T extends object = {}> = {
-  Header: string;
-  accessor: keyof T;
-  widthFixed?: number;
-  widthRatio?: number;
-  isAvatar?: boolean;
-  isAction?: boolean;
-  isDisableSort?: boolean;
-};
-
-export type CustomTableFooter<T extends object = {}> = {
-  accessor: keyof T;
-  value: string;
-};
-
-interface Props<T extends Record<string, unknown>> {
+interface IMyCustomTableProps<T extends Record<string, unknown>> {
   data: T[];
-  columns: CustomTableColumn<T>[];
-  footer?: CustomTableFooter<T>[];
   isLoading: boolean;
-  tableWidth?: number | '100%';
-  rowHeight?: number;
-  possibleRowsPerPage?: number[];
-  headerHeight?: number;
-  headerStyle?: ViewStyle;
-  headerTextStyle?: TextStyle;
-  textStyle?: TextStyle;
-  childColor?: string;
-  childColorOdd?: string;
-  withTableHeader?: boolean;
-  withPagination?: boolean;
-  defaultSortFrom?: 'asc' | 'desc';
+  columns: CustomTableColumn<T>[];
+  rowKeysAccessor?: keyof T;
+  footer?: CustomTableFooter<T>[];
+  tableSettings: ICustomTableSettings;
 }
-const CustomTable = <T extends Record<string, unknown>>({
+const MyCustomTable = <T extends Record<string, unknown>>({
   data,
-  columns,
-  footer,
   isLoading = true,
-  possibleRowsPerPage = [10, 25, 50],
-  tableWidth = '100%',
-  headerHeight = 70,
-  rowHeight = 50,
-  headerStyle,
-  headerTextStyle,
-  textStyle,
-  childColor = '#e4e4e7',
-  childColorOdd = '#fafafa',
-  withTableHeader = true,
-  withPagination = true,
-  defaultSortFrom = 'asc',
-}: Props<T>) => {
-  const styles = {
-    tableStyle: {...defaultStyles.tableStyle, width: tableWidth},
-    header: headerStyle || {...defaultStyles.header, height: headerHeight},
-    headerText: headerTextStyle || defaultStyles.headerText,
-    text: textStyle || defaultStyles.text,
+  columns,
+  rowKeysAccessor = 'id',
+  footer,
+  tableSettings: tableSettingParams,
+}: IMyCustomTableProps<T>) => {
+  const window = useWindowDimensions();
+
+  const tableSettings = {
+    ...tableSettingParams,
+    mainSettings: {
+      ...tableSettingParams.mainSettings,
+      tableWidth:
+        tableSettingParams.mainSettings.tableWidth === 'full'
+          ? window.width - 32
+          : tableSettingParams.mainSettings.tableWidth,
+      withPagination:
+        tableSettingParams.mainSettings.withPagination === false
+          ? false
+          : tableSettingParams.mainSettings.withPagination === undefined
+          ? true
+          : true,
+      defaultSortFrom:
+        tableSettingParams?.mainSettings?.defaultSortFrom || 'asc',
+      optionRowsPerPage: tableSettingParams?.mainSettings
+        ?.optionRowsPerPage || [10, 25, 50],
+      withSearch:
+        tableSettingParams.mainSettings.withSearch === false
+          ? false
+          : tableSettingParams.mainSettings.withSearch === undefined
+          ? true
+          : true,
+    },
+    header: {
+      ...tableSettingParams.header,
+      headerHeight: tableSettingParams?.header?.headerHeight || 70,
+      withTableHeader: tableSettingParams?.header?.withTableHeader || true,
+    },
     row: {
-      ...defaultStyles.row,
-      height: rowHeight,
-      backgroundColor: childColor,
-    } as ViewStyle,
-    rowOdd: {
-      ...defaultStyles.row,
-      height: rowHeight,
-      backgroundColor: childColorOdd,
-    } as ViewStyle,
+      ...tableSettingParams.row,
+      childColor: tableSettingParams?.row?.childColor || '#e4e4e7',
+      childColorOdd: tableSettingParams?.row?.childColor || '#fafafa',
+      rowHeight: tableSettingParams?.row?.rowHeight || 60,
+    },
   };
 
-  // header
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 42 ~ tableSettingParams.mainSettings',
+  //   tableSettingParams.mainSettings,
+  // );
+  // console.log(
+  //   '🚀 ~ file: index.tsx ~ line 42 ~ tableSettings.mainSettings',
+  //   tableSettings.mainSettings,
+  // );
+
   const [searchTerm, setSearhTerm] = useState('');
   const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>(
-    defaultSortFrom,
+    tableSettings.mainSettings.defaultSortFrom,
   );
   const [valueToOrderBy, setValueToOrderBy] = useState<
     CustomTableColumn<T>['accessor']
@@ -91,12 +98,24 @@ const CustomTable = <T extends Record<string, unknown>>({
     columns.find(col => col?.isDisableSort === false || !col?.isDisableSort)
       ?.accessor || '',
   );
+  const [valueToOrderByForDisplay, setValueToOrderByForDisplay] = useState<
+    CustomTableColumn<T>['accessor']
+  >(
+    columns.find(col => col?.isDisableSort === false || !col?.isDisableSort)
+      ?.accessor || '',
+  );
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 102 ~ valueToOrderByForDisplay',
+    valueToOrderByForDisplay,
+  );
 
   // pagination
   const [currentPage, setCurrentPage] = useState(0);
 
   const [rowsPerPage, setRowsPerPage] = useState(
-    withPagination ? possibleRowsPerPage[0] : 999999999,
+    tableSettings.mainSettings.withPagination
+      ? tableSettings.mainSettings.optionRowsPerPage[0]
+      : 999999999,
   );
 
   useEffect(() => {
@@ -110,11 +129,27 @@ const CustomTable = <T extends Record<string, unknown>>({
   };
 
   const handleRequestSort = useCallback(
-    (valueToOrderByNew: keyof T) => {
+    (
+      actualValueToOrderByNew: keyof T,
+      valueToOrderByNewForDisplay?: keyof T,
+    ) => {
+      console.log(
+        '🚀 ~ file: index.tsx ~ line 136 ~ valueToOrderByNewForDisplay',
+        valueToOrderByNewForDisplay,
+      );
+      console.log(
+        '🚀 ~ file: index.tsx ~ line 136 ~ actualValueToOrderByNew',
+        actualValueToOrderByNew,
+      );
       const isAscending =
-        valueToOrderBy === valueToOrderByNew && orderDirection === 'asc';
+        valueToOrderBy === actualValueToOrderByNew && orderDirection === 'asc';
 
-      setValueToOrderBy(valueToOrderByNew);
+      setValueToOrderBy(actualValueToOrderByNew);
+      setValueToOrderByForDisplay(
+        valueToOrderByNewForDisplay
+          ? valueToOrderByNewForDisplay
+          : actualValueToOrderByNew,
+      );
       setOrderDirection(isAscending ? 'desc' : 'asc');
     },
     [orderDirection, valueToOrderBy],
@@ -160,161 +195,53 @@ const CustomTable = <T extends Record<string, unknown>>({
     valueToOrderBy,
   ]);
 
-  const headerCell = useCallback(
-    (text: string, accessor: keyof T, isDisableSort: boolean) => {
-      if (isDisableSort) {
-        return <Text color="milano_red.500">{text}</Text>;
-      } else {
-        return (
-          <Pressable onPress={() => handleRequestSort(accessor)}>
-            <HStack space="3" alignItems="center">
-              <Text color="milano_red.500">{text}</Text>
-              <Icon
-                as={Feather}
-                name={orderDirection === 'asc' ? 'arrow-down' : 'arrow-up'}
-                size="4"
-                color={
-                  valueToOrderBy === accessor ? 'milano_red.500' : 'transparent'
-                }
-              />
-            </HStack>
-          </Pressable>
-        );
-      }
-    },
-    [handleRequestSort, orderDirection, valueToOrderBy],
-  );
-
-  const footerCell = useCallback(
-    (accessor: keyof T) => {
-      if (!footer) return null;
-      const found = footer.find(val => val.accessor === accessor);
-
-      if (found) {
-        return (
-          <Row style={styles.header}>
-            <Text>{found.value}</Text>
-          </Row>
-        );
-      } else {
-        return <Row style={styles.header}>{null}</Row>;
-      }
-    },
-    [footer, styles.header],
-  );
-
-  const table = useCallback(
-    () => (
-      <Grid style={{minWidth: '100%'}}>
-        {columns.map(col => (
-          <Col
-            key={col.Header}
-            style={{
-              width: col.widthFixed ? col.widthFixed : undefined,
-            }}
-            size={col.widthRatio ? col.widthRatio : undefined}>
-            <Row style={styles.header}>
-              {headerCell(
-                col.Header,
-                col.accessor,
-                col?.isDisableSort ? col.isDisableSort : false,
-              )}
-            </Row>
-            {processedData.map((rowdata, i) => (
-              <Row
-                key={`${col.Header}${col.accessor}${i}`}
-                style={[
-                  i % 2 ? styles.rowOdd : styles.row,
-                  col?.isAvatar
-                    ? {
-                        paddingTop: 25,
-                      }
-                    : undefined,
-                  col?.isAction
-                    ? {
-                        paddingTop: 10,
-                      }
-                    : undefined,
-                ]}>
-                {typeof rowdata[col.accessor] === 'function' ? (
-                  (rowdata[col.accessor] as React.ReactElement)
-                ) : (
-                  <Text>{rowdata[col.accessor] as string}</Text>
-                )}
-              </Row>
-            ))}
-            {footer && footerCell(col.accessor)}
-          </Col>
-        ))}
-      </Grid>
-    ),
-    [
-      columns,
-      footer,
-      footerCell,
-      headerCell,
-      processedData,
-      styles.header,
-      styles.row,
-      styles.rowOdd,
-    ],
-  );
-
   return (
-    <VStack w="full">
-      <LoadingOverlay size="md" visible={isLoading} />
-      {withTableHeader && <CustomTableHeader {...{searchTerm, setSearhTerm}} />}
-      {tableWidth === '100%' ? (
-        table()
-      ) : (
-        <ScrollView horizontal={true} nestedScrollEnabled={true}>
-          {table()}
-        </ScrollView>
+    <VStack bgColor="white" borderRadius={'xl'}>
+      {tableSettings.customComponent?.top && (
+        <tableSettings.customComponent.top />
       )}
-
-      {withPagination && (
+      <LoadingOverlay size="md" visible={isLoading} />
+      {tableSettings.mainSettings.withSearch && (
+        <CustomTableSearchHeader
+          {...{
+            searchTerm,
+            setSearhTerm,
+            customTableHeaderStyle: tableSettings.header.headerStyle
+              ? {
+                  borderTopLeftRadius: 'none',
+                  borderTopRightRadius: 'none',
+                  paddingTop: 0,
+                }
+              : undefined,
+          }}
+        />
+      )}
+      <CustomTable
+        columns={columns}
+        handleRequestSort={handleRequestSort}
+        orderDirection={orderDirection}
+        processedData={processedData}
+        rowKeysAccessor={rowKeysAccessor}
+        tableSettings={tableSettings}
+        valueToOrderByForDisplay={valueToOrderByForDisplay}
+        footer={footer}
+      />
+      {tableSettings.mainSettings.withPagination && (
         <CustomTablePagination
           handleChangeRowsPerPage={handleChangeRowsPerPage}
           rowsPerPage={rowsPerPage}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           dataLength={data.length}
-          possibleRowsPerPage={possibleRowsPerPage}
+          optionRowsPerPage={tableSettings.mainSettings.optionRowsPerPage}
         />
+      )}
+
+      {tableSettings.customComponent?.bottom && (
+        <tableSettings.customComponent.bottom />
       )}
     </VStack>
   );
 };
 
-const defaultStyles = StyleSheet.create({
-  tableStyle: {
-    width: '100%',
-  },
-  header: {
-    height: 50,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  headerText: {
-    fontWeight: '500',
-    color: '#dc2626',
-    paddingHorizontal: 20,
-  },
-  text: {
-    fontWeight: '300',
-    color: '#000',
-    paddingHorizontal: 20,
-  },
-  dataWrapper: {
-    marginTop: -1,
-  },
-  row: {
-    backgroundColor: '#e4e4e7',
-    alignItems: 'center',
-    position: 'relative',
-    paddingHorizontal: 20,
-  },
-});
-
-export default CustomTable;
+export default MyCustomTable;
