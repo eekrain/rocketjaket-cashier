@@ -1,19 +1,5 @@
-mutation Store_UpdateStore(
-  $id: Int!
-  $address: String
-  $latitude: String
-  $longitude: String
-  $name: String
-) {
-  update_rocketjaket_store_by_pk(
-    pk_columns: {id: $id}
-    _set: {
-      name: $name
-      address: $address
-      latitude: $latitude
-      longitude: $longitude
-    }
-  ) {
+mutation Store_UpdateStore($store: stores_set_input!, $store_id: Int!) {
+  update_stores_by_pk(pk_columns: {id: $store_id}, _set: $store) {
     id
     name
   }

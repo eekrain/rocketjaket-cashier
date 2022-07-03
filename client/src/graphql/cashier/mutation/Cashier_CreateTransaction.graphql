@@ -1,26 +1,27 @@
 mutation Cashier_CreateTransaction(
   $payment_type: TransactionPaymentTypeEnum!
   $total_transaction: Int!
-  $user_id: uuid!
-  $transaction_items: [transaction_items!]!
+  $karyawan_name: String
   $cash_in_amount: Int!
   $store_id: Int!
+  $transaction_items: [transaction_items_input!]!
 ) {
-  createTransaction(
-    user_id: $user_id
+  Cashier_CreateTransaction(
+    karyawan_name: $karyawan_name
     total_transaction: $total_transaction
     payment_type: $payment_type
-    transaction_items: $transaction_items
     cash_in_amount: $cash_in_amount
     store_id: $store_id
+    transaction_items: $transaction_items
   ) {
     invoice_number
-    isOutOfSync
     cash_change
     payment_type
     total_transaction
     cash_in_amount
     transaction_status
     store_id
+    isError
+    errorMessage
   }
 }

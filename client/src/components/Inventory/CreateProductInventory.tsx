@@ -28,6 +28,7 @@ import ProductSelectVariation from './ProductSelectVariation';
 import {useMyAppState} from '../../state';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {IProductInventoryDefaultValues} from './types';
+import to from 'await-to-js';
 
 const schema = yup
   .object({
@@ -42,13 +43,13 @@ const schema = yup
       value: yup.number().min(0).required(),
     }),
     override_capital_price: yup.object({
-      value: yup.number().min(0).optional(),
+      value: yup.number().min(0).nullable(),
     }),
     override_selling_price: yup.object({
-      value: yup.number().min(0).optional(),
+      value: yup.number().min(0).nullable(),
     }),
     override_discount: yup.object({
-      value: yup.number().min(0).max(100).optional(),
+      value: yup.number().min(0).max(100).nullable(),
     }),
   })
   .required();
@@ -111,27 +112,30 @@ const CreateProductInventory = ({
     variables: {
       id: selectedProductId,
     },
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
     if (!isDataReady) {
       myAppState.setLoadingWholePage(getProductData.loading);
-      if (getProductData.data?.rocketjaket_product_by_pk) {
+      if (getProductData.data?.products_by_pk) {
         myAppState.setLoadingWholePage(false);
         setDataReady(true);
       }
     }
+
+    return () => {
+      myAppState.setLoadingWholePage(false);
+    };
   }, [
-    getProductData.data?.rocketjaket_product_by_pk,
+    getProductData.data?.products_by_pk,
     getProductData.loading,
     isDataReady,
-    myAppState,
   ]);
 
   const selectedProductData = useMemo(() => {
-    return getProductData?.data?.rocketjaket_product_by_pk || null;
-  }, [getProductData?.data?.rocketjaket_product_by_pk]);
+    return getProductData?.data?.products_by_pk || null;
+  }, [getProductData?.data?.products_by_pk]);
 
   const [
     createInventoryProductMutation,
@@ -139,7 +143,7 @@ const CreateProductInventory = ({
   ] = useInventory_CreateInventoryProductMutation({
     ...getXHasuraContextHeader({role: 'administrator'}),
     refetchQueries: [
-      namedOperations.Query.Inventory_GetAllInventoryProductByStorePK,
+      namedOperations.Query.Inventory_GetAllInventoryProductByStoreId,
     ],
   });
 
@@ -166,20 +170,21 @@ const CreateProductInventory = ({
           ),
         };
       });
-    const price = {
-      override_capital_price: data.override_capital_price.value,
-      override_selling_price: data.override_selling_price.value,
-      override_discount: data.override_discount.value,
-    };
 
-    try {
-      const res = await createInventoryProductMutation({
+    const [err, res] = await to(
+      createInventoryProductMutation({
         variables: {
           inventory_product: {
             product_id: selectedProductId,
-            override_capital_price: price.override_capital_price,
-            override_selling_price: price.override_selling_price,
-            override_discount: price.override_discount,
+            override_capital_price: myNumberFormat.nullIfBelowZero(
+              data.override_capital_price.value,
+            ),
+            override_selling_price: myNumberFormat.nullIfBelowZero(
+              data.override_selling_price.value,
+            ),
+            override_discount: myNumberFormat.nullIfBelowZero(
+              data.override_discount.value,
+            ),
             store_id: route.params.storeId,
             available_qty: data.available_qty.value,
             min_available_qty: data.min_available_qty.value,
@@ -188,28 +193,31 @@ const CreateProductInventory = ({
             },
           },
         },
-      });
+      }),
+    );
 
-      if (res.errors) {
-        toast.show({
-          ...TOAST_TEMPLATE.error(
-            `Gagal melakukan penambahan variasi produk dengan nama ${selectedProductData?.product_category.name} / ${selectedProductData?.name}.`,
-          ),
-        });
-      } else {
-        reset();
-        toast.show({
-          ...TOAST_TEMPLATE.success(
-            `Berhasil menambahkan manajemen stok untuk produk ${selectedProductData?.product_category.name} / ${selectedProductData?.name}.`,
-          ),
-        });
-        navigation.goBack();
-      }
-    } catch (error) {
+    if (err || !res) {
       console.log(
-        '🚀 ~ file: CreateProductInventory.tsx ~ line 165 ~ handleSubmission ~ error',
-        error,
+        '🚀 ~ file: CreateProductInventory.tsx ~ line 192 ~ handleSubmission ~ err',
+        err,
       );
+      toast.show(
+        TOAST_TEMPLATE.error(
+          `Gagal melakukan penambahan variasi produk dengan nama ${selectedProductData?.product_category.name} / ${selectedProductData?.name}.`,
+        ),
+      );
+    } else {
+      console.log(
+        '🚀 ~ file: CreateProductInventory.tsx ~ line 197 ~ handleSubmission ~ res',
+        res,
+      );
+      reset();
+      toast.show(
+        TOAST_TEMPLATE.success(
+          `Berhasil menambahkan manajemen stok untuk produk ${selectedProductData?.product_category.name} / ${selectedProductData?.name}.`,
+        ),
+      );
+      navigation.goBack();
     }
   };
 

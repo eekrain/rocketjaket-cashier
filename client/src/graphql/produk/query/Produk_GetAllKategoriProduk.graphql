@@ -1,7 +1,0 @@
-query Produk_GetAllKategoriProduk {
-  rocketjaket_product_category(order_by: {name: asc}) {
-    id
-    name
-    description
-  }
-}

@@ -10,11 +10,10 @@ import {
 } from 'native-base';
 import {
   useInventory_GetVariantMetadataByTitleQuery,
-  useInventory_BulkUpdateVariantsMetadataMutation,
+  useInventory_UpdateInventoryVariantsMetadataMutation,
   namedOperations,
 } from '../../graphql/gql-generated';
 import * as yup from 'yup';
-import {getXHasuraContextHeader} from '../../shared/utils';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useFieldArray, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -29,6 +28,7 @@ import {
 import withAppLayout from '../Layout/AppLayout';
 import {UpdateProductVariantsNavProps} from '../../screens/app/InventoryScreen';
 import {useMyAppState} from '../../state';
+import to from 'await-to-js';
 
 interface VariationValue {
   value: string;
@@ -37,20 +37,34 @@ interface VariationValue {
 }
 
 interface IDefaultValues {
-  variation_title: string;
-  variation_values: VariationValue[];
+  variant_title: string;
+  variant_values: VariationValue[];
 }
 
 const schema = yup
   .object({
-    variation_title: yup.string().required('Nama toko harus diisi'),
+    variant_title: yup.string().required('Nama toko harus diisi'),
+    variant_values: yup
+      .array()
+      .of(
+        yup.object().shape({
+          value: yup.string().required('Opsi variasi harus diisi'),
+        }),
+      )
+      .min(1, 'Opsi variasi minimal ada 1'),
   })
   .required();
 
 const defaultValues: IDefaultValues = {
-  variation_title: '',
-  variation_values: [{value: ''}],
+  variant_title: '',
+  variant_values: [{value: ''}],
 };
+
+interface NewVariants {
+  id?: number;
+  variant_title: string;
+  variant_value: string;
+}
 
 interface ICreateProductVariantsProps extends UpdateProductVariantsNavProps {}
 
@@ -73,15 +87,11 @@ const CreateProductVariants = ({
     defaultValues,
     resolver: yupResolver(schema),
   });
-  const formVariationValues = watch('variation_values');
-
-  // useEffect(() => {
-  //   reset();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  // console.log(watch());
+  const formVariationValues = watch('variant_values');
 
   const {fields, append, remove} = useFieldArray({
-    name: 'variation_values',
+    name: 'variant_values',
     control,
   });
 
@@ -91,40 +101,37 @@ const CreateProductVariants = ({
     },
     fetchPolicy: 'network-only',
   });
+
   useEffect(() => {
-    if (!isSubmitSuccessful) {
-      myAppState.setLoadingWholePage(getVariantMetadata.loading);
-    } else {
+    myAppState.setLoadingWholePage(getVariantMetadata.loading);
+
+    return () => {
       myAppState.setLoadingWholePage(false);
-    }
-  }, [getVariantMetadata.loading, isSubmitSuccessful, myAppState]);
+    };
+  }, [getVariantMetadata.loading]);
+
   useEffect(() => {
     const variantMetadata =
-      getVariantMetadata.data?.rocketjaket_inventory_variant_metadata;
+      getVariantMetadata.data?.inventory_variants_metadata;
     if (variantMetadata && variantMetadata.length <= 0 && !isDataReady) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'),
-      });
+      toast.show(TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'));
       navigation.goBack();
       setDataReady(true);
     } else if (variantMetadata && variantMetadata.length > 0 && !isDataReady) {
       if (variantMetadata) {
-        setValue('variation_title', route.params.variant_title);
-        setValue(
-          'variation_values',
-          variantMetadata.map(variant => {
-            return {
-              value: variant.variant_value,
-              is_removed: false,
-              inventory_variant_metadata_id: variant.id,
-            };
-          }),
-        );
+        reset({
+          variant_title: route.params.variant_title,
+          variant_values: variantMetadata.map(variant => ({
+            value: variant.variant_value,
+            is_removed: false,
+            inventory_variant_metadata_id: variant.id,
+          })),
+        });
         setDataReady(true);
       }
     }
   }, [
-    getVariantMetadata.data?.rocketjaket_inventory_variant_metadata,
+    getVariantMetadata.data?.inventory_variants_metadata,
     isDataReady,
     navigation,
     route.params.variant_title,
@@ -133,85 +140,67 @@ const CreateProductVariants = ({
   ]);
 
   const [
-    bulkUpdateVariantMetadataMutation,
-    _bulkUpdateVariantMetadataMutationResult,
-  ] = useInventory_BulkUpdateVariantsMetadataMutation({
-    ...getXHasuraContextHeader({role: 'administrator'}),
+    updateVariantsMetadataMutation,
+    _updateVariantsMetadataMutationResult,
+  ] = useInventory_UpdateInventoryVariantsMetadataMutation({
     refetchQueries: [namedOperations.Query.Inventory_GetAllVariantMetadata],
   });
 
   const handleSubmission = async (data: IDefaultValues) => {
-    const needDelete: number[] = data.variation_values
+    const needDeleteIds: number[] = data.variant_values
       .filter(
-        variation =>
-          variation?.inventory_variant_metadata_id &&
-          variation?.is_removed === true,
+        variant =>
+          variant?.inventory_variant_metadata_id &&
+          variant?.is_removed === true,
       )
       .map(
-        variation => variation.inventory_variant_metadata_id,
+        variant => variant.inventory_variant_metadata_id,
       ) as unknown as number[];
+    console.log(
+      '🚀 ~ file: UpdateProductVariants.tsx ~ line 155 ~ handleSubmission ~ needDeleteIds',
+      needDeleteIds,
+    );
 
-    const needAdd = data.variation_values
-      .filter(variation => !variation?.inventory_variant_metadata_id)
-      .map(variation => ({
-        variant_title: data.variation_title,
-        variant_value: variation.value,
+    const needUpsert: NewVariants[] = data.variant_values
+      .filter(
+        (variant, index) =>
+          dirtyFields?.variant_values?.[index]?.value === true &&
+          variant.value !== '' &&
+          !variant?.is_removed,
+      )
+      .map(variant => ({
+        id: variant.inventory_variant_metadata_id,
+        variant_title: data.variant_title,
+        variant_value: variant.value,
       }));
 
-    const needUpdate = data.variation_values
-      .filter(
-        (variation, index) =>
-          dirtyFields?.variation_values?.[index]?.value === true &&
-          typeof variation.inventory_variant_metadata_id === 'number',
-      )
-      .map(variation => ({
-        id: variation.inventory_variant_metadata_id,
-        variant_value: variation.value,
-      })) as {
-      id: number;
-      variant_value: string;
-    }[];
-
-    try {
-      const res = await bulkUpdateVariantMetadataMutation({
-        variables: {
-          needDeleteIds: needDelete,
-          old_variant_title: route.params.variant_title,
-          new_variant_title: data.variation_title,
-          needAddVariantMetadata: needAdd,
-          needUpdateVariantMetadata: needUpdate,
-        },
-      });
-      if (res.data?.bulkUpdateVariantsMetadata?.is_any_update === true) {
-        reset();
-        toast.show({
-          ...TOAST_TEMPLATE.success(
-            `Berhasil update variasi produk dengan judul ${res.data?.bulkUpdateVariantsMetadata?.variant_title}.`,
-          ),
-        });
-        navigation.goBack();
-      } else if (
-        res.data?.bulkUpdateVariantsMetadata?.is_any_update === false
-      ) {
-        reset();
-        toast.show({
-          ...TOAST_TEMPLATE.cancelled(
-            'Isi variasi produk tidak ada yang diubah.',
-          ),
-        });
-        navigation.goBack();
-      } else {
-        toast.show({
-          ...TOAST_TEMPLATE.error(
-            `Gagal melakukan update variasi produk dengan judul ${res.data?.bulkUpdateVariantsMetadata?.variant_title}.`,
-          ),
-        });
-      }
-    } catch (error) {
+    const [err, res] = await to(
+      updateVariantsMetadataMutation({
+        variables: {deleteIds: needDeleteIds, upsert: needUpsert},
+      }),
+    );
+    if (err || !res) {
       console.log(
-        '🚀 ~ file: UpdateProductVariants.tsx ~ line 179 ~ handleSubmission ~ error',
-        error,
+        '🚀 ~ file: UpdateProductVariants.tsx ~ line 180 ~ handleSubmission ~ err',
+        err,
       );
+      toast.show(
+        TOAST_TEMPLATE.error(
+          `Gagal melakukan update variasi produk dengan judul ${data.variant_title}.`,
+        ),
+      );
+    } else {
+      console.log(
+        '🚀 ~ file: UpdateProductVariants.tsx ~ line 179 ~ handleSubmission ~ res',
+        res,
+      );
+      reset(defaultValues);
+      toast.show(
+        TOAST_TEMPLATE.success(
+          `Berhasil update variasi produk dengan judul ${data.variant_title}.`,
+        ),
+      );
+      navigation.goBack();
     }
   };
 
@@ -226,7 +215,7 @@ const CreateProductVariants = ({
           <Box bgColor="white" p="8">
             <VStack space="4">
               <RHTextInput
-                name="variation_title"
+                name="variant_title"
                 control={control}
                 errors={errors}
                 label="Nama Variasi"
@@ -240,10 +229,20 @@ const CreateProductVariants = ({
                     <HStack key={field.id} alignItems="flex-end" space="5">
                       <Box w="4/5">
                         <RHTextInput
-                          name={`variation_values.${index}.value`}
+                          name={`variant_values.${index}.value`}
                           control={control}
                           errors={errors}
                           label={`Opsi Variasi ${index + 1}`}
+                          overrideErrorMessage={
+                            errors?.variant_values?.[index]?.value?.message
+                              ? errors.variant_values?.[index]?.value?.message
+                              : ''
+                          }
+                          overrideIsInvalid={
+                            errors?.variant_values?.[index]?.value?.message
+                              ? true
+                              : false
+                          }
                         />
                       </Box>
                       <Box>
@@ -254,7 +253,7 @@ const CreateProductVariants = ({
                               customText="Cancel Hapus Opsi"
                               onPress={() =>
                                 setValue(
-                                  `variation_values.${index}.is_removed`,
+                                  `variant_values.${index}.is_removed`,
                                   false,
                                 )
                               }
@@ -264,7 +263,7 @@ const CreateProductVariants = ({
                               customText="Hapus Opsi"
                               onPress={() =>
                                 setValue(
-                                  `variation_values.${index}.is_removed`,
+                                  `variant_values.${index}.is_removed`,
                                   true,
                                 )
                               }
@@ -289,7 +288,7 @@ const CreateProductVariants = ({
               </HStack>
               <HStack justifyContent="flex-end" mt="5" space="4">
                 <ButtonSave
-                  isLoading={_bulkUpdateVariantMetadataMutationResult.loading}
+                  isLoading={_updateVariantsMetadataMutationResult.loading}
                   onPress={handleSubmit(handleSubmission)}
                 />
                 <ButtonBack onPress={() => navigation.goBack()} />

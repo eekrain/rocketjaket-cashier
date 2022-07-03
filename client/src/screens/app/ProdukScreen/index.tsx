@@ -1,16 +1,17 @@
 import React from 'react';
-import {createStackNavigator, StackScreenProps} from '@react-navigation/stack';
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 
-import ProdukIndex from '../../../components/Produk';
+import ProdukHome from '../../../components/Produk';
 import CreateKategoriProduk from '../../../components/Produk/CreateKategoriProduk';
 import UpdateKategoriProduk from '../../../components/Produk/UpdateKategoriProduk';
 import CreateProduk from '../../../components/Produk/CreateProduk';
 import UpdateProduk from '../../../components/Produk/UpdateProduk';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {AppNavProps} from '..';
 
 export type ProductStackParamList = {
-  ListProduk: undefined;
+  ProdukHome: undefined;
   CreateKategoriProduk: undefined;
   UpdateKategoriProduk: {categoryId: number};
   CreateProduk: undefined;
@@ -24,7 +25,7 @@ type IProdukRoutes = {
 };
 
 export const rootProdukRoutes: IProdukRoutes[] = [
-  {name: 'ListProduk', component: ProdukIndex, routeNiceName: 'List Produk'},
+  {name: 'ProdukHome', component: ProdukHome, routeNiceName: 'List Produk'},
   {
     name: 'CreateKategoriProduk',
     component: CreateKategoriProduk,
@@ -47,32 +48,22 @@ export const rootProdukRoutes: IProdukRoutes[] = [
   },
 ];
 
-export type ProdukRootStackNavProps = CompositeScreenProps<
-  StackScreenProps<ProductStackParamList, any>,
-  AppNavProps
+export type ProdukScreenProps = {
+  [Properties in keyof ProductStackParamList]: NativeStackScreenProps<
+    ProductStackParamList,
+    keyof ProductStackParamList
+  >;
+};
+export type UpdateKategoriProdukNavProps = NativeStackScreenProps<
+  ProductStackParamList,
+  'UpdateKategoriProduk'
 >;
-export type ListProdukNavProps = CompositeScreenProps<
-  StackScreenProps<ProductStackParamList, 'ListProduk'>,
-  AppNavProps
->;
-export type CreateKategoriProdukNavProps = CompositeScreenProps<
-  StackScreenProps<ProductStackParamList, 'CreateKategoriProduk'>,
-  AppNavProps
->;
-export type UpdateKategoriProdukNavProps = CompositeScreenProps<
-  StackScreenProps<ProductStackParamList, 'UpdateKategoriProduk'>,
-  AppNavProps
->;
-export type CreateProdukNavProps = CompositeScreenProps<
-  StackScreenProps<ProductStackParamList, 'CreateProduk'>,
-  AppNavProps
->;
-export type UpdateProdukNavProps = CompositeScreenProps<
-  StackScreenProps<ProductStackParamList, 'UpdateProduk'>,
-  AppNavProps
+export type UpdateProdukNavProps = NativeStackScreenProps<
+  ProductStackParamList,
+  'UpdateProduk'
 >;
 
-const ProdukStack = createStackNavigator<ProductStackParamList>();
+const ProdukStack = createNativeStackNavigator<ProductStackParamList>();
 
 interface Props {}
 

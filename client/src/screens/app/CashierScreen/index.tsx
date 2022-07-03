@@ -1,8 +1,11 @@
 import React from 'react';
-import {AppNavProps, CashierRootNavProps} from '../index';
+// import {AppNavProps} from '../index';
 import CashierHome from '../../../components/Cashier';
-import {createStackNavigator, StackScreenProps} from '@react-navigation/stack';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
+// import {CompositeScreenProps} from '@react-navigation/native';
 
 export type CashierRootStackParamList = {
   CashierHome: {invoiceNumberRefundPart?: string};
@@ -18,14 +21,14 @@ export const rootCashierRoutes: ICashierRoutes[] = [
   {name: 'CashierHome', component: CashierHome, routeNiceName: 'Kasir'},
 ];
 
-export type CashierHomeNavProps = CompositeScreenProps<
-  StackScreenProps<CashierRootStackParamList, 'CashierHome'>,
-  AppNavProps
+export type CashierHomeNavProps = NativeStackScreenProps<
+  CashierRootStackParamList,
+  'CashierHome'
 >;
 
-const CashierStack = createStackNavigator<CashierRootStackParamList>();
+const CashierStack = createNativeStackNavigator<CashierRootStackParamList>();
 
-interface ICashierScreenProps extends CashierRootNavProps {}
+interface ICashierScreenProps {}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const CashierScreen = (props: ICashierScreenProps) => {

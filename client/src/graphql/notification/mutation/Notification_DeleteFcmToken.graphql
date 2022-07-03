@@ -1,0 +1,5 @@
+mutation Notification_DeleteFcmToken($fcm_token: String!) {
+  delete_active_fcm_tokens_by_pk(fcm_token: $fcm_token) {
+    fcm_token
+  }
+}

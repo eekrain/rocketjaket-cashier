@@ -1,6 +1,0 @@
-mutation Produk_DeleteProdukByPK($id: uuid!) {
-  delete_rocketjaket_product_by_pk(id: $id) {
-    id
-    name
-  }
-}

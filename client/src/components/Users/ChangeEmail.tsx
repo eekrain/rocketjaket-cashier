@@ -4,10 +4,10 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {useForm} from 'react-hook-form';
 import {RHTextInput} from '../../shared/components';
-import {Button, Box, Icon, useToast} from 'native-base';
+import {Button, Icon, useToast} from 'native-base';
 import Feather from 'react-native-vector-icons/Feather';
-import {auth} from '../../shared/utils';
 import {TOAST_TEMPLATE} from '../../shared/constants';
+import {useChangeEmail} from '@nhost/react';
 
 interface IDefaultValues {
   email: string;
@@ -42,6 +42,7 @@ const ChangeEmail = ({current_email}: Props) => {
     },
     resolver: yupResolver(schema),
   });
+  const {changeEmail} = useChangeEmail();
 
   const formStateEmail = watch('email');
   React.useEffect(() => {
@@ -55,26 +56,22 @@ const ChangeEmail = ({current_email}: Props) => {
 
   const handleSubmission = async (data: IDefaultValues) => {
     try {
-      await auth.changeEmail(data.email);
+      await changeEmail(data.email);
 
-      toast.show({
-        ...TOAST_TEMPLATE.success('Berhasil mengganti email.'),
-      });
+      toast.show(TOAST_TEMPLATE.success('Berhasil mengganti email.'));
     } catch (error) {
       console.log(
         '🚀 ~ file: ChangeEmail.tsx ~ line 65 ~ handleChangeEmail ~ error',
         error,
       );
-      toast.show({
-        ...TOAST_TEMPLATE.error('Gagal mengganti email.'),
-      });
+      toast.show(TOAST_TEMPLATE.error('Gagal mengganti email.'));
     }
   };
 
   return (
     <>
       <RHTextInput
-        type="Email"
+        type="text"
         name="email"
         control={control}
         errors={errors}

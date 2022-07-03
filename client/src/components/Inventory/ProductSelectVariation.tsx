@@ -30,10 +30,8 @@ const ProductSelectVariation = ({control, errors, setValue}: Props) => {
   const getAllVariantMetadata = useInventory_GetAllVariantMetadataQuery();
 
   const allVariantMetadata = useMemo(() => {
-    return (
-      getAllVariantMetadata.data?.rocketjaket_inventory_variant_metadata || []
-    );
-  }, [getAllVariantMetadata.data?.rocketjaket_inventory_variant_metadata]);
+    return getAllVariantMetadata.data?.inventory_variants_metadata || [];
+  }, [getAllVariantMetadata.data?.inventory_variants_metadata]);
 
   const variantCheckboxOptions = useMemo(() => {
     const map = new Map();

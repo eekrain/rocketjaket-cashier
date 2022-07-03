@@ -7,40 +7,28 @@ import {
   Button,
   Icon,
   useToast,
-  ScrollView,
   Modal,
   Badge,
+  useBreakpointValue,
+  Stack,
 } from 'native-base';
-import {Alert, RefreshControl} from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
+import {Alert, RefreshControl, ScrollView} from 'react-native';
 import {
-  ListProdukNavProps,
-  ProductStackParamList,
-} from '../../screens/app/ProdukScreen';
-import {
-  namedOperations,
-  Rocketjaket_Transaction_Status_Enum_Enum,
-  useProduk_DeleteProdukByPkMutation,
+  Transaction_Status_Enum_Enum,
   useStore_GetAllStoreQuery,
-  useStore_GetStoreByPkQuery,
   useTransaction_GetAllTransactionByStoreIdQuery,
 } from '../../graphql/gql-generated';
 import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {IconButtonDelete, ButtonEdit} from '../Buttons';
+import {ButtonEdit} from '../Buttons';
 import {myNumberFormat, useMyUser} from '../../shared/utils';
 import {useMyAppState} from '../../state';
-import {TOAST_TEMPLATE} from '../../shared/constants';
 import withAppLayout from '../Layout/AppLayout';
 import {useForm} from 'react-hook-form';
 import {UserRolesEnum} from '../../types/user';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {RHSelect} from '../../shared/components';
-import {
-  ListTransactionNavProps,
-  TransactionRootStackParamList,
-} from '../../screens/app/TransactionScreen';
+import {ListTransactionNavProps} from '../../screens/app/TransactionScreen';
 import dayjs from 'dayjs';
 
 export interface IDefaultValues {
@@ -50,7 +38,8 @@ export interface IDefaultValues {
 
 const defaultValues: IDefaultValues = {
   show_modal_change_toko: false,
-  store_id: null,
+  // store_id: null,
+  store_id: '1',
 };
 
 interface IActionProps {
@@ -78,6 +67,11 @@ const Action = ({invoice_number, navigation}: IActionProps) => {
 interface Props extends ListTransactionNavProps {}
 
 const Produk = ({navigation}: Props) => {
+  const tableWidth: number | 'full' = useBreakpointValue({
+    base: 1000,
+    lg: 'full',
+  });
+
   const myUser = useMyUser();
   const toast = useToast();
   const [isDataStoreReady, setDataStoreReady] = useState(false);
@@ -91,21 +85,13 @@ const Produk = ({navigation}: Props) => {
     defaultValues,
   });
   const selectedStoreId = watch('store_id');
+  const [selectedStoreName, setSelectedStoreName] = useState('');
 
   const getAllStore = useStore_GetAllStoreQuery();
   const storeSelectOptions = useMemo(() => {
-    const data = getAllStore.data?.rocketjaket_store || [];
+    const data = getAllStore.data?.stores || [];
     return data.map(store => ({label: store.name, value: store.id.toString()}));
-  }, [getAllStore.data?.rocketjaket_store]);
-
-  const getStoreActive = useStore_GetStoreByPkQuery({
-    variables: {
-      id: parseInt(selectedStoreId || '0', 10),
-    },
-  });
-  const dataStoreActive = useMemo(() => {
-    return getStoreActive.data?.rocketjaket_store_by_pk;
-  }, [getStoreActive.data?.rocketjaket_store_by_pk]);
+  }, [getAllStore.data?.stores]);
 
   const getAllTransaction = useTransaction_GetAllTransactionByStoreIdQuery({
     variables: {
@@ -113,35 +99,33 @@ const Produk = ({navigation}: Props) => {
     },
   });
 
-  const [deleteProdukMutation, _deleteProdukMutationResult] =
-    useProduk_DeleteProdukByPkMutation({
-      refetchQueries: [namedOperations.Query.Produk_GetAllProduk],
-    });
+  // const [deleteProdukMutation, _deleteProdukMutationResult] =
+  //   useProduk_DeleteProdukByPkMutation({
+  //     refetchQueries: [namedOperations.Query.Produk_GetAllProduk],
+  //   });
 
   const allTransaction = useMemo(() => {
-    const temp = getAllTransaction.data?.rocketjaket_transaction || [];
+    const temp = getAllTransaction.data?.transaction || [];
 
     const withComponent = temp.map(transaction => ({
       ...transaction,
-      handled_by: transaction.user.display_name,
+      handled_by: transaction.karyawan_name,
       total_transaction: myNumberFormat.rp(transaction.total_transaction),
-      profit: myNumberFormat.rp(
-        transaction.transaction_items.reduce(
-          (prevVal: number, currentVal) => prevVal + currentVal.profit,
-          0,
-        ),
+      profit: myNumberFormat.rp(transaction.total_profit),
+      created_at_formatted: dayjs(transaction?.created_at).format(
+        'D/M/YYYY H:mm',
       ),
-      created_at: dayjs(transaction?.created_at).format('D/M/YYYY H:mm'),
+      created_at_unix: dayjs(transaction?.created_at).unix(),
       transaction_status: (
         <Badge
           colorScheme={
             transaction.transaction_status_enum.transaction_status ===
-            Rocketjaket_Transaction_Status_Enum_Enum.Success
+            Transaction_Status_Enum_Enum.Success
               ? 'success'
               : transaction.transaction_status_enum.transaction_status ===
-                  Rocketjaket_Transaction_Status_Enum_Enum.Failed ||
+                  Transaction_Status_Enum_Enum.Failed ||
                 transaction.transaction_status_enum.transaction_status ===
-                  Rocketjaket_Transaction_Status_Enum_Enum.Refund
+                  Transaction_Status_Enum_Enum.ReturnAll
               ? 'danger'
               : 'warning'
           }>
@@ -156,69 +140,140 @@ const Produk = ({navigation}: Props) => {
       ),
     }));
     return withComponent;
-  }, [getAllTransaction.data?.rocketjaket_transaction, navigation]);
+  }, [getAllTransaction.data?.transaction, navigation]);
 
   useEffect(() => {
+    if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
+      myUser.updateStoreId(parseInt(selectedStoreId, 10));
+    }
     if (
       myUser.roles.includes(UserRolesEnum.administrator) &&
       !selectedStoreId
     ) {
       setValue('show_modal_change_toko', true);
-    } else if (
-      myUser.roles.includes(UserRolesEnum.administrator) &&
-      selectedStoreId
-    ) {
+    }
+    if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
       setValue('show_modal_change_toko', false);
     }
-    if (!isDataStoreReady) {
-      console.log(
-        '🚀 ~ file: index.tsx ~ line 227 ~ useEffect ~ nhostAuth.user.store_id',
-        myUser.store_id,
+  }, [myUser.roles, selectedStoreId]);
+
+  useEffect(() => {
+    if (!isDataStoreReady && myUser.store_id) {
+      setValue('store_id', myUser.store_id.toString());
+      setDataStoreReady(true);
+    } else if (
+      isDataStoreReady &&
+      !myUser.roles.includes(UserRolesEnum.administrator) &&
+      !myUser.store_id
+    ) {
+      Alert.alert(
+        'Akun Anda Belum Terdaftar',
+        'Akun anda belum terdaftar di store manapun! Silahkan kontak owner / admin untuk mendaftarkan akun anda ke penempatan toko sesuai.',
       );
-      if (myUser.store_id) {
-        setValue('store_id', myUser.store_id.toString());
-        setDataStoreReady(true);
-      } else if (!myUser.roles.includes(UserRolesEnum.administrator)) {
-        Alert.alert(
-          'Akun Anda Belum Terdaftar',
-          'Akun anda belum terdaftar di store manapun! Silahkan kontak owner / admin untuk mendaftarkan akun anda ke penempatan toko sesuai.',
-        );
-      }
     }
-  }, [isDataStoreReady, myUser, selectedStoreId, setValue]);
+  }, [
+    isDataStoreReady,
+    myUser.roles,
+    myUser.store_id,
+    selectedStoreId,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    const found = storeSelectOptions.find(val => val.value === selectedStoreId);
+    setSelectedStoreName(found?.label || '');
+  }, [selectedStoreId, storeSelectOptions]);
+
+  // return (
+  //   <ScrollView
+  //     refreshControl={
+  //       <RefreshControl
+  //         refreshing={false}
+  //         onRefresh={async () => await getAllTransaction.refetch()}
+  //       />
+  //     }>
+  //     <CustomTable
+  //       data={allTransaction}
+  //       rowKeysAccessor="invoice_number"
+  //       isLoading={getAllTransaction.loading}
+  //       tableSettings={{
+  //         mainSettings: {
+  //           tableWidth,
+  //           defaultSortFrom: 'desc',
+  //         },
+  //       }}
+  //       columns={[
+  //         {
+  //           Header: 'Invoice',
+  //           accessor: 'invoice_number',
+  //           widthRatio: 1,
+  //           isDisableSort: true,
+  //         },
+  //         {
+  //           Header: 'Dibuat',
+  //           accessor: 'created_at_formatted',
+  //           widthRatio: 1,
+  //           sortAs: 'created_at_unix',
+  //         },
+  //         {
+  //           Header: 'Total Transaksi',
+  //           accessor: 'total_transaction',
+  //           widthRatio: 1,
+  //         },
+  //         {
+  //           Header: 'Profit',
+  //           accessor: 'profit',
+  //           widthRatio: 1,
+  //           isSkip: !myUser.roles.includes(UserRolesEnum.administrator),
+  //         },
+  //         {Header: 'Diproses Oleh', accessor: 'handled_by', widthRatio: 1},
+  //         {Header: 'Status', accessor: 'transaction_status', widthRatio: 1},
+  //         {
+  //           Header: 'Aksi',
+  //           accessor: 'action',
+  //           widthRatio: 1,
+  //           isAction: true,
+  //           isDisableSort: true,
+  //         },
+  //       ]}
+  //     />
+  //   </ScrollView>
+  // );
 
   return (
     <ScrollView
       refreshControl={
         <RefreshControl
           refreshing={false}
-          onRefresh={() => {
-            getAllTransaction.refetch();
-          }}
+          onRefresh={async () => await getAllTransaction.refetch()}
         />
       }>
-      <Modal
-        isOpen={watch('show_modal_change_toko')}
-        onClose={() => setValue('show_modal_change_toko', false)}>
-        <Modal.Content maxWidth="400px">
-          <Modal.CloseButton />
-          <Modal.Header>Pilih Toko</Modal.Header>
-          <Box p="3">
-            <RHSelect
-              selectOptions={storeSelectOptions}
-              control={control}
-              errors={errors}
-              name="store_id"
-              label="Toko"
-            />
-          </Box>
-        </Modal.Content>
-      </Modal>
-      <Box w="full" paddingBottom={300}>
-        <HStack alignItems="center" mb="10">
-          <HStack space="4" alignItems="center">
+      <Box>
+        <Modal
+          isOpen={watch('show_modal_change_toko')}
+          onClose={() => setValue('show_modal_change_toko', false)}>
+          <Modal.Content maxWidth="400px">
+            <Modal.CloseButton />
+            <Modal.Header>Pilih Toko</Modal.Header>
+            <Box p="3">
+              <RHSelect
+                selectOptions={storeSelectOptions}
+                control={control}
+                errors={errors}
+                name="store_id"
+                label="Toko"
+              />
+            </Box>
+          </Modal.Content>
+        </Modal>
+        <Box w="full" paddingBottom={'20'}>
+          <Stack
+            direction={{base: 'column', md: 'row'}}
+            space="4"
+            alignItems={{base: 'flex-start', md: 'center'}}
+            mb="10">
             <Heading fontSize="xl">
-              List Semua Transaksi di Toko {dataStoreActive?.name}
+              List Semua Transaksi di Toko {selectedStoreName}
             </Heading>
             {myUser.roles.includes(UserRolesEnum.administrator) && (
               <Button
@@ -228,50 +283,54 @@ const Produk = ({navigation}: Props) => {
                 Ganti Toko
               </Button>
             )}
-          </HStack>
-        </HStack>
+          </Stack>
 
-        <CustomTable
-          isLoading={
-            getAllTransaction.loading || _deleteProdukMutationResult.loading
-          }
-          data={allTransaction}
-          headerHeight={90}
-          rowHeight={70}
-          defaultSortFrom="desc"
-          columns={[
-            {
-              Header: 'Invoice',
-              accessor: 'invoice_number',
-              widthRatio: 1,
-              isDisableSort: true,
-            },
-            {
-              Header: 'Dibuat',
-              accessor: 'created_at',
-              widthRatio: 1,
-            },
-            {
-              Header: 'Total Transaksi',
-              accessor: 'total_transaction',
-              widthRatio: 1,
-            },
-            {
-              Header: 'Profit',
-              accessor: 'profit',
-              widthRatio: 1,
-            },
-            {Header: 'Diproses Oleh', accessor: 'handled_by', widthRatio: 1},
-            {Header: 'Status', accessor: 'transaction_status', widthRatio: 1},
-            {
-              Header: 'Aksi',
-              accessor: 'action',
-              widthRatio: 1,
-              isAction: true,
-              isDisableSort: true,
-            },
-          ]}
-        />
+          <CustomTable
+            data={allTransaction}
+            rowKeysAccessor="invoice_number"
+            isLoading={getAllTransaction.loading}
+            tableSettings={{
+              mainSettings: {
+                tableWidth,
+                defaultSortFrom: 'desc',
+              },
+            }}
+            columns={[
+              {
+                Header: 'Invoice',
+                accessor: 'invoice_number',
+                widthRatio: 1,
+                isDisableSort: true,
+              },
+              {
+                Header: 'Dibuat',
+                accessor: 'created_at_formatted',
+                widthRatio: 1,
+                sortAs: 'created_at_unix',
+              },
+              {
+                Header: 'Total Transaksi',
+                accessor: 'total_transaction',
+                widthRatio: 1,
+              },
+              {
+                Header: 'Profit',
+                accessor: 'profit',
+                widthRatio: 1,
+                isSkip: !myUser.roles.includes(UserRolesEnum.administrator),
+              },
+              {Header: 'Diproses Oleh', accessor: 'handled_by', widthRatio: 1},
+              {Header: 'Status', accessor: 'transaction_status', widthRatio: 1},
+              {
+                Header: 'Aksi',
+                accessor: 'action',
+                widthRatio: 1,
+                isAction: true,
+                isDisableSort: true,
+              },
+            ]}
+          />
+        </Box>
       </Box>
     </ScrollView>
   );

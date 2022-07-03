@@ -1,0 +1,13 @@
+query Produk_GetAllProduk {
+  products {
+    name
+    id
+    photo_id
+    capital_price
+    discount
+    selling_price
+    product_category {
+      name
+    }
+  }
+}

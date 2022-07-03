@@ -1,0 +1,27 @@
+table:
+  name: active_fcm_tokens
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - fcm_token
+  role: me
+select_permissions:
+- permission:
+    columns:
+    - fcm_token
+    filter: {}
+  role: me
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - fcm_token
+    filter: {}
+  role: me
+delete_permissions:
+- permission:
+    filter: {}
+  role: me

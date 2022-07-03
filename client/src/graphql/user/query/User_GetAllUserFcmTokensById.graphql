@@ -1,7 +1,0 @@
-query User_GetAllUserFcmTokensById($user_id: uuid!) {
-  users_fcm_token(where: {user_id: {_eq: $user_id}}) {
-    id
-    user_id
-    fcm_token
-  }
-}

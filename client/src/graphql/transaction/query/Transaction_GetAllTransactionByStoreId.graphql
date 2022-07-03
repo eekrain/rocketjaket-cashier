@@ -1,5 +1,5 @@
 query Transaction_GetAllTransactionByStoreId($store_id: Int) {
-  rocketjaket_transaction(where: {store_id: {_eq: $store_id}}) {
+  transaction(where: {store_id: {_eq: $store_id}}) {
     cash_change
     cash_in_amount
     created_at
@@ -7,16 +7,14 @@ query Transaction_GetAllTransactionByStoreId($store_id: Int) {
     payment_type
     store_id
     total_transaction
+    total_profit
     updated_at
-    user {
-      id
-      display_name
-    }
+    karyawan_name
     transaction_status_enum {
       transaction_status
       title
     }
-    transaction_items {
+    transaction_items(where: {transaction_status: {_eq: success}}) {
       id
       inventory_product_id
       product_name

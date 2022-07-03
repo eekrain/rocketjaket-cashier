@@ -1,7 +1,0 @@
-mutation User_DeleteFcmTokenByUserId($fcm_token: String, $user_id: uuid!) {
-  delete_users_fcm_token(
-    where: {fcm_token: {_eq: $fcm_token}, user_id: {_eq: $user_id}}
-  ) {
-    affected_rows
-  }
-}

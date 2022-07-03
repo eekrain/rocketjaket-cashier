@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useMemo} from 'react';
 import {
   Box,
   Text,
@@ -11,34 +11,29 @@ import {
   Heading,
   Button,
   Center,
+  useToast,
+  useBreakpointValue,
 } from 'native-base';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {myNumberFormat, useMyUser} from '../../shared/utils';
 import {UserRolesEnum} from '../../types/user';
 import {Control, UseFormSetValue} from 'react-hook-form';
-import {MyAvatar, RHTextInput} from '../../shared/components';
-import {IDefaultValues, IInventoryProductData} from '.';
+import {MyAvatar, MyImageViewer, RHTextInput} from '../../shared/components';
+import {clearReturn, IDefaultValues, IInventoryProductData} from '.';
 import {useMyCart} from '../../state';
 import {CashierHomeNavProps} from '../../screens/app/CashierScreen';
 import FastImage from 'react-native-fast-image';
+import {ButtonCancelDelete} from '../Buttons';
+import {useNavigation} from '@react-navigation/native';
+import {UpdateTransactionNavProps} from '../../screens/app/TransactionScreen';
+import {TOAST_TEMPLATE} from '../../shared/constants';
+import {ContextOptions} from 'flexsearch';
 
 interface Props {
   route: CashierHomeNavProps['route'];
   searchTerm: string;
   setValue: UseFormSetValue<IDefaultValues>;
-  dataStoreActive:
-    | {
-        __typename?: 'rocketjaket_store' | undefined;
-        id: number;
-        name: string;
-        latitude?: string | null | undefined;
-        longitude?: string | null | undefined;
-        address?: string | null | undefined;
-        created_at: any;
-        updated_at: any;
-      }
-    | null
-    | undefined;
+  selectedStoreName: string;
   control: Control<IDefaultValues, object>;
   errors: any;
   kategoriProdukTab: {
@@ -54,7 +49,7 @@ const ProductsContent = ({
   route,
   setValue,
   searchTerm,
-  dataStoreActive,
+  selectedStoreName,
   control,
   errors,
   kategoriProdukTab,
@@ -63,82 +58,126 @@ const ProductsContent = ({
   searchedInventoryProductData,
 }: Props) => {
   const myUser = useMyUser();
+  const myCart = useMyCart();
+  const roles = useMemo(() => myUser.roles, [myUser.roles]);
+  const navigation = useNavigation<UpdateTransactionNavProps['navigation']>();
+  const toast = useToast();
+
+  const isTrueWhenLg: boolean = useBreakpointValue({
+    base: false,
+    lg: true,
+  });
+
+  const content = () => (
+    <HStack
+      direction={'row'}
+      flexWrap="wrap"
+      w="full"
+      justifyContent="space-evenly"
+      mt="2"
+      flex={1}>
+      {!searchTerm
+        ? filteredByCategoryProductData.map(product => (
+            <ProductItem product={product} key={product.id} />
+          ))
+        : searchedInventoryProductData.map(product => (
+            <ProductItem product={product} key={product.id} />
+          ))}
+    </HStack>
+  );
 
   return (
-    <ScrollView w={['full', 'full', '4/6']}>
-      <Stack w="full" direction="column" space="3" pb="100">
-        {route.params?.invoiceNumberRefundPart && (
-          <Heading fontSize="xl" mb="2">
-            Refund Sebagian Invoice {route.params.invoiceNumberRefundPart}
-          </Heading>
-        )}
-        <HStack space="4" alignItems="center">
-          <Heading fontSize="xl">Toko {dataStoreActive?.name}</Heading>
-          {myUser.roles.includes(UserRolesEnum.administrator) && (
-            <Button
-              onPress={() => setValue('show_modal_change_toko', true)}
-              size="sm"
-              leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
-              Ganti Toko
-            </Button>
-          )}
-        </HStack>
+    <Stack w={{base: 'full', lg: '3/5'}} direction="column" space="3">
+      {isTrueWhenLg && (
+        <Box>
+          {route.params?.invoiceNumberRefundPart && (
+            <HStack alignItems="center" justifyContent="space-between">
+              <Heading fontSize="xl" mb="2">
+                Retur Invoice {route.params.invoiceNumberRefundPart}
+              </Heading>
 
-        <Box bgColor="white" borderRadius="lg">
-          <RHTextInput
-            control={control}
-            errors={errors}
-            label="Search..."
-            isDisableLabel={true}
-            name="search_term"
-            InputLeftElement={
-              <Icon
-                as={<FeatherIcon name="search" />}
-                size={5}
-                ml="2"
-                color="muted.400"
+              <ButtonCancelDelete
+                customText="Cancel Retur"
+                variant={'solid'}
+                onPress={() => {
+                  toast.show(
+                    TOAST_TEMPLATE.cancelled('Refund transaksi tidak jadi.'),
+                  );
+                  clearReturn(
+                    navigation,
+                    myCart,
+                    route.params?.invoiceNumberRefundPart,
+                  );
+                }}
               />
-            }
-          />
-        </Box>
-        {!searchTerm && (
-          <HStack>
-            <ScrollView horizontal={true} nestedScrollEnabled={true}>
-              {kategoriProdukTab.map((cat, i) => {
-                const borderColor =
-                  activeCategory === cat.value ? 'scarlet.400' : 'coolGray.200';
-
-                return (
-                  <Pressable
-                    key={`${cat.value}${cat.label}`}
-                    borderBottomWidth="3"
-                    borderColor={borderColor}
-                    alignItems="center"
-                    px="3"
-                    pb="2"
-                    cursor="pointer"
-                    onPress={() => {
-                      console.log(i);
-                      setValue('active_category', i === 0 ? null : cat.value);
-                    }}>
-                    <Text>{cat.label}</Text>
-                  </Pressable>
-                );
-              })}
-            </ScrollView>
+            </HStack>
+          )}
+          <HStack space="4" alignItems="center">
+            <Heading fontSize="xl">Toko {selectedStoreName}</Heading>
+            {roles.includes(UserRolesEnum.administrator) && (
+              <Button
+                onPress={() => setValue('show_modal_change_toko', true)}
+                size="sm"
+                leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
+                Ganti Toko
+              </Button>
+            )}
           </HStack>
-        )}
-        <HStack flexWrap="wrap" w="full" justifyContent="space-evenly" mt="2">
-          {!searchTerm
-            ? filteredByCategoryProductData.map(product => (
-                <ProductItem product={product} key={product.id} />
-              ))
-            : searchedInventoryProductData.map(product => (
-                <ProductItem product={product} key={product.id} />
-              ))}
+        </Box>
+      )}
+
+      <Box bgColor="white" borderRadius="lg">
+        <RHTextInput
+          control={control}
+          errors={errors}
+          label="Search..."
+          isDisableLabel={true}
+          name="search_term"
+          InputLeftElement={
+            <Icon
+              as={<FeatherIcon name="search" />}
+              size={5}
+              ml="2"
+              color="muted.400"
+            />
+          }
+        />
+      </Box>
+      {!searchTerm && (
+        <HStack>
+          <ScrollView horizontal={true} nestedScrollEnabled={true}>
+            {kategoriProdukTab.map((cat, i) => {
+              const borderColor =
+                activeCategory === cat.value ? 'scarlet.400' : 'coolGray.200';
+
+              return (
+                <Pressable
+                  key={`${cat.value}${cat.label}`}
+                  borderBottomWidth="3"
+                  borderColor={borderColor}
+                  alignItems="center"
+                  px="3"
+                  pb="2"
+                  onPress={() => {
+                    console.log(i);
+                    setValue('active_category', i === 0 ? null : cat.value);
+                  }}>
+                  <Text>{cat.label}</Text>
+                </Pressable>
+              );
+            })}
+          </ScrollView>
         </HStack>
-      </Stack>
-    </ScrollView>
+      )}
+
+      {isTrueWhenLg ? (
+        <ScrollView nestedScrollEnabled={true} scrollEnabled={true}>
+          {content()}
+        </ScrollView>
+      ) : (
+        content()
+      )}
+    </Stack>
   );
 };
 
@@ -153,20 +192,21 @@ const ProductItem = ({product}: {product: IInventoryProductData}) => {
 
   return (
     <Pressable
-      w="32%"
+      w={{base: '40%', sm: '32%'}}
       onPress={() => {
         if (product.available_qty > 0) {
           myCart.handleAddToCart({
-            product_inventory_id: product.id,
             product_name: product.product_name,
-            variant: product.variant,
-            product_photo_url: product.product_photo_url,
+            product_inventory_id: product.id,
+            product_name_concise: product.product_name_concise,
+            product_photo_id: product.product_photo_id,
             capital_price: product.capital_price,
             selling_price: product.selling_price,
             discount: product.discount,
             available_qty: product.available_qty,
             inventory_product_updated_at: product.inventory_product_updated_at,
             product_updated_at: product.product_updated_at,
+            qty: 1,
           });
         }
       }}>
@@ -182,8 +222,11 @@ const productItemInner = (product: IInventoryProductData) => {
         <MyAvatar
           fallbackText={product.product_name}
           source={{
-            uri: product.product_photo_url,
+            fileId: product.product_photo_id,
+            w: 150,
+            q: 80,
           }}
+          isDisableZoom={true}
           height={150}
           width="100%"
           borderTopRadius={10}

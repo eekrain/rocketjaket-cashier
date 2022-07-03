@@ -1,0 +1,30 @@
+mutation Transaction_ReturnTransaction(
+  $invoice_number: String!
+  $return_reason: String!
+  $return_type: TransactionReturnType!
+  $cash_in_amount: Int!
+  $total_transaction: Int!
+  $returned_items: [Transaction_ReturnedItem!]!
+  $karyawan_name: String!
+  $added_items: [transaction_items_input!]!
+) {
+  Transaction_ReturnTransaction(
+    invoice_number: $invoice_number
+    return_reason: $return_reason
+    return_type: $return_type
+    cash_in_amount: $cash_in_amount
+    total_transaction: $total_transaction
+    karyawan_name: $karyawan_name
+    returned_items: $returned_items
+    added_items: $added_items
+  ) {
+    invoice_number
+    isError
+    errorMessage
+    total_transaction
+    cash_in_amount
+    cash_change
+    return_type
+    total_transaction_compare
+  }
+}

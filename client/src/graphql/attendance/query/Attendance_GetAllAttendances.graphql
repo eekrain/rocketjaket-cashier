@@ -1,0 +1,30 @@
+query Attendance_GetAllAttendances(
+  $startDate: timestamptz!
+  $untilDate: timestamptz!
+) {
+  attendance(
+    where: {
+      user: {defaultRole: {_eq: "karyawan"}}
+      created_at: {_gt: $startDate, _lte: $untilDate}
+    }
+  ) {
+    id
+    photo_file_id
+    created_at
+    user {
+      displayName
+      users_metadata {
+        stores {
+          name
+        }
+      }
+    }
+  }
+  attendance_aggregate {
+    aggregate {
+      min {
+        created_at
+      }
+    }
+  }
+}

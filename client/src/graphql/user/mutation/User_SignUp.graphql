@@ -1,0 +1,20 @@
+mutation User_SignUp(
+  $defaultRole: String = "karyawan"
+  $defaultStore: Int = null
+  $displayName: String!
+  $email: String!
+  $password: String!
+) {
+  User_SignUp(
+    password: $password
+    email: $email
+    displayName: $displayName
+    defaultStore: $defaultStore
+    defaultRole: $defaultRole
+  ) {
+    email
+    errorMessage
+    isError
+    displayName
+  }
+}

@@ -1,4 +1,4 @@
-import {IInputProps, FormControl, TextField} from 'native-base';
+import {IInputProps, FormControl, Input} from 'native-base';
 import React from 'react';
 import {Control, Controller} from 'react-hook-form';
 import {myNumberFormat} from '../../utils';
@@ -14,6 +14,8 @@ interface IRHTextInputProps extends IInputProps {
   isDisableLabel?: boolean;
   overrideErrorName?: string;
   format?: TRHTextInputFormat;
+  overrideErrorMessage?: string;
+  overrideIsInvalid?: boolean;
 }
 
 const formatText = (text: string, format?: TRHTextInputFormat) => {
@@ -26,7 +28,7 @@ const formatText = (text: string, format?: TRHTextInputFormat) => {
   }
 };
 
-const RHTextInput = ({
+export const RHTextInput = ({
   name,
   label,
   control,
@@ -35,41 +37,44 @@ const RHTextInput = ({
   isDisableLabel,
   overrideErrorName,
   format,
+  overrideErrorMessage,
+  overrideIsInvalid,
   ...rest
 }: IRHTextInputProps) => {
   return (
     <FormControl
       isInvalid={
-        overrideErrorName ? overrideErrorName in errors : name in errors
+        overrideIsInvalid !== undefined
+          ? overrideIsInvalid
+          : overrideErrorName
+          ? overrideErrorName in errors
+          : name in errors
       }>
       {!isDisableLabel ? <FormControl.Label>{label}</FormControl.Label> : null}
       <Controller
         name={name}
         control={control}
-        render={({field: {onChange, value}}) => {
-          console.log('🚀 ~ file: index.tsx ~ line 68 ~ value', value);
-          return (
-            <TextField
-              onChangeText={val => {
-                console.log('🚀 ~ file: index.tsx ~ line 63 ~ val', val);
-                onChange(formatText(val, format));
-              }}
-              textTransform="none"
-              autoCapitalize="none"
-              value={value}
-              placeholder={placeholder ? placeholder : label}
-              {...rest}
-            />
-          );
-        }}
+        render={({field: {onChange, value}}) => (
+          <Input
+            onChangeText={val => {
+              console.log('🚀 ~ file: index.tsx ~ line 63 ~ val', val);
+              onChange(formatText(val, format));
+            }}
+            textTransform="none"
+            autoCapitalize="none"
+            value={value}
+            placeholder={placeholder ? placeholder : label}
+            {...rest}
+          />
+        )}
       />
       <FormControl.ErrorMessage>
-        {overrideErrorName
+        {overrideErrorMessage
+          ? overrideErrorMessage
+          : overrideErrorName
           ? errors[overrideErrorName]?.message
           : errors[name]?.message}
       </FormControl.ErrorMessage>
     </FormControl>
   );
 };
-
-export default RHTextInput;

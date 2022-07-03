@@ -5,14 +5,20 @@ import {
   Heading,
   Image,
   VStack,
-  Link,
+  // Link,
   Button,
   ScrollView,
+  useToast,
+  Center,
 } from 'native-base';
-import {SigninNavProps} from '../../../types/navigation';
+import {SigninNavProps} from '..';
 import {RHTextInput} from '../../../shared/components';
 import {useForm} from 'react-hook-form';
 import {useSignInEmailPassword} from '@nhost/react';
+import Config from 'react-native-config';
+import {TOAST_TEMPLATE} from '../../../shared/constants';
+import {useApolloClient} from '@apollo/client';
+import to from 'await-to-js';
 
 interface ISignInScreenProps extends SigninNavProps {}
 
@@ -22,22 +28,16 @@ interface IDefaultValues {
 }
 
 const defaultValues = {
-  username: 'ardianoption@gmail.com',
-  password: 'ardianeka',
+  username: Config.APP_ENV === 'development' ? 'ardianoption@gmail.com' : '',
+  password: Config.APP_ENV === 'development' ? 'ardianeka' : '',
 };
 
 const SignInScreen = ({navigation}: ISignInScreenProps) => {
-  const {
-    signInEmailPassword,
-    isLoading,
-    needsEmailVerification,
-    needsMfaOtp,
-    sendMfaOtp,
-    isSuccess,
-    isError,
-    error,
-    user,
-  } = useSignInEmailPassword();
+  const toast = useToast();
+
+  const client = useApolloClient();
+
+  const {signInEmailPassword} = useSignInEmailPassword();
 
   const {
     register,
@@ -46,29 +46,64 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
     formState: {errors},
   } = useForm({defaultValues});
 
-  const handleSubmission = async (data: IDefaultValues) => {
-    signInEmailPassword(data.username, data.password);
+  const handleSignIn = async (data: IDefaultValues) => {
+    console.log(
+      '🚀 ~ file: index.tsx ~ line 43 ~ handleSubmission ~ data',
+      data,
+    );
+
+    const [err, res] = await to(
+      signInEmailPassword(data.username, data.password),
+    );
+    if (err || !res) {
+      console.log('🚀 ~ file: index.tsx ~ line 58 ~ handleSignIn ~ err', err);
+    } else {
+      console.log('🚀 ~ file: index.tsx ~ line 58 ~ handleSignIn ~ res', res);
+      if (res.needsEmailVerification)
+        toast.show(TOAST_TEMPLATE.error(`Email anda belum terverifikasi!`));
+
+      if (res.isError) {
+        toast.show(TOAST_TEMPLATE.error(res?.error?.message || 'Error'));
+      }
+
+      if (res.isSuccess) await client.refetchQueries({include: 'active'});
+    }
   };
 
   return (
     <ScrollView>
-      <Box safeArea flex={1} p="2" py="8" w="md" mx="auto">
-        <Box justifyContent="center" alignItems="center">
+      <Box
+        safeArea
+        flex={1}
+        p={4}
+        pt="8"
+        w={{base: 'full', md: 'md'}}
+        mx="auto">
+        <Center>
           <Image
             source={require('../../../assets/images/logo.png')}
             alt="Logo Rocketjaketr"
             w="xs"
             resizeMode="contain"
           />
-          <Heading size="lg" fontWeight="600" color="coolGray.800">
-            Kasir
-          </Heading>
-          <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
-            Selamat Datang!
-          </Heading>
-        </Box>
+        </Center>
 
-        <VStack space={3} mt="5">
+        <VStack space={3} mt="5" bgColor={'white'} p="8" borderRadius={'xl'}>
+          <Center>
+            <Heading fontSize={'3xl'} fontWeight="600" color="coolGray.800">
+              Kasir
+            </Heading>
+          </Center>
+          <Center>
+            <Heading
+              mb="6"
+              color="coolGray.600"
+              fontWeight="medium"
+              fontSize={'xl'}>
+              Selamat Datang!
+            </Heading>
+          </Center>
+
           <RHTextInput
             name="username"
             label="Username"
@@ -83,7 +118,7 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
             label="Password"
           />
 
-          <Link
+          {/* <Link
             onTouchEnd={() => navigation.navigate('ForgotPassword')}
             _text={{
               fontSize: 'xs',
@@ -93,24 +128,13 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
             alignSelf="flex-end"
             mt="1">
             Forget Password?
-          </Link>
+          </Link> */}
           <Button
             mt="2"
             _text={{color: 'white'}}
-            onPress={handleSubmit(handleSubmission)}>
+            onPress={handleSubmit(handleSignIn)}>
             Sign in
           </Button>
-          {/* <Button
-            mt="2"
-            _text={{color: 'white'}}
-            onPress={async () =>
-              await auth.register({
-                email: defaultValues.username,
-                password: defaultValues.password,
-              })
-            }>
-            Register EKA
-          </Button> */}
         </VStack>
       </Box>
     </ScrollView>

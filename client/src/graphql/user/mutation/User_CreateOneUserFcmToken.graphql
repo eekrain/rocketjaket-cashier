@@ -1,8 +1,0 @@
-mutation User_CreateOneUserFcmToken(
-  $insert_users_fcm_token: users_fcm_token_insert_input!
-) {
-  insert_users_fcm_token_one(object: $insert_users_fcm_token) {
-    id
-    fcm_token
-  }
-}

@@ -1,0 +1,1 @@
+CREATE TABLE "public"."users_fcm_token" ("fcm_token" text NOT NULL, "user_id" uuid NOT NULL, PRIMARY KEY ("fcm_token") , FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON UPDATE cascade ON DELETE cascade);

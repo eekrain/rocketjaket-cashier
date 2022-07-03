@@ -21,7 +21,7 @@ interface IRHCheckBoxProps {
   extendedOnChange?: (itemValue?: any) => void;
 }
 
-const RHCheckBox = ({
+export const RHCheckbox = ({
   checkboxOptions,
   name,
   label,
@@ -69,5 +69,3 @@ const RHCheckBox = ({
     </FormControl>
   );
 };
-
-export default RHCheckBox;
