@@ -1,0 +1,83 @@
+table:
+  name: customers
+  schema: public
+array_relationships:
+- name: transaction_receipts
+  using:
+    foreign_key_constraint_on:
+      column: customer_id
+      table:
+        name: transaction_receipts
+        schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - name
+    - phone_number
+    - email
+    - created_at
+    - updated_at
+  role: administrator
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - email
+    - name
+    - phone_number
+    - created_at
+    - updated_at
+    - id
+  role: karyawan
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - email
+    - name
+    - phone_number
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - email
+    - name
+    - phone_number
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: karyawan
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - email
+    - name
+    - phone_number
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: administrator
+- permission:
+    check: {}
+    columns:
+    - email
+    - name
+    - phone_number
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: karyawan
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator

@@ -7,35 +7,35 @@ import {
   Icon,
   useToast,
   ScrollView,
+  Modal,
+  useBreakpointValue,
+  Stack,
+  IStackProps,
 } from 'native-base';
 import {Alert, RefreshControl} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import {
   useStore_GetAllStoreQuery,
-  useInventory_GetAllInventoryProductByStorePkQuery,
+  useInventory_GetAllInventoryProductByStoreIdQuery,
   namedOperations,
-  useInventory_BulkDeleteOneInventoryProductByPkMutation,
+  useInventory_DeleteOneInventoryProductByIdMutation,
 } from '../../graphql/gql-generated';
 import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
 import {ButtonEdit, IconButtonDelete} from '../Buttons';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {TOAST_TEMPLATE} from '../../shared/constants';
-import {RHSelect, MyAvatar} from '../../shared/components';
+import {RHSelect, MyImageViewer} from '../../shared/components';
 import {useMyAppState} from '../../state';
-import {
-  InventoryHomeNavProps,
-  InventoryRootStackParamList,
-} from '../../screens/app/InventoryScreen';
+import {InventoryScreenProps} from '../../screens/app/InventoryScreen';
 import {useForm} from 'react-hook-form';
-import {
-  getStorageFileUrlWImageTransform,
-  myNumberFormat,
-} from '../../shared/utils';
+import {myNumberFormat, useMyUser} from '../../shared/utils';
 import {nanoid} from 'nanoid/non-secure';
+import {TOAST_TEMPLATE} from '../../shared/constants';
+import to from 'await-to-js';
+import {UserRolesEnum} from '../../types/user';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 interface IActionProps {
-  navigation: StackNavigationProp<InventoryRootStackParamList, 'InventoryHome'>;
+  navigation: InventoryScreenProps['InventoryHome']['navigation'];
   handleDeleteKategori: () => Promise<void>;
   storeId: string;
   storeName: string;
@@ -70,36 +70,57 @@ const Action = ({
   );
 };
 
-interface InventoryForm {
+export interface IDefaultValues {
+  show_modal_change_toko: boolean;
   store_id: string | null;
 }
 
-const defaultValues: InventoryForm = {
+const defaultValues: IDefaultValues = {
+  show_modal_change_toko: false,
   store_id: null,
 };
 
-interface IListInventoryProps extends InventoryHomeNavProps {}
+type X = InventoryScreenProps['InventoryHome'];
+
+interface IListInventoryProps extends X {}
 
 const ListInventory = ({navigation}: IListInventoryProps) => {
+  const flexDirHeader: IStackProps['direction'] = useBreakpointValue({
+    base: 'column',
+    md: 'row',
+  });
+  const showWhenSm: boolean = useBreakpointValue({
+    base: true,
+    md: false,
+  });
+  const showWhenMd: boolean = useBreakpointValue({
+    base: false,
+    md: true,
+  });
+  const tableWidth: number | 'full' = useBreakpointValue({
+    base: 900,
+    md: 'full',
+  });
+  const myUser = useMyUser();
   const myAppState = useMyAppState();
   const getAllToko = useStore_GetAllStoreQuery();
   const toast = useToast();
-  const [isDataReady, setDataReady] = useState(false);
+  const [isDataStoreReady, setDataStoreReady] = useState(false);
 
   const {
     watch,
     control,
     setValue,
     formState: {errors},
-  } = useForm<InventoryForm>({
+  } = useForm({
     defaultValues,
   });
 
   const selectedStoreId = watch('store_id');
   const [selectedStoreName, setSelectedStoreName] = useState('');
 
-  const tokoSelectOptions = useMemo(() => {
-    const allToko = getAllToko.data?.rocketjaket_store || [];
+  const storeSelectOptions = useMemo(() => {
+    const allToko = getAllToko.data?.stores || [];
 
     const normalized = allToko.map(toko => ({
       value: toko.id.toString(),
@@ -107,45 +128,23 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
     }));
 
     return normalized;
-  }, [getAllToko.data?.rocketjaket_store]);
+  }, [getAllToko.data?.stores]);
 
-  useEffect(() => {
-    if (!isDataReady && tokoSelectOptions.length > 0) {
-      setValue('store_id', tokoSelectOptions?.[0].value);
-      setDataReady(true);
-      myAppState.setLoadingWholePage(false);
-    } else if (!isDataReady) {
-      myAppState.setLoadingWholePage(true);
-    }
-  }, [
-    getAllToko.loading,
-    isDataReady,
-    myAppState,
-    setValue,
-    tokoSelectOptions,
-  ]);
-
-  useEffect(() => {
-    const found = tokoSelectOptions.find(val => val.value === selectedStoreId);
-    setSelectedStoreName(found?.label || '');
-  }, [selectedStoreId, tokoSelectOptions]);
-
-  const getAllInventory = useInventory_GetAllInventoryProductByStorePkQuery({
+  const getAllInventory = useInventory_GetAllInventoryProductByStoreIdQuery({
     variables: {
       store_id: selectedStoreId ? parseInt(selectedStoreId, 10) : 0,
     },
-    fetchPolicy: 'cache-first',
   });
 
   const allInventoryProduct = useMemo(() => {
-    const products = getAllInventory.data?.rocketjaket_inventory_product || [];
+    const products = getAllInventory.data?.inventory_products || [];
 
     return products.map(pdk => ({
       id: pdk.id,
       product_name: pdk.product.name,
       product_label: `${pdk.product.product_category.name} / ${pdk.product.name}`,
       variant_values: pdk.inventory_product_variants
-        .map(variant => variant.inventory_variant_metadata.variant_value)
+        .map(variant => variant.inventory_variants_metadata.variant_value)
         .join(' / '),
       available_qty: myNumberFormat.thousandSeparated(pdk.available_qty),
       capital_price: myNumberFormat.rp(
@@ -158,38 +157,44 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
           ? pdk.override_selling_price
           : pdk.product.selling_price,
       ),
-      discount: myNumberFormat.rpDiscount(
+      discount: myNumberFormat.percentageDiscount(
         pdk?.override_discount ? pdk.override_discount : pdk.product.discount,
       ),
-      photo_url: pdk.product.photo_url,
+      photo_id: pdk.product.photo_id,
     }));
-  }, [getAllInventory.data?.rocketjaket_inventory_product]);
+  }, [getAllInventory.data?.inventory_products]);
 
   const [
     deleteInventoryProductMutation,
     _deleteInventoryProductMutationResult,
-  ] = useInventory_BulkDeleteOneInventoryProductByPkMutation({
+  ] = useInventory_DeleteOneInventoryProductByIdMutation({
     refetchQueries: [
-      namedOperations.Query.Inventory_GetAllInventoryProductByStorePK,
+      namedOperations.Query.Inventory_GetAllInventoryProductByStoreId,
     ],
   });
 
   const data = useMemo(() => {
-    const handleDeleteKategori = async (id: string, name: string) => {
+    const handleDeleteInventory = async (id: string, name: string) => {
       const mutation = async () => {
-        const res = await deleteInventoryProductMutation({
-          variables: {inventory_product_id: id},
-        });
-        if (res.errors) {
-          toast.show({
-            ...TOAST_TEMPLATE.error(`Hapus inventory produk ${name} gagal.`),
-          });
-        } else {
-          toast.show({
-            ...TOAST_TEMPLATE.success(
-              `Hapus inventory produk ${name} berhasil.`,
+        const [err, res] = await to(
+          deleteInventoryProductMutation({
+            variables: {inventory_product_id: id},
+          }),
+        );
+        if (err || !res) {
+          console.log(
+            '🚀 ~ file: ListInventory.tsx ~ line 184 ~ mutation ~ err',
+            err,
+          );
+          toast.show(
+            TOAST_TEMPLATE.error(
+              `Hapus inventory produk ${name} gagal.${err.message}`,
             ),
-          });
+          );
+        } else {
+          toast.show(
+            TOAST_TEMPLATE.success(`Hapus inventory produk ${name} berhasil.`),
+          );
         }
       };
       Alert.alert(
@@ -211,31 +216,28 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
         },
       );
     };
+
     const withAction = allInventoryProduct.map(val => ({
       ...val,
       photo: (
-        <MyAvatar
+        <MyImageViewer
           size={50}
           source={{
-            uri: getStorageFileUrlWImageTransform({
-              fileKey: val.photo_url,
-              w: 100,
-              q: 60,
-            }),
+            fileId: val.photo_id,
+            w: 50,
+            q: 60,
           }}
-          fallbackText={val.product_name}
         />
       ),
       component: (
         <Action
-          {...{
-            storeId: selectedStoreId || '',
-            storeName: selectedStoreName,
-            inventoryProductId: val.id,
-            handleDeleteKategori: () =>
-              handleDeleteKategori(val.id, val.product_label),
-            navigation,
-          }}
+          storeId={selectedStoreId || ''}
+          storeName={selectedStoreName}
+          inventoryProductId={val.id}
+          navigation={navigation}
+          handleDeleteKategori={() =>
+            handleDeleteInventory(val.id, val.product_label)
+          }
         />
       ),
     }));
@@ -243,84 +245,159 @@ const ListInventory = ({navigation}: IListInventoryProps) => {
     return withAction;
   }, [
     allInventoryProduct,
-    deleteInventoryProductMutation,
+    // deleteInventoryProductMutation,
     navigation,
     selectedStoreId,
     selectedStoreName,
     toast,
   ]);
 
+  useEffect(() => {
+    if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
+      myUser.updateStoreId(parseInt(selectedStoreId, 10));
+    }
+    if (
+      myUser.roles.includes(UserRolesEnum.administrator) &&
+      !selectedStoreId
+    ) {
+      setValue('show_modal_change_toko', true);
+    }
+    if (myUser.roles.includes(UserRolesEnum.administrator) && selectedStoreId) {
+      setValue('show_modal_change_toko', false);
+    }
+  }, [myUser.roles, selectedStoreId]);
+
+  useEffect(() => {
+    if (!isDataStoreReady && myUser.store_id) {
+      setValue('store_id', myUser.store_id.toString());
+      setDataStoreReady(true);
+    } else if (
+      isDataStoreReady &&
+      !myUser.roles.includes(UserRolesEnum.administrator) &&
+      !myUser.store_id
+    ) {
+      Alert.alert(
+        'Akun Anda Belum Terdaftar',
+        'Akun anda belum terdaftar di store manapun! Silahkan kontak owner / admin untuk mendaftarkan akun anda ke penempatan toko sesuai.',
+      );
+    }
+  }, [
+    isDataStoreReady,
+    myUser.roles,
+    myUser.store_id,
+    selectedStoreId,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    const found = storeSelectOptions.find(val => val.value === selectedStoreId);
+    setSelectedStoreName(found?.label || '');
+  }, [selectedStoreId, storeSelectOptions]);
+
   return (
     <ScrollView
       refreshControl={
         <RefreshControl
           refreshing={false}
-          onRefresh={() => {
-            getAllToko.refetch();
-            getAllInventory.refetch();
+          onRefresh={async () => {
+            await getAllToko.refetch();
+            await getAllInventory.refetch();
           }}
         />
       }>
-      <Box paddingBottom={300}>
-        <Box mb="4">
-          <Heading fontSize="xl" mb="2">
-            Pilih Toko
-          </Heading>
-          <Box bgColor="white" rounded="lg">
+      <Modal
+        isOpen={watch('show_modal_change_toko')}
+        onClose={() => setValue('show_modal_change_toko', false)}>
+        <Modal.Content maxWidth="400px">
+          <Modal.CloseButton />
+          <Modal.Header>Pilih Toko</Modal.Header>
+          <Box p="3">
             <RHSelect
-              selectOptions={tokoSelectOptions}
-              name="store_id"
+              selectOptions={storeSelectOptions}
               control={control}
               errors={errors}
-              label="Pilih Toko"
-              isDisableLabel={true}
-              w="full"
-              fontSize="lg"
-              placeholderTextColor="gray.400"
+              name="store_id"
+              label="Toko"
             />
           </Box>
-        </Box>
-        <HStack
+        </Modal.Content>
+      </Modal>
+      <Box pb={'56'}>
+        <Stack
+          direction={flexDirHeader}
           justifyContent="space-between"
-          alignItems="center"
+          alignItems={{base: 'flex-start', md: 'center'}}
+          space={{base: '4', md: undefined}}
           mb="10"
           mt="4">
-          <Heading fontSize="xl">
-            List Inventory / Stok Produk Toko {selectedStoreName}
-          </Heading>
-          <Button
-            onPress={() => {
-              if (selectedStoreId) {
-                myAppState.setLoadingWholePage(true);
-                navigation.navigate('CreateProductInventory', {
-                  storeId: parseInt(selectedStoreId, 10),
-                  storeName: selectedStoreName,
-                });
-              }
-            }}
-            size="lg"
-            leftIcon={<Icon as={Feather} name="plus-square" size="sm" />}>
-            Buat Baru
-          </Button>
-        </HStack>
+          <HStack space="4" alignItems="center">
+            <Heading fontSize="xl">
+              List Inventory / Stok Produk Toko {selectedStoreName}
+            </Heading>
+            {myUser.roles.includes(UserRolesEnum.administrator) && showWhenMd && (
+              <Button
+                onPress={() => setValue('show_modal_change_toko', true)}
+                size="sm"
+                leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
+                Ganti Toko
+              </Button>
+            )}
+          </HStack>
+
+          <HStack
+            justifyContent={'space-between'}
+            w={{base: 'full', md: undefined}}>
+            {myUser.roles.includes(UserRolesEnum.administrator) && showWhenSm && (
+              <Button
+                onPress={() => setValue('show_modal_change_toko', true)}
+                size="sm"
+                leftIcon={<Icon as={FeatherIcon} name="home" size="xs" />}>
+                Ganti Toko
+              </Button>
+            )}
+            <Button
+              onPress={() => {
+                if (selectedStoreId) {
+                  myAppState.setLoadingWholePage(true);
+                  navigation.navigate('CreateProductInventory', {
+                    storeId: parseInt(selectedStoreId, 10),
+                    storeName: selectedStoreName,
+                  });
+                }
+              }}
+              size="lg"
+              leftIcon={<Icon as={Feather} name="plus-square" size="sm" />}>
+              Buat Baru
+            </Button>
+          </HStack>
+        </Stack>
         <CustomTable
           isLoading={
-            getAllToko.loading || _deleteInventoryProductMutationResult.loading
+            getAllToko.loading ||
+            getAllInventory.loading ||
+            _deleteInventoryProductMutationResult.loading
           }
-          rowHeight={80}
+          tableSettings={{
+            mainSettings: {
+              tableWidth,
+              defaultSortFrom: 'asc',
+            },
+            row: {
+              rowHeight: 80,
+            },
+          }}
+          rowKeysAccessor="id"
           data={data}
-          tableWidth={1500}
           columns={[
             {
               Header: '',
               accessor: 'photo',
-              widthRatio: 0.3,
-              isAvatar: true,
+              widthRatio: 0.4,
               isDisableSort: true,
             },
             {Header: 'Produk', accessor: 'product_label', widthRatio: 1},
             {Header: 'Varian', accessor: 'variant_values', widthRatio: 0.4},
-            {Header: 'Tersedia', accessor: 'available_qty', widthRatio: 0.6},
+            {Header: 'Tersedia', accessor: 'available_qty', widthRatio: 0.4},
             {Header: 'Harga Modal', accessor: 'capital_price', widthRatio: 0.6},
             {Header: 'Harga Jual', accessor: 'selling_price', widthRatio: 0.6},
             {Header: 'Diskon', accessor: 'discount', widthRatio: 0.6},

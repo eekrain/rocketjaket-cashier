@@ -1,0 +1,20 @@
+query Inventory_GetInventoryProductById($id: uuid = "") {
+  inventory_products_by_pk(id: $id) {
+    available_qty
+    created_at
+    min_available_qty
+    override_capital_price
+    override_discount
+    override_selling_price
+    product_id
+    store_id
+    updated_at
+    inventory_product_variants {
+      inventory_variants_metadata {
+        id
+        variant_title
+        variant_value
+      }
+    }
+  }
+}

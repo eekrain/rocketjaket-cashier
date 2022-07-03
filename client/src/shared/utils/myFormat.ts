@@ -1,6 +1,11 @@
 import numbro from 'numbro';
 
 export const myNumberFormat = {
+  nullIfBelowZero: (num?: number | null) => {
+    if (!num) return null;
+    else if (num <= 0) return null;
+    else return num;
+  },
   thousandSeparated(num?: number | null, options?: 'nullAsEmpty') {
     if (!num && options === 'nullAsEmpty') {
       return '';
@@ -13,18 +18,18 @@ export const myNumberFormat = {
     if (!num && options === 'nullAsEmpty') {
       return '';
     } else if (!num) num = 0;
-    return numbro(num).format({
+    return numbro(num).formatCurrency({
       thousandSeparated: true,
-      prefix: 'Rp ',
+      currencySymbol: 'Rp ',
     });
   },
   rpDiscount(num?: number | null, options?: 'nullAsEmpty') {
     if (!num && options === 'nullAsEmpty') {
       return '';
     } else if (!num) num = 0;
-    return numbro(num).format({
+    return numbro(num).formatCurrency({
       thousandSeparated: true,
-      prefix: '- Rp ',
+      currencySymbol: '- Rp ',
     });
   },
   percentageDiscount(num?: number | null, options?: 'nullAsEmpty') {
@@ -83,16 +88,16 @@ export const myNumberFormat = {
       bareNumber.slice(7).length > 0 ? `-${bareNumber.slice(7)}` : '';
 
     if (format === 'with+62') {
-      console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ with+62');
+      // console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ with+62');
       return `+62 ${part1}${part2}${part3}`;
     } else if (format === 'with0') {
-      console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ with0');
+      // console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ with0');
       return `0${part1}${part2}${part3}`;
     } else if (format === 'withoutFirst') {
-      console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ withoutFirst');
+      // console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ withoutFirst');
       return `${part1}${part2}${part3}`;
     } else {
-      console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ else');
+      // console.log('🚀 ~ file: myNumberFormat.ts ~ line 75 ~ else');
       return text;
     }
   },

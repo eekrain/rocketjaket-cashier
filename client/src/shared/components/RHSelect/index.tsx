@@ -12,7 +12,7 @@ interface ISelectOptions {
 interface IRHSelectProps extends ISelectProps {
   selectOptions: ISelectOptions[];
   name: string;
-  label: string;
+  label?: string;
   control: Control<any>;
   errors: {
     [x: string]: any;
@@ -20,7 +20,7 @@ interface IRHSelectProps extends ISelectProps {
   isDisableLabel?: boolean;
 }
 
-const RHSelect = ({
+export const RHSelect = ({
   selectOptions,
   name,
   label,
@@ -68,5 +68,3 @@ const RHSelect = ({
     </FormControl>
   );
 };
-
-export default RHSelect;

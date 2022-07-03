@@ -1,6 +1,6 @@
 import React from 'react';
 import {Box, Heading, Image, VStack, Button} from 'native-base';
-import {ForgotPasswordNavProps} from '../../../types/navigation';
+import {ForgotPasswordNavProps} from '..';
 import {RHTextInput} from '../../../shared/components';
 import {useForm} from 'react-hook-form';
 

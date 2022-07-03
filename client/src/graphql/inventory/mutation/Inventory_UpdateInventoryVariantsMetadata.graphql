@@ -1,0 +1,17 @@
+mutation Inventory_UpdateInventoryVariantsMetadata(
+  $upsert: [inventory_variants_metadata_insert_input!]!
+  $deleteIds: [Int!]!
+) {
+  insert_inventory_variants_metadata(
+    objects: $upsert
+    on_conflict: {
+      constraint: inventory_variants_metadata_pkey
+      update_columns: [variant_title, variant_value]
+    }
+  ) {
+    affected_rows
+  }
+  delete_inventory_variants_metadata(where: {id: {_in: $deleteIds}}) {
+    affected_rows
+  }
+}

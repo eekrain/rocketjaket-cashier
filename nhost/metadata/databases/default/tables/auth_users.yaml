@@ -28,7 +28,7 @@ configuration:
     insert: insertUsers
     insert_one: insertUser
     select: users
-    select_aggregate: userAggregate
+    select_aggregate: usersAggregate
     select_by_pk: user
     update: updateUsers
     update_by_pk: updateUser
@@ -37,6 +37,13 @@ object_relationships:
   using:
     foreign_key_constraint_on: default_role
 array_relationships:
+- name: attendances
+  using:
+    foreign_key_constraint_on:
+      column: user_id
+      table:
+        name: attendance
+        schema: public
 - name: refreshTokens
   using:
     foreign_key_constraint_on:
@@ -58,3 +65,121 @@ array_relationships:
       table:
         name: user_providers
         schema: auth
+- name: users_metadata
+  using:
+    foreign_key_constraint_on:
+      column: user_id
+      table:
+        name: users_metadata
+        schema: public
+select_permissions:
+- permission:
+    columns:
+    - disabled
+    - email_verified
+    - is_anonymous
+    - phone_number_verified
+    - locale
+    - metadata
+    - active_mfa_type
+    - avatar_url
+    - default_role
+    - display_name
+    - otp_hash
+    - otp_method_last_used
+    - password_hash
+    - phone_number
+    - ticket
+    - totp_secret
+    - created_at
+    - last_seen
+    - otp_hash_expires_at
+    - ticket_expires_at
+    - updated_at
+    - email
+    - new_email
+    - id
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - disabled
+    - email_verified
+    - is_anonymous
+    - phone_number_verified
+    - locale
+    - metadata
+    - active_mfa_type
+    - avatar_url
+    - default_role
+    - display_name
+    - otp_hash
+    - otp_method_last_used
+    - password_hash
+    - phone_number
+    - ticket
+    - totp_secret
+    - created_at
+    - last_seen
+    - otp_hash_expires_at
+    - ticket_expires_at
+    - updated_at
+    - email
+    - new_email
+    - id
+    filter: {}
+  role: karyawan
+- permission:
+    columns:
+    - disabled
+    - email_verified
+    - is_anonymous
+    - phone_number_verified
+    - locale
+    - metadata
+    - active_mfa_type
+    - avatar_url
+    - default_role
+    - display_name
+    - otp_hash
+    - otp_method_last_used
+    - password_hash
+    - phone_number
+    - ticket
+    - totp_secret
+    - created_at
+    - last_seen
+    - otp_hash_expires_at
+    - ticket_expires_at
+    - updated_at
+    - email
+    - new_email
+    - id
+    filter:
+      id:
+        _eq: X-Hasura-User-Id
+  role: me
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - avatar_url
+    - default_role
+    - disabled
+    - display_name
+    - email
+    filter: {}
+  role: administrator
+- permission:
+    check: {}
+    columns:
+    - avatar_url
+    - display_name
+    filter:
+      id:
+        _eq: X-Hasura-User-Id
+  role: me
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator

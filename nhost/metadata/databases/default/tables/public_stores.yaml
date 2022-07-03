@@ -1,0 +1,107 @@
+table:
+  name: stores
+  schema: public
+array_relationships:
+- name: inventory_products
+  using:
+    foreign_key_constraint_on:
+      column: store_id
+      table:
+        name: inventory_products
+        schema: public
+- name: transactions
+  using:
+    foreign_key_constraint_on:
+      column: store_id
+      table:
+        name: transaction
+        schema: public
+- name: users_metadata
+  using:
+    foreign_key_constraint_on:
+      column: store_id
+      table:
+        name: users_metadata
+        schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - address
+    - created_at
+    - id
+    - is_record_attendance
+    - latitude
+    - longitude
+    - name
+    - updated_at
+    - working_hour_end
+    - working_hour_start
+  role: administrator
+select_permissions:
+- permission:
+    columns:
+    - is_record_attendance
+    - latitude
+    - longitude
+    - id
+    - address
+    - name
+    - created_at
+    - updated_at
+    - working_hour_end
+    - working_hour_start
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - is_record_attendance
+    - latitude
+    - longitude
+    - id
+    - address
+    - name
+    - created_at
+    - updated_at
+    - working_hour_end
+    - working_hour_start
+    filter: {}
+  role: karyawan
+- permission:
+    columns:
+    - is_record_attendance
+    - latitude
+    - longitude
+    - id
+    - address
+    - name
+    - created_at
+    - updated_at
+    - working_hour_end
+    - working_hour_start
+    filter:
+      users_metadata:
+        user_id:
+          _eq: X-Hasura-User-Id
+  role: me
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - is_record_attendance
+    - latitude
+    - longitude
+    - id
+    - address
+    - name
+    - created_at
+    - updated_at
+    - working_hour_end
+    - working_hour_start
+    filter: {}
+  role: administrator
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator

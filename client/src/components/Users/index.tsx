@@ -8,47 +8,37 @@ import {
   Icon,
   useToast,
   ScrollView,
+  useBreakpointValue,
 } from 'native-base';
 import {Alert, RefreshControl} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import {
-  useStore_GetAllStoreQuery,
-  useStore_DeleteStoreByPkMutation,
   namedOperations,
+  useUser_DeleteUserMutation,
   useUser_GetAllUserQuery,
-  useUser_BulkDeleteOneUserMutation,
 } from '../../graphql/gql-generated';
 import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
 import {ButtonEdit, IconButtonDelete} from '../Buttons';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useMyAppState} from '../../state';
 import withAppLayout from '../Layout/AppLayout';
-import {
-  ListUserNavProps,
-  UserRootStackParamList,
-} from '../../screens/app/UserScreen';
 import {MyAvatar} from '../../shared/components';
-import {
-  getStorageFileUrlWImageTransform,
-  getXHasuraContextHeader,
-  storage,
-} from '../../shared/utils';
-import {
-  PossibleDefaultRoleUser,
-  UserRolesEnum,
-  UserRoleValues,
-} from '../../types/user';
+import {PossibleDefaultRoleUser, UserRolesEnum} from '../../types/user';
+import {UserScreenProps} from '../../screens/app/UserScreen';
+import {useNavigation} from '@react-navigation/native';
+import {getXHasuraContextHeader, nhost} from '../../shared/utils';
+import to from 'await-to-js';
+import {TOAST_TEMPLATE} from '../../shared/constants';
 
 interface IActionProps {
   id: string;
-  navigation: StackNavigationProp<UserRootStackParamList, 'ListUser'>;
-  handleDeleteKategori: () => Promise<void>;
+  handleDeleteUser: () => Promise<void>;
 }
 
-const Action = ({id, navigation, handleDeleteKategori}: IActionProps) => {
+const Action = ({id, handleDeleteUser}: IActionProps) => {
+  // console.log('🚀 ~ file: index.tsx ~ line 31 ~ Action ~ id', id);
   const myAppState = useMyAppState();
+  const navigation = useNavigation<UserScreenProps['ListUser']['navigation']>();
 
   return (
     <HStack space="3">
@@ -59,18 +49,23 @@ const Action = ({id, navigation, handleDeleteKategori}: IActionProps) => {
           navigation.navigate('UpdateUser', {userId: id});
         }}
       />
-      <IconButtonDelete size="sm" onPress={() => handleDeleteKategori()} />
+      <IconButtonDelete size="sm" onPress={() => handleDeleteUser()} />
     </HStack>
   );
 };
 
-interface IUserHomeProps extends ListUserNavProps {}
+interface IUserHomeProps {}
 
-const UserHome = ({navigation}: IUserHomeProps) => {
-  const getAllUser = useUser_GetAllUserQuery();
+const UserHome = ({}: IUserHomeProps) => {
+  const tableWidth: number | 'full' = useBreakpointValue({
+    base: 1000,
+    lg: 'full',
+  });
+
   const toast = useToast();
+  const navigation = useNavigation<UserScreenProps['ListUser']['navigation']>();
 
-  const [deleteUser, _deleteUserResult] = useUser_BulkDeleteOneUserMutation({
+  const [deleteUser, _deleteUserResult] = useUser_DeleteUserMutation({
     ...getXHasuraContextHeader({role: 'administrator'}),
     refetchQueries: [
       namedOperations.Query.User_GetAllUser,
@@ -78,38 +73,39 @@ const UserHome = ({navigation}: IUserHomeProps) => {
     ],
   });
 
+  const getAllUser = useUser_GetAllUserQuery();
+
   const data = useMemo(() => {
     const handleDeleteUser = async (
-      account_id: string,
       user_id: string,
       name: string,
-      avatar_url: string,
+      avatarFileId: string,
     ) => {
       const mutation = async () => {
-        if (avatar_url && avatar_url !== '') {
-          await storage.delete(`/${avatar_url}`).catch(error => {
-            console.log(
-              '🚀 ~ file: index.tsx ~ line 108 ~ mutation - storage.delete ~ error',
-              error,
-            );
-          });
+        if (avatarFileId && avatarFileId !== '') {
+          const [err, res] = await to(
+            nhost.storage.delete({fileId: avatarFileId}),
+          );
+          if (err || !res) {
+            console.log('🚀 ~ file: index.tsx ~ line 90 ~ mutation ~ err', err);
+          } else {
+            console.log('🚀 ~ file: index.tsx ~ line 90 ~ mutation ~ res', res);
+          }
         }
-        const res = await deleteUser({variables: {account_id, user_id}}).catch(
-          error => {
+        const [err, res] = await to(
+          deleteUser({variables: {id: user_id}}).catch(error => {
             console.log(
               '🚀 ~ file: index.tsx ~ line 88 ~ mutation ~ error',
               error,
             );
-          },
+          }),
         );
-        if (res && res.errors) {
-          toast.show({
-            ...TOAST_TEMPLATE.error(`Hapus pengguna ${name} gagal.`),
-          });
+        if (err && !res) {
+          toast.show(TOAST_TEMPLATE.error(`Hapus pengguna ${name} gagal.`));
         } else {
-          toast.show({
-            ...TOAST_TEMPLATE.success(`Hapus pengguna ${name} berhasil.`),
-          });
+          toast.show(
+            TOAST_TEMPLATE.success(`Hapus pengguna ${name} berhasil.`),
+          );
         }
       };
       Alert.alert(
@@ -132,61 +128,51 @@ const UserHome = ({navigation}: IUserHomeProps) => {
       );
     };
     const temp = getAllUser.data?.users || [];
+    // console.log('🚀 ~ file: index.tsx ~ line 118 ~ data ~ temp', temp);
 
     const withAction = temp.map(val => ({
       ...val,
-      ...val.account,
+      // ...val.account,
       default_role: PossibleDefaultRoleUser.includes(
-        val.account?.default_role as UserRolesEnum,
+        val.defaultRole as UserRolesEnum,
       )
-        ? val.account?.default_role
+        ? val.defaultRole
         : null,
       store_name:
-        val.account?.default_role !== UserRolesEnum.administrator
-          ? val.store?.name || ''
+        val.defaultRole !== UserRolesEnum.administrator
+          ? val.users_metadata?.[0]?.stores?.name || ''
           : '',
       photo: (
         <MyAvatar
           size={50}
+          bgColor="white"
           source={{
-            uri: getStorageFileUrlWImageTransform({
-              fileKey: val.avatar_url,
-              w: 100,
-              q: 60,
-            }),
+            fileId: val.avatarUrl,
+            w: 50,
+            q: 60,
           }}
-          fallbackText={val?.display_name || ''}
+          fallbackText={val?.displayName || ''}
         />
       ),
       component: (
         <Action
-          {...{
-            id: val.id,
-            navigation,
-          }}
-          handleDeleteKategori={() =>
-            handleDeleteUser(
-              val.account?.id,
-              val.id,
-              val.display_name || '',
-              val.avatar_url || '',
-            )
+          id={val.id}
+          handleDeleteUser={() =>
+            handleDeleteUser(val.id, val.displayName, val.avatarUrl)
           }
         />
       ),
     }));
 
     return withAction;
-  }, [deleteUser, getAllUser.data?.users, navigation, toast]);
+  }, [getAllUser.data?.users, toast]); // deleteUser
 
   return (
     <ScrollView
       refreshControl={
         <RefreshControl
           refreshing={false}
-          onRefresh={() => {
-            getAllUser.refetch();
-          }}
+          onRefresh={async () => await getAllUser.refetch()}
         />
       }>
       <Box paddingBottom={300}>
@@ -206,8 +192,17 @@ const UserHome = ({navigation}: IUserHomeProps) => {
           </Button>
         </HStack>
         <CustomTable
+          rowKeysAccessor="id"
           isLoading={getAllUser.loading || _deleteUserResult.loading}
-          rowHeight={80}
+          tableSettings={{
+            mainSettings: {
+              tableWidth,
+              defaultSortFrom: 'asc',
+            },
+            row: {
+              rowHeight: 90,
+            },
+          }}
           data={data}
           columns={[
             {
@@ -217,7 +212,7 @@ const UserHome = ({navigation}: IUserHomeProps) => {
               isAvatar: true,
               isDisableSort: true,
             },
-            {Header: 'Nama', accessor: 'display_name', widthRatio: 1},
+            {Header: 'Nama', accessor: 'displayName', widthRatio: 1},
             {Header: 'Email', accessor: 'email', widthRatio: 1},
             {Header: 'Role', accessor: 'default_role', widthRatio: 1},
             {Header: 'Toko', accessor: 'store_name', widthRatio: 1},

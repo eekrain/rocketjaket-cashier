@@ -1,10 +1,10 @@
 mutation Inventory_CreateInventoryProduct(
-  $inventory_product: rocketjaket_inventory_product_insert_input!
+  $inventory_product: inventory_products_insert_input!
 ) {
-  insert_rocketjaket_inventory_product_one(object: $inventory_product) {
+  insert_inventory_products_one(object: $inventory_product) {
     id
     inventory_product_variants(order_by: {inventory_variant_metadata_id: asc}) {
-      inventory_variant_metadata {
+      inventory_variants_metadata {
         variant_title
       }
     }

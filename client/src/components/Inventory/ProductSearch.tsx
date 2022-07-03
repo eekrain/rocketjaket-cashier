@@ -1,11 +1,12 @@
 import React, {useMemo} from 'react';
 import {Box, Text, VStack, HStack, Pressable} from 'native-base';
 import {useWatch, Control} from 'react-hook-form';
-import {RHTextInput} from '../../shared/components';
+import {MyImageViewer, RHTextInput} from '../../shared/components';
 import {useProduk_GetAllProdukQuery} from '../../graphql/gql-generated';
 import {MyAvatar} from '../../shared/components';
 import {
   getStorageFileUrlWImageTransform,
+  nhost,
   useFlexSearch,
 } from '../../shared/utils';
 import {ButtonCancelDelete} from '../Buttons';
@@ -13,7 +14,7 @@ import {IProductInventoryDefaultValues} from './types';
 
 interface ISearchData {
   id: string;
-  photo_url?: string | null;
+  photo_id?: string | null;
   label: string;
   product_name: string;
 }
@@ -34,17 +35,23 @@ const ProductSearch = ({control, errors, setSelectedProductId}: Props) => {
     name: 'product_search_term',
   });
 
-  const getAllProducts = useProduk_GetAllProdukQuery();
+  const getAllProducts = useProduk_GetAllProdukQuery({
+    fetchPolicy: 'network-only',
+  });
   const allProducts = useMemo(
-    () => getAllProducts.data?.rocketjaket_product || [],
-    [getAllProducts.data?.rocketjaket_product],
+    () => getAllProducts.data?.products || [],
+    [getAllProducts.data?.products],
   );
+  // console.log(
+  //   '🚀 ~ file: ProductSearch.tsx ~ line 43 ~ ProductSearch ~ allProducts',
+  //   allProducts,
+  // );
 
   const searchData: ISearchData[] = useMemo(() => {
     return allProducts.map(pdk => ({
       id: pdk.id,
       label: `${pdk.product_category.name} / ${pdk.name}`,
-      photo_url: pdk.photo_url,
+      photo_id: pdk.photo_id,
       product_name: pdk.name,
     }));
   }, [allProducts]);
@@ -59,7 +66,7 @@ const ProductSearch = ({control, errors, setSelectedProductId}: Props) => {
       document: {
         index: 'label',
         // @ts-ignore: Unreachable code error
-        store: ['photo_url', 'id', 'label', 'product_name'],
+        store: ['photo_id', 'id', 'label', 'product_name'],
       },
     },
     {enrich: true},
@@ -93,16 +100,10 @@ const ProductSearch = ({control, errors, setSelectedProductId}: Props) => {
             px="4"
             py="2"
             space="6">
-            <MyAvatar
-              source={{
-                uri: getStorageFileUrlWImageTransform({
-                  fileKey: selectedProduct.photo_url || '',
-                  w: 100,
-                  q: 60,
-                }),
-              }}
-              fallbackText={selectedProduct.product_name}
+            <MyImageViewer
+              source={{fileId: selectedProduct.photo_id, w: 50}}
               size={50}
+              isDisableZoom={true}
             />
             <Text>{selectedProduct.label}</Text>
           </HStack>
@@ -165,15 +166,12 @@ const searchDropdown = (
                       index === searchResult.length - 1 ? 0 : 1
                     }
                     borderColor="gray.200">
-                    <MyAvatar
+                    <MyImageViewer
                       source={{
-                        uri: getStorageFileUrlWImageTransform({
-                          fileKey: item.photo_url || '',
-                          w: 100,
-                          q: 60,
-                        }),
+                        fileId: item.photo_id,
+                        w: 50,
                       }}
-                      fallbackText={item.product_name}
+                      isDisableZoom={true}
                       size={50}
                     />
                     <Text>{item.label}</Text>

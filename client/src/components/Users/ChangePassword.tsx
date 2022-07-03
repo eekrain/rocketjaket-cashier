@@ -4,20 +4,18 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {useForm} from 'react-hook-form';
 import {RHTextInput} from '../../shared/components';
-import {Button, Box, Icon, useToast} from 'native-base';
+import {Button, Icon, useToast} from 'native-base';
 import Feather from 'react-native-vector-icons/Feather';
-import {auth} from '../../shared/utils';
 import {TOAST_TEMPLATE} from '../../shared/constants';
+import {useChangePassword} from '@nhost/react';
 
 interface IDefaultValues {
-  oldPassword: string;
   newPassword: string;
   newPasswordConfirm: string;
 }
 
 const schema = yup
   .object({
-    oldPassword: yup.string().required('Password lama harus di isi'),
     newPassword: yup
       .string()
       .min(8, 'Minimal 8 karakter')
@@ -29,7 +27,6 @@ const schema = yup
   .required();
 
 const defaultValues: IDefaultValues = {
-  oldPassword: '',
   newPassword: '',
   newPasswordConfirm: '',
 };
@@ -49,6 +46,7 @@ const ChangePassword = ({}: Props) => {
     defaultValues,
     resolver: yupResolver(schema),
   });
+  const {changePassword} = useChangePassword();
 
   React.useEffect(() => {
     if (isSubmitSuccessful) {
@@ -59,19 +57,15 @@ const ChangePassword = ({}: Props) => {
 
   const handleChangePassword = async (data: IDefaultValues) => {
     try {
-      await auth.changePassword(data.oldPassword, data.newPasswordConfirm);
+      await changePassword(data.newPasswordConfirm);
 
-      toast.show({
-        ...TOAST_TEMPLATE.success('Berhasil mengganti password.'),
-      });
+      toast.show(TOAST_TEMPLATE.success('Berhasil mengganti password.'));
     } catch (error) {
       console.log(
         '🚀 ~ file: ChangePassword.tsx ~ line 65 ~ handleChangePassword ~ error',
         error,
       );
-      toast.show({
-        ...TOAST_TEMPLATE.error('Gagal mengganti password.'),
-      });
+      toast.show(TOAST_TEMPLATE.error('Gagal mengganti password.'));
     }
   };
 
@@ -86,13 +80,6 @@ const ChangePassword = ({}: Props) => {
         </Button>
       ) : (
         <>
-          <RHTextInput
-            type="password"
-            name="oldPassword"
-            control={control}
-            errors={errors}
-            label="Password Lama"
-          />
           <RHTextInput
             type="password"
             name="newPassword"

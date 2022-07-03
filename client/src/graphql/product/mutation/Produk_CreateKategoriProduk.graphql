@@ -1,0 +1,8 @@
+mutation Produk_CreateKategoriProduk(
+  $category: product_categories_insert_input = {}
+) {
+  insert_product_categories_one(object: $category) {
+    id
+    name
+  }
+}

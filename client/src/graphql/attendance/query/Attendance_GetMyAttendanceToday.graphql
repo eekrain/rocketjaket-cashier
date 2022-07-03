@@ -1,0 +1,16 @@
+query Attendance_GetMyAttendanceToday(
+  $working_hour_start: timestamptz!
+  $user_id: uuid!
+) {
+  attendance(
+    where: {
+      created_at: {_gte: $working_hour_start}
+      attendance_type: {_eq: enter}
+      user_id: {_eq: $user_id}
+    }
+  ) {
+    id
+    attendance_type
+    user_id
+  }
+}
