@@ -1,0 +1,99 @@
+table:
+  name: products
+  schema: public
+object_relationships:
+- name: product_category
+  using:
+    foreign_key_constraint_on: product_category_id
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - product_category_id
+    - capital_price
+    - selling_price
+    - discount
+    - created_at
+    - updated_at
+    - name
+    - photo_id
+  role: administrator
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - capital_price
+    - discount
+    - product_category_id
+    - selling_price
+    - name
+    - photo_id
+    - created_at
+    - updated_at
+    - id
+  role: karyawan
+select_permissions:
+- permission:
+    columns:
+    - capital_price
+    - discount
+    - product_category_id
+    - selling_price
+    - name
+    - photo_id
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - capital_price
+    - discount
+    - product_category_id
+    - selling_price
+    - name
+    - photo_id
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: karyawan
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - capital_price
+    - discount
+    - product_category_id
+    - selling_price
+    - name
+    - photo_id
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: administrator
+- permission:
+    check: {}
+    columns:
+    - capital_price
+    - discount
+    - product_category_id
+    - selling_price
+    - name
+    - photo_id
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: karyawan
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator
+- permission:
+    filter: {}
+  role: karyawan

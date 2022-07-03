@@ -1,0 +1,58 @@
+query Dashboard_GetDashboardData(
+  $startDate: String!
+  $untilDate: String!
+  $stores: [Int!] = 10
+  $mode: TimeMode = daily
+) {
+  Dashboard_GetDashboardData(
+    mode: $mode
+    startDate: $startDate
+    stores: $stores
+    untilDate: $untilDate
+  ) {
+    stores
+    isCanForwards
+    isCanBackwards
+    firstTransactionDate
+    totalCustomer
+    totalOmset
+    totalProfit
+    totalItemReturned
+    totalItemSold
+    totalOperasional
+    totalReturnedTransaction
+    totalSuccessTransaction
+    omsetChart {
+      datasets {
+        data
+        store_id
+      }
+      labels
+    }
+    profitChart {
+      datasets {
+        data
+        store_id
+      }
+      labels
+    }
+    itemSoldChart {
+      datasets {
+        data
+        store_id
+      }
+      labels
+    }
+    operasionalChart {
+      datasets {
+        data
+        store_id
+      }
+      labels
+    }
+    paymentTypePercentage {
+      name
+      total_transaksi
+    }
+  }
+}

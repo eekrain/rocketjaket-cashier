@@ -14,7 +14,6 @@ import {
   Text,
   Center,
 } from 'native-base';
-import {Image} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import withAppLayout from '../Layout/AppLayout';
 import {
@@ -29,7 +28,7 @@ import {
   getXHasuraContextHeader,
   myNumberFormat,
   renameFilenameWithAddedNanoid,
-  storage,
+  nhost,
 } from '../../shared/utils';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useForm} from 'react-hook-form';
@@ -38,13 +37,13 @@ import {
   SimpleDataGrid,
   DismissKeyboardWrapper,
   RHTextInput,
+  RHSelect,
+  RHNumberInput,
+  TRHNumberValueType,
+  MyImageViewer,
 } from '../../shared/components';
 import {ButtonBack, ButtonSave} from '../Buttons';
-import RHNumberInput, {
-  TRHNumberValueType,
-} from '../../shared/components/RHNumberInput';
 import {useMemo} from 'react';
-import RHSelect from '../../shared/components/RHSelect';
 import {
   launchCamera,
   Asset,
@@ -54,6 +53,7 @@ import {useState} from 'react';
 import {UpdateProdukNavProps} from '../../screens/app/ProdukScreen';
 import {useMyAppState} from '../../state';
 import dayjs from 'dayjs';
+import to from 'await-to-js';
 
 interface IDefaultValues {
   product_category_id: string;
@@ -61,6 +61,10 @@ interface IDefaultValues {
   capital_price: TRHNumberValueType;
   selling_price: TRHNumberValueType;
   discount: TRHNumberValueType;
+  photo: {
+    currentPhotoFileId: string;
+    asset?: Asset;
+  };
 }
 
 const schema = yup
@@ -94,6 +98,7 @@ const defaultValues: IDefaultValues = {
     formattedValue: '0',
     value: 0,
   },
+  photo: {currentPhotoFileId: ''},
 };
 
 interface AssetWithUpdate extends Asset {
@@ -124,16 +129,17 @@ const UpdateProduk = ({navigation, route}: Props) => {
     control,
     setValue,
     formState: {errors, isSubmitSuccessful},
+    reset,
+    watch,
   } = useForm({
     defaultValues,
     resolver: yupResolver(schema),
   });
+  const photo = watch('photo');
   console.log(
-    '🚀 ~ file: UpdateProduk.tsx ~ line 115 ~ UpdateProduk ~ isSubmitSuccessful',
-    isSubmitSuccessful,
+    '🚀 ~ file: UpdateProduk.tsx ~ line 139 ~ UpdateProduk ~ photo',
+    photo,
   );
-
-  const [productFoto, setProductFoto] = useState<AssetWithUpdate | null>(null);
 
   const [isErrorOnce, setErrorOnce] = useState(false);
   const getProdukData = useProduk_GetProdukByPkQuery({
@@ -144,148 +150,143 @@ const UpdateProduk = ({navigation, route}: Props) => {
   });
 
   useEffect(() => {
-    if (!isSubmitSuccessful) {
-      myAppState.setLoadingWholePage(getProdukData.loading);
-    } else {
+    myAppState.setLoadingWholePage(getProdukData.loading);
+
+    return () => {
       myAppState.setLoadingWholePage(false);
-    }
-  }, [getProdukData.loading, isSubmitSuccessful, myAppState]);
+    };
+  }, [getProdukData.loading]);
 
   useEffect(() => {
-    if (
-      getProdukData.data?.rocketjaket_product_by_pk === null &&
-      !isErrorOnce
-    ) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Produk tidak ditemukan.'),
-      });
+    const produkData = getProdukData.data?.products_by_pk;
+    if (produkData === null && !isErrorOnce) {
+      toast.show(TOAST_TEMPLATE.error('Produk tidak ditemukan.'));
       navigation.goBack();
       setErrorOnce(true);
     } else {
-      if (getProdukData.data?.rocketjaket_product_by_pk) {
-        setProductFoto({
-          isChanged: false,
-          defaultPhotoURL: getProdukData.data.rocketjaket_product_by_pk
-            ?.photo_url
-            ? getStorageFileUrlWImageTransform({
-                fileKey:
-                  getProdukData.data.rocketjaket_product_by_pk?.photo_url || '',
-                w: 500,
-                q: 60,
-              })
-            : undefined,
-        });
-        setValue('name', getProdukData.data?.rocketjaket_product_by_pk.name);
-        setValue(
-          'product_category_id',
-          getProdukData.data?.rocketjaket_product_by_pk.product_category_id.toString(),
-        );
-        setValue('capital_price', {
-          formattedValue: myNumberFormat.thousandSeparated(
-            getProdukData.data.rocketjaket_product_by_pk.capital_price,
-          ),
-          value: getProdukData.data.rocketjaket_product_by_pk.capital_price,
-        });
-        setValue('selling_price', {
-          formattedValue: myNumberFormat.thousandSeparated(
-            getProdukData.data?.rocketjaket_product_by_pk.selling_price,
-          ),
-          value: getProdukData.data?.rocketjaket_product_by_pk.selling_price,
-        });
-        setValue('discount', {
-          formattedValue: myNumberFormat.thousandSeparated(
-            getProdukData.data?.rocketjaket_product_by_pk?.discount || 0,
-          ),
-          value: getProdukData.data?.rocketjaket_product_by_pk?.discount,
+      if (produkData) {
+        reset({
+          name: produkData?.name || '',
+          product_category_id: produkData.product_category_id.toString(),
+          capital_price: {
+            formattedValue: myNumberFormat.thousandSeparated(
+              produkData.capital_price,
+            ),
+            value: produkData.capital_price,
+          },
+          selling_price: {
+            formattedValue: myNumberFormat.thousandSeparated(
+              produkData.selling_price,
+            ),
+            value: produkData.selling_price,
+          },
+          discount: {
+            formattedValue: myNumberFormat.thousandSeparated(
+              produkData.discount || 0,
+            ),
+            value: produkData.discount,
+          },
+          photo: {currentPhotoFileId: produkData.photo_id || ''},
         });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getProdukData.data?.rocketjaket_product_by_pk, isErrorOnce]);
+  }, [getProdukData.data?.products_by_pk, isErrorOnce]);
 
   const getAllKategoriProduk = useProduk_GetAllKategoriProdukQuery();
   const kategoriProduk = useMemo(() => {
     const kategori =
-      getAllKategoriProduk.data?.rocketjaket_product_category.map(cat => ({
+      getAllKategoriProduk.data?.product_categories.map(cat => ({
         value: cat.id.toString(),
         label: cat.name,
       })) || [];
     return kategori;
-  }, [getAllKategoriProduk.data?.rocketjaket_product_category]);
+  }, [getAllKategoriProduk.data?.product_categories]);
 
   const [updateProdukMutation, _updateProdukMutationResult] =
     useProduk_UpdateProdukByPkMutation({
       ...getXHasuraContextHeader({role: 'administrator'}),
-      refetchQueries: [namedOperations.Query.Produk_GetAllProduk],
+      refetchQueries: [
+        namedOperations.Query.Produk_GetAllProduk,
+        namedOperations.Query.Inventory_GetAllInventoryProductByStoreId,
+      ],
     });
 
   const handleSubmission = async (data: IDefaultValues) => {
-    console.log(
-      '🚀 ~ file: UpdateProduk.tsx ~ line 202 ~ handleSubmission ~ data',
-      data,
-    );
-    let photo_url =
-      getProdukData.data?.rocketjaket_product_by_pk?.photo_url || '';
-    if (productFoto?.isChanged && productFoto?.uri) {
-      try {
-        const finalFileName = renameFilenameWithAddedNanoid(
-          data.name,
-          productFoto.uri,
-        );
-        const image = {
-          type: productFoto.type,
-          uri: productFoto.uri,
-          name: finalFileName.modifiedName,
-        };
-        const res = await storage.put(
-          `/public/products/${finalFileName.modifiedName}`,
-          image,
-        );
-        if (
-          res?.key &&
-          getProdukData.data?.rocketjaket_product_by_pk?.photo_url !== ''
-        ) {
-          await storage.delete(
-            `/${getProdukData.data?.rocketjaket_product_by_pk?.photo_url}`,
-          );
-        }
-        photo_url = res?.key ? res.key : 'error key undefined';
-      } catch (error) {
+    let photo_id = getProdukData.data?.products_by_pk?.photo_id || '';
+    if (data.photo.asset?.uri) {
+      const finalFileName = renameFilenameWithAddedNanoid(
+        data.name,
+        data.photo.asset?.uri,
+      );
+      const image = {
+        type: data.photo.asset.type,
+        uri: data.photo.asset.uri,
+        name: finalFileName.modifiedName,
+      };
+      const [err, res] = await to(
+        nhost.storage.upload({
+          file: image,
+          bucketId: 'products',
+        }),
+      );
+      if (err || !res) {
         console.log(
-          '🚀 ~ file: CreateProduk.tsx ~ line 145 ~ handleSubmission ~ error',
-          error,
+          '🚀 ~ file: CreateProduk.tsx ~ line 145 ~ handleSubmission ~ err',
+          err,
         );
-        toast.show({
-          ...TOAST_TEMPLATE.error(
+        toast.show(
+          TOAST_TEMPLATE.error(
             `Gagal melakukan upload foto produk ${data.name}.`,
           ),
-        });
+        );
       }
+      if (
+        res?.fileMetadata?.id &&
+        getProdukData.data?.products_by_pk?.photo_id !== ''
+      ) {
+        const [err, res] = await to(
+          nhost.storage.delete({
+            fileId: getProdukData?.data?.products_by_pk?.photo_id || '',
+          }),
+        );
+        if (err || !res) {
+          console.log(
+            '🚀 ~ file: UpdateProduk.tsx ~ line 250 ~ handleSubmission ~ err',
+            err,
+          );
+        } else {
+          console.log(
+            '🚀 ~ file: UpdateProduk.tsx ~ line 250 ~ handleSubmission ~ res',
+            res,
+          );
+        }
+      }
+      photo_id = res?.fileMetadata?.id ? res?.fileMetadata?.id : photo_id;
     }
-    const res = await updateProdukMutation({
-      variables: {
-        id: route.params.productId,
-        name: data.name,
-        photo_url: photo_url,
-        capital_price: data.capital_price.value,
-        selling_price: data.selling_price.value,
-        discount: data.discount.value,
-        product_category_id: parseInt(data.product_category_id, 10),
-      },
-    });
-    if (res.errors) {
-      myAppState.setLoadingWholePage(false);
-      toast.show({
-        ...TOAST_TEMPLATE.error(
-          `Gagal melakukan update produk ${res.data?.update_rocketjaket_product_by_pk?.name}.`,
-        ),
-      });
+    const [err, res] = await to(
+      updateProdukMutation({
+        variables: {
+          id: route.params.productId,
+          product: {
+            name: data.name,
+            photo_id: photo_id,
+            capital_price: data.capital_price.value,
+            selling_price: data.selling_price.value,
+            discount: data.discount.value,
+            product_category_id: parseInt(data.product_category_id, 10),
+          },
+        },
+      }),
+    );
+    if (err || !res) {
+      toast.show(
+        TOAST_TEMPLATE.error(`Gagal melakukan update produk ${data.name}.`),
+      );
     } else {
-      toast.show({
-        ...TOAST_TEMPLATE.success(
-          `Berhasil update produk ${res.data?.update_rocketjaket_product_by_pk?.name}.`,
-        ),
-      });
+      toast.show(
+        TOAST_TEMPLATE.success(`Berhasil update produk ${data.name}.`),
+      );
       navigation.goBack();
     }
   };
@@ -300,9 +301,7 @@ const UpdateProduk = ({navigation, route}: Props) => {
       data => {
         if (data?.assets) {
           const asset = data.assets[0] || {};
-          setProductFoto(prev => {
-            return {...prev, ...asset, isChanged: true};
-          });
+          setValue('photo.asset', asset, {shouldDirty: true});
         }
       },
     );
@@ -317,12 +316,11 @@ const UpdateProduk = ({navigation, route}: Props) => {
       data => {
         if (data?.assets) {
           const asset = data.assets[0] || {};
-          setProductFoto(prev => ({...prev, ...asset, isChanged: true}));
+          setValue('photo.asset', asset, {shouldDirty: true});
         }
       },
     );
   };
-
   return (
     <ScrollView>
       <DismissKeyboardWrapper>
@@ -338,19 +336,21 @@ const UpdateProduk = ({navigation, route}: Props) => {
                 <HStack justifyContent="flex-end">
                   <Box>
                     <SimpleDataGrid
+                      gridWidth={220}
+                      titleWidthRatio={0.9}
+                      dividerWidthRatio={0.1}
+                      valueWidthRatio={1}
                       data={[
                         {
                           title: 'Dibuat tanggal',
                           value: dayjs(
-                            getProdukData.data?.rocketjaket_product_by_pk
-                              ?.created_at,
+                            getProdukData.data?.products_by_pk?.created_at,
                           ).format('D/M/YYYY H:mm'),
                         },
                         {
                           title: 'Terakhir diubah',
                           value: dayjs(
-                            getProdukData.data?.rocketjaket_product_by_pk
-                              ?.updated_at,
+                            getProdukData.data?.products_by_pk?.updated_at,
                           ).format('D/M/YYYY H:mm'),
                         },
                       ]}
@@ -401,36 +401,22 @@ const UpdateProduk = ({navigation, route}: Props) => {
                 <Center>
                   <Text fontWeight="bold">Foto Produk</Text>
                 </Center>
-                {productFoto?.isChanged ? (
-                  <Box h="40">
-                    <Image
-                      source={{uri: productFoto?.uri}}
-                      resizeMode="contain"
-                      style={{height: '100%'}}
-                    />
-                  </Box>
-                ) : productFoto?.defaultPhotoURL ? (
-                  <Box h="40">
-                    <Image
-                      source={{
-                        headers: {
-                          Pragma: 'no-cache',
-                        },
-                        uri: productFoto?.defaultPhotoURL,
-                      }}
-                      resizeMode="contain"
-                      style={{height: '100%'}}
-                    />
-                  </Box>
-                ) : (
-                  <Center h="40">
-                    <Image
-                      source={require('../../assets/images/image-not-found.png')}
-                      resizeMode="contain"
-                      style={{height: '100%'}}
-                    />
-                  </Center>
-                )}
+                <Center>
+                  <MyImageViewer
+                    source={{
+                      fileUrl: photo.asset?.uri,
+                      fileId: photo.asset?.uri
+                        ? undefined
+                        : photo.currentPhotoFileId
+                        ? photo.currentPhotoFileId
+                        : undefined,
+                      w: 180,
+                      q: 60,
+                    }}
+                    size={180}
+                    isDisableZoom={true}
+                  />
+                </Center>
                 <VStack space="2" justifyContent="center" alignItems="center">
                   <Box mb="4">
                     <Text>Belum ada foto</Text>

@@ -1,0 +1,10 @@
+query Transaction_GetLastTransactionNumber($created_at_gte: timestamptz = "") {
+  transaction(
+    where: { created_at: { _gte: $created_at_gte } }
+    order_by: { created_at: desc_nulls_last }
+    limit: 1
+  ) {
+    invoice_number
+    created_at
+  }
+}

@@ -1,17 +1,5 @@
-mutation Store_CreateStore(
-  $name: String!
-  $address: String
-  $latitude: String
-  $longitude: String
-) {
-  insert_rocketjaket_store_one(
-    object: {
-      name: $name
-      address: $address
-      latitude: $latitude
-      longitude: $longitude
-    }
-  ) {
+mutation Store_CreateStore($store: stores_insert_input = {}) {
+  insert_stores_one(object: $store) {
     id
     name
   }

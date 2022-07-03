@@ -1,11 +1,11 @@
 mutation Inventory_CreateInventoryVariantMetadata(
-  $objects: [rocketjaket_inventory_variant_metadata_insert_input!]!
+  $objects: [inventory_variants_metadata_insert_input!]!
 ) {
-  insert_rocketjaket_inventory_variant_metadata(objects: $objects) {
-    affected_rows
+  insert_inventory_variants_metadata(objects: $objects) {
     returning {
       id
       variant_title
     }
+    affected_rows
   }
 }

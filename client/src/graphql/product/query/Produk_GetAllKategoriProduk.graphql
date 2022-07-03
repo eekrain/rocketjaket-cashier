@@ -1,0 +1,7 @@
+query Produk_GetAllKategoriProduk {
+  product_categories(order_by: {name: asc}) {
+    id
+    name
+    description
+  }
+}

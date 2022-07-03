@@ -4,16 +4,21 @@ import {useForm} from 'react-hook-form';
 import {
   namedOperations,
   TransactionReceiptTypeEnum,
-  useCashier_SendReceiptToCustomerMutation,
+  useTransaction_SendReceiptToCustomerMutation,
 } from '../../graphql/gql-generated';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {myNumberFormat, myTextFormat} from '../../shared/utils';
-import {ISendReceiptFormDefaultValues} from '../Cashier/PaymentLanding';
+import {ISendReceiptFormDefaultValues} from '../Cashier/Payment/PaymentLandingModal';
 import SendReceiptForm from '../Cashier/SendReceiptForm';
+import to from 'await-to-js';
+import Config from 'react-native-config';
 
 const defaultValues: ISendReceiptFormDefaultValues = {
-  customer_name: '',
-  phone_number: '',
+  customer_name: Config.APP_ENV === 'development' ? 'Budi' : '',
+  phone_number:
+    Config.APP_ENV === 'development'
+      ? myNumberFormat.phoneNumber('1', 'withoutFirst')
+      : '',
 };
 
 interface Props {
@@ -47,7 +52,7 @@ const ModalSendReceipt = ({
   }, [customer_name, phone_number, setValue]);
 
   const [sendReceipt, _sendReceiptStatus] =
-    useCashier_SendReceiptToCustomerMutation({
+    useTransaction_SendReceiptToCustomerMutation({
       refetchQueries: [namedOperations.Query.Transaction_GetTransactionByPK],
     });
 
@@ -56,50 +61,42 @@ const ModalSendReceipt = ({
       '🚀 ~ file: PaymentLanding.tsx ~ line 61 ~ handleSubmission ~ data',
       data,
     );
-
-    const resReceipt = await sendReceipt({
-      variables: {
-        customer: {
-          name: myTextFormat.titleCase(data.customer_name),
-          phone_number: myNumberFormat.phoneNumber(
-            data.phone_number,
-            'cleanBareNumberOnly',
-          ),
+    const [err, res] = await to(
+      sendReceipt({
+        variables: {
+          customer: {
+            name: myTextFormat.titleCase(data.customer_name),
+            phone_number: myNumberFormat.phoneNumber(
+              data.phone_number,
+              'cleanBareNumberOnly',
+            ),
+          },
+          invoice_number: invoice_number,
+          receipt_type: TransactionReceiptTypeEnum.Whatsapp,
         },
-        invoice_number: invoice_number,
-        receipt_type: TransactionReceiptTypeEnum.Whatsapp,
-      },
-    }).catch(error => {
-      console.log(
-        '🚀 ~ file: PaymentLanding.tsx ~ line 80 ~ handleSubmission ~ error',
-        error,
-      );
-      toast.show({
-        ...TOAST_TEMPLATE.error(
-          `Gagal melakukan pengiriman nota untuk customer ${data.customer_name}.`,
-        ),
-      });
-    });
-    console.log(
-      '🚀 ~ file: PaymentLanding.tsx ~ line 63 ~ resReceipt',
-      resReceipt,
+      }),
     );
-    if (resReceipt && resReceipt.errors) {
+    console.log(
+      '🚀 ~ file: ModalSendReceipt.tsx ~ line 65 ~ handleSubmission ~ res',
+      res,
+    );
+
+    if (err || res.data?.Transaction_SendReceipt?.isError === true) {
       console.log(
-        '🚀 ~ file: PaymentLanding.tsx ~ line 80 ~ handleSubmission ~ resReceipt.errors',
-        resReceipt.errors,
+        '🚀 ~ file: ModalSendReceipt.tsx ~ line 76 ~ handleSubmission ~ err',
+        err,
       );
-      toast.show({
-        ...TOAST_TEMPLATE.error(
-          `Gagal melakukan pengiriman nota untuk customer ${data.customer_name}.`,
+      toast.show(
+        TOAST_TEMPLATE.error(
+          `Gagal melakukan pengiriman nota untuk customer ${data.customer_name}.\n${res?.data?.Transaction_SendReceipt?.errorMessage}`,
         ),
-      });
-    } else if (resReceipt && resReceipt.data) {
-      toast.show({
-        ...TOAST_TEMPLATE.success(
+      );
+    } else {
+      toast.show(
+        TOAST_TEMPLATE.success(
           `Berhasil melakukan pengiriman nota untuk customer ${data.customer_name}.`,
         ),
-      });
+      );
     }
     setModalReceiptOpen(false);
   };

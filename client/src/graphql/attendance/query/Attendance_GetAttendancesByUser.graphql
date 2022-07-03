@@ -1,0 +1,21 @@
+query Attendance_GetAttendancesByUser(
+  $startDate: timestamptz!
+  $untilDate: timestamptz!
+) {
+  users(where: {defaultRole: {_eq: "karyawan"}}) {
+    id
+    displayName
+    attendances(where: {created_at: {_gt: $startDate, _lte: $untilDate}}) {
+      id
+      created_at
+      photo_file_id
+    }
+  }
+  attendance_aggregate {
+    aggregate {
+      min {
+        created_at
+      }
+    }
+  }
+}

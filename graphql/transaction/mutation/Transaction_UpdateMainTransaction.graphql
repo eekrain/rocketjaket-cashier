@@ -1,0 +1,14 @@
+mutation Transaction_UpdateMainTransaction(
+  $invoice_number: String!
+  $main_transaction: transaction_set_input!
+) {
+  update_transaction_by_pk(
+    pk_columns: { invoice_number: $invoice_number }
+    _set: $main_transaction
+  ) {
+    invoice_number
+    payment_type
+    return_reason
+    total_transaction
+  }
+}

@@ -1,6 +1,146 @@
-actions: []
+actions:
+- name: Cashier_CreateTransaction
+  definition:
+    kind: synchronous
+    handler: '{{NHOST_BACKEND_URL}}/v1/functions/actions/Cashier_CreateTransaction'
+    forward_client_headers: true
+  permissions:
+  - role: karyawan
+  - role: administrator
+- name: Dashboard_GetDashboardData
+  definition:
+    kind: ""
+    handler: '{{NHOST_BACKEND_URL}}/v1/functions/actions/Dashboard_GetDashboardData'
+  permissions:
+  - role: administrator
+- name: Transaction_ReturnTransaction
+  definition:
+    kind: synchronous
+    handler: '{{NHOST_BACKEND_URL}}/v1/functions/actions/Transaction_ReturnTransaction'
+  permissions:
+  - role: administrator
+  - role: karyawan
+- name: Transaction_SendReceipt
+  definition:
+    kind: synchronous
+    handler: '{{NHOST_BACKEND_URL}}/v1/functions/actions/Transaction_SendReceipt'
+  permissions:
+  - role: karyawan
+  - role: administrator
+- name: User_SignUp
+  definition:
+    kind: synchronous
+    handler: '{{NHOST_BACKEND_URL}}/v1/functions/actions/User_SignUp'
+    forward_client_headers: true
+  permissions:
+  - role: administrator
+- name: Whatsapp_GetAuthStatus
+  definition:
+    kind: ""
+    handler: '{{NHOST_BACKEND_URL}}/v1/functions/actions/Whatsapp_GetAuthStatus'
+  permissions:
+  - role: administrator
+- name: Whatsapp_SignOut
+  definition:
+    kind: synchronous
+    handler: '{{NHOST_BACKEND_URL}}/v1/functions/actions/Whatsapp_SignOut'
+    forward_client_headers: true
+  permissions:
+  - role: administrator
 custom_types:
-  enums: []
-  input_objects: []
-  objects: []
+  enums:
+  - name: TransactionStatusEnum
+    values:
+    - description: Gagal
+      is_deprecated: null
+      value: failed
+    - description: ReturSemua
+      is_deprecated: null
+      value: return_all
+    - description: ReturSebagian
+      is_deprecated: null
+      value: return_part
+    - description: Sukses
+      is_deprecated: null
+      value: success
+  - name: TransactionPaymentTypeEnum
+    values:
+    - description: Cash
+      is_deprecated: null
+      value: CASH
+    - description: BCA
+      is_deprecated: null
+      value: EDC_BCA
+    - description: BRI
+      is_deprecated: null
+      value: EDC_BRI
+    - description: MANDIRI
+      is_deprecated: null
+      value: EDC_MANDIRI
+    - description: GOPAY
+      is_deprecated: null
+      value: EWALLET_GOPAY
+    - description: LINKAJA
+      is_deprecated: null
+      value: EWALLET_LINKAJA
+    - description: SHOPEEPAY
+      is_deprecated: null
+      value: EWALLET_SHOPEEPAY
+  - name: TransactionReceiptTypeEnum
+    values:
+    - description: Email
+      is_deprecated: null
+      value: email
+    - description: Whatsapp
+      is_deprecated: null
+      value: whatsapp
+  - name: TransactionReturnType
+    values:
+    - description: ReturSemua
+      is_deprecated: null
+      value: return_all
+    - description: ReturSebagian
+      is_deprecated: null
+      value: return_part
+  - name: TotalTransactionCompare
+    values:
+    - description: plus
+      is_deprecated: null
+      value: plus
+    - description: minus
+      is_deprecated: null
+      value: minus
+  - name: TimeMode
+    values:
+    - description: daily
+      is_deprecated: null
+      value: daily
+    - description: weekly
+      is_deprecated: null
+      value: weekly
+    - description: monthly
+      is_deprecated: null
+      value: monthly
+  input_objects:
+  - name: InventoryVariantMetadataInsertInput
+  - name: InventoryVariantMetadataNeedUpdateInput
+  - name: InventoryVariantsMetadaUpsertInput
+  - name: transaction_items_input
+  - name: CustomerInput
+  - name: Transaction_ReturnedItem
+  objects:
+  - name: User_SignUpOutput
+  - name: Whatsapp_GetAuthStatusOutput
+  - name: Whatsapp_SignOutOutput
+  - name: BulkUpdateVariantsMetadataOutput
+  - name: Cashier_CreateTransactionOutput
+  - name: sendReceiptOutput
+  - name: Transaction_SendReceiptOutput
+  - name: Transaction_RefundTransactionOutput
+  - name: Transaction_ReturnTransactionOutput
+  - name: Dashboard_GetDashboardDataOutput
+  - name: PaymentTypePercentage
+  - name: NumberChartData
+  - name: ChartPerStore
+  - name: NumberChartDatasets
   scalars: []

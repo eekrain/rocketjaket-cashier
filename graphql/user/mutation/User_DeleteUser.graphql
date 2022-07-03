@@ -1,0 +1,8 @@
+mutation User_DeleteUser($email: citext = "") {
+  deleteUsers(where: { email: { _eq: $email } }) {
+    affected_rows
+    returning {
+      id
+    }
+  }
+}

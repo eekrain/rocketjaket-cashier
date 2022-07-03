@@ -2,23 +2,23 @@ import create from 'zustand';
 import {createTrackedSelector} from 'react-tracked';
 
 export interface ICartItem {
-  product_photo_url: string;
+  product_photo_id?: string | null;
   product_inventory_id: string;
+  product_name_concise: string;
   product_name: string;
-  variant: string;
   capital_price: number;
   selling_price: number;
   discount: number;
   available_qty: number;
-  product_updated_at: any;
-  inventory_product_updated_at: any;
-  qty?: number;
+  product_updated_at?: any;
+  inventory_product_updated_at?: any;
+  qty: number;
   transaction_item_id?: string;
 }
 
 export interface ICart {
   cartItems: ICartItem[];
-  handleSetCartItem: (newItems: ICartItem[]) => void;
+  handleSetCartItems: (newItems: ICartItem[]) => void;
   handleAddToCart: (newItem: ICartItem) => void;
   handleRemoveFromCart: (removeItemId: string, isRefundPart?: boolean) => void;
   clearCart: () => void;
@@ -28,7 +28,7 @@ export interface ICart {
 
 const zustandCartStore = create<ICart>((set, get) => ({
   cartItems: [],
-  handleSetCartItem: newItems => {
+  handleSetCartItems: newItems => {
     set(state => ({
       ...state,
       cartItems: newItems,
@@ -43,10 +43,10 @@ const zustandCartStore = create<ICart>((set, get) => ({
         typeof isItemInCart?.qty === 'number' &&
         isItemInCart?.qty < isItemInCart.available_qty
       ) {
-        console.log(
-          '🚀 ~ file: cart.ts ~ line 44 ~ isItemInCart?.qty',
-          isItemInCart?.qty,
-        );
+        // console.log(
+        //   '🚀 ~ file: cart.ts ~ line 44 ~ isItemInCart?.qty',
+        //   isItemInCart?.qty,
+        // );
         set(state => ({
           ...state,
           cartItems: state.cartItems.map(item => {

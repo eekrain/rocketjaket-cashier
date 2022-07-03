@@ -7,34 +7,34 @@ import {
   Icon,
   useToast,
   ScrollView,
+  useBreakpointValue,
 } from 'native-base';
-import {Alert, RefreshControl} from 'react-native';
+import {Alert, RefreshControl, useWindowDimensions} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import {
-  ListProdukNavProps,
-  ProductStackParamList,
-} from '../../screens/app/ProdukScreen';
+import {ProdukScreenProps} from '../../screens/app/ProdukScreen';
 import {
   namedOperations,
-  useProduk_DeleteProdukByPkMutation,
   useProduk_GetAllProdukQuery,
+  useProduk_DeleteProdukByIdMutation,
 } from '../../graphql/gql-generated';
 import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {IconButtonDelete, ButtonEdit} from '../Buttons';
 import {
+  checkErrorMessage,
   getStorageFileUrlWImageTransform,
   myNumberFormat,
-  storage,
+  nhost,
 } from '../../shared/utils';
 import {useMyAppState} from '../../state';
-import FastImage from 'react-native-fast-image';
+import {useNavigation} from '@react-navigation/native';
+import {MyImageViewer} from '../../shared/components';
 import {TOAST_TEMPLATE} from '../../shared/constants';
+import to from 'await-to-js';
 
 interface IActionProps {
   id: string;
-  navigation: StackNavigationProp<ProductStackParamList, 'ListProduk'>;
+  navigation: ProdukScreenProps['ProdukHome']['navigation'];
   handleDeleteKategori: () => Promise<void>;
 }
 
@@ -55,36 +55,21 @@ const Action = ({id, navigation, handleDeleteKategori}: IActionProps) => {
 };
 
 interface IProductPhotoProps {
-  photo_url: string;
+  photo_id: string;
 }
 
-const ProductPhoto = ({photo_url}: IProductPhotoProps) => {
-  return (
-    <FastImage
-      // eslint-disable-next-line react-native/no-inline-styles
-      style={{width: 50, height: 50}}
-      source={
-        photo_url
-          ? {
-              uri: getStorageFileUrlWImageTransform({
-                fileKey: photo_url,
-                w: 100,
-                q: 60,
-              }),
-            }
-          : require('../../assets/images/image-not-found.png')
-      }
-      resizeMode={FastImage.resizeMode.cover}
-    />
-  );
-};
+interface Props {}
 
-interface Props extends ListProdukNavProps {}
-
-const Produk = ({navigation}: Props) => {
+const Produk = ({}: Props) => {
+  const tableWidth: number | 'full' = useBreakpointValue({
+    base: 900,
+    md: 'full',
+  });
+  const navigation =
+    useNavigation<ProdukScreenProps['ProdukHome']['navigation']>();
   const getAllProduk = useProduk_GetAllProdukQuery();
   const [deleteProdukMutation, _deleteProdukMutationResult] =
-    useProduk_DeleteProdukByPkMutation({
+    useProduk_DeleteProdukByIdMutation({
       refetchQueries: [namedOperations.Query.Produk_GetAllProduk],
     });
   const toast = useToast();
@@ -93,25 +78,33 @@ const Produk = ({navigation}: Props) => {
     const handleDeleteProduk = async (
       id: string,
       name: string,
-      product_photo_url: string,
+      photo_id?: string | null,
     ) => {
       const mutation = async () => {
-        if (product_photo_url && product_photo_url !== '') {
-          const res = await storage.delete(`/${product_photo_url}`);
-          console.log(
-            '🚀 ~ file: ListProduk.tsx ~ line 99 ~ mutation ~ res',
-            res,
-          );
+        if (photo_id && photo_id !== '') {
+          const [err, res] = await to(nhost.storage.delete({fileId: photo_id}));
+          if (err || !res) {
+            console.log(
+              '🚀 ~ file: ListProduk.tsx ~ line 87 ~ mutation ~ err',
+              err,
+            );
+          } else {
+            console.log(
+              '🚀 ~ file: ListProduk.tsx ~ line 87 ~ mutation ~ res',
+              res,
+            );
+          }
         }
-        const res = await deleteProdukMutation({variables: {id}});
-        if (res.errors) {
-          toast.show({
-            ...TOAST_TEMPLATE.error(`Delete produk ${name} gagal.`),
-          });
+        const [err, res] = await to(deleteProdukMutation({variables: {id}}));
+        if (err || !res) {
+          const errFk = checkErrorMessage.fkError(err.message)
+            ? `\nProduk ${name} masih ada di dalam inventory.`
+            : '';
+          toast.show(
+            TOAST_TEMPLATE.error(`Delete produk ${name} gagal.${errFk}`),
+          );
         } else {
-          toast.show({
-            ...TOAST_TEMPLATE.success(`Delete produk ${name} berhasil.`),
-          });
+          toast.show(TOAST_TEMPLATE.success(`Delete produk ${name} berhasil.`));
         }
       };
       Alert.alert(
@@ -133,50 +126,53 @@ const Produk = ({navigation}: Props) => {
         },
       );
     };
-    const temp = getAllProduk.data?.rocketjaket_product || [];
 
-    const withComponent = temp.map(produk => ({
-      ...produk,
-      capital_price: myNumberFormat.rp(produk.capital_price),
-      selling_price: myNumberFormat.rp(produk.selling_price),
-      discount: myNumberFormat.percentageDiscount(produk.discount || 0),
-      category: produk.product_category.name,
-      photo: (
-        <ProductPhoto photo_url={produk?.photo_url ? produk.photo_url : ''} />
-      ),
-      action: (
-        <Action
-          {...{
-            id: produk.id,
-            navigation,
-          }}
-          handleDeleteKategori={async () =>
-            handleDeleteProduk(produk.id, produk.name, produk.photo_url || '')
-          }
-        />
-      ),
-    }));
+    const temp = getAllProduk.data?.products || [];
+
+    const withComponent = temp.map(produk => {
+      return {
+        ...produk,
+        capital_price: myNumberFormat.rp(produk.capital_price),
+        selling_price: myNumberFormat.rp(produk.selling_price),
+        discount: myNumberFormat.percentageDiscount(produk.discount || 0),
+        category: produk.product_category.name,
+        photo: (
+          <MyImageViewer
+            size={50}
+            source={{
+              fileId: produk?.photo_id,
+              w: 50,
+              q: 60,
+            }}
+          />
+        ),
+        action: (
+          <Action
+            {...{
+              id: produk.id,
+              navigation,
+            }}
+            handleDeleteKategori={() =>
+              handleDeleteProduk(produk.id, produk.name, produk.photo_id)
+            }
+          />
+        ),
+      };
+    });
     return withComponent;
   }, [
-    deleteProdukMutation,
-    getAllProduk.data?.rocketjaket_product,
+    // deleteProdukMutation,
+    getAllProduk.data?.products,
     navigation,
     toast,
   ]);
-
-  useEffect(() => {
-    getAllProduk.refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <ScrollView
       refreshControl={
         <RefreshControl
           refreshing={false}
-          onRefresh={() => {
-            getAllProduk.refetch();
-          }}
+          onRefresh={async () => await getAllProduk.refetch()}
         />
       }>
       <Box w="full" paddingBottom={300}>
@@ -191,12 +187,20 @@ const Produk = ({navigation}: Props) => {
         </HStack>
 
         <CustomTable
+          tableSettings={{
+            mainSettings: {
+              tableWidth: tableWidth,
+              defaultSortFrom: 'asc',
+            },
+            row: {
+              rowHeight: 80,
+            },
+          }}
+          rowKeysAccessor="id"
           isLoading={
-            getAllProduk.loading || _deleteProdukMutationResult.loading
+            getAllProduk.loading // || _deleteProdukMutationResult.loading
           }
           data={data}
-          headerHeight={90}
-          rowHeight={70}
           columns={[
             {
               Header: 'Foto',

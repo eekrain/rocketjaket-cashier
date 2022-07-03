@@ -1,0 +1,5 @@
+query User_GetUserByEmail($email: citext!) {
+  users(limit: 1, where: { email: { _eq: $email } }) {
+    id
+  }
+}

@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:205797953198:android:4a3752dc4860ab2d9ee73f",
+        "mobilesdk_app_id": "1:205797953198:android:33e91cf974cb2bfb9ee73f",
         "android_client_info": {
-          "package_name": "com.rocketjaket.kasir"
+          "package_name": "com.kasirrocketjaket"
         }
       },
       "oauth_client": [

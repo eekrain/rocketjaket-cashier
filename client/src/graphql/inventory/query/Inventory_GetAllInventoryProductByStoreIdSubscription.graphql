@@ -1,0 +1,34 @@
+subscription Inventory_GetAllInventoryProductByStoreIdSubscription(
+  $store_id: Int!
+) {
+  inventory_products(
+    where: {store_id: {_eq: $store_id}}
+    order_by: {product: {name: asc}}
+  ) {
+    id
+    available_qty
+    min_available_qty
+    override_selling_price
+    override_discount
+    override_capital_price
+    updated_at
+    product {
+      name
+      capital_price
+      selling_price
+      discount
+      photo_id
+      updated_at
+      product_category {
+        id
+        name
+      }
+    }
+    inventory_product_variants(order_by: {inventory_variant_metadata_id: asc}) {
+      inventory_variants_metadata {
+        variant_title
+        variant_value
+      }
+    }
+  }
+}

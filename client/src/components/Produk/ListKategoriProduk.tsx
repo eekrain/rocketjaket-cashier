@@ -7,28 +7,28 @@ import {
   Icon,
   useToast,
   ScrollView,
+  useBreakpointValue,
 } from 'native-base';
 import {Alert, RefreshControl} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import {
-  ListProdukNavProps,
-  ProductStackParamList,
-} from '../../screens/app/ProdukScreen';
+import {ProdukScreenProps} from '../../screens/app/ProdukScreen';
 import {
   useProduk_GetAllKategoriProdukQuery,
-  useProduk_DeleteKategoriProdukMutation,
+  useProduk_DeleteKategoriProdukIdMutation,
   namedOperations,
 } from '../../graphql/gql-generated';
 import CustomTable from '../CustomTable';
 import {useMemo} from 'react';
 import {ButtonEdit, IconButtonDelete} from '../Buttons';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {useMyAppState} from '../../state';
+import {useNavigation} from '@react-navigation/native';
+import to from 'await-to-js';
+import {checkErrorMessage} from '../../shared/utils';
 
 interface IActionProps {
   id: number;
-  navigation: StackNavigationProp<ProductStackParamList, 'ListProduk'>;
+  navigation: ProdukScreenProps['ProdukHome']['navigation'];
   handleDeleteKategori: () => Promise<void>;
 }
 
@@ -49,31 +49,41 @@ const Action = ({id, navigation, handleDeleteKategori}: IActionProps) => {
   );
 };
 
-interface Props extends ListProdukNavProps {}
+interface Props {}
 
-const KategoriProduk = ({navigation}: Props) => {
+const KategoriProduk = ({}: Props) => {
+  const tableWidth: number | 'full' = useBreakpointValue({
+    base: 700,
+    md: 'full',
+  });
+
+  const navigation =
+    useNavigation<ProdukScreenProps['ProdukHome']['navigation']>();
   const getAllKategoriProduk = useProduk_GetAllKategoriProdukQuery();
   const toast = useToast();
 
   const [deleteKategoriMutation, _deleteKategoriMutationResult] =
-    useProduk_DeleteKategoriProdukMutation({
+    useProduk_DeleteKategoriProdukIdMutation({
       refetchQueries: [namedOperations.Query.Produk_GetAllKategoriProduk],
     });
 
   const data = useMemo(() => {
     const handleDeleteKategori = async (id: number, name: string) => {
       const mutation = async () => {
-        const res = await deleteKategoriMutation({variables: {id}});
-        if (res.errors) {
-          toast.show({
-            ...TOAST_TEMPLATE.error(`Delete kategori produk ${name} gagal.`),
-          });
-        } else {
-          toast.show({
-            ...TOAST_TEMPLATE.success(
-              `Delete kategori produk ${name} berhasil.`,
+        const [err, res] = await to(deleteKategoriMutation({variables: {id}}));
+        if (err || !res) {
+          const errFk = checkErrorMessage.fkError(err.message)
+            ? `\nMasih ada produk yang berada dalam kategori ${name}.`
+            : '';
+          toast.show(
+            TOAST_TEMPLATE.error(
+              `Delete kategori produk ${name} gagal.${errFk}`,
             ),
-          });
+          );
+        } else {
+          toast.show(
+            TOAST_TEMPLATE.success(`Delete kategori produk ${name} berhasil.`),
+          );
         }
       };
       Alert.alert(
@@ -95,7 +105,7 @@ const KategoriProduk = ({navigation}: Props) => {
         },
       );
     };
-    const temp = getAllKategoriProduk.data?.rocketjaket_product_category || [];
+    const temp = getAllKategoriProduk.data?.product_categories || [];
 
     const withAction = temp.map(val => ({
       ...val,
@@ -112,8 +122,8 @@ const KategoriProduk = ({navigation}: Props) => {
 
     return withAction;
   }, [
-    deleteKategoriMutation,
-    getAllKategoriProduk.data?.rocketjaket_product_category,
+    // deleteKategoriMutation,
+    getAllKategoriProduk.data?.product_categories,
     navigation,
     toast,
   ]);
@@ -123,9 +133,7 @@ const KategoriProduk = ({navigation}: Props) => {
       refreshControl={
         <RefreshControl
           refreshing={false}
-          onRefresh={() => {
-            getAllKategoriProduk.refetch();
-          }}
+          onRefresh={async () => await getAllKategoriProduk.refetch()}
         />
       }>
       <Box paddingBottom={300}>
@@ -142,9 +150,16 @@ const KategoriProduk = ({navigation}: Props) => {
         </HStack>
         <CustomTable
           isLoading={
-            getAllKategoriProduk.loading ||
-            _deleteKategoriMutationResult.loading
+            getAllKategoriProduk.loading
+            // || _deleteKategoriMutationResult.loading
           }
+          tableSettings={{
+            mainSettings: {
+              tableWidth: tableWidth,
+              defaultSortFrom: 'asc',
+            },
+          }}
+          rowKeysAccessor="id"
           data={data}
           columns={[
             {Header: 'Nama Kategori', accessor: 'name', widthRatio: 2},

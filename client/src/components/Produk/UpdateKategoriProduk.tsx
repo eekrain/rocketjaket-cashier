@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Box, HStack, VStack, Heading, ScrollView, useToast} from 'native-base';
 import withAppLayout from '../Layout/AppLayout';
 import {
@@ -12,9 +12,11 @@ import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {DismissKeyboardWrapper, RHTextInput} from '../../shared/components';
 import {ButtonSave, ButtonBack} from '../Buttons';
-import {UpdateKategoriProdukNavProps} from '../../screens/app/ProdukScreen';
 import {useEffect} from 'react';
 import {useMyAppState} from '../../state';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {UpdateKategoriProdukNavProps} from '../../screens/app/ProdukScreen';
+import to from 'await-to-js';
 
 interface IDefaultValues {
   name: string;
@@ -30,9 +32,12 @@ const schema = yup
 
 const defaultValues: IDefaultValues = {name: '', description: ''};
 
-interface Props extends UpdateKategoriProdukNavProps {}
+interface Props {}
 
-const UpdateKategoriProduk = ({navigation, route}: Props) => {
+const UpdateKategoriProduk = ({}: Props) => {
+  const navigation =
+    useNavigation<UpdateKategoriProdukNavProps['navigation']>();
+  const route = useRoute<UpdateKategoriProdukNavProps['route']>();
   const toast = useToast();
   const myAppState = useMyAppState();
   const [isErrorOnce, setErrorOnce] = useState(false);
@@ -50,39 +55,36 @@ const UpdateKategoriProduk = ({navigation, route}: Props) => {
   const getDataKategori = useProduk_GetKategoriProdukByPkQuery({
     variables: {id: route.params.categoryId},
   });
-  useEffect(() => {
-    if (!isSubmitSuccessful) {
-      myAppState.setLoadingWholePage(getDataKategori.loading);
-    } else {
-      myAppState.setLoadingWholePage(false);
-    }
-  }, [getDataKategori.loading, isSubmitSuccessful, myAppState]);
 
   useEffect(() => {
-    if (
-      getDataKategori.data?.rocketjaket_product_category_by_pk === null &&
-      !isErrorOnce
-    ) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'),
-      });
+    myAppState.setLoadingWholePage(getDataKategori.loading);
+
+    return () => {
+      myAppState.setLoadingWholePage(false);
+    };
+  }, [getDataKategori.loading]);
+
+  useEffect(() => {
+    const dataKategori = getDataKategori.data?.product_categories_by_pk;
+    if (dataKategori === null && !isErrorOnce) {
+      toast.show(TOAST_TEMPLATE.error('Kategori Produk tidak ditemukan.'));
       navigation.goBack();
       setErrorOnce(true);
     } else {
-      if (getDataKategori.data?.rocketjaket_product_category_by_pk) {
-        setValue(
-          'name',
-          getDataKategori.data?.rocketjaket_product_category_by_pk.name,
-        );
-        setValue(
-          'description',
-          getDataKategori.data?.rocketjaket_product_category_by_pk
-            .description || '',
-          {shouldDirty: false, shouldValidate: false},
-        );
+      if (dataKategori) {
+        reset({
+          name: dataKategori.name,
+          description: dataKategori.description,
+        });
       }
     }
-  }, [getDataKategori, isErrorOnce, navigation, setValue, toast]);
+  }, [
+    getDataKategori.data?.product_categories_by_pk,
+    isErrorOnce,
+    navigation,
+    setValue,
+    toast,
+  ]);
 
   const [updateKategoriMutation, _updateKategoriMutationResult] =
     useProduk_UpdateKategoriProdukMutation({
@@ -91,30 +93,32 @@ const UpdateKategoriProduk = ({navigation, route}: Props) => {
 
   const handleSubmission = async (data: IDefaultValues) => {
     if (!isDirty) {
-      toast.show({
-        ...TOAST_TEMPLATE.cancelled('Kategori produk tidak ada yang diubah.'),
-      });
+      toast.show(
+        TOAST_TEMPLATE.cancelled('Kategori produk tidak ada yang diubah.'),
+      );
       navigation.goBack();
       return;
     }
-    const res = await updateKategoriMutation({
-      variables: {
-        id: route.params.categoryId,
-        name: data.name,
-        description: data.description,
-      },
-    });
-    if (res.errors) {
-      toast.show({
-        ...TOAST_TEMPLATE.error('Gagal melakukan update kategori.'),
-      });
+    const [err, res] = await to(
+      updateKategoriMutation({
+        variables: {
+          id: route.params.categoryId,
+          category: {
+            name: data.name,
+            description: data.description,
+          },
+        },
+      }),
+    );
+    if (err || !res) {
+      toast.show(TOAST_TEMPLATE.error('Gagal melakukan update kategori.'));
     } else {
       reset();
-      toast.show({
-        ...TOAST_TEMPLATE.success(
-          `Berhasil merubah kategori ${res.data?.update_rocketjaket_product_category_by_pk?.name}.`,
+      toast.show(
+        TOAST_TEMPLATE.success(
+          `Berhasil merubah kategori ${res.data?.update_product_categories_by_pk?.name}.`,
         ),
-      });
+      );
       navigation.goBack();
     }
   };

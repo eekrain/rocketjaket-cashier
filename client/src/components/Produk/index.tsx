@@ -13,14 +13,13 @@ import withAppLayout from '../Layout/AppLayout';
 import ListProduk from './ListProduk';
 import ListKategoriProduk from './ListKategoriProduk';
 import {useMemo} from 'react';
-import {ListProdukNavProps} from '../../screens/app/ProdukScreen';
 
 const routes = [
   {key: 'first', title: 'Produk', component: ListProduk},
   {key: 'second', title: 'Kategori Produk', component: ListKategoriProduk},
 ];
 
-interface Props extends ListProdukNavProps {}
+interface Props {}
 
 const ProdukIndex = (props: Props) => {
   const [activeTab, setActiveTab] = React.useState(0);
@@ -43,7 +42,6 @@ const ProdukIndex = (props: Props) => {
             flex={1}
             alignItems="center"
             p="3"
-            cursor="pointer"
             onPress={() => {
               console.log(i);
               setActiveTab(i);

@@ -1,0 +1,33 @@
+query Dashboard_GetPeriodicChartData(
+  $startDate: timestamptz!
+  $untilDate: timestamptz!
+  $storeIds: [Int!]!
+) {
+  transaction(
+    where: {
+      created_at: { _gt: $startDate, _lte: $untilDate }
+      store_id: { _in: $storeIds }
+    }
+  ) {
+    total_profit
+    total_transaction
+    total_purchased_product
+    store_id
+    transaction_payment_type_enum {
+      title
+      payment_type
+    }
+  }
+  operational_costs_aggregate(
+    where: {
+      created_at: { _gt: $startDate, _lte: $untilDate }
+      store_id: { _in: $storeIds }
+    }
+  ) {
+    aggregate {
+      sum {
+        cost
+      }
+    }
+  }
+}

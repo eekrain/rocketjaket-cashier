@@ -1,34 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
+import {Pressable} from 'react-native';
 import {
   Button,
   HamburgerIcon,
-  Pressable,
-  Heading,
   HStack,
   Popover,
   Text,
   VStack,
   Icon,
-  IconButton,
   Badge,
   useContrastText,
 } from 'native-base';
-import {
-  useMyUser,
-  getStorageFileUrlWImageTransform,
-  getXHasuraContextHeader,
-} from '../../shared/utils';
+import {useMyUser, getXHasuraContextHeader} from '../../shared/utils';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {useState} from 'react';
-import {allAppRoutes, AppNavProps} from '../../screens/app';
+import {allAppRoutes, AppNavigationParamList} from '../../screens/app';
 import {MyAvatar} from '../../shared/components';
-import {useUser_DeleteFcmTokenByUserIdMutation} from '../../graphql/gql-generated';
-import {
-  useAccessToken,
-  useSignOut,
-  useAuthenticationStatus,
-} from '@nhost/react';
+import {useSignOut, useAuthenticationStatus} from '@nhost/react';
+import {useNavigation} from '@react-navigation/native';
+import {DrawerScreenProps} from '@react-navigation/drawer';
+import {useMyNotification} from '../../state';
+import {useNotification_DeleteFcmTokenMutation} from '../../graphql/gql-generated';
+import messaging from '@react-native-firebase/messaging';
+import to from 'await-to-js';
 
 export const customHeaderHeight: number = 70;
 
@@ -40,45 +35,38 @@ const getRouteNiceName = (routeName: string) => {
   return niceName ? niceName : '';
 };
 
-interface ICustomHeaderProps extends AppNavProps {}
+interface ICustomHeaderProps {}
 
-const CustomHeader = (props: ICustomHeaderProps) => {
-  const accessToken = useAccessToken();
+const CustomHeader = ({}: ICustomHeaderProps) => {
+  const navigation =
+    useNavigation<
+      DrawerScreenProps<AppNavigationParamList, any>['navigation']
+    >();
+  const route =
+    useNavigation<DrawerScreenProps<AppNavigationParamList, any>['route']>();
   const authStatus = useAuthenticationStatus();
   const myUser = useMyUser();
-  const {signOut, isSuccess: isSignoutSuccess} = useSignOut();
+  // console.log('🚀 ~ file: index.tsx ~ line 49 ~ CustomHeader ~ myUser', myUser);
+  const {signOut, isSuccess: _isSignoutSuccess} = useSignOut();
   const bgLight = 'white';
   const colorContrastLight = useContrastText(bgLight);
 
   const [isNotifPressed, setNotifPressed] = useState(false);
   const [isAvatarPressed, setAvatarPressed] = useState(false);
 
-  const [deleteFcmToken] = useUser_DeleteFcmTokenByUserIdMutation({
-    ...getXHasuraContextHeader({role: 'me', withUserId: true}),
+  const myNotif = useMyNotification();
+
+  const [deleteFcmToken] = useNotification_DeleteFcmTokenMutation({
+    ...getXHasuraContextHeader({role: 'me'}),
   });
 
-  const handleLogout = () => {
-    signOut();
-    // nhostAuth.setLoading(true);
-    // nhostAuth
-    //   .signOut(async () => {
-    //     const resDelete = await deleteFcmToken({
-    //       variables: {
-    //         user_id: nhostAuth.user.userId,
-    //         fcm_token: nhostAuth.fcmToken,
-    //       },
-    //     }).catch(error => {
-    //       console.error(
-    //         '🚀 ~ file: index.tsx ~ line 65 ~ .signOut ~ error',
-    //         error,
-    //       );
-    //     });
-    //     console.log(
-    //       '🚀 ~ file: index.tsx ~ line 65 ~ .signOut ~ resDelete',
-    //       resDelete,
-    //     );
-    //   })
-    //   .finally(() => nhostAuth.setLoading(false));
+  const handleLogout = async () => {
+    const fcm_token = await messaging().getToken();
+    const [err, res] = await to(deleteFcmToken({variables: {fcm_token}}));
+    if (err || !res) {
+      console.log('🚀 ~ file: index.tsx ~ line 72 ~ handleLogout ~ err', err);
+    }
+    await signOut();
   };
 
   return (
@@ -86,60 +74,47 @@ const CustomHeader = (props: ICustomHeaderProps) => {
       bgColor="milano_red.500"
       alignItems="center"
       justifyContent="space-between"
-      px="4"
+      pr="4"
       height={customHeaderHeight}>
-      <HStack space="6">
-        <Pressable onPress={() => props.navigation.toggleDrawer()}>
+      <Pressable onPress={() => navigation.toggleDrawer()}>
+        <HStack h="full" alignItems={'center'} pl="4" pr="10">
           <HamburgerIcon size="sm" color="white" />
+        </HStack>
+      </Pressable>
+      <HStack space="6" alignItems="center">
+        <Pressable
+          onPressIn={() => setNotifPressed(true)}
+          onPressOut={() => {
+            setNotifPressed(false);
+            navigation.navigate('Notification');
+          }}>
+          <VStack>
+            {myNotif.total_unread > 0 && (
+              <Badge
+                bgColor={isNotifPressed ? 'orange.300' : 'orange.500'}
+                rounded="full"
+                mb="-10px"
+                mr={-2}
+                zIndex={1}
+                variant="solid"
+                alignSelf="flex-end"
+                _text={{
+                  fontSize: 10,
+                }}>
+                {myNotif.total_unread}
+              </Badge>
+            )}
+            <Icon as={FeatherIcon} name="bell" size="lg" color="white" />
+          </VStack>
         </Pressable>
-        <Heading size="md" color="white">
-          {getRouteNiceName(props.route.name)}
-        </Heading>
-      </HStack>
-      <HStack space="4" alignItems="center">
-        <VStack>
-          <Badge
-            bgColor={isNotifPressed ? 'orange.300' : 'orange.500'}
-            rounded="full"
-            mb={-6}
-            mr={0}
-            zIndex={1}
-            variant="solid"
-            alignSelf="flex-end"
-            _text={{
-              fontSize: 12,
-            }}>
-            2
-          </Badge>
-          <IconButton
-            variant="ghost"
-            mx={{
-              base: 'auto',
-              md: 0,
-            }}
-            rounded="full"
-            p="2"
-            _icon={{as: FeatherIcon, name: 'bell', color: 'white'}}
-            onPressIn={() => setNotifPressed(true)}
-            onPressOut={() => setNotifPressed(false)}
-          />
-        </VStack>
         <Popover
           trigger={triggerProps => (
-            <Pressable
-              onPressIn={() => setAvatarPressed(true)}
-              onPressOut={() => setAvatarPressed(false)}
-              {...triggerProps}>
+            <Pressable {...triggerProps}>
               <MyAvatar
                 source={{
-                  uri: getStorageFileUrlWImageTransform({
-                    fileKey: myUser.avatarUrl,
-                    w: 100,
-                    q: 60,
-                  }),
-                  headers: {
-                    authorization: `Bearer ${accessToken}`,
-                  },
+                  fileUrl: myUser.avatarUrl,
+                  w: 150,
+                  q: 60,
                 }}
                 fallbackText={myUser.displayName || ''}
                 size={50}
@@ -147,6 +122,7 @@ const CustomHeader = (props: ICustomHeaderProps) => {
                 textColor={
                   isAvatarPressed ? 'milano_red.500' : 'milano_red.600'
                 }
+                isDisableZoom={true}
               />
             </Pressable>
           )}>
@@ -158,7 +134,7 @@ const CustomHeader = (props: ICustomHeaderProps) => {
               <VStack space="3">
                 <Button
                   onPress={() => {
-                    props.navigation.navigate('Profile');
+                    navigation.navigate('Profile');
                   }}
                   justifyContent="flex-start"
                   bg={bgLight}

@@ -22,7 +22,7 @@ interface IRHRadioProps {
   extendedOnChange?: (itemValue?: any) => void;
 }
 
-const RHCheckBox = ({
+export const RHRadio = ({
   radioOptions,
   name,
   label,
@@ -73,5 +73,3 @@ const RHCheckBox = ({
     </FormControl>
   );
 };
-
-export default RHCheckBox;

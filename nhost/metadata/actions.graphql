@@ -1,0 +1,261 @@
+type Mutation {
+  Cashier_CreateTransaction(
+    karyawan_name: String
+    payment_type: TransactionPaymentTypeEnum!
+    total_transaction: Int!
+    cash_in_amount: Int!
+    transaction_items: [transaction_items_input!]!
+    store_id: Int!
+  ): Cashier_CreateTransactionOutput
+}
+
+type Query {
+  Dashboard_GetDashboardData(
+    startDate: String!
+    untilDate: String!
+    mode: TimeMode!
+    stores: [Int!]!
+  ): Dashboard_GetDashboardDataOutput
+}
+
+type Mutation {
+  Transaction_ReturnTransaction(
+    invoice_number: String!
+    karyawan_name: String!
+    return_type: TransactionReturnType!
+    return_reason: String!
+    total_transaction: Int!
+    cash_in_amount: Int!
+    returned_items: [Transaction_ReturnedItem!]
+    added_items: [transaction_items_input!]
+  ): Transaction_ReturnTransactionOutput
+}
+
+type Mutation {
+  Transaction_SendReceipt(
+    customer: CustomerInput!
+    receipt_type: TransactionReceiptTypeEnum!
+    invoice_number: String!
+  ): Transaction_SendReceiptOutput
+}
+
+type Mutation {
+  User_SignUp(
+    email: String!
+    password: String!
+    displayName: String
+    defaultRole: String!
+    defaultStore: Int
+  ): User_SignUpOutput
+}
+
+type Query {
+  Whatsapp_GetAuthStatus: Whatsapp_GetAuthStatusOutput
+}
+
+type Mutation {
+  Whatsapp_SignOut: Whatsapp_SignOutOutput
+}
+
+enum TransactionStatusEnum {
+  """ Gagal """ failed
+  """ ReturSemua """ return_all
+  """ ReturSebagian """ return_part
+  """ Sukses """ success
+}
+
+enum TransactionPaymentTypeEnum {
+  """ Cash """ CASH
+  """ BCA """ EDC_BCA
+  """ BRI """ EDC_BRI
+  """ MANDIRI """ EDC_MANDIRI
+  """ GOPAY """ EWALLET_GOPAY
+  """ LINKAJA """ EWALLET_LINKAJA
+  """ SHOPEEPAY """ EWALLET_SHOPEEPAY
+}
+
+enum TransactionReceiptTypeEnum {
+  """ Email """ email
+  """ Whatsapp """ whatsapp
+}
+
+enum TransactionReturnType {
+  """ ReturSemua """ return_all
+  """ ReturSebagian """ return_part
+}
+
+enum TotalTransactionCompare {
+  """ plus """ plus
+  """ minus """ minus
+}
+
+enum TimeMode {
+  """ daily """ daily
+  """ weekly """ weekly
+  """ monthly """ monthly
+}
+
+input InventoryVariantMetadataInsertInput {
+  variant_title: String
+  variant_value: String
+}
+
+input InventoryVariantMetadataNeedUpdateInput {
+  id: Int!
+  variant_value: String
+}
+
+input InventoryVariantsMetadaUpsertInput {
+  id: Int
+  variant_title: String
+  variant_value: String
+}
+
+input transaction_items_input {
+  product_inventory_id: uuid!
+  product_name_concise: String!
+  capital_price: Int!
+  selling_price: Int!
+  discount: Int!
+  purchace_qty: Int!
+  inventory_product_updated_at: String!
+  product_updated_at: String!
+}
+
+input CustomerInput {
+  id: uuid
+  email: String
+  name: String
+  phone_number: String
+}
+
+input Transaction_ReturnedItem {
+  transaction_item_id: String!
+  capital_price: Int!
+  selling_price: Int!
+  discount: Int!
+  returned_qty: Int!
+}
+
+type User_SignUpOutput {
+  email: String
+  displayName: String
+  isError: Boolean!
+  errorMessage: String
+}
+
+type Whatsapp_GetAuthStatusOutput {
+  is_authenticated: Boolean!
+  is_qr_ready: Boolean!
+  is_client_ready: Boolean!
+  qrcode: String
+  client_state: String
+  client_name: String
+  client_phone_number: String
+  client_platform: String
+  isError: Boolean!
+  errorMessage: String
+}
+
+type Whatsapp_SignOutOutput {
+  is_success: Boolean!
+}
+
+type BulkUpdateVariantsMetadataOutput {
+  variant_title: String
+  is_any_update: Boolean
+}
+
+type Cashier_CreateTransactionOutput {
+  isError: Boolean!
+  errorMessage: String
+  invoice_number: String
+  total_transaction: Int
+  cash_change: Int
+  cash_in_amount: Int
+  payment_type: String
+  store_id: Int
+  transaction_status: TransactionStatusEnum!
+}
+
+type sendReceiptOutput {
+  email: String
+  id: uuid!
+  name: String
+  phone_number: String
+  created_at: timestamptz!
+  is_sent: Boolean!
+}
+
+type Transaction_SendReceiptOutput {
+  email: String
+  id: uuid
+  name: String
+  phone_number: String
+  created_at: timestamptz!
+  isError: Boolean
+  errorMessage: String
+}
+
+type Transaction_RefundTransactionOutput {
+  invoice_number: String
+  isError: Boolean!
+  errorMessage: String
+  total_transaction: Int
+  cash_in_amount: Int
+  cash_change: Int
+  return_type: TransactionReturnType
+  total_transaction_compare: TotalTransactionCompare
+}
+
+type Transaction_ReturnTransactionOutput {
+  invoice_number: String
+  isError: Boolean!
+  errorMessage: String
+  total_transaction: Int
+  cash_in_amount: Int
+  cash_change: Int
+  return_type: TransactionReturnType
+  total_transaction_compare: TotalTransactionCompare
+}
+
+type Dashboard_GetDashboardDataOutput {
+  isCanBackwards: Boolean!
+  isCanForwards: Boolean!
+  firstTransactionDate: String!
+  totalCustomer: Int!
+  paymentTypePercentage: [PaymentTypePercentage!]!
+  totalOmset: Int!
+  totalProfit: Int!
+  totalOperasional: Int!
+  totalSuccessTransaction: Int!
+  totalReturnedTransaction: Int!
+  totalItemSold: Int!
+  totalItemReturned: Int!
+  omsetChart: NumberChartData!
+  profitChart: NumberChartData!
+  operasionalChart: NumberChartData!
+  itemSoldChart: NumberChartData!
+  stores: [Int!]!
+}
+
+type PaymentTypePercentage {
+  name: String!
+  total_transaksi: Int!
+}
+
+type NumberChartData {
+  labels: [String!]!
+  datasets: [NumberChartDatasets!]
+}
+
+type ChartPerStore {
+  store_name: String!
+  data: NumberChartData!
+}
+
+type NumberChartDatasets {
+  store_id: Int!
+  data: [Int!]!
+}
+

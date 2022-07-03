@@ -1,0 +1,160 @@
+table:
+  name: transaction_items
+  schema: public
+object_relationships:
+- name: inventory_product
+  using:
+    foreign_key_constraint_on: inventory_product_id
+- name: transaction
+  using:
+    foreign_key_constraint_on: transaction_invoice_number
+- name: transaction_status_enum
+  using:
+    foreign_key_constraint_on: transaction_status
+computed_fields:
+- definition:
+    function:
+      name: transaction_items_profit
+      schema: public
+  name: profit
+- definition:
+    function:
+      name: transaction_items_real_capital_price
+      schema: public
+  name: real_capital_price
+- comment: ""
+  definition:
+    function:
+      name: transaction_items_subtotal
+      schema: public
+  name: subtotal
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - capital_price
+    - created_at
+    - discount
+    - id
+    - inventory_product_id
+    - product_name
+    - purchase_qty
+    - selling_price
+    - transaction_invoice_number
+    - transaction_status
+    - updated_at
+  role: administrator
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - capital_price
+    - created_at
+    - discount
+    - id
+    - inventory_product_id
+    - product_name
+    - purchase_qty
+    - selling_price
+    - transaction_invoice_number
+    - transaction_status
+    - updated_at
+  role: karyawan
+select_permissions:
+- permission:
+    columns:
+    - id
+    - transaction_invoice_number
+    - product_name
+    - capital_price
+    - selling_price
+    - discount
+    - purchase_qty
+    - transaction_status
+    - inventory_product_id
+    - created_at
+    - updated_at
+    computed_fields:
+    - profit
+    - real_capital_price
+    - subtotal
+    filter: {}
+  role: administrator
+- permission:
+    columns:
+    - capital_price
+    - discount
+    - purchase_qty
+    - selling_price
+    - product_name
+    - transaction_invoice_number
+    - transaction_status
+    - created_at
+    - updated_at
+    - id
+    - inventory_product_id
+    computed_fields:
+    - profit
+    - real_capital_price
+    - subtotal
+    filter: {}
+  role: karyawan
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - capital_price
+    - created_at
+    - discount
+    - id
+    - inventory_product_id
+    - product_name
+    - purchase_qty
+    - selling_price
+    - transaction_invoice_number
+    - transaction_status
+    - updated_at
+    filter: {}
+  role: administrator
+- permission:
+    check: {}
+    columns:
+    - capital_price
+    - created_at
+    - discount
+    - id
+    - inventory_product_id
+    - product_name
+    - purchase_qty
+    - selling_price
+    - transaction_invoice_number
+    - transaction_status
+    - updated_at
+    filter: {}
+  role: karyawan
+delete_permissions:
+- permission:
+    filter: {}
+  role: administrator
+event_triggers:
+- definition:
+    enable_manual: false
+    insert:
+      columns: "*"
+  name: UpdateAvailableQtyOnInsertTransactionItem
+  retry_conf:
+    interval_sec: 30
+    num_retries: 10
+    timeout_sec: 60
+  webhook: "{{NHOST_BACKEND_URL}}/v1/functions/events/UpdateAvailableQtyOnInsertTransactionItem"
+- definition:
+    enable_manual: false
+    update:
+      columns: "*"
+  name: UpdateAvailableQtyOnUpdateTransactionItem
+  retry_conf:
+    interval_sec: 10
+    num_retries: 0
+    timeout_sec: 60
+  webhook: "{{NHOST_BACKEND_URL}}/v1/functions/events/UpdateAvailableQtyOnUpdateTransactionItem"

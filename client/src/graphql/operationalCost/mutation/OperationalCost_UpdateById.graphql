@@ -1,0 +1,9 @@
+mutation OperationalCost_UpdateById(
+  $id: Int!
+  $_set: operational_costs_set_input!
+) {
+  update_operational_costs_by_pk(pk_columns: {id: $id}, _set: $_set) {
+    id
+    reason
+  }
+}

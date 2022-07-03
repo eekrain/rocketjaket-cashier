@@ -1,19 +1,18 @@
-query User_GetUserById($id: uuid!) {
-  users_by_pk(id: $id) {
+query User_GetUserById($user_id: uuid = "") {
+  user(id: $user_id) {
+    avatarUrl
+    defaultRole
+    displayName
+    email
+    emailVerified
+    newEmail
     id
-    display_name
-    avatar_url
-    store_id
-    account {
-      email
-      default_role
-      active
-      account_roles {
-        role
-        is_custom
-        id
-        account_id
-      }
+    users_metadata(limit: 1) {
+      store_id
+    }
+    disabled
+    roles {
+      role
     }
   }
 }
