@@ -19,16 +19,28 @@ import Config from 'react-native-config';
 import {TOAST_TEMPLATE} from '../../../shared/constants';
 import {useApolloClient} from '@apollo/client';
 import to from 'await-to-js';
+import * as yup from 'yup';
+import {yupResolver} from '@hookform/resolvers/yup';
 
 interface ISignInScreenProps extends SigninNavProps {}
 
 interface IDefaultValues {
-  username: string;
+  email: string;
   password: string;
 }
 
+const schema = yup
+  .object({
+    email: yup
+      .string()
+      .email('Struktur email tidak valid')
+      .required('Email harus di isi'),
+    password: yup.string().min(8, 'Password minimal 8 karakter').required(),
+  })
+  .required();
+
 const defaultValues = {
-  username: Config.APP_ENV === 'development' ? 'ardianoption@gmail.com' : '',
+  email: Config.APP_ENV === 'development' ? 'ardianoption@gmail.com' : '',
   password: Config.APP_ENV === 'development' ? 'ardianeka' : '',
 };
 
@@ -44,7 +56,7 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
     handleSubmit,
     control,
     formState: {errors},
-  } = useForm({defaultValues});
+  } = useForm({defaultValues, resolver: yupResolver(schema)});
 
   const handleSignIn = async (data: IDefaultValues) => {
     console.log(
@@ -52,9 +64,7 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
       data,
     );
 
-    const [err, res] = await to(
-      signInEmailPassword(data.username, data.password),
-    );
+    const [err, res] = await to(signInEmailPassword(data.email, data.password));
     if (err || !res) {
       console.log('🚀 ~ file: index.tsx ~ line 58 ~ handleSignIn ~ err', err);
     } else {
@@ -105,8 +115,8 @@ const SignInScreen = ({navigation}: ISignInScreenProps) => {
           </Center>
 
           <RHTextInput
-            name="username"
-            label="Username"
+            name="email"
+            label="Email"
             control={control}
             errors={errors}
           />
