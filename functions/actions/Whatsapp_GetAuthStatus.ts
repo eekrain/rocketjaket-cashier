@@ -1,17 +1,20 @@
 import { Request, Response } from "express";
 import axios from "axios";
 import to from "await-to-js";
+import { getWhatsappConfig } from "../../utils";
 
 export default async (_req: Request, res: Response) => {
-  const tesPrintEnv = {
-    NHOST_ADMIN_SECRET: process.env.NHOST_ADMIN_SECRET as string,
-    WHATSAPP_API_URL: process.env.WHATSAPP_API_URL as string,
-    WHATSAPP_API_SECRET: process.env.WHATSAPP_API_SECRET as string,
-  };
+  const whatsappConfig = getWhatsappConfig();
   console.log(
-    "🚀 ~ file: Whatsapp_GetAuthStatus.ts ~ line 11 ~ tesPrintEnv",
-    tesPrintEnv
+    "🚀 ~ file: Whatsapp_GetAuthStatus.ts ~ line 8 ~ whatsappConfig",
+    whatsappConfig
   );
+  const url = `${whatsappConfig.WHATSAPP_API_URL}/auth/getauthstatus`;
+  const axiosConfig = {
+    headers: {
+      "x-mywa-secret": whatsappConfig.WHATSAPP_API_SECRET,
+    },
+  };
 
   const defaultFailReq: Whatsapp_GetAuthStatusOutput = {
     is_authenticated: false,
@@ -27,14 +30,7 @@ export default async (_req: Request, res: Response) => {
   };
 
   const [errAuth, resAuth] = await to(
-    axios.get<MyWAGetAuthStatusOutput>(
-      `${process.env.WHATSAPP_API_URL}/auth/getauthstatus`,
-      {
-        headers: {
-          "x-mywa-secret": process.env.WHATSAPP_API_SECRET || "",
-        },
-      }
-    )
+    axios.get<MyWAGetAuthStatusOutput>(url, axiosConfig)
   );
 
   if (errAuth || !resAuth) {
