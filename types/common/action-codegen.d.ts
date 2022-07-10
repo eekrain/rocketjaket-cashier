@@ -106,6 +106,7 @@ type Whatsapp_GetAuthStatusOutput = {
 
 type Whatsapp_SignOutOutput = {
   is_success: boolean;
+  errorMessage?: Maybe<string>;
 };
 
 type BulkUpdateVariantsMetadataOutput = {

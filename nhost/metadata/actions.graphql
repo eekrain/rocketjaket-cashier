@@ -159,6 +159,7 @@ type Whatsapp_GetAuthStatusOutput {
 
 type Whatsapp_SignOutOutput {
   is_success: Boolean!
+  errorMessage: String
 }
 
 type BulkUpdateVariantsMetadataOutput {
