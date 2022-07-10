@@ -9,6 +9,7 @@ interface MyWAGetAuthStatusOutput {
 
 interface MyWASignoutResponse {
   is_success: boolean;
+  errorMessage?: string;
 }
 
 enum WAStateEnum {

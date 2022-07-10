@@ -21,6 +21,7 @@ export default async (req: Request, res: Response) => {
     );
     const output: Whatsapp_SignOutOutput = {
       is_success: false,
+      errorMessage: errSignout.message,
     };
     return res.send(output);
   }
