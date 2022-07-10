@@ -3,6 +3,16 @@ import axios from "axios";
 import to from "await-to-js";
 
 export default async (_req: Request, res: Response) => {
+  const tesPrintEnv = {
+    NHOST_ADMIN_SECRET: process.env.NHOST_ADMIN_SECRET as string,
+    WHATSAPP_API_URL: process.env.WHATSAPP_API_URL as string,
+    WHATSAPP_API_SECRET: process.env.WHATSAPP_API_SECRET as string,
+  };
+  console.log(
+    "🚀 ~ file: Whatsapp_GetAuthStatus.ts ~ line 11 ~ tesPrintEnv",
+    tesPrintEnv
+  );
+
   const defaultFailReq: Whatsapp_GetAuthStatusOutput = {
     is_authenticated: false,
     is_client_ready: false,
