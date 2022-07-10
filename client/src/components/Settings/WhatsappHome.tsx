@@ -10,27 +10,19 @@ import {
   HStack,
   Button,
   useToast,
-  Modal,
   Center,
 } from 'native-base';
 import {
   useWhatsapp_GetAuthStatusQuery,
   useWhatsapp_SignOutMutation,
 } from '../../graphql/gql-generated';
-import {Grid, Row, Col} from 'react-native-easy-grid';
-import {
-  Alert,
-  ScrollView,
-  StyleProp,
-  StyleSheet,
-  useWindowDimensions,
-  ViewStyle,
-} from 'react-native';
+import {Alert, ScrollView, useWindowDimensions} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import {useMyAppState} from '../../state';
 import {TOAST_TEMPLATE} from '../../shared/constants';
 import {myNumberFormat} from '../../shared/utils';
 import {IDataSimpleGrid, SimpleDataGrid} from '../../shared/components';
+import to from 'await-to-js';
 
 interface ITokoHomeProps {}
 
@@ -64,13 +56,17 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
 
   const handleWhatsappSignout = useCallback(async () => {
     const doSignout = async () => {
-      await whatsappSignout().catch(error => {
-        console.log(
-          '🚀 ~ file: WhatsappHome.tsx ~ line 71 ~ res ~ error',
-          error,
-        );
+      const [err, res] = await to(whatsappSignout());
+      if (err || !res) {
+        console.log('🚀 ~ file: WhatsappHome.tsx ~ line 71 ~ res ~ error', err);
         toast.show(TOAST_TEMPLATE.error('Gagal melakukan sign out whatsapp!'));
-      });
+      } else {
+        toast.show(
+          TOAST_TEMPLATE.error(
+            'Berhasil melakukan sign out whatsapp! Tunggu sesaat untuk update status autentikasi.',
+          ),
+        );
+      }
     };
     Alert.alert(
       'Signout Whatsapp',
@@ -131,14 +127,21 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
       <Box pb="64">
         <HStack mb="10" mt="4" justifyContent="space-between">
           <Heading fontSize="xl">Whatsapp</Heading>
-          <Button onPress={async () => await getWAAuthStatus.refetch()}>
-            Refresh
-          </Button>
+          <HStack space={'4'}>
+            <Button onPress={async () => await getWAAuthStatus.refetch()}>
+              Refresh
+            </Button>
+            {WAAuthStatus?.is_authenticated === true && (
+              <Button colorScheme={'danger'} onPress={handleWhatsappSignout}>
+                Signout
+              </Button>
+            )}
+          </HStack>
         </HStack>
 
         <Stack
           direction={{base: 'column', lg: 'row'}}
-          alignItems="center"
+          alignItems={{base: 'center', lg: 'flex-start'}}
           space={{base: '20', lg: 0}}>
           <SimpleDataGrid
             titleWidthRatio={0.5}
@@ -184,12 +187,5 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
     </ScrollView>
   );
 };
-
-const defaultStyles = StyleSheet.create({
-  row: {
-    height: 35,
-    alignItems: 'center',
-  },
-});
 
 export default WhatsappHome;
