@@ -252,6 +252,7 @@ export type Whatsapp_GetAuthStatusOutput = {
 
 export type Whatsapp_SignOutOutput = {
   __typename?: 'Whatsapp_SignOutOutput';
+  errorMessage?: Maybe<Scalars['String']>;
   is_success: Scalars['Boolean'];
 };
 
