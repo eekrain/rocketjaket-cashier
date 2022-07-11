@@ -1,0 +1,11 @@
+table:
+  name: whatsapp_subscription
+  schema: public
+select_permissions:
+- permission:
+    columns:
+    - id
+    - created_at
+    - until
+    filter: {}
+  role: administrator

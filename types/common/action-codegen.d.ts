@@ -92,6 +92,7 @@ type User_SignUpOutput = {
 };
 
 type Whatsapp_GetAuthStatusOutput = {
+  subscription_until?: Maybe<string>;
   is_authenticated: boolean;
   is_qr_ready: boolean;
   is_client_ready: boolean;
