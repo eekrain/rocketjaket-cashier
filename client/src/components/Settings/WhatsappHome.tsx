@@ -23,6 +23,11 @@ import {TOAST_TEMPLATE} from '../../shared/constants';
 import {myNumberFormat} from '../../shared/utils';
 import {IDataSimpleGrid, SimpleDataGrid} from '../../shared/components';
 import to from 'await-to-js';
+import dayjs from 'dayjs';
+import Config from 'react-native-config';
+
+const WITH_WHATSAPP_SERVER_PAYMENT_REMINDER =
+  Config.WITH_WHATSAPP_SERVER_PAYMENT_REMINDER === 'true';
 
 interface ITokoHomeProps {}
 
@@ -88,17 +93,41 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
     );
   }, [WAAuthStatus?.client_name, toast, whatsappSignout]);
 
-  const errorGrid: IDataSimpleGrid[] = WAAuthStatus?.isError
-    ? [
-        {
-          title: 'Error',
-          value: () => <Text color="red.600">{WAAuthStatus.errorMessage}</Text>,
-        },
-      ]
-    : [];
+  const subscriptionStatus = `Langganan API Whatsapp Web anda berlaku sampai dengan ${
+    WAAuthStatus?.subscription_until
+      ? dayjs(WAAuthStatus.subscription_until).format('D/M/YYYY H:mm:ss')
+      : 0
+  }.`;
+
+  let isSubscribed = false;
+  if (
+    WAAuthStatus?.subscription_until &&
+    dayjs(WAAuthStatus.subscription_until).isAfter(dayjs())
+  )
+    isSubscribed = true;
+
+  const errorGrid: IDataSimpleGrid[] =
+    WAAuthStatus?.isError || !isSubscribed
+      ? [
+          {
+            title: 'Error',
+            value: () => (
+              <Text color="red.600">{`${
+                WAAuthStatus?.errorMessage
+                  ? WAAuthStatus?.errorMessage + '.\n'
+                  : ''
+              }${
+                !isSubscribed ? 'Langganan API Whatsapp Web belum aktif.' : ''
+              }`}</Text>
+            ),
+          },
+        ]
+      : [];
 
   const otherStatus: IDataSimpleGrid[] =
-    WAAuthStatus?.isError === false && WAAuthStatus?.client_state
+    WAAuthStatus?.isError === false &&
+    WAAuthStatus?.client_state &&
+    isSubscribed
       ? [
           {
             title: 'Status',
@@ -157,9 +186,11 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
                     padding={2}
                     width="20"
                     colorScheme={
-                      WAAuthStatus?.is_authenticated ? 'success' : 'danger'
+                      WAAuthStatus?.is_authenticated && isSubscribed
+                        ? 'success'
+                        : 'danger'
                     }>
-                    {WAAuthStatus?.is_authenticated
+                    {WAAuthStatus?.is_authenticated && isSubscribed
                       ? 'Signed In'
                       : 'Signed Out'}
                   </Badge>
@@ -167,6 +198,10 @@ const WhatsappHome = ({}: ITokoHomeProps) => {
               },
               ...errorGrid,
               ...otherStatus,
+              {
+                title: 'Status Langganan',
+                value: subscriptionStatus,
+              },
             ]}
           />
 

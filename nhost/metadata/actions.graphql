@@ -145,6 +145,7 @@ type User_SignUpOutput {
 }
 
 type Whatsapp_GetAuthStatusOutput {
+  subscription_until: String
   is_authenticated: Boolean!
   is_qr_ready: Boolean!
   is_client_ready: Boolean!
