@@ -248,6 +248,7 @@ export type Whatsapp_GetAuthStatusOutput = {
   is_client_ready: Scalars['Boolean'];
   is_qr_ready: Scalars['Boolean'];
   qrcode?: Maybe<Scalars['String']>;
+  subscription_until?: Maybe<Scalars['String']>;
 };
 
 export type Whatsapp_SignOutOutput = {
@@ -3846,6 +3847,10 @@ export type Mutation_Root = {
   delete_users_metadata?: Maybe<Users_Metadata_Mutation_Response>;
   /** delete single row from the table: "users_metadata" */
   delete_users_metadata_by_pk?: Maybe<Users_Metadata>;
+  /** delete data from the table: "whatsapp_subscription" */
+  delete_whatsapp_subscription?: Maybe<Whatsapp_Subscription_Mutation_Response>;
+  /** delete single row from the table: "whatsapp_subscription" */
+  delete_whatsapp_subscription_by_pk?: Maybe<Whatsapp_Subscription>;
   /** insert a single row into the table: "auth.providers" */
   insertAuthProvider?: Maybe<AuthProviders>;
   /** insert a single row into the table: "auth.provider_requests" */
@@ -3962,6 +3967,10 @@ export type Mutation_Root = {
   insert_users_metadata?: Maybe<Users_Metadata_Mutation_Response>;
   /** insert a single row into the table: "users_metadata" */
   insert_users_metadata_one?: Maybe<Users_Metadata>;
+  /** insert data into the table: "whatsapp_subscription" */
+  insert_whatsapp_subscription?: Maybe<Whatsapp_Subscription_Mutation_Response>;
+  /** insert a single row into the table: "whatsapp_subscription" */
+  insert_whatsapp_subscription_one?: Maybe<Whatsapp_Subscription>;
   /** update single row of the table: "auth.providers" */
   updateAuthProvider?: Maybe<AuthProviders>;
   /** update single row of the table: "auth.provider_requests" */
@@ -4078,6 +4087,10 @@ export type Mutation_Root = {
   update_users_metadata?: Maybe<Users_Metadata_Mutation_Response>;
   /** update single row of the table: "users_metadata" */
   update_users_metadata_by_pk?: Maybe<Users_Metadata>;
+  /** update data of the table: "whatsapp_subscription" */
+  update_whatsapp_subscription?: Maybe<Whatsapp_Subscription_Mutation_Response>;
+  /** update single row of the table: "whatsapp_subscription" */
+  update_whatsapp_subscription_by_pk?: Maybe<Whatsapp_Subscription>;
 };
 
 
@@ -4468,6 +4481,18 @@ export type Mutation_RootDelete_Users_MetadataArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Users_Metadata_By_PkArgs = {
   id: Scalars['uuid'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Whatsapp_SubscriptionArgs = {
+  where: Whatsapp_Subscription_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Whatsapp_Subscription_By_PkArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -4874,6 +4899,20 @@ export type Mutation_RootInsert_Users_MetadataArgs = {
 export type Mutation_RootInsert_Users_Metadata_OneArgs = {
   object: Users_Metadata_Insert_Input;
   on_conflict?: InputMaybe<Users_Metadata_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Whatsapp_SubscriptionArgs = {
+  objects: Array<Whatsapp_Subscription_Insert_Input>;
+  on_conflict?: InputMaybe<Whatsapp_Subscription_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Whatsapp_Subscription_OneArgs = {
+  object: Whatsapp_Subscription_Insert_Input;
+  on_conflict?: InputMaybe<Whatsapp_Subscription_On_Conflict>;
 };
 
 
@@ -5330,6 +5369,22 @@ export type Mutation_RootUpdate_Users_Metadata_By_PkArgs = {
   _inc?: InputMaybe<Users_Metadata_Inc_Input>;
   _set?: InputMaybe<Users_Metadata_Set_Input>;
   pk_columns: Users_Metadata_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Whatsapp_SubscriptionArgs = {
+  _inc?: InputMaybe<Whatsapp_Subscription_Inc_Input>;
+  _set?: InputMaybe<Whatsapp_Subscription_Set_Input>;
+  where: Whatsapp_Subscription_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Whatsapp_Subscription_By_PkArgs = {
+  _inc?: InputMaybe<Whatsapp_Subscription_Inc_Input>;
+  _set?: InputMaybe<Whatsapp_Subscription_Set_Input>;
+  pk_columns: Whatsapp_Subscription_Pk_Columns_Input;
 };
 
 /** columns and relationships of "notification" */
@@ -6890,6 +6945,12 @@ export type Query_Root = {
   users_metadata_aggregate: Users_Metadata_Aggregate;
   /** fetch data from the table: "users_metadata" using primary key columns */
   users_metadata_by_pk?: Maybe<Users_Metadata>;
+  /** fetch data from the table: "whatsapp_subscription" */
+  whatsapp_subscription: Array<Whatsapp_Subscription>;
+  /** fetch aggregated fields from the table: "whatsapp_subscription" */
+  whatsapp_subscription_aggregate: Whatsapp_Subscription_Aggregate;
+  /** fetch data from the table: "whatsapp_subscription" using primary key columns */
+  whatsapp_subscription_by_pk?: Maybe<Whatsapp_Subscription>;
 };
 
 
@@ -7567,6 +7628,29 @@ export type Query_RootUsers_Metadata_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
+
+export type Query_RootWhatsapp_SubscriptionArgs = {
+  distinct_on?: InputMaybe<Array<Whatsapp_Subscription_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Whatsapp_Subscription_Order_By>>;
+  where?: InputMaybe<Whatsapp_Subscription_Bool_Exp>;
+};
+
+
+export type Query_RootWhatsapp_Subscription_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Whatsapp_Subscription_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Whatsapp_Subscription_Order_By>>;
+  where?: InputMaybe<Whatsapp_Subscription_Bool_Exp>;
+};
+
+
+export type Query_RootWhatsapp_Subscription_By_PkArgs = {
+  id: Scalars['Int'];
+};
+
 /** columns and relationships of "stores" */
 export type Stores = {
   __typename?: 'stores';
@@ -8111,6 +8195,12 @@ export type Subscription_Root = {
   users_metadata_aggregate: Users_Metadata_Aggregate;
   /** fetch data from the table: "users_metadata" using primary key columns */
   users_metadata_by_pk?: Maybe<Users_Metadata>;
+  /** fetch data from the table: "whatsapp_subscription" */
+  whatsapp_subscription: Array<Whatsapp_Subscription>;
+  /** fetch aggregated fields from the table: "whatsapp_subscription" */
+  whatsapp_subscription_aggregate: Whatsapp_Subscription_Aggregate;
+  /** fetch data from the table: "whatsapp_subscription" using primary key columns */
+  whatsapp_subscription_by_pk?: Maybe<Whatsapp_Subscription>;
 };
 
 
@@ -8778,6 +8868,29 @@ export type Subscription_RootUsers_Metadata_AggregateArgs = {
 
 export type Subscription_RootUsers_Metadata_By_PkArgs = {
   id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootWhatsapp_SubscriptionArgs = {
+  distinct_on?: InputMaybe<Array<Whatsapp_Subscription_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Whatsapp_Subscription_Order_By>>;
+  where?: InputMaybe<Whatsapp_Subscription_Bool_Exp>;
+};
+
+
+export type Subscription_RootWhatsapp_Subscription_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Whatsapp_Subscription_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Whatsapp_Subscription_Order_By>>;
+  where?: InputMaybe<Whatsapp_Subscription_Bool_Exp>;
+};
+
+
+export type Subscription_RootWhatsapp_Subscription_By_PkArgs = {
+  id: Scalars['Int'];
 };
 
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
@@ -11176,6 +11289,191 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
+/** columns and relationships of "whatsapp_subscription" */
+export type Whatsapp_Subscription = {
+  __typename?: 'whatsapp_subscription';
+  created_at: Scalars['timestamptz'];
+  id: Scalars['Int'];
+  until: Scalars['timestamptz'];
+};
+
+/** aggregated selection of "whatsapp_subscription" */
+export type Whatsapp_Subscription_Aggregate = {
+  __typename?: 'whatsapp_subscription_aggregate';
+  aggregate?: Maybe<Whatsapp_Subscription_Aggregate_Fields>;
+  nodes: Array<Whatsapp_Subscription>;
+};
+
+/** aggregate fields of "whatsapp_subscription" */
+export type Whatsapp_Subscription_Aggregate_Fields = {
+  __typename?: 'whatsapp_subscription_aggregate_fields';
+  avg?: Maybe<Whatsapp_Subscription_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Whatsapp_Subscription_Max_Fields>;
+  min?: Maybe<Whatsapp_Subscription_Min_Fields>;
+  stddev?: Maybe<Whatsapp_Subscription_Stddev_Fields>;
+  stddev_pop?: Maybe<Whatsapp_Subscription_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Whatsapp_Subscription_Stddev_Samp_Fields>;
+  sum?: Maybe<Whatsapp_Subscription_Sum_Fields>;
+  var_pop?: Maybe<Whatsapp_Subscription_Var_Pop_Fields>;
+  var_samp?: Maybe<Whatsapp_Subscription_Var_Samp_Fields>;
+  variance?: Maybe<Whatsapp_Subscription_Variance_Fields>;
+};
+
+
+/** aggregate fields of "whatsapp_subscription" */
+export type Whatsapp_Subscription_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Whatsapp_Subscription_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** aggregate avg on columns */
+export type Whatsapp_Subscription_Avg_Fields = {
+  __typename?: 'whatsapp_subscription_avg_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** Boolean expression to filter rows from the table "whatsapp_subscription". All fields are combined with a logical 'AND'. */
+export type Whatsapp_Subscription_Bool_Exp = {
+  _and?: InputMaybe<Array<Whatsapp_Subscription_Bool_Exp>>;
+  _not?: InputMaybe<Whatsapp_Subscription_Bool_Exp>;
+  _or?: InputMaybe<Array<Whatsapp_Subscription_Bool_Exp>>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Int_Comparison_Exp>;
+  until?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "whatsapp_subscription" */
+export enum Whatsapp_Subscription_Constraint {
+  /** unique or primary key constraint */
+  WhatsappSubscriptionPkey = 'whatsapp_subscription_pkey'
+}
+
+/** input type for incrementing numeric columns in table "whatsapp_subscription" */
+export type Whatsapp_Subscription_Inc_Input = {
+  id?: InputMaybe<Scalars['Int']>;
+};
+
+/** input type for inserting data into table "whatsapp_subscription" */
+export type Whatsapp_Subscription_Insert_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['Int']>;
+  until?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate max on columns */
+export type Whatsapp_Subscription_Max_Fields = {
+  __typename?: 'whatsapp_subscription_max_fields';
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['Int']>;
+  until?: Maybe<Scalars['timestamptz']>;
+};
+
+/** aggregate min on columns */
+export type Whatsapp_Subscription_Min_Fields = {
+  __typename?: 'whatsapp_subscription_min_fields';
+  created_at?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['Int']>;
+  until?: Maybe<Scalars['timestamptz']>;
+};
+
+/** response of any mutation on the table "whatsapp_subscription" */
+export type Whatsapp_Subscription_Mutation_Response = {
+  __typename?: 'whatsapp_subscription_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Whatsapp_Subscription>;
+};
+
+/** on_conflict condition type for table "whatsapp_subscription" */
+export type Whatsapp_Subscription_On_Conflict = {
+  constraint: Whatsapp_Subscription_Constraint;
+  update_columns?: Array<Whatsapp_Subscription_Update_Column>;
+  where?: InputMaybe<Whatsapp_Subscription_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "whatsapp_subscription". */
+export type Whatsapp_Subscription_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  until?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: whatsapp_subscription */
+export type Whatsapp_Subscription_Pk_Columns_Input = {
+  id: Scalars['Int'];
+};
+
+/** select columns of table "whatsapp_subscription" */
+export enum Whatsapp_Subscription_Select_Column {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Until = 'until'
+}
+
+/** input type for updating data in table "whatsapp_subscription" */
+export type Whatsapp_Subscription_Set_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['Int']>;
+  until?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate stddev on columns */
+export type Whatsapp_Subscription_Stddev_Fields = {
+  __typename?: 'whatsapp_subscription_stddev_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Whatsapp_Subscription_Stddev_Pop_Fields = {
+  __typename?: 'whatsapp_subscription_stddev_pop_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Whatsapp_Subscription_Stddev_Samp_Fields = {
+  __typename?: 'whatsapp_subscription_stddev_samp_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate sum on columns */
+export type Whatsapp_Subscription_Sum_Fields = {
+  __typename?: 'whatsapp_subscription_sum_fields';
+  id?: Maybe<Scalars['Int']>;
+};
+
+/** update columns of table "whatsapp_subscription" */
+export enum Whatsapp_Subscription_Update_Column {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Until = 'until'
+}
+
+/** aggregate var_pop on columns */
+export type Whatsapp_Subscription_Var_Pop_Fields = {
+  __typename?: 'whatsapp_subscription_var_pop_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate var_samp on columns */
+export type Whatsapp_Subscription_Var_Samp_Fields = {
+  __typename?: 'whatsapp_subscription_var_samp_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate variance on columns */
+export type Whatsapp_Subscription_Variance_Fields = {
+  __typename?: 'whatsapp_subscription_variance_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
 export type Attendance_InsertOneMutationVariables = Exact<{
   object?: InputMaybe<Attendance_Insert_Input>;
 }>;
@@ -11481,7 +11779,7 @@ export type Store_GetStoreByPkQuery = { __typename?: 'query_root', stores_by_pk?
 export type Whatsapp_GetAuthStatusQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Whatsapp_GetAuthStatusQuery = { __typename?: 'query_root', Whatsapp_GetAuthStatus?: { __typename?: 'Whatsapp_GetAuthStatusOutput', client_phone_number?: string | null, client_name?: string | null, client_platform?: string | null, client_state?: string | null, errorMessage?: string | null, qrcode?: string | null, is_authenticated: boolean, is_qr_ready: boolean, is_client_ready: boolean, isError: boolean } | null };
+export type Whatsapp_GetAuthStatusQuery = { __typename?: 'query_root', Whatsapp_GetAuthStatus?: { __typename?: 'Whatsapp_GetAuthStatusOutput', client_phone_number?: string | null, client_name?: string | null, client_platform?: string | null, client_state?: string | null, errorMessage?: string | null, qrcode?: string | null, is_authenticated: boolean, is_qr_ready: boolean, is_client_ready: boolean, isError: boolean, subscription_until?: string | null } | null };
 
 export type Transaction_ReturnTransactionMutationVariables = Exact<{
   invoice_number: Scalars['String'];
@@ -13362,6 +13660,7 @@ export const Whatsapp_GetAuthStatusDocument = gql`
     is_qr_ready
     is_client_ready
     isError
+    subscription_until
   }
 }
     `;

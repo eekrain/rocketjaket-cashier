@@ -25,5 +25,6 @@
 - "!include public_transaction_receipts.yaml"
 - "!include public_transaction_status_enum.yaml"
 - "!include public_users_metadata.yaml"
+- "!include public_whatsapp_subscription.yaml"
 - "!include storage_buckets.yaml"
 - "!include storage_files.yaml"

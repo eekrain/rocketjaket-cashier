@@ -9,6 +9,7 @@ import {
 } from "../../graphql/gql-generated";
 import { getAdminSdk } from "../../utils";
 import { myNumberFormat } from "../../utils/myFormat";
+import dayjs from "dayjs";
 
 export default async (req: Request, res: Response) => {
   const params: Transaction_SendReceiptArgs = req.body.input;
@@ -28,6 +29,19 @@ export default async (req: Request, res: Response) => {
   };
 
   const sdk = getAdminSdk();
+
+  const [errSubs, resSubs] = await to(
+    sdk.Whatsapp_GetLastWhatsappSubscription()
+  );
+  if (errSubs || !resSubs) {
+    console.log(
+      "🚀 ~ file: Transaction_SendReceipt.ts ~ line 37 ~ errSubs",
+      errSubs
+    );
+  }
+  let isSubscribed = false;
+  const subUntil = resSubs?.data?.whatsapp_subscription?.[0]?.until;
+  if (subUntil && dayjs(subUntil).isAfter(dayjs())) isSubscribed = true;
 
   const [errNewCustomer, resNewCustomer] = await to(
     sdk.Customer_CreateCustomer({
@@ -72,7 +86,8 @@ export default async (req: Request, res: Response) => {
   const sendReceipt = await sendWhatsappMessage(
     params,
     customer,
-    foundInv.data
+    foundInv.data,
+    isSubscribed
   );
 
   const [errReceipt, resReceipt] = await to(
@@ -121,10 +136,18 @@ interface MyWASendMessageResponse {
 const sendWhatsappMessage = async (
   params: Transaction_SendReceiptArgs,
   customer: Customer_CreateCustomerMutation["insert_customers_one"],
-  invoice: Transaction_GetTransactionByPkQuery
+  invoice: Transaction_GetTransactionByPkQuery,
+  isSubscribed: boolean
 ): Promise<MyWASendMessageResponse> => {
   let isError = true;
   let errorMessage: string = "";
+
+  if (!isSubscribed) {
+    isError = true;
+    errorMessage = "Langganan API Whatsapp Web belum aktif";
+    return { isError, errorMessage };
+  }
+
   if (customer?.phone_number) {
     let message = "";
     const item_bought = invoice.transaction_by_pk?.transaction_items
