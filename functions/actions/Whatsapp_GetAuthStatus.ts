@@ -1,20 +1,23 @@
 import { Request, Response } from "express";
 import axios from "axios";
 import to from "await-to-js";
-import { getWhatsappConfig } from "../../utils";
+import { getAdminSdk, getWhatsappConfig } from "../../utils";
+import dayjs from "dayjs";
 
 export default async (_req: Request, res: Response) => {
   const whatsappConfig = getWhatsappConfig();
-  console.log(
-    "🚀 ~ file: Whatsapp_GetAuthStatus.ts ~ line 8 ~ whatsappConfig",
-    whatsappConfig
-  );
   const url = `${whatsappConfig.WHATSAPP_API_URL}/auth/getauthstatus`;
   const axiosConfig = {
     headers: {
       "x-mywa-secret": whatsappConfig.WHATSAPP_API_SECRET,
     },
   };
+
+  const sdk = getAdminSdk();
+  const [errSubs, resSubs] = await to(
+    sdk.Whatsapp_GetLastWhatsappSubscription()
+  );
+  const latestSubscription = resSubs?.data?.whatsapp_subscription?.[0]?.until;
 
   const defaultFailReq: Whatsapp_GetAuthStatusOutput = {
     is_authenticated: false,
@@ -27,6 +30,9 @@ export default async (_req: Request, res: Response) => {
     client_state: null,
     isError: true,
     errorMessage: "",
+    subscription_until: latestSubscription
+      ? dayjs(latestSubscription).toISOString()
+      : null,
   };
 
   const [errAuth, resAuth] = await to(
@@ -63,6 +69,9 @@ export default async (_req: Request, res: Response) => {
     client_platform: client?.platform || null,
     client_state: resAuth.data.state || null,
     isError: false,
+    subscription_until: latestSubscription
+      ? dayjs(latestSubscription).toISOString()
+      : null,
   };
 
   if (

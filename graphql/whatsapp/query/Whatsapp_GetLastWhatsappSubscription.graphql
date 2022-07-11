@@ -1,0 +1,7 @@
+query Whatsapp_GetLastWhatsappSubscription {
+  whatsapp_subscription(limit: 1, order_by: { until: desc_nulls_last }) {
+    until
+    id
+    created_at
+  }
+}
