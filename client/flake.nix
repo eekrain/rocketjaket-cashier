@@ -37,9 +37,8 @@
             platforms-android-31
 
             # Other useful packages for a development environment.
-            # sources-android-30
-            # system-images-android-30-google-apis-x86
-            # system-images-android-30-google-apis-playstore-x86
+            sources-android-31
+            system-images-android-31-google-apis-x86-64
           ]);
 
           android-studio = pkgs.androidStudioPackages.stable;
