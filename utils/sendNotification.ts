@@ -24,7 +24,7 @@ export const sendNotification = async (notification: INotification) => {
     );
   } else {
     const tokens = fcmRaw.map((x) => x.fcm_token);
-    const firebaseAdmin = await myFirebaseAdminApp();
+    // const firebaseAdmin = await myFirebaseAdminApp();
 
     const [errNotif, resNotif] = await to(
       sdk.Notification_CreateOneNotification({
@@ -47,44 +47,44 @@ export const sendNotification = async (notification: INotification) => {
     }
     const notification_id = resNotif?.data.insert_notification_one?.id;
 
-    const [errMulticast, resMulticast] = await to(
-      firebaseAdmin.messaging.sendMulticast({
-        tokens,
-        data: {
-          notifee: JSON.stringify({
-            title: notification.title,
-            body: notification.body,
-            data: {
-              link: notification.link,
-              notification_id: notification_id
-                ? notification_id.toString()
-                : undefined,
-            },
-            android: {
-              channelId: "default",
-              pressAction: {
-                id: "default",
-              },
-              actions: notification_id
-                ? [
-                    {
-                      title: "Mark as Read",
-                      pressAction: {
-                        id: "mark-as-read",
-                      },
-                    },
-                  ]
-                : undefined,
-            },
-          }),
-        },
-      })
-    );
-    if (errMulticast || !resMulticast) {
-      console.log(
-        "🚀 ~ file: UpdateAvailableQtyOnInsertTransactionItem.ts ~ line 143 ~ errMulticast",
-        errMulticast
-      );
-    }
+    // const [errMulticast, resMulticast] = await to(
+    //   firebaseAdmin.messaging.sendMulticast({
+    //     tokens,
+    //     data: {
+    //       notifee: JSON.stringify({
+    //         title: notification.title,
+    //         body: notification.body,
+    //         data: {
+    //           link: notification.link,
+    //           notification_id: notification_id
+    //             ? notification_id.toString()
+    //             : undefined,
+    //         },
+    //         android: {
+    //           channelId: "default",
+    //           pressAction: {
+    //             id: "default",
+    //           },
+    //           actions: notification_id
+    //             ? [
+    //                 {
+    //                   title: "Mark as Read",
+    //                   pressAction: {
+    //                     id: "mark-as-read",
+    //                   },
+    //                 },
+    //               ]
+    //             : undefined,
+    //         },
+    //       }),
+    //     },
+    //   })
+    // );
+    // if (errMulticast || !resMulticast) {
+    //   console.log(
+    //     "🚀 ~ file: UpdateAvailableQtyOnInsertTransactionItem.ts ~ line 143 ~ errMulticast",
+    //     errMulticast
+    //   );
+    // }
   }
 };
