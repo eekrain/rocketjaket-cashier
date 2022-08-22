@@ -112,7 +112,7 @@ const sendNotificationOnMinAvailableQty = async (
       );
     } else {
       const tokens = fcmRaw.map((x) => x.fcm_token);
-      const firebaseAdmin = myFirebaseAdminApp();
+      const firebaseAdmin = await myFirebaseAdminApp();
       const notification = {
         title: "Stok Produk Menipis",
         body: `Produk ${eventData.new.product_name} hanya tersisa ${newAvailableQtyAfterBought} di Toko ${inv_pdk?.store.name}!`,
