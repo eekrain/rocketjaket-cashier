@@ -112,7 +112,7 @@ const sendNotificationOnMinAvailableQty = async (
       );
     } else {
       const tokens = fcmRaw.map((x) => x.fcm_token);
-      const firebaseAdmin = await myFirebaseAdminApp();
+      // const firebaseAdmin = await myFirebaseAdminApp();
       const notification = {
         title: "Stok Produk Menipis",
         body: `Produk ${eventData.new.product_name} hanya tersisa ${newAvailableQtyAfterBought} di Toko ${inv_pdk?.store.name}!`,
@@ -134,45 +134,45 @@ const sendNotificationOnMinAvailableQty = async (
       }
       const notification_id = resNotif?.data.insert_notification_one?.id;
 
-      const [errMulticast, resMulticast] = await to(
-        firebaseAdmin.messaging.sendMulticast({
-          tokens,
-          data: {
-            notifee: JSON.stringify({
-              title: notification.title,
-              body: notification.body,
-              data: {
-                link: "myapp://inventory",
-                notification_id: notification_id
-                  ? notification_id.toString()
-                  : undefined,
-              },
-              android: {
-                channelId: "default",
-                pressAction: {
-                  id: "default",
-                },
-                actions: notification_id
-                  ? [
-                      {
-                        title: "Mark as Read",
-                        pressAction: {
-                          id: "mark-as-read",
-                        },
-                      },
-                    ]
-                  : undefined,
-              },
-            }),
-          },
-        })
-      );
-      if (errMulticast || !resMulticast) {
-        console.log(
-          "🚀 ~ file: UpdateAvailableQtyOnInsertTransactionItem.ts ~ line 143 ~ errMulticast",
-          errMulticast
-        );
-      }
+      // const [errMulticast, resMulticast] = await to(
+      //   firebaseAdmin.messaging.sendMulticast({
+      //     tokens,
+      //     data: {
+      //       notifee: JSON.stringify({
+      //         title: notification.title,
+      //         body: notification.body,
+      //         data: {
+      //           link: "myapp://inventory",
+      //           notification_id: notification_id
+      //             ? notification_id.toString()
+      //             : undefined,
+      //         },
+      //         android: {
+      //           channelId: "default",
+      //           pressAction: {
+      //             id: "default",
+      //           },
+      //           actions: notification_id
+      //             ? [
+      //                 {
+      //                   title: "Mark as Read",
+      //                   pressAction: {
+      //                     id: "mark-as-read",
+      //                   },
+      //                 },
+      //               ]
+      //             : undefined,
+      //         },
+      //       }),
+      //     },
+      //   })
+      // );
+      // if (errMulticast || !resMulticast) {
+      //   console.log(
+      //     "🚀 ~ file: UpdateAvailableQtyOnInsertTransactionItem.ts ~ line 143 ~ errMulticast",
+      //     errMulticast
+      //   );
+      // }
     }
   }
 };
