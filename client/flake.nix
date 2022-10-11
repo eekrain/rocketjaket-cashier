@@ -35,6 +35,8 @@
             emulator
             platform-tools
             platforms-android-30
+            build-tools-31-0-0
+            platforms-android-31
 
             # Other useful packages for a development environment.
             # sources-android-30
