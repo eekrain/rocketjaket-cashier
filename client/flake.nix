@@ -11,7 +11,7 @@
   outputs = { self, nixpkgs, devshell, flake-utils, android }:
     {
       overlay = final: prev: {
-        inherit (self.packages.${final.system}) android-sdk; #android-studio
+        inherit (self.packages.${final.system}) android-sdk android-studio;
       };
     }
     //
@@ -30,21 +30,22 @@
         packages = {
           android-sdk = android.sdk.${system} (sdkPkgs: with sdkPkgs; [
             # Useful packages for building and testing.
-            build-tools-30-0-2
             cmdline-tools-latest
             emulator
             platform-tools
-            platforms-android-30
+            build-tools-30-0-2
+            build-tools-30-0-3
             build-tools-31-0-0
+            platforms-android-30
             platforms-android-31
 
             # Other useful packages for a development environment.
-            # sources-android-30
-            # system-images-android-30-google-apis-x86
+            sources-android-30
+            system-images-android-30-google-apis-x86
             # system-images-android-30-google-apis-playstore-x86
           ]);
 
-          # android-studio = pkgs.androidStudioPackages.stable;
+          android-studio = pkgs.androidStudioPackages.stable;
         };
 
         devShell = import ./devshell.nix { inherit pkgs; };
