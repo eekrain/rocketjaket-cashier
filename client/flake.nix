@@ -42,10 +42,7 @@
             # system-images-android-30-google-apis-playstore-x86
           ]);
 
-          android-studio = pkgs.androidStudioPackages.stable;
-          # android-studio = pkgs.androidStudioPackages.beta;
-          # android-studio = pkgs.androidStudioPackages.preview;
-          # android-studio = pkgs.androidStudioPackage.canary;
+          # android-studio = pkgs.androidStudioPackages.stable;
         };
 
         devShell = import ./devshell.nix { inherit pkgs; };
