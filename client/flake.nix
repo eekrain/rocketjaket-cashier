@@ -11,7 +11,7 @@
   outputs = { self, nixpkgs, devshell, flake-utils, android }:
     {
       overlay = final: prev: {
-        inherit (self.packages.${final.system}) android-sdk android-studio;
+        inherit (self.packages.${final.system}) android-sdk; #android-studio
       };
     }
     //
