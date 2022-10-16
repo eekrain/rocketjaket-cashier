@@ -61,5 +61,3 @@ buck-out/
 /vendor/bundle/
 
 .env.production
-
-.direnv
