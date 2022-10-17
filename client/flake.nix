@@ -36,6 +36,7 @@
             build-tools-31-0-0
             # If when building the apps needs to add other version of build tools, u can add it too
             build-tools-30-0-3
+            build-tools-30-0-2
             cmdline-tools-latest
             emulator
             platform-tools
