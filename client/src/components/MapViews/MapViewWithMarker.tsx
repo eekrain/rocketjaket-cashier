@@ -15,11 +15,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useGetLocation} from '../../shared/utils';
 import {StyleSheet} from 'react-native';
 import LoadingOverlay from '../Overlay/LoadingOverlay';
-import turf from '@turf/circle';
+import Config from 'react-native-config';
 
-MapboxGL.setAccessToken(
-  'sk.eyJ1IjoiZWVrcmFpbiIsImEiOiJjbDQ1amNnYW8yMXJqM2JxeWVlbjV3dmlkIn0.d3OKo8Sem6SkohYsWyaU3w',
-);
+MapboxGL.setAccessToken(Config.MAPBOX_PUBLIC_ACCESS_TOKEN);
 
 type GeoJSONFeature = OnPressEvent['features'][number];
 
